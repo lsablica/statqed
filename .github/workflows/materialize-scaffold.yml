@@ -1,0 +1,44 @@
+name: materialize-statqed-scaffold
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - bootstrap_scaffold.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-statqed-scaffold
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Materialize validated scaffold
+        run: python bootstrap_scaffold.py
+      - name: Verify scaffold
+        run: make check
+      - name: Commit generated repository tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No scaffold changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: bootstrap StatQED architecture and agent harness"
+          git push origin HEAD:main
