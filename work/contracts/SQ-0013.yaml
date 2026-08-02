@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0013","title":"Bootstrap R frontend package","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A package-native R skeleton constructs the accepted toy IR without duplicating canonical semantics.",
+  "dependencies":["SQ-0001","SQ-0006"],
+  "allowed_paths":["frontends/r/**","generated/r/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],
+  "public_changes":["provisional R package API for toy IR"],
+  "steps":["Create DESCRIPTION/NAMESPACE/package layout","Choose minimum R and package tooling from SQ-0002","Generate/shared structural types","Implement exact integer/rational constructors","Call reference backend for canonical bytes","Add provenance/session capture","Add testthat and R CMD check CI","Document unsupported semantics"],
+  "tests":["R CMD check","toy object fixture","integer/rational/missing-value tests","unsupported feature failure","reference-backend equality"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["R frontend reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Package checks cleanly","No silent double coercion","No R-only normative meaning","Output matches shared fixture"],
+  "commands":["R CMD build frontends/r","R CMD check --no-manual frontends/r/*.tar.gz","make check"],"handoff_outputs":["Package skeleton","check log","toy example"]
+}

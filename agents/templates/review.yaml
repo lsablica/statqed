@@ -1,0 +1,14 @@
+{
+  "review_id": "RV-XXXX",
+  "task_id": "SQ-XXXX",
+  "review_type": "semantic_source",
+  "reviewer": "",
+  "independent_of_author": true,
+  "subject_hash": "",
+  "outcome": "REVISE",
+  "checks": [],
+  "findings": [],
+  "limitations": [],
+  "commands": [],
+  "timestamp": ""
+}

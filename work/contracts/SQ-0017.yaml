@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0017","title":"Define trust report v0","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Machine and human reports expose verification mode, claim closure, assumptions, TCB, untrusted producers, locks, warnings, and nonclaims.",
+  "dependencies":["SQ-0009","SQ-0010"],
+  "allowed_paths":["schemas/report/**","backend/crates/statqed-artifact/**","docs/quality/trust-report-template.md","docs/design/assurance-profile.md","conformance/report/**","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["docs/design/trust-model.md","lean/StatQED/Assurance/**","frontends/**"],
+  "public_changes":["trust report schema/rendering v0"],
+  "steps":["Define machine report from assurance closure","Define exact status vocabulary","Render accessible human report","Expose unresolved/external leaves and TCB","Separate warnings from failure","Add overclaim sentence fixtures","Review interpretation with nontechnical readers"],
+  "tests":["kernel/compiled/structural mode examples","unresolved assumption visibility","report cannot alter normative result","snapshot plus semantic assertions","overclaim negative tests"],
+  "reviewers":{"semantic_source":["statistical reviewer"],"formal_conformance":["conformance reviewer"],"adversarial":["overclaim reviewer","accessibility reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["No binary verified badge","Mode/TCB/nonclaims unavoidable","Machine and human reports agree","Planned functionality not implied"],
+  "commands":["cd backend && cargo test --workspace","make check"],"handoff_outputs":["Report schema","rendered examples","overclaim review"]
+}

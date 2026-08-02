@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite the StatQED core paper or, before that paper exists, this software record. Also cite the original statistical results and method packs used by an artifact."
+title: "StatQED: Proof-carrying statistical analysis"
+type: software
+authors:
+  - family-names: "Sablica"
+    given-names: "Lukas"
+  - name: "StatQED contributors"
+repository-code: "https://github.com/lsablica/statqed"
+license: MIT
+version: "0.0.0-dev"
+keywords:
+  - formal statistics
+  - Lean
+  - proof-carrying analysis
+  - statistical computing
+  - reproducibility

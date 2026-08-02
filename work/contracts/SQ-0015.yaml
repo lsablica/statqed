@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0015","title":"Bootstrap Julia frontend package","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A Julia package constructs the accepted toy IR and delegates canonicalization to the reference backend.",
+  "dependencies":["SQ-0001","SQ-0006"],
+  "allowed_paths":["frontends/julia/**","generated/julia/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],
+  "public_changes":["provisional Julia package API for toy IR"],
+  "steps":["Create Project.toml/src/test layout","Pin supported Julia from SQ-0002","Generate/shared immutable structures","Use exact Rational and explicit IEEE representations","Implement backend bridge","Capture project/manifest provenance","Add package tests and docs","Document unsupported semantics"],
+  "tests":["Pkg.test","toy fixture","rational/missing/categorical boundaries","backend equality","fresh environment instantiate"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["Julia frontend reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Pkg.test passes","No silent type loss","No Julia-only normative meaning","Output matches shared fixture"],
+  "commands":["julia --project=frontends/julia -e 'using Pkg; Pkg.instantiate(); Pkg.test()'","make check"],"handoff_outputs":["Package skeleton","test log","toy example"]
+}

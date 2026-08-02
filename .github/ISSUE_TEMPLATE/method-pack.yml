@@ -1,0 +1,41 @@
+name: Method pack proposal
+description: Propose an end-to-end statistical method pack.
+title: "[METHOD PACK] "
+labels: []
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scientific scope, estimands, procedures, and claims
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary source corpus and theorem variants
+    validations:
+      required: true
+  - type: textarea
+    id: assumptions
+    attributes:
+      label: External assumptions and randomness scopes
+    validations:
+      required: true
+  - type: textarea
+    id: certificate
+    attributes:
+      label: Proposed numerical witness/checker
+    validations:
+      required: true
+  - type: textarea
+    id: frontends
+    attributes:
+      label: Frontend and conformance plan
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-goals and overclaim risks
+    validations:
+      required: true

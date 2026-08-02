@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0009","title":"Define assurance graph toy core","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A typed acyclic toy graph composes accepted evidence and rejects prohibited promotions.",
+  "dependencies":["SQ-0008"],
+  "allowed_paths":["lean/StatQED/Assurance/**","schemas/assurance/**","docs/spec/assurance-graph.md","docs/design/assurance-profile.md","conformance/assurance/**","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["methods/**","frontends/**"],
+  "public_changes":["assurance node/edge v0"],
+  "steps":["Define toy node and edge kinds","Define stable IDs and DAG validation","Encode allowed dependency rules","Prohibit diagnostic-to-deductive promotion","Add unresolved/external leaves","Specify dependency closure and report projection"],
+  "tests":["Valid toy graph","cycle rejection","forbidden edge rejection","unknown critical kind rejection","Lean examples and schema vectors"],
+  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["lean reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Graph semantics match docs and schema","Type/validator prevents prohibited promotion","Dependency closure deterministic"],
+  "commands":["cd lean && lake build","make check"],"handoff_outputs":["Graph signatures","golden/negative graphs","review records"]
+}

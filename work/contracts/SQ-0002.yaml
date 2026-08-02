@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0002","title":"Research and pin compatible toolchains","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Produce a reproduced compatibility matrix and exact pin proposal for every foundation toolchain.",
+  "dependencies":["SQ-0001"],
+  "allowed_paths":["docs/implementation/toolchain-compatibility.md","docs/research/toolchain-prototypes/**","scripts/bootstrap/**","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
+  "forbidden_paths":["lean/lean-toolchain","lean/lakefile.toml","backend/rust-toolchain.toml","frontends/**"],
+  "public_changes":[],
+  "steps":["Identify current official Lean/Mathlib compatibility","Prototype minimal Lake project","Prototype Rust/CBOR/Arrow candidates","Check R/Python/Julia minimum versions and package tooling","Test Linux/macOS and record Windows plan","Record installation, caching, licensing, and maintenance risks","Recommend exact pins with rejected alternatives"],
+  "tests":["Fresh-environment reproduction","Version command capture","Tiny compile/run for each proposed tool","Dependency/license review"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["lean maintainer","rust engineer","frontend maintainers"],"adversarial":["release engineer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Every pin is current and reproduced","No untested compatibility claim","Bootstrap tasks receive exact versions/commands"],
+  "commands":["make check"],"handoff_outputs":["Compatibility report","pin proposal","prototype logs"]
+}

@@ -1,0 +1,29 @@
+name: RFC proposal
+description: Propose a constitutional, semantic, trust-boundary, or normative-format decision.
+title: "[RFC] "
+labels: []
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Decision boundary and motivation
+    validations:
+      required: true
+  - type: textarea
+    id: semantics
+    attributes:
+      label: Proposed semantics with examples and nonexamples
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and trade-offs
+    validations:
+      required: true
+  - type: textarea
+    id: effects
+    attributes:
+      label: Formal, artifact, frontend, trust, and migration effects
+    validations:
+      required: true

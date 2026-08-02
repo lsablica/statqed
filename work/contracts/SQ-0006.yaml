@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0006","title":"Define schema v0 and golden vectors","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Versioned CDDL modules and independently reviewed canonical vectors define the toy IR envelope.",
+  "dependencies":["SQ-0005"],
+  "allowed_paths":["schemas/**","conformance/golden/**","docs/spec/ir.md","docs/spec/canonicalization.md","docs/implementation/schema-development.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
+  "forbidden_paths":["generated/**","frontends/**","lean/**","backend/src/**"],
+  "public_changes":["schema v0"],
+  "steps":["Split CDDL into numeric/common/envelope/toy modules","Define feature and extension behavior","Create minimal/maximal valid examples","Create malformed/numeric/Unicode/unknown-critical negatives","Generate canonical bytes/digests from reviewed semantics","Document error codes and version policy"],
+  "tests":["CDDL parser validation","positive and negative fixtures","independent byte/digest comparison","roundtrip/idempotence"],
+  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["conformance-reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Every field has semantic prose","Golden output independently approved","Unknown critical fields fail","No generic ambiguous number"],
+  "commands":["make check"],"handoff_outputs":["Schema digest","fixture manifest","review record"]
+}

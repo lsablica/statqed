@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0018","title":"Expand multi-language CI and trusted-path checks","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"CI reproducibly enforces every implemented foundation gate from a clean checkout.",
+  "dependencies":["SQ-0003","SQ-0004","SQ-0013","SQ-0014","SQ-0015","SQ-0016"],
+  "allowed_paths":[".github/workflows/**","scripts/**","Makefile","docs/implementation/ci.md","docs/quality/test-strategy.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["docs/design/**","schemas/**/*.cddl","lean/StatQED/**/*.lean","backend/**/src/**","frontends/**/src/**"],
+  "public_changes":[],
+  "steps":["Create pinned jobs per toolchain","Add dependency/cache keys from locks","Run schemas and conformance","Run Lean trust/axiom scan","Run package builds/tests","Run clean-checkout artifact roundtrip","Add dependency/security review","Document required statuses and local equivalents"],
+  "tests":["Each job succeeds on clean branch","Deliberate sorry/golden drift/broken link fails","No hidden generated diff","CI permissions least privilege"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["release engineer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Every documented gate runs","Toolchains pinned","No write permissions except necessary release jobs","Local reproduction documented"],
+  "commands":["make check","python3 scripts/run_conformance.py"],"handoff_outputs":["Workflow map","required-check proposal","failure-injection evidence"]
+}

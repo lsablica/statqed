@@ -1,0 +1,23 @@
+{
+  "audit_id": "SA-XXXX",
+  "subject": "",
+  "source": {
+    "work": "",
+    "version": "",
+    "locator": "",
+    "persistent_id": ""
+  },
+  "controlled_statement": "",
+  "hypotheses": [
+    {"name": "", "class": "source_explicit", "source_anchor": "", "notes": ""}
+  ],
+  "variants": [],
+  "concept_mapping": [],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": [],
+  "strengthenings": [],
+  "weakenings": [],
+  "attribution": [],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

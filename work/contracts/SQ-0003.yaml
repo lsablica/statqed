@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0003","title":"Bootstrap Lean and Mathlib project","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A clean checkout builds a pinned minimal Lean/Mathlib project and reports trusted axioms.",
+  "dependencies":["SQ-0002"],
+  "allowed_paths":["lean/**","scripts/check_lean_trust.py",".github/workflows/lean.yml","docs/implementation/lean-core.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
+  "forbidden_paths":["docs/design/**","schemas/**","backend/**","frontends/**"],
+  "public_changes":[],
+  "steps":["Create pinned lean-toolchain and Lake configuration","Add minimal StatQED namespace/library/test executable","Configure Mathlib dependency and lock","Add formatting/lint conventions","Add axiom/trusted-path report script","Document local setup and cache","Add clean CI job"],
+  "tests":["lake build","lake test or executable test","axiom report","clean checkout build","forbidden sorry/admit scan"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["mathlib-scout","lean-formalizer"],"adversarial":["integration-reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Pinned build is reproducible","No statistical semantics introduced","No trusted placeholder","CI and docs match commands"],
+  "commands":["cd lean && lake build","python3 scripts/check_lean_trust.py","make check"],"handoff_outputs":["Toolchain lock","build logs","axiom baseline"]
+}

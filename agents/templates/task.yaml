@@ -1,0 +1,27 @@
+{
+  "id": "SQ-XXXX",
+  "title": "",
+  "status": "READY",
+  "plan": "",
+  "milestone": "",
+  "objective": "Observable outcome",
+  "dependencies": [],
+  "dependency_evidence": [],
+  "allowed_paths": [],
+  "forbidden_paths": [],
+  "public_changes": [],
+  "accepted_decisions": [],
+  "sources": [],
+  "assumptions": [],
+  "steps": [],
+  "tests": [],
+  "reviewers": {
+    "semantic_source": [],
+    "formal_conformance": [],
+    "adversarial": [],
+    "integrator": []
+  },
+  "acceptance": [],
+  "commands": [],
+  "handoff_outputs": []
+}

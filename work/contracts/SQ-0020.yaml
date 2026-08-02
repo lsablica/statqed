@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0020","title":"Run independent foundation milestone review","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Independent reviewers reproduce, attack, and assess the entire foundation before statistical method work begins.",
+  "dependencies":["SQ-0019"],
+  "allowed_paths":["reviews/foundation/**","docs/exec-plans/active/0001-foundation-bootstrap.md","docs/quality/dashboard.md","docs/quality/**","work/backlog.yaml","work/status.yaml","rfcs/**","docs/adr/**"],
+  "forbidden_paths":["lean/StatQED/**/*.lean","backend/**/src/**","frontends/**/src/**","schemas/**/*.cddl"],
+  "public_changes":["foundation maturity decision"],
+  "steps":["Reproduce from clean machines","Review accepted semantics and TCB","Run malformed/resource/differential attacks","Audit all status/verification language","Check locks and archival/offline path","Review agent/task process evidence","File blocking and follow-up tasks","Complete retrospective and maturity decision"],
+  "tests":["Independent command transcript","tampering exercises","toolchain rebuild","review subject hashes","open issue reconciliation"],
+  "reviewers":{"semantic_source":["independent statistician"],"formal_conformance":["independent Lean/formal reviewer","independent interoperability reviewer"],"adversarial":["security reviewer","counterexample reviewer"],"integrator":["release/integration reviewer"]},
+  "acceptance":["No unaddressed soundness blocker","Limitations published","Randomization plan unblocked only by explicit decision","Outcome/retrospective complete"],
+  "commands":["make check","make list-work","python3 scripts/run_conformance.py"],"handoff_outputs":["Milestone review report","reproduction logs","follow-up DAG","maturity decision"]
+}

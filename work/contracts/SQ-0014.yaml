@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0014","title":"Bootstrap Python frontend package","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A typed Python package constructs the accepted toy IR and delegates canonicalization to the reference backend.",
+  "dependencies":["SQ-0001","SQ-0006"],
+  "allowed_paths":["frontends/python/**","generated/python/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],
+  "public_changes":["provisional Python package API for toy IR"],
+  "steps":["Create pyproject/src/tests layout","Pin supported Python from SQ-0002","Generate/shared structural models","Use explicit integer/Fraction/IEEE-bit types","Implement reference-backend bridge","Capture environment/provenance","Add type, unit, and packaging checks","Document unsupported semantics"],
+  "tests":["pytest","static type check","build/install wheel","toy fixture","numeric and missing-value boundaries","backend equality"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["Python frontend reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Typed package builds/installs","No implicit float/exact coercion","No Python-only normative meaning","Output matches shared fixture"],
+  "commands":["cd frontends/python && python -m pytest","cd frontends/python && python -m build","make check"],"handoff_outputs":["Package skeleton","test/type logs","toy example"]
+}

@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0004","title":"Bootstrap Rust reference workspace","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A pinned safe Rust workspace and thin CLI compile, lint, and test from a clean checkout.",
+  "dependencies":["SQ-0002"],
+  "allowed_paths":["backend/**",".github/workflows/rust.yml","docs/implementation/rust-backend.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
+  "forbidden_paths":["schemas/**","lean/**","frontends/**"],
+  "public_changes":[],
+  "steps":["Create minimal workspace/crates approved by ADR","Pin toolchain/MSRV","Forbid unsafe code","Add structured error and deterministic CLI skeleton","Add format/clippy/test/deny policies","Document platform/setup","Add CI"],
+  "tests":["cargo fmt --check","cargo clippy --all-targets --all-features -- -D warnings","cargo test --workspace","panic-free smoke on malformed CLI input"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["rust engineer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Clean reproducible build","No semantic schema invented","No unsafe code","Machine-readable stable error skeleton"],
+  "commands":["cd backend && cargo fmt --check","cd backend && cargo clippy --all-targets --all-features -- -D warnings","cd backend && cargo test --workspace","make check"],"handoff_outputs":["Workspace lock","test logs","security notes"]
+}

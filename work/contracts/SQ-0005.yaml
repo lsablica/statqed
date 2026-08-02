@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0005","title":"Prototype deterministic serialization","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Resolve the normative encoding RFC using independently reproduced canonicalization prototypes.",
+  "dependencies":["SQ-0002","SQ-0004"],
+  "allowed_paths":["schemas/prototypes/**","conformance/prototypes/**","docs/spec/canonicalization.md","docs/research/serialization/**","rfcs/0001-deterministic-encoding.md","docs/adr/0004-deterministic-cbor-cddl.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
+  "forbidden_paths":["schemas/v0/**","frontends/**","lean/StatQED/Artifact/**"],
+  "public_changes":["normative serialization decision"],
+  "steps":["Enumerate semantic value cases","Implement Rust prototype","Implement independent prototype in another language/library","Test ordering, Unicode, duplicate keys, numeric tags, IEEE bits, intervals, missingness, extensions","Document divergent behavior and security limits","Resolve RFC and ADR"],
+  "tests":["Byte-for-byte differential vectors","decode/re-encode idempotence","malformed and duplicate-key rejection","resource-bound tests"],
+  "reviewers":{"semantic_source":["interoperability reviewer"],"formal_conformance":["conformance-reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Two independent implementations agree","All ambiguities settled or explicitly excluded","RFC accepted before schema v0"],
+  "commands":["make check"],"handoff_outputs":["RFC","prototype code/logs","accepted vector catalogue"]
+}

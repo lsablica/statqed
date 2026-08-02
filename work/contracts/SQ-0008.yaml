@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0008","title":"Define minimal Lean claim and evidence types","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Reviewed minimal Lean interfaces distinguish claims, evidence, assumptions, randomness, and verification modes.",
+  "dependencies":["SQ-0001","SQ-0003"],
+  "allowed_paths":["lean/StatQED/Assurance/**","lean/StatQED/Guarantee/**","source-audits/core/**","docs/design/core-beliefs.md","docs/design/randomness-scopes.md","docs/glossary.md","theorem-registry/core/**","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["lean/StatQED/Methods/**","backend/**","frontends/**"],
+  "public_changes":["core Lean types"],
+  "steps":["Draft source-grounded interfaces","Provide examples/nonexamples","Audit external-vs-formal evidence","Review quantifier/randomness representation","Freeze public signatures","Implement and document"],
+  "tests":["Lean examples compile","nonexamples rejected where type-level","statement hash locks","axiom report"],
+  "reviewers":{"semantic_source":["ontology-architect","hypothesis-auditor"],"formal_conformance":["lean reviewer","mathlib-scout"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["No evidence category conflation","External assumptions cannot be constructed as kernel proof accidentally","No overgeneralized experiment design"],
+  "commands":["cd lean && lake build","python3 scripts/check_lean_trust.py","make check"],"handoff_outputs":["Frozen signatures","source/review records","examples"]
+}

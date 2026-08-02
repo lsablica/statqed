@@ -1,0 +1,18 @@
+{
+  "theorem_id": "statqed.domain.result.variant",
+  "version": 1,
+  "maturity": "Draft",
+  "lean_declaration": "",
+  "statement_hash": "",
+  "claim_class": "",
+  "randomness_scopes": [],
+  "quantifier_profile": {},
+  "assumptions": [],
+  "conclusion": {},
+  "sources": [],
+  "reviews": {},
+  "nonvacuity_examples": [],
+  "ablation_tests": [],
+  "compatibility": [],
+  "citations": []
+}

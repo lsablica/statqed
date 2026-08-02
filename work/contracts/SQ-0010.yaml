@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0010","title":"Define safe artifact envelope","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A deterministic bounded `.statqed` envelope is specified with hostile-input fixtures and exact failure behavior.",
+  "dependencies":["SQ-0006","SQ-0009"],
+  "allowed_paths":["schemas/artifact/**","conformance/artifact/**","docs/spec/artifact.md","docs/spec/provenance.md","docs/quality/trust-report-template.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["backend/src/**","lean/StatQED/Artifact/**","frontends/**"],
+  "public_changes":["artifact envelope v0"],
+  "steps":["Define required entries and manifest","Specify deterministic archive order/metadata","Set size/count/depth limits","Separate normative and report files","Define digest coverage and critical features","Create traversal/duplicate/oversize/truncation/unknown fixtures","Review offline archival behavior"],
+  "tests":["Schema validation","path traversal rejection","duplicate entry rejection","resource limits","digest mismatch","non-normative report isolation"],
+  "reviewers":{"semantic_source":["interoperability reviewer"],"formal_conformance":["conformance reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["No bundled code execution path","All limits explicit","Artifact can be verified offline","Report cannot influence normative result"],
+  "commands":["make check"],"handoff_outputs":["Envelope spec","fixture manifest","security review"]
+}

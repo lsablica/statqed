@@ -1,0 +1,42 @@
+name: Bug report
+description: Report an implementation, artifact, conformance, documentation, or verifier defect.
+title: "[BUG] "
+labels: []
+body:
+  - type: dropdown
+    id: class
+    attributes:
+      label: Defect class
+      options:
+        - Semantic/statistical
+        - Formal/proof
+        - Numerical/certificate
+        - Schema/canonicalization
+        - Artifact/verifier
+        - Frontend
+        - Documentation
+        - Security-sensitive (do not disclose exploit here)
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Exact version/commit/toolchain
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Which claim or assurance status could be affected?

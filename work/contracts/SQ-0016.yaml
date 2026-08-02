@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0016","title":"Build cross-language conformance harness","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Rust, R, Python, and Julia implementations are compared against reviewed semantic fixtures and produce identical accepted results.",
+  "dependencies":["SQ-0011","SQ-0013","SQ-0014","SQ-0015"],
+  "allowed_paths":["conformance/**","scripts/run_conformance.py","generated/**","docs/implementation/frontend-conformance.md","docs/quality/test-strategy.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["schemas/**/*.cddl","docs/design/**","lean/StatQED/Assurance/**"],
+  "public_changes":["conformance protocol v0"],
+  "steps":["Define fixture manifest and expected semantics","Implement language runners","Normalize only non-normative diagnostics","Compare canonical bytes/digests and error classes","Add boundary/malformed/differential cases","Record tool versions and minimized failures","Prevent automatic golden updates"],
+  "tests":["all implementations on all fixtures","deliberate divergent implementation detected","runner reproducibility","missing tool/report behavior"],
+  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["conformance-reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["Accepted objects byte-identical","Rejected objects agree on failure class","Golden vectors have independent semantic approval","Failure output is actionable"],
+  "commands":["python3 scripts/run_conformance.py","make check"],"handoff_outputs":["Fixture manifest","comparison report","minimized divergence corpus"]
+}

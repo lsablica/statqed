@@ -1,0 +1,16 @@
+{
+  "experiment_id": "EXP-XXXX",
+  "research_question": "",
+  "hypotheses": [],
+  "agents_models_tools": [],
+  "task_sample": [],
+  "controls": [],
+  "metrics": [],
+  "protocol": [],
+  "raw_outputs": [],
+  "analysis_plan": "",
+  "results": [],
+  "failures": [],
+  "limitations": [],
+  "reproduction": []
+}

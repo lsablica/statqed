@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0001","title":"Ratify constitutional baseline","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Every foundational semantic/architectural choice is accepted, explicitly deferred, or represented by a blocking RFC/task.",
+  "dependencies":[],
+  "allowed_paths":["CHARTER.md","ARCHITECTURE.md","README.md","ROADMAP.md","GOVERNANCE.md","docs/adr/**","docs/design/**","docs/governance/**","docs/spec/**","rfcs/**","work/status.yaml","work/backlog.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["lean/**/*.lean","backend/**/*.rs","frontends/**/src/**"],
+  "public_changes":["mission","non-goals","ontology boundaries","TCB","monorepo","naming","encoding direction","first vertical slice"],
+  "steps":["Review all constitutional docs for contradictions","Research current package/name and ecosystem constraints","Run statistical, formal, interoperability, and security review","Open RFCs for unresolved choices","Mark ADR status/date/reviewers","Update dependency tasks and plan decision log"],
+  "tests":["Repository link/ledger checks","Terminology consistency search","Reviewer checklist","No planned feature described as implemented"],
+  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["formal-methods reviewer","interoperability reviewer"],"adversarial":["counterexample-reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["No unresolved choice is silently assumed","Initial ready-set remains valid","Accepted status is evidence-backed","make check passes"],
+  "commands":["make check","make list-work"],"handoff_outputs":["Accepted ADR/RFC list","decision log","updated status"]
+}

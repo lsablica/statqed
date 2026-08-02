@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0007","title":"Create theorem registry and lock v0","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A toy Lean theorem has a stable registry ID, normalized statement hash, lock, and deterministic resolver.",
+  "dependencies":["SQ-0003","SQ-0006"],
+  "allowed_paths":["theorem-registry/**","schemas/registry/**","lean/StatQED/Registry/**","backend/crates/statqed-registry/**","docs/design/theorem-registry.md","docs/spec/theorem-lock.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["lean/StatQED/Experiment/**","methods/**","frontends/**"],
+  "public_changes":["theorem ID and statement normalization v0"],
+  "steps":["Define toy theorem and controlled metadata","Specify normalization algorithm","Hash statement independently","Implement lock schema and Rust resolver","Reject name-only and wrong-direction substitutions","Add compatibility toy examples"],
+  "tests":["Proof-body refactor preserves hash","Statement change changes hash","Missing/wrong lock fails","resolver deterministic"],
+  "reviewers":{"semantic_source":["source curator"],"formal_conformance":["lean reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["ID/version/hash semantics documented","Resolver cannot silently substitute meaning","Toy lock resolves offline"],
+  "commands":["cd lean && lake build","cd backend && cargo test --workspace","make check"],"handoff_outputs":["Toy registry entry","statement hash vectors","lock fixture"]
+}

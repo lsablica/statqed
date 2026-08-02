@@ -1,0 +1,33 @@
+name: Theorem formalization
+description: Propose a source-aligned public statistical theorem.
+title: "[THEOREM] "
+labels: []
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Primary source and exact locator
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Controlled informal statement
+    validations:
+      required: true
+  - type: textarea
+    id: hypotheses
+    attributes:
+      label: Hypotheses, randomness scopes, and quantifiers
+    validations:
+      required: true
+  - type: textarea
+    id: use
+    attributes:
+      label: Intended method pack and concrete claim
+    validations:
+      required: true
+  - type: textarea
+    id: counterexamples
+    attributes:
+      label: Known boundary cases or counterexamples

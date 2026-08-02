@@ -1,0 +1,12 @@
+{
+  "id":"SQ-0011","title":"Implement Rust canonical backend v0","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Rust parses, validates, canonically encodes, hashes, and inspects the toy IR with bounded deterministic behavior.",
+  "dependencies":["SQ-0004","SQ-0006"],
+  "allowed_paths":["backend/**","conformance/golden/**","docs/implementation/rust-backend.md","docs/implementation/schema-development.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "forbidden_paths":["schemas/**/*.cddl","docs/design/**","lean/**","frontends/**"],
+  "public_changes":["Rust reference API/CLI for accepted schema v0"],
+  "steps":["Generate or hand-map accepted schema types with traceable provenance","Implement strict decoder and validators","Implement canonical encoder and digests","Define stable machine-readable error taxonomy","Add inspect/validate/canonicalize CLI commands","Add property/differential/resource tests","Document non-authority of Rust semantics"],
+  "tests":["cargo fmt/clippy/test","golden byte/digest vectors","all negative fixtures","decode-encode idempotence","no panic under malformed corpus","bounded allocation/depth"],
+  "reviewers":{"semantic_source":[],"formal_conformance":["conformance-reviewer","rust reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
+  "acceptance":["All accepted vectors match","All rejected vectors have stable failure class","No network or code execution","No schema drift"],
+  "commands":["cd backend && cargo fmt --check","cd backend && cargo clippy --all-targets --all-features -- -D warnings","cd backend && cargo test --workspace","make check"],"handoff_outputs":["CLI/API docs","test logs","fuzz corpus seed"]
+}
