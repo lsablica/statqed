@@ -6,6 +6,10 @@ on:
       - main
     paths:
       - bootstrap_scaffold.py
+  issues:
+    types:
+      - opened
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -28,7 +32,12 @@ jobs:
         with:
           python-version: "3.13"
       - name: Materialize validated scaffold
-        run: python bootstrap_scaffold.py
+        run: |
+          if [[ -f bootstrap_scaffold.py ]]; then
+            python bootstrap_scaffold.py
+          else
+            echo "Scaffold is already materialized."
+          fi
       - name: Verify scaffold
         run: make check
       - name: Commit generated repository tree
