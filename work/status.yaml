@@ -5,10 +5,11 @@
   "in_progress": [],
   "blocked_count": 59,
   "done": [],
-  "last_integrated_commit": "",
+  "last_integrated_commit": "605f70e872d7bf44278e037667e72dc6cc704d31",
   "last_updated": "2026-08-02",
   "notes": [
-    "Repository architecture and agent scaffold installed.",
+    "Repository architecture and agent scaffold installed in commit 605f70e872d7bf44278e037667e72dc6cc704d31.",
+    "The permanent scaffold contains 203 files; temporary bootstrap transport was removed.",
     "No statistical method or executable verifier is implemented yet.",
     "SQ-0001 must ratify provisional ADRs before toolchain bootstrap."
   ]
