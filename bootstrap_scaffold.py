@@ -16,6 +16,7 @@ EXPECTED_FILE_COUNT = 226
 EXPECTED_PAYLOAD_SHA256 = "718d7bc932d97d83dc50747b2bb0958d84780695fda0b8eed8bac6e26d897631"
 EXPECTED_DECODED_SHA256 = "9768d6233e0348231e1db8fc9f0cb935c7e0a16392982b7b7c5c23390d49296f"
 
+# This edit intentionally retriggers the one-shot materialization workflow.
 # Each staged chunk is validated independently. A GitHub connector edge case dropped
 # the first Base64 character from some chunks, so the sole permitted repair is to
 # restore that known character and then require the original SHA-256 digest.
