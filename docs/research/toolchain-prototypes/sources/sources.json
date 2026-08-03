@@ -1,0 +1,462 @@
+[
+  {
+    "id": "lean-release-v4.32.2",
+    "title": "Lean v4.32.2 standalone release",
+    "url": "https://github.com/leanprover/lean4/releases/tag/v4.32.2",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Lean project official GitHub release",
+    "license": "Apache-2.0 (Lean source repository)",
+    "maintenance_security": "Latest standalone stable observed; approximately monthly release cadence, with no strong backwards-compatibility guarantee.",
+    "notes": "Released 2026-07-28; full tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. No matching stable Mathlib v4.32.2 release was listed at cutoff."
+  },
+  {
+    "id": "lean-release-v4.32.1-matched",
+    "title": "Lean v4.32.1 matched release",
+    "url": "https://github.com/leanprover/lean4/releases/tag/v4.32.1",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Lean project official GitHub release",
+    "license": "Apache-2.0",
+    "maintenance_security": "Latest Lean release with a matching stable Mathlib tag observed.",
+    "notes": "Released 2026-07-22; full tag commit f054605aea4b840552cca2e725580bffd1e1b704."
+  },
+  {
+    "id": "mathlib-release-v4.32.1",
+    "title": "Mathlib v4.32.1 release",
+    "url": "https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.1",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Mathlib official GitHub release",
+    "license": "Apache-2.0",
+    "maintenance_security": "Latest stable Mathlib release observed.",
+    "notes": "Released 2026-07-23; full tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6. Tagged lean-toolchain is leanprover/lean4:v4.32.1."
+  },
+  {
+    "id": "mathlib-v4.32.1-toolchain",
+    "title": "Mathlib v4.32.1 lean-toolchain",
+    "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.1/lean-toolchain",
+    "retrieved_at": "2026-08-03T14:09:00+02:00",
+    "authority": "Mathlib immutable tagged source file",
+    "license": "Apache-2.0 repository",
+    "maintenance_security": "Immutable content at the stable Mathlib tag.",
+    "notes": "Exact content: leanprover/lean4:v4.32.1. This is the decisive matching-pair locator."
+  },
+  {
+    "id": "lean-release-policy",
+    "title": "Lean 4 release policy",
+    "url": "https://github.com/leanprover/lean4/blob/master/RELEASES.md",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Lean project policy",
+    "license": "Apache-2.0 repository",
+    "maintenance_security": "Approximately monthly minor releases; breaking changes remain possible.",
+    "notes": "Mutable master document; use only as policy evidence, not a frozen release artifact."
+  },
+  {
+    "id": "lean-lake-reference",
+    "title": "Lean Language Reference: Lake",
+    "url": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Lake/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Lean language reference",
+    "license": "Documentation; Lean source is Apache-2.0",
+    "maintenance_security": "Latest documentation is mutable with Lean releases.",
+    "notes": "Lake is the standard build tool; configuration plus manifest fixes transitive dependency versions; manifest should normally be committed."
+  },
+  {
+    "id": "lean-elan-reference",
+    "title": "Managing Toolchains with Elan",
+    "url": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Managing-Toolchains-with-Elan/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Lean language reference",
+    "license": "Documentation; Lean source is Apache-2.0",
+    "maintenance_security": "Latest documentation is mutable.",
+    "notes": "Recommends a specific toolchain version in a version-controlled lean-toolchain file."
+  },
+  {
+    "id": "rust-release-1.97.1",
+    "title": "Announcing Rust 1.97.1",
+    "url": "https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Rust project official release announcement",
+    "license": "Rust repository is MIT OR Apache-2.0; portions have other compatible notices",
+    "maintenance_security": "Current stable observed; point release fixes an LLVM miscompilation present since at least 1.87.",
+    "notes": "Use 1.97.1 rather than 1.97.0 for the development baseline observation."
+  },
+  {
+    "id": "cargo-rust-version-policy",
+    "title": "Cargo rust-version field",
+    "url": "https://doc.rust-lang.org/stable/cargo/reference/rust-version.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Cargo reference",
+    "license": "Rust documentation under repository licensing",
+    "maintenance_security": "Rust upstream provides fixes only for the latest Rust release; downstream MSRV policies are project choices.",
+    "notes": "rust-version is respected since 1.56 but can be bypassed with --ignore-rust-version."
+  },
+  {
+    "id": "rust-platform-support",
+    "title": "Rust platform support",
+    "url": "https://forge.rust-lang.org/release/platform-support.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Rust Forge policy",
+    "license": "Rust documentation under repository licensing",
+    "maintenance_security": "Target tiers are maintained upstream but may change.",
+    "notes": "Tier status applies to Rust itself, not automatically to this workspace or native dependencies."
+  },
+  {
+    "id": "rustsec-home",
+    "title": "RustSec Advisory Database",
+    "url": "https://rustsec.org/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Rust Secure Code Working Group ecosystem resource",
+    "license": "CC0 advisory database; tools have their own licenses",
+    "maintenance_security": "Active crate-advisory database used by cargo-audit/cargo-deny.",
+    "notes": "Crate ecosystem evidence; not the release authority for rustc or Cargo."
+  },
+  {
+    "id": "python-release-v3.14.6",
+    "title": "CPython v3.14.6 release",
+    "url": "https://github.com/python/cpython/releases/tag/v3.14.6",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "CPython official GitHub release",
+    "license": "PSF License v2",
+    "maintenance_security": "Current stable observed; 3.14.7 was only scheduled for 2026-08-04 at cutoff.",
+    "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45."
+  },
+  {
+    "id": "python-supported-versions",
+    "title": "CPython supported versions",
+    "url": "https://devguide.python.org/versions/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Python Developer's Guide",
+    "license": "Python documentation licensing",
+    "maintenance_security": "As of 2026-05-27: 3.14/3.13 bugfix; 3.12/3.11/3.10 security; 3.9 EOL.",
+    "notes": "Security phase is generally source-only; do not promise regular platform binaries."
+  },
+  {
+    "id": "python-pyproject-guide",
+    "title": "Writing pyproject.toml",
+    "url": "https://packaging.python.org/en/latest/guides/writing-pyproject-toml/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Python Packaging Authority official guide",
+    "license": "PyPA documentation licensing",
+    "maintenance_security": "Actively maintained packaging guide.",
+    "notes": "requires-python declares the supported interpreter constraint but is not a test record."
+  },
+  {
+    "id": "python-packaging-flow",
+    "title": "Python packaging flow",
+    "url": "https://packaging.python.org/en/latest/flow/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Python Packaging Authority official guide",
+    "license": "PyPA documentation licensing",
+    "maintenance_security": "Actively maintained packaging guide.",
+    "notes": "Documents pyproject.toml, source distribution, and wheel flow."
+  },
+  {
+    "id": "python-security-policy",
+    "title": "Python security policy",
+    "url": "https://devguide.python.org/security/policy/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Python Developer's Guide",
+    "license": "Python documentation licensing",
+    "maintenance_security": "Security reports accepted for bugfix/security branches; security updates span five years and are irregular.",
+    "notes": "Policy evidence only; consult release artifacts for actual fixes/binaries."
+  },
+  {
+    "id": "r-release-4.6.1",
+    "title": "R developer release status",
+    "url": "https://developer.r-project.org/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "R Core official developer site",
+    "license": "R distribution is GPL-2 | GPL-3",
+    "maintenance_security": "R 4.6.1 released 2026-06-24; annual x.y.0 cadence and as-needed patches; no fixed multi-version horizon stated.",
+    "notes": "Currentness is date-scoped."
+  },
+  {
+    "id": "r-writing-extensions-4.6.1",
+    "title": "Writing R Extensions for R 4.6.1",
+    "url": "https://cran.r-project.org/doc/manuals/r-release/R-exts.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "R Core official manual",
+    "license": "Manual copying terms stated in the document; R distribution is GPL-2 | GPL-3",
+    "maintenance_security": "Manual for the current R release.",
+    "notes": "Exact anchors: §1.1.5 tests, §1.3 R CMD check/build, and DESCRIPTION dependency fields."
+  },
+  {
+    "id": "cran-policy-r6875",
+    "title": "CRAN Repository Policy revision 6875",
+    "url": "https://cran.r-project.org/web/packages/policies.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "CRAN Repository Maintainers official policy",
+    "license": "Policy text; package licenses remain package-specific",
+    "maintenance_security": "CRAN is volunteer-maintained and may archive packages that fail current R checks.",
+    "notes": "Normally expects portability to at least two major R platforms; policy is not package test evidence."
+  },
+  {
+    "id": "r-devel-news",
+    "title": "R-devel daily news",
+    "url": "https://developer.r-project.org/blosxom.cgi/R-devel",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "R Core official development feed",
+    "license": "R distribution is GPL-2 | GPL-3",
+    "maintenance_security": "Records fixes after the 4.6.1 release on patched/development branches.",
+    "notes": "Do not silently substitute R-patched for the 4.6.1 release artifact."
+  },
+  {
+    "id": "r-sdlc-2026",
+    "title": "R Software Development Life Cycle",
+    "url": "https://www.r-project.org/doc/R-SDLC.pdf",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "R Foundation official document",
+    "license": "R distribution is GPL",
+    "maintenance_security": "March 12, 2026 document; scope is R Base plus Recommended packages.",
+    "notes": "Does not extend its assurances to arbitrary CRAN packages."
+  },
+  {
+    "id": "julia-support-policy",
+    "title": "Julia support tiers and release support",
+    "url": "https://julialang.org/downloads/support/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Julia project official site",
+    "license": "Julia source is MIT; binary aggregation may be GPL due to dependencies",
+    "maintenance_security": "Only Stable 1.12.6 and LTS 1.10.11 maintained at cutoff; platform tiers documented.",
+    "notes": "Tier status is for Julia itself, not automatic package compatibility."
+  },
+  {
+    "id": "julia-release-v1.12.6",
+    "title": "Julia v1.12.6 release",
+    "url": "https://github.com/JuliaLang/julia/releases/tag/v1.12.6",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Julia project official GitHub release",
+    "license": "MIT source repository",
+    "maintenance_security": "Current stable observed.",
+    "notes": "Immutable signed release; short commit 1534690; official downloads page dates it 2026-04-09."
+  },
+  {
+    "id": "julia-release-v1.10.11",
+    "title": "Julia v1.10.11 release",
+    "url": "https://github.com/JuliaLang/julia/releases/tag/v1.10.11",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Julia project official GitHub release",
+    "license": "MIT source repository",
+    "maintenance_security": "Current LTS observed.",
+    "notes": "Immutable signed release; short commit a2b1190."
+  },
+  {
+    "id": "julia-pkg-toml",
+    "title": "Pkg Project.toml and Manifest.toml",
+    "url": "https://pkgdocs.julialang.org/v1/toml-files/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Julia Pkg official documentation",
+    "license": "Pkg repository license applies",
+    "maintenance_security": "Versioned v1 documentation.",
+    "notes": "Project compat constraints and exact Manifest resolution are distinct."
+  },
+  {
+    "id": "julia-pkg-registries",
+    "title": "Pkg registries",
+    "url": "https://pkgdocs.julialang.org/v1/registries/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Julia Pkg official documentation",
+    "license": "Pkg repository license applies",
+    "maintenance_security": "General registry offers conservative and eager flavors.",
+    "notes": "Conservative is recommended; eager packages may require external artifact downloads."
+  },
+  {
+    "id": "julia-distribution-license",
+    "title": "Distributing Julia",
+    "url": "https://docs.julialang.org/en/v1/devdocs/build/distributing/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Julia documentation",
+    "license": "Julia source MIT; produced distributions usually GPL due to bundled dependencies such as SuiteSparse",
+    "maintenance_security": "Versioned v1 documentation.",
+    "notes": "Do not flatten source license and aggregate binary-distribution obligations."
+  },
+  {
+    "id": "julia-security-wg-2025",
+    "title": "Launching the Julia Security Working Group",
+    "url": "https://julialang.org/blog/2025/11/launching-security-wg/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official Julia project blog",
+    "license": "Julia website terms",
+    "maintenance_security": "Security advisory database, SBOM, and scanning governance described as emerging work.",
+    "notes": "Evidence of active effort, not a mature formal core SECURITY policy."
+  },
+  {
+    "id": "arrow-release-25.0.0",
+    "title": "Apache Arrow 25.0.0 release",
+    "url": "https://arrow.apache.org/release/25.0.0.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Apache Arrow official release page",
+    "license": "Apache-2.0 with component-specific third-party notices",
+    "maintenance_security": "Current release observed, dated 2026-07-10.",
+    "notes": "Immutable GitHub release tag apache-arrow-25.0.0 has short commit 59bea6e."
+  },
+  {
+    "id": "arrow-format-versioning",
+    "title": "Arrow format and library versioning",
+    "url": "https://arrow.apache.org/docs/format/Versioning.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Apache Arrow official format documentation",
+    "license": "Apache-2.0 documentation/source",
+    "maintenance_security": "Format compatibility is specified separately from library semantic versions.",
+    "notes": "Do not use library 25.0.0 as the Arrow format version."
+  },
+  {
+    "id": "arrow-implementation-status-v25",
+    "title": "Arrow implementation status",
+    "url": "https://arrow.apache.org/docs/status.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Apache Arrow official v25 documentation",
+    "license": "Apache-2.0 documentation/source",
+    "maintenance_security": "Coverage table for official implementations.",
+    "notes": "Rust and Julia coverage differs; Julia lacks several types/interfaces and Parquet in this table."
+  },
+  {
+    "id": "arrow-format-security",
+    "title": "Arrow security considerations",
+    "url": "https://arrow.apache.org/docs/format/Security.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Apache Arrow official format documentation",
+    "license": "Apache-2.0 documentation/source",
+    "maintenance_security": "Warns that invalid/untrusted data may crash or leak and recommends explicit validation.",
+    "notes": "C Data Interface must not be consumed from an untrusted producer."
+  },
+  {
+    "id": "arrow-security-reporting",
+    "title": "Apache Arrow security reporting",
+    "url": "https://arrow.apache.org/security/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Apache Arrow official security page",
+    "license": "Apache-2.0 project",
+    "maintenance_security": "Routes vulnerability reports and advisories through Apache Security.",
+    "notes": "Use this rather than GitHub's empty repository-advisory snapshot as the authoritative route."
+  },
+  {
+    "id": "rfc8949-cbor",
+    "title": "RFC 8949: Concise Binary Object Representation",
+    "url": "https://www.rfc-editor.org/rfc/rfc8949.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "RFC Editor; Internet Standard STD 94",
+    "license": "IETF Trust legal provisions for standards text",
+    "maintenance_security": "Current CBOR standard; errata checked separately.",
+    "notes": "§4.2.1 core deterministic and §4.2.3 length-first are conflicting byte-order profiles."
+  },
+  {
+    "id": "rfc8610-cddl",
+    "title": "RFC 8610: Concise Data Definition Language",
+    "url": "https://www.rfc-editor.org/rfc/rfc8610.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "RFC Editor; IETF Proposed Standard",
+    "license": "IETF Trust legal provisions for standards text",
+    "maintenance_security": "Updated by RFC 9682.",
+    "notes": "Schema language; does not choose deterministic CBOR serialization bytes."
+  },
+  {
+    "id": "rfc9682-cddl-more-control",
+    "title": "RFC 9682: More Control Operators for CDDL",
+    "url": "https://www.rfc-editor.org/rfc/rfc9682.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "RFC Editor; IETF Proposed Standard",
+    "license": "IETF Trust legal provisions for standards text",
+    "maintenance_security": "Published standards update to RFC 8610.",
+    "notes": "Distinguish from implemented Internet-Draft extensions."
+  },
+  {
+    "id": "cddl-modules-draft-06",
+    "title": "draft-ietf-cbor-cddl-modules-06",
+    "url": "https://datatracker.ietf.org/doc/draft-ietf-cbor-cddl-modules/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "IETF Datatracker Internet-Draft",
+    "license": "IETF Trust legal provisions",
+    "maintenance_security": "Active draft as of March 2026; not an RFC or accepted standard.",
+    "notes": "Any use must remain Experimental and version-pinned."
+  },
+  {
+    "id": "ciborium-0.2.2",
+    "title": "ciborium 0.2.2",
+    "url": "https://docs.rs/ciborium/0.2.2/ciborium/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "docs.rs build of the published Rust crate",
+    "license": "Apache-2.0",
+    "maintenance_security": "Repository activity observed in 2026; release remains 0.2.2.",
+    "notes": "Shortest lossless numeric encodings; map Value preserves wire order."
+  },
+  {
+    "id": "ciborium-canonical-source-0.2.2",
+    "title": "ciborium CanonicalValue source",
+    "url": "https://docs.rs/ciborium/latest/src/ciborium/value/canonical.rs.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "docs.rs source for published crate",
+    "license": "Apache-2.0",
+    "maintenance_security": "Implementation evidence at published release.",
+    "notes": "Explicitly implements RFC 8949 §4.2.3 length-first ordering, not §4.2.1 core deterministic ordering."
+  },
+  {
+    "id": "minicbor-2.3.0",
+    "title": "minicbor 2.3.0",
+    "url": "https://docs.rs/crate/minicbor/2.3.0",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "docs.rs build of the published Rust crate",
+    "license": "BlueOak-1.0.0",
+    "maintenance_security": "Released 2026-07-23; actively maintained.",
+    "notes": "Low-level encoder permits indefinite items; no matching deterministic profile was established from docs."
+  },
+  {
+    "id": "serde-cbor-archived",
+    "title": "serde_cbor archived repository",
+    "url": "https://github.com/pyfisch/cbor",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Original project repository",
+    "license": "MIT OR Apache-2.0",
+    "maintenance_security": "Archived 2021-08-15; README says no maintainer.",
+    "notes": "Rejected maintenance-state candidate; README recommends ciborium or minicbor."
+  },
+  {
+    "id": "rust-cddl-0.10.6",
+    "title": "cddl 0.10.6",
+    "url": "https://docs.rs/crate/cddl/0.10.6",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "docs.rs build of the published Rust crate",
+    "license": "MIT",
+    "maintenance_security": "Released 2026-06-29; package metadata marks actively developed; MSRV 1.88.",
+    "notes": "Supports RFCs and drafts; feature set must be pinned, and documented validation limitations preserved."
+  },
+  {
+    "id": "python-cbor2-6.1.3",
+    "title": "cbor2 6.1.3",
+    "url": "https://pypi.org/project/cbor2/6.1.3/",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "PyPI project registry release metadata",
+    "license": "MIT",
+    "maintenance_security": "Released 2026-07-04; Python >=3.10; recent releases fix CVE-2026-26209 and malformed-input issues.",
+    "notes": "sdist SHA256 8d70680acb55c04ea5b5ad86da094f9612b53d5a8a65d0f5b3aafc3ce917ecbb; Trusted Publishing."
+  },
+  {
+    "id": "python-cbor2-api-6.1.3",
+    "title": "cbor2 API documentation",
+    "url": "https://cbor2.readthedocs.io/en/stable/api.html",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official project documentation",
+    "license": "MIT project",
+    "maintenance_security": "Current documentation; project states it has not been tested against malicious input.",
+    "notes": "canonical=True does not name RFC 8949 §4.2.1 versus §4.2.3; duplicate/indefinite/depth policy needs explicit configuration and tests."
+  },
+  {
+    "id": "github-hosted-runners-reference",
+    "title": "GitHub-hosted runners reference",
+    "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official GitHub Actions documentation",
+    "license": "GitHub documentation terms",
+    "maintenance_security": "Runner availability and labels are service state and change over time.",
+    "notes": "latest means latest stable image GitHub provides, not necessarily the OS vendor's latest release."
+  },
+  {
+    "id": "github-runner-images-observation",
+    "title": "GitHub Actions runner images",
+    "url": "https://github.com/actions/runner-images",
+    "retrieved_at": "2026-08-03T13:52:14+02:00",
+    "authority": "Official GitHub Actions runner-images repository",
+    "license": "MIT",
+    "maintenance_security": "Typically weekly image updates; latest-label migrations take one to two months; main latest visible commit 931efbf dated 2026-07-30.",
+    "notes": "Observed latest mapping: Ubuntu 24.04 x64, Windows Server 2025 x64, macOS 26 arm64. Capture actual image version from each job's Set up job log."
+  }
+]

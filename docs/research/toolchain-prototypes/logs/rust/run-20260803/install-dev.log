@@ -1,0 +1,11 @@
+timestamp_start=2026-08-03T11:54:08+00:00
+timestamp_end=2026-08-03T11:54:08+00:00
+cwd=/tmp/statqed-preflight-9bf9922
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=env CARGO_HOME=/home/lukas/.cargo /home/lukas/.cargo/bin/rustup toolchain install 1.97.1 --profile minimal --component clippy --component rustfmt 
+stdout_path=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/../logs/rust/run-20260803/install-dev.stdout
+stderr_path=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/../logs/rust/run-20260803/install-dev.stderr
+exit_code=0

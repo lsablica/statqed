@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/tmp/statqed-sq0002-python/supported-3-14-6/builder/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "-r",
+    "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock"
+  ],
+  "cwd": "docs/research/toolchain-prototypes/python",
+  "ended_at": "2026-08-03T15:11:13+02:00",
+  "environment_variables": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PIP_CACHE_DIR": "/tmp/statqed-sq0002-python-pip-cache",
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+    "PIP_FIND_LINKS": "/tmp/statqed-sq0002-python-wheelhouse",
+    "PIP_NO_INDEX": "1",
+    "PIP_NO_INPUT": "1",
+    "PYTHONHASHSEED": "0",
+    "UV_CACHE_DIR": "/tmp/statqed-sq0002-python-cache",
+    "UV_PYTHON_DOWNLOADS": "manual",
+    "UV_PYTHON_INSTALL_DIR": "/tmp/statqed-sq0002-python-runtimes"
+  },
+  "exit_status": 0,
+  "expected_exit_statuses": [
+    0
+  ],
+  "name": "development-3-14-6-locked-tools-install",
+  "started_at": "2026-08-03T15:11:11+02:00"
+}

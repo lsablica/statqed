@@ -1,0 +1,48 @@
+R version 4.4.3 (2025-02-28) 
+platform: x86_64-conda-linux-gnu 
+testthat: 3.2.3 
+$Package
+[1] "testthat"
+
+$Version
+[1] "3.2.3"
+
+$License
+[1] "MIT + file LICENSE"
+
+$URL
+[1] "https://testthat.r-lib.org, https://github.com/r-lib/testthat"
+
+$BugReports
+[1] "https://github.com/r-lib/testthat/issues"
+
+$Repository
+[1] "CRAN"
+
+$`Date/Publication`
+[1] "2025-01-13 11:20:03 UTC"
+
+$Built
+[1] "R 4.4.3; x86_64-conda-linux-gnu; 2025-09-10 16:06:09 UTC; unix"
+
+R version 4.4.3 (2025-02-28)
+Platform: x86_64-conda-linux-gnu
+Running under: Ubuntu 24.04.4 LTS
+
+Matrix products: default
+BLAS/LAPACK: /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib/libopenblasp-r0.3.33.so;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+ [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+ [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+
+time zone: UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_4.4.3

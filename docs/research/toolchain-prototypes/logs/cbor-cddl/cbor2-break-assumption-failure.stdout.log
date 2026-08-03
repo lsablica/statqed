@@ -1,0 +1,8 @@
+Using CPython 3.12.3 interpreter at: /usr/bin/python3
+Creating virtual environment at: /tmp/statqed-sq0002-cbor-cddl.aoG5Lr/venv
+Activate with: source /tmp/statqed-sq0002-cbor-cddl.aoG5Lr/venv/bin/activate
+Using Python 3.12.3 environment at: /tmp/statqed-sq0002-cbor-cddl.aoG5Lr/venv
+Resolved 1 package in 220ms
+Prepared 1 package in 53ms
+Installed 1 package in 2ms
+ + cbor2==6.1.3

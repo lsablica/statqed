@@ -1,0 +1,33 @@
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--version"]
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using InteractiveUtils; versioninfo(verbose=true); println(\"Sys.MACHINE=\", Sys.MACHINE); println(\"Sys.KERNEL=\", Sys.KERNEL)"]
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using Pkg; Pkg.resolve()"]
+    Updating `/tmp/statqed-julia-1.10.11-5iv2181g/project/Project.toml`
+  [ea8e919c] ~ SHA ⇒ v0.7.0
+    Updating `/tmp/statqed-julia-1.10.11-5iv2181g/project/Manifest.toml`
+  [ea8e919c] + SHA v0.7.0
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using Pkg; Pkg.instantiate(; verbose=true, update_registry=false)"]
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using Pkg; Pkg.precompile(; strict=true)"]
+Precompiling packages...
+    446.6 ms  ✓ StatQEDProbe
+  1 dependency successfully precompiled in 1 seconds
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using Pkg; Pkg.test(; coverage=false)"]
+     Testing StatQEDProbe
+      Status `/tmp/jl_d4GdP9/Project.toml`
+  [a5ce49cd] StatQEDProbe v0.0.0 `/tmp/statqed-julia-1.10.11-5iv2181g/project`
+  [ea8e919c] SHA v0.7.0
+  [8dfed614] Test
+      Status `/tmp/jl_d4GdP9/Manifest.toml`
+  [a5ce49cd] StatQEDProbe v0.0.0 `/tmp/statqed-julia-1.10.11-5iv2181g/project`
+  [2a0f44e3] Base64
+  [b77e0a4c] InteractiveUtils
+  [56ddb016] Logging
+  [d6f4376e] Markdown
+  [9a3f8284] Random
+  [ea8e919c] SHA v0.7.0
+  [9e88b42a] Serialization
+  [8dfed614] Test
+     Testing Running tests...
+Test Summary:                 | Pass  Total  Time
+StatQED Julia toolchain probe |    5      5  0.1s
+     Testing StatQEDProbe tests passed 
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project", "-e", "using Pkg; Pkg.status(; mode=Pkg.PKGMODE_PROJECT); Pkg.status(; mode=Pkg.PKGMODE_MANIFEST)"]

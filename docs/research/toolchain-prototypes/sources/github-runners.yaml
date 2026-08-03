@@ -1,0 +1,35 @@
+{
+  "audit_id": "SA-SQ0002-GITHUB-RUNNERS",
+  "subject": "GitHub-hosted runner labels and image mutability",
+  "source": {
+    "work": "GitHub-hosted runners reference and actions/runner-images README",
+    "version": "observed 2026-08-03; runner-images main latest visible commit 931efbf (2026-07-30)",
+    "locator": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners; https://github.com/actions/runner-images",
+    "persistent_id": "runner-images main observation 2026-08-03; named release/image tags must be captured per run"
+  },
+  "controlled_statement": "On 2026-08-03, the runner-images README mapped ubuntu-latest to Ubuntu 24.04, windows-latest to Windows Server 2025, and macos-latest to macOS 26 arm64. These aliases and their installed software are mutable; compatibility evidence must name the requested label and record the actual image/version from each run log.",
+  "hypotheses": [
+    {"name": "latest_label_mapping", "class": "source_explicit", "source_anchor": "https://github.com/actions/runner-images#available-images", "notes": "Observed mapping at audit time: Ubuntu 24.04 x64, Windows Server 2025 x64, macOS 26 arm64."},
+    {"name": "latest_label_is_fixed", "class": "strengthening_unjustified", "source_anchor": "https://github.com/actions/runner-images#latest-migration-process", "notes": "Migrations are gradual over one to two months; a workflow using latest may see different OS versions during migration."},
+    {"name": "installed_tools_are_fixed", "class": "strengthening_unjustified", "source_anchor": "https://github.com/actions/runner-images#image-releases", "notes": "Images generally update weekly and default versions are updated under a separate policy."},
+    {"name": "documentation_snapshot_identifies_run_image", "class": "strengthening_unjustified", "source_anchor": "https://github.com/actions/runner-images#what-image-version-is-used-in-my-build", "notes": "Official README says use the Set up job/Initialize job log to identify image and software versions for a specific build."},
+    {"name": "ci_platform_compatibility", "class": "formalization_obligation", "source_anchor": "", "notes": "Only actual run logs and test outputs establish compatibility for a repository commit."}
+  ],
+  "variants": [
+    {"name": "runner_selector", "source_variant": "mutable *-latest alias", "controlled_variant": "named OS label such as ubuntu-24.04 plus captured image version", "reason": "A named label reduces OS migration ambiguity but image contents still update."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "workflow label", "project_concept": "CI request", "caveat": "The actual VM image and tool inventory are response metadata in the job log."}
+  ],
+  "quantifiers": ["Each required OS/architecture combination needs its own successful job evidence."],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["runner-images commit history records distinct July 2026 image documentation versions for Ubuntu, Windows, and macOS."],
+  "strengthenings": [],
+  "weakenings": ["Describe the alias mapping as an observation dated 2026-08-03, not a permanent contract."],
+  "attribution": [
+    {"work": "GitHub-hosted runners reference", "locator": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners#supported-runners-and-hardware-resources", "role": "available labels and hardware"},
+    {"work": "runner-images support policy", "locator": "https://github.com/actions/runner-images#software-and-image-support", "role": "weekly updates, supported image count, removal policy"},
+    {"work": "runner-images license", "locator": "https://github.com/actions/runner-images/blob/main/LICENSE", "role": "MIT license for image source repository"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

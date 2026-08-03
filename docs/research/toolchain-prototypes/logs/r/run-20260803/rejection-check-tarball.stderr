@@ -1,0 +1,7 @@
+Warning: unable to access index for repository https://cloud.r-project.org/src/contrib:
+  cannot open URL 'https://cloud.r-project.org/src/contrib/PACKAGES'
+
+See
+  ‘/tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/check/statqedRToolchainProbe.Rcheck/00check.log’
+for details.
+

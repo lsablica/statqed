@@ -1,0 +1,11 @@
+timestamp_start=2026-08-03T11:59:09+00:00
+timestamp_end=2026-08-03T11:59:09+00:00
+cwd=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=/home/lukas/.cargo/bin/cargo +1.85.1 check --manifest-path rejections/archive-msrv/Cargo.toml 
+stdout_path=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/../logs/rust/run-20260803/archive-8.1-msrv-rejection.stdout
+stderr_path=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/../logs/rust/run-20260803/archive-8.1-msrv-rejection.stderr
+exit_code=101

@@ -1,0 +1,17 @@
+## rejected-3-10-20-python-version
+Python 3.10.20
+
+## rejected-3-10-20-pin-pip
+Looking in links: /tmp/statqed-sq0002-python-wheelhouse
+Processing /tmp/statqed-sq0002-python-wheelhouse/pip-26.2-py3-none-any.whl
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.0.1
+    Uninstalling pip-23.0.1:
+      Successfully uninstalled pip-23.0.1
+Successfully installed pip-26.2
+
+## rejected-3-10-20-metadata-rejection
+Looking in links: /tmp/statqed-sq0002-python-wheelhouse
+Processing /tmp/statqed-sq0002-python/supported-3-14-6/dist/statqed_python_toolchain_probe-0.0.0-py3-none-any.whl
+INFO: pip is looking at multiple versions of statqed-python-toolchain-probe to determine which version is compatible with other requirements. This could take a while.

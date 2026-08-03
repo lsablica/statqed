@@ -1,0 +1,130 @@
+Using CPython 3.14.6 interpreter at: /tmp/statqed-sq0002-python-runtimes/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14
+Creating virtual environment at: /tmp/statqed-sq0002-arrow.7jr1jX/venv
+Activate with: source /tmp/statqed-sq0002-arrow.7jr1jX/venv/bin/activate
+Using Python 3.14.6 environment at: /tmp/statqed-sq0002-arrow.7jr1jX/venv
+Resolved 1 package in 2ms
+Prepared 1 package in 591ms
+Installed 1 package in 7ms
+ + pyarrow==25.0.0
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded arrow-string v59.1.0
+  Downloaded half v2.7.1
+  Downloaded cfg-if v1.0.4
+  Downloaded atoi v2.0.0
+  Downloaded const-random v0.1.18
+  Downloaded const-random-macro v0.1.16
+  Downloaded crunchy v0.2.4
+  Downloaded rustc_version v0.4.1
+  Downloaded bytes v1.12.1
+  Downloaded version_check v0.9.5
+  Downloaded flatbuffers v25.12.19
+  Downloaded num-integer v0.1.46
+  Downloaded tiny-keccak v2.0.2
+  Downloaded lexical-core v1.0.6
+  Downloaded ahash v0.8.12
+  Downloaded once_cell v1.21.4
+  Downloaded semver v1.0.28
+  Downloaded autocfg v1.5.1
+  Downloaded getrandom v0.2.17
+  Downloaded lexical-parse-integer v1.0.6
+  Downloaded num-complex v0.4.6
+  Downloaded quote v1.0.47
+  Downloaded arrow-row v59.1.0
+  Downloaded getrandom v0.3.4
+  Downloaded iana-time-zone v0.1.65
+  Downloaded num-traits v0.2.19
+  Downloaded proc-macro2 v1.0.107
+  Downloaded bitflags v2.13.1
+  Downloaded ryu v1.0.23
+  Downloaded unicode-ident v1.0.24
+  Downloaded arrow-arith v59.1.0
+  Downloaded arrow-data v59.1.0
+  Downloaded lexical-write-integer v1.0.6
+  Downloaded arrow-ord v59.1.0
+  Downloaded base64 v0.22.1
+  Downloaded memchr v2.8.3
+  Downloaded num-bigint v0.4.8
+  Downloaded arrow-schema v59.1.0
+  Downloaded lexical-util v1.0.7
+  Downloaded lexical-write-float v1.0.6
+  Downloaded zerocopy-derive v0.8.55
+  Downloaded arrow v59.1.0
+  Downloaded arrow-buffer v59.1.0
+  Downloaded arrow-select v59.1.0
+  Downloaded arrow-cast v59.1.0
+  Downloaded arrow-ipc v59.1.0
+  Downloaded libm v0.2.16
+  Downloaded hashbrown v0.17.1
+  Downloaded regex v1.13.1
+  Downloaded aho-corasick v1.1.5
+  Downloaded lexical-parse-float v1.0.6
+  Downloaded chrono v0.4.45
+  Downloaded zerocopy v0.8.55
+  Downloaded syn v2.0.119
+  Downloaded arrow-array v59.1.0
+  Downloaded regex-syntax v0.8.11
+  Downloaded regex-automata v0.4.16
+  Downloaded libc v0.2.189
+   Compiling autocfg v1.5.1
+   Compiling libm v0.2.16
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling zerocopy v0.8.55
+   Compiling cfg-if v1.0.4
+   Compiling libc v0.2.189
+   Compiling version_check v0.9.5
+   Compiling getrandom v0.3.4
+   Compiling bytes v1.12.1
+   Compiling once_cell v1.21.4
+   Compiling arrow-schema v59.1.0
+   Compiling iana-time-zone v0.1.65
+   Compiling hashbrown v0.17.1
+   Compiling lexical-util v1.0.7
+   Compiling semver v1.0.28
+   Compiling memchr v2.8.3
+   Compiling regex-syntax v0.8.11
+   Compiling bitflags v2.13.1
+   Compiling base64 v0.22.1
+   Compiling ryu v1.0.23
+   Compiling ahash v0.8.12
+   Compiling rustc_version v0.4.1
+   Compiling num-traits v0.2.19
+   Compiling lexical-parse-integer v1.0.6
+   Compiling lexical-write-integer v1.0.6
+   Compiling flatbuffers v25.12.19
+   Compiling aho-corasick v1.1.5
+   Compiling lexical-parse-float v1.0.6
+   Compiling lexical-write-float v1.0.6
+   Compiling syn v2.0.119
+   Compiling lexical-core v1.0.6
+   Compiling num-integer v0.1.46
+   Compiling num-complex v0.4.6
+   Compiling chrono v0.4.45
+   Compiling atoi v2.0.0
+   Compiling regex-automata v0.4.16
+   Compiling num-bigint v0.4.8
+   Compiling zerocopy-derive v0.8.55
+   Compiling regex v1.13.1
+   Compiling half v2.7.1
+   Compiling arrow-buffer v59.1.0
+   Compiling arrow-data v59.1.0
+   Compiling arrow-array v59.1.0
+   Compiling arrow-select v59.1.0
+   Compiling arrow-row v59.1.0
+   Compiling arrow-arith v59.1.0
+   Compiling arrow-ord v59.1.0
+   Compiling arrow-ipc v59.1.0
+   Compiling arrow-string v59.1.0
+   Compiling arrow-cast v59.1.0
+   Compiling arrow v59.1.0
+   Compiling statqed-arrow-probe v0.0.0 (/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/arrow)
+    Finished `dev` profile [unoptimized] target(s) in 23.71s
+     Running `/tmp/statqed-sq0002-arrow.7jr1jX/target/debug/statqed-arrow-probe self`
+    Finished `dev` profile [unoptimized] target(s) in 0.03s
+     Running `/tmp/statqed-sq0002-arrow.7jr1jX/target/debug/statqed-arrow-probe read-file /tmp/statqed-sq0002-arrow.7jr1jX/exchange/python.arrow`
+    Finished `dev` profile [unoptimized] target(s) in 0.03s
+     Running `/tmp/statqed-sq0002-arrow.7jr1jX/target/debug/statqed-arrow-probe write-file /tmp/statqed-sq0002-arrow.7jr1jX/exchange/rust.arrow`
+    Finished `dev` profile [unoptimized] target(s) in 0.03s
+     Running `/tmp/statqed-sq0002-arrow.7jr1jX/target/debug/statqed-arrow-probe reject-file /tmp/statqed-sq0002-arrow.7jr1jX/exchange/magic-only.arrow`

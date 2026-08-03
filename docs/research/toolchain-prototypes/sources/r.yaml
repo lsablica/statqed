@@ -1,0 +1,35 @@
+{
+  "audit_id": "SA-SQ0002-R",
+  "subject": "R package and support baseline",
+  "source": {
+    "work": "R 4.6.1 release information, Writing R Extensions, and CRAN Repository Policy",
+    "version": "R 4.6.1 (2026-06-24); CRAN policy revision 6875; retrieved 2026-08-03",
+    "locator": "https://developer.r-project.org/; https://cran.r-project.org/doc/manuals/r-release/R-exts.html; https://cran.r-project.org/web/packages/policies.html",
+    "persistent_id": "R 4.6.1 Happy Hop"
+  },
+  "controlled_statement": "R 4.6.1 was the current release observed on 2026-08-03. R package support must be expressed in DESCRIPTION and tested with R CMD check on explicit hosts; annual release cadence and CRAN acceptance policy do not define a multi-version support guarantee.",
+  "hypotheses": [
+    {"name": "r_current_release", "class": "source_explicit", "source_anchor": "https://developer.r-project.org/", "notes": "R 4.6.1 Happy Hop was released 2026-06-24."},
+    {"name": "r_package_check", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Checking-packages", "notes": "R CMD check tests source packages; final checks are strongly recommended on the R CMD build tarball."},
+    {"name": "cross_platform_expectation", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/web/packages/policies.html#Source-packages", "notes": "CRAN normally expects packages on at least two major R platforms; this policy is not evidence that a particular package passes them."},
+    {"name": "release_cadence_implies_support_horizon", "class": "strengthening_unjustified", "source_anchor": "https://developer.r-project.org/", "notes": "The official page describes annual x.y.0 releases and as-needed patches, but does not promise support for a fixed count of earlier series."},
+    {"name": "package_platform_compatibility", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by R CMD check results for named R versions and OS runners."}
+  ],
+  "variants": [
+    {"name": "release_branch_state", "source_variant": "R 4.6.1 release tarball", "controlled_variant": "R-patched contains later fixes", "reason": "The R-devel news feed records post-release patched-branch fixes; do not silently treat patched as the release artifact."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Depends: R (>= x.y)", "project_concept": "declared minimum R", "caveat": "Requires CI evidence and does not express an upper bound."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": ["Package tests using random numbers must set a seed for reproducible reference output, per Writing R Extensions §1.1.5."],
+  "nonvacuity_witnesses": ["Writing R Extensions identifies itself as the manual for R 4.6.1 dated 2026-06-24."],
+  "strengthenings": [],
+  "weakenings": ["State exactly which R/OS combinations pass instead of saying the package is cross-platform."],
+  "attribution": [
+    {"work": "R-devel daily news", "locator": "https://developer.r-project.org/blosxom.cgi/R-devel", "role": "post-release maintenance caveat"},
+    {"work": "R for macOS", "locator": "https://mac.r-project.org/", "role": "specific official macOS build availability, not universal platform support"},
+    {"work": "R Software Development Life Cycle", "locator": "https://www.r-project.org/doc/R-SDLC.pdf", "role": "R distribution scope and GPL statement"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

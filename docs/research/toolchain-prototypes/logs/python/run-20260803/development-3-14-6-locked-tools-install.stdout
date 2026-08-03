@@ -1,0 +1,20 @@
+Looking in links: /tmp/statqed-sq0002-python-wheelhouse
+Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+Processing /tmp/statqed-sq0002-python-wheelhouse/build-1.5.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 3))
+Processing /tmp/statqed-sq0002-python-wheelhouse/hatchling-1.31.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 13))
+Processing /tmp/statqed-sq0002-python-wheelhouse/iniconfig-2.3.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 17))
+Processing /tmp/statqed-sq0002-python-wheelhouse/packaging-26.2-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 21))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pathspec-1.1.1-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 29))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pip-26.2-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 33))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pluggy-1.6.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 37))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pygments-2.20.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 43))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pyproject_hooks-1.2.0-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 47))
+Processing /tmp/statqed-sq0002-python-wheelhouse/pytest-9.1.1-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 51))
+Processing /tmp/statqed-sq0002-python-wheelhouse/trove_classifiers-2026.6.1.19-py3-none-any.whl (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 55))
+Installing collected packages: trove-classifiers, pyproject-hooks, pygments, pluggy, pip, pathspec, packaging, iniconfig, pytest, hatchling, build
+  Attempting uninstall: pip
+    Found existing installation: pip 26.1.2
+    Uninstalling pip-26.1.2:
+      Successfully uninstalled pip-26.1.2
+
+Successfully installed build-1.5.0 hatchling-1.31.0 iniconfig-2.3.0 packaging-26.2 pathspec-1.1.1 pip-26.2 pluggy-1.6.0 pygments-2.20.0 pyproject-hooks-1.2.0 pytest-9.1.1 trove-classifiers-2026.6.1.19

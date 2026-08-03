@@ -1,0 +1,1 @@
+$ ["/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/julia/rejected-compat", "-e", "using Pkg; Pkg.resolve()"]

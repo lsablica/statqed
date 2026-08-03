@@ -1,0 +1,17 @@
+retrieved_at=2026-08-03T15:04:00+02:00
+
+python-build-standalone release=20260718
+asset=https://github.com/astral-sh/python-build-standalone/releases/download/20260718/cpython-3.14.6%2B20260718-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+published_and_observed_sha256=86bf107f65fc30b56f2b263b26797fcbb1661f5315910cdbf27f733eb8738b74
+asset=https://github.com/astral-sh/python-build-standalone/releases/download/20260718/cpython-3.11.15%2B20260718-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+published_and_observed_sha256=23ccae6f1ff73e8aa8378436f869da003b8eb7d6c95f2bc706f494115ba1447d
+
+uv release=0.11.32
+asset=https://github.com/astral-sh/uv/releases/download/0.11.32/uv-x86_64-unknown-linux-gnu.tar.gz
+published_and_observed_sha256=aab924fd522efd06f1c5f3b93a243864fc453132c94b2dc49f1371b528a4b967
+extracted_uv_binary_sha256=da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb
+
+The release asset URL and digest fields were retrieved through the official
+GitHub Releases API for astral-sh/python-build-standalone and astral-sh/uv.
+The archives were downloaded fresh, checked before extraction, and used for
+the final offline development and floor package-native probes.

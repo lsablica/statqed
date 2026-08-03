@@ -1,0 +1,2 @@
+# Probe logs preserve tool-emitted bytes, including trailing spaces and blank lines.
+logs/** -whitespace

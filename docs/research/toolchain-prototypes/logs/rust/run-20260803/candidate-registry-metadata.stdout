@@ -1,0 +1,255 @@
+serde #serde #serialization #no_std
+A generic serialization/deserialization framework
+version: 1.0.229
+license: MIT OR Apache-2.0
+rust-version: 1.56
+documentation: https://docs.rs/serde
+homepage: https://serde.rs
+repository: https://github.com/serde-rs/serde
+crates.io: https://crates.io/crates/serde/1.0.229
+features:
+ +default      = [std]
+  std          = [serde_core/std]
+  alloc        = [serde_core/alloc]
+  derive       = [serde_derive]
+  rc           = [serde_core/rc]
+  serde_derive = [dep:serde_derive]
+  unstable     = [serde_core/unstable]
+serde_json #json #serde #serialization
+A JSON serialization file format
+version: 1.0.151
+license: MIT OR Apache-2.0
+rust-version: 1.71
+documentation: https://docs.rs/serde_json
+repository: https://github.com/serde-rs/json
+crates.io: https://crates.io/crates/serde_json/1.0.151
+features:
+ +default             = [std]
+  std                 = [memchr/std, serde_core/std]
+  alloc               = [serde_core/alloc]
+  arbitrary_precision = []
+  float_roundtrip     = []
+  indexmap            = [dep:indexmap]
+  preserve_order      = [indexmap, std]
+  raw_value           = []
+  unbounded_depth     = []
+arrow #arrow
+Rust implementation of Apache Arrow
+version: 59.1.0
+license: Apache-2.0
+rust-version: 1.85
+documentation: https://docs.rs/arrow/59.1.0
+homepage: https://github.com/apache/arrow-rs
+repository: https://github.com/apache/arrow-rs
+crates.io: https://crates.io/crates/arrow/59.1.0
+features:
+ +default                   = [csv, ipc, json]
+  arrow-csv                 = [dep:arrow-csv]
+  arrow-ipc                 = [dep:arrow-ipc]
+  arrow-json                = [dep:arrow-json]
+  csv                       = [arrow-csv]
+  ipc                       = [arrow-ipc]
+  json                      = [arrow-json]
+  async                     = [arrow-array/async]
+  canonical_extension_types = [arrow-schema/canonical_extension_types]
+  chrono-tz                 = [arrow-array/chrono-tz]
+  ffi                       = [arrow-schema/ffi, arrow-data/ffi, arrow-array/ffi]
+  force_validate            = [arrow-array/force_validate, arrow-data/force_validate]
+  ipc_compression           = [ipc, arrow-ipc/lz4, arrow-ipc/zstd]
+  pool                      = [arrow-array/pool]
+  prettyprint               = [arrow-cast/prettyprint]
+  pyarrow                   = [ffi, dep:arrow-pyarrow]
+  test_utils                = [dep:rand, dep:half]
+zip #zip #archive #compression
+Library to support the reading and writing of zip files.
+version: 7.2.0 (latest 9.0.0-pre2)
+license: MIT
+rust-version: 1.83.0
+documentation: https://docs.rs/zip/7.2.0
+repository: https://github.com/zip-rs/zip2.git
+crates.io: https://crates.io/crates/zip/7.2.0
+features:
+ +default                       = [aes-crypto, bzip2, deflate64, deflate, lzma, ppmd, time, zstd, xz]
+  _bzip2_any                    = []
+  _deflate-any                  = []
+  aes-crypto                    = [dep:aes, dep:constant_time_eq, dep:generic-array, getrandom/std, dep:hmac, dep:pbkdf2, dep:sha1, dep:zeroize]
+  bzip2                         = [dep:bzip2, bzip2/default, _bzip2_any]
+  deflate                       = [deflate-zopfli, deflate-flate2-zlib-rs]
+  deflate-flate2                = [_deflate-any, dep:flate2]
+  deflate-flate2-zlib-rs        = [deflate-flate2, flate2/zlib-rs]
+  deflate-zopfli                = [dep:zopfli, _deflate-any]
+  deflate64                     = [dep:deflate64]
+  lzma                          = [dep:lzma-rust2]
+  ppmd                          = [dep:ppmd-rust]
+  time                          = [dep:time]
+  xz                            = [dep:lzma-rust2]
+  zstd                          = [dep:zstd]
+  _all-features                 = []
+  _arbitrary                    = [dep:arbitrary]
+  bitstream-io                  = [dep:bitstream-io]
+  bzip2-rs                      = [dep:bzip2, bzip2/bzip2-sys, _bzip2_any]
+  chrono                        = [dep:chrono]
+  deflate-flate2-zlib           = [deflate-flate2, flate2/zlib]
+  deflate-flate2-zlib-ng        = [deflate-flate2, flate2/zlib-ng]
+  deflate-flate2-zlib-ng-compat = [deflate-flate2, flate2/zlib-ng-compat]
+  getrandom                     = [dep:getrandom]
+  jiff-02                       = [dep:jiff]
+  legacy-zip                    = [bitstream-io]
+  nt-time                       = [dep:nt-time]
+  unreserved                    = []
+zip #zip #archive #compression
+Library to support the reading and writing of zip files.
+version: 8.1.0 (latest 9.0.0-pre2)
+license: MIT
+rust-version: 1.88
+documentation: https://docs.rs/zip/8.1.0
+repository: https://github.com/zip-rs/zip2.git
+crates.io: https://crates.io/crates/zip/8.1.0
+features:
+ +default                       = [aes-crypto, bzip2, deflate64, deflate, lzma, ppmd, time, zstd, xz]
+  _bzip2_any                    = []
+  _deflate-any                  = []
+  aes-crypto                    = [dep:aes, dep:constant_time_eq, getrandom/std, dep:hmac, dep:pbkdf2, dep:sha1, dep:zeroize]
+  bzip2                         = [dep:bzip2, bzip2/default, _bzip2_any]
+  deflate                       = [deflate-zopfli, deflate-flate2-zlib-rs]
+  deflate-flate2                = [_deflate-any, dep:flate2]
+  deflate-flate2-zlib-rs        = [deflate-flate2, flate2/zlib-rs]
+  deflate-zopfli                = [dep:zopfli, _deflate-any]
+  deflate64                     = [dep:deflate64]
+  lzma                          = [dep:lzma-rust2]
+  ppmd                          = [dep:ppmd-rust]
+  time                          = [dep:time]
+  xz                            = [dep:lzma-rust2]
+  zstd                          = [dep:zstd]
+  _arbitrary                    = [dep:arbitrary]
+  bitstream-io                  = [dep:bitstream-io]
+  bzip2-rs                      = [dep:bzip2, bzip2/bzip2-sys, _bzip2_any]
+  chrono                        = [dep:chrono]
+  deflate-flate2-zlib           = [deflate-flate2, flate2/zlib]
+  deflate-flate2-zlib-ng        = [deflate-flate2, flate2/zlib-ng]
+  deflate-flate2-zlib-ng-compat = [deflate-flate2, flate2/zlib-ng-compat]
+  deprecated-time               = []
+  getrandom                     = [dep:getrandom]
+  jiff-02                       = [dep:jiff]
+  legacy-zip                    = [bitstream-io]
+  nt-time                       = [dep:nt-time]
+  unreserved                    = []
+zip #zip #archive #compression
+Library to support the reading and writing of zip files.
+version: 9.0.0-pre2
+license: MIT
+rust-version: 1.88
+documentation: https://docs.rs/zip/9.0.0-pre2
+repository: https://github.com/zip-rs/zip2
+crates.io: https://crates.io/crates/zip/9.0.0-pre2
+features:
+ +default                       = [aes-crypto, bzip2, deflate64, deflate, lzma, ppmd, time, zstd, xz]
+  _bzip2_any                    = []
+  _deflate-any                  = []
+  aes-crypto                    = [dep:aes, dep:constant_time_eq, getrandom/std, dep:hmac, dep:pbkdf2, dep:sha1, dep:zeroize]
+  bzip2                         = [dep:bzip2, bzip2/default, _bzip2_any]
+  deflate                       = [deflate-zopfli, deflate-flate2-zlib-rs]
+  deflate-flate2                = [_deflate-any, dep:flate2]
+  deflate-flate2-zlib-rs        = [deflate-flate2, flate2/zlib-rs]
+  deflate-zopfli                = [dep:zopfli, _deflate-any]
+  deflate64                     = [dep:deflate64]
+  lzma                          = [dep:lzma-rust2]
+  ppmd                          = [dep:ppmd-rust]
+  time                          = [dep:time]
+  xz                            = [dep:lzma-rust2]
+  zstd                          = [dep:zstd]
+  _arbitrary                    = [dep:arbitrary]
+  bitstream-io                  = [dep:bitstream-io]
+  bzip2-rs                      = [dep:bzip2, bzip2/bzip2-sys, _bzip2_any]
+  chrono                        = [dep:chrono]
+  deflate-flate2-zlib           = [deflate-flate2, flate2/zlib]
+  deflate-flate2-zlib-ng        = [deflate-flate2, flate2/zlib-ng]
+  deflate-flate2-zlib-ng-compat = [deflate-flate2, flate2/zlib-ng-compat]
+  getrandom                     = [dep:getrandom]
+  jiff-02                       = [dep:jiff]
+  legacy-zip                    = [bitstream-io]
+  nt-time                       = [dep:nt-time]
+  unreserved                    = []
+blake3
+the BLAKE3 hash function
+version: 1.8.5
+license: CC0-1.0 OR Apache-2.0 OR Apache-2.0 WITH LLVM-exception
+rust-version: unknown
+documentation: https://docs.rs/blake3
+repository: https://github.com/BLAKE3-team/BLAKE3
+crates.io: https://crates.io/crates/blake3/1.8.5
+features:
+ +default           = [std]
+  std               = [constant_time_eq/std]
+  digest            = [dep:digest]
+  mmap              = [std, dep:memmap2]
+  neon              = []
+  no_avx2           = []
+  no_avx512         = []
+  no_neon           = []
+  no_sse2           = []
+  no_sse41          = []
+  prefer_intrinsics = []
+  pure              = []
+  rayon             = [dep:rayon-core]
+  serde             = [dep:serde]
+  traits-preview    = [dep:digest]
+  wasm32_simd       = []
+  zeroize           = [dep:zeroize, arrayvec/zeroize]
+sha2 #sha2 #hash #digest
+Pure Rust implementation of the SHA-2 hash function family
+including SHA-224, SHA-256, SHA-384, and SHA-512.
+version: 0.11.0
+license: MIT OR Apache-2.0
+rust-version: 1.85
+documentation: https://docs.rs/sha2
+repository: https://github.com/RustCrypto/hashes
+crates.io: https://crates.io/crates/sha2/0.11.0
+features:
+ +default = [alloc, oid]
+  alloc   = [digest/alloc]
+  oid     = [digest/oid]
+  zeroize = [digest/zeroize]
+clap #argument #cli #arg #parser #parse
+A simple to use, efficient, and full-featured Command Line Argument Parser
+version: 4.6.5
+license: MIT OR Apache-2.0
+rust-version: 1.85
+documentation: https://docs.rs/clap/4.6.5
+repository: https://github.com/clap-rs/clap
+crates.io: https://crates.io/crates/clap/4.6.5
+features:
+ +default                  = [std, color, help, usage, error-context, suggestions]
+  color                    = [clap_builder/color]
+  error-context            = [clap_builder/error-context]
+  help                     = [clap_builder/help]
+  std                      = [clap_builder/std]
+  suggestions              = [clap_builder/suggestions]
+  usage                    = [clap_builder/usage]
+  cargo                    = [clap_builder/cargo]
+  debug                    = [clap_builder/debug, clap_derive?/debug]
+  deprecated               = [clap_builder/deprecated, clap_derive?/deprecated]
+  derive                   = [dep:clap_derive]
+  env                      = [clap_builder/env]
+  string                   = [clap_builder/string]
+  unicode                  = [clap_builder/unicode]
+  unstable-derive-ui-tests = []
+  unstable-doc             = [clap_builder/unstable-doc, derive]
+  unstable-ext             = [clap_builder/unstable-ext]
+  unstable-markdown        = [clap_derive/unstable-markdown]
+  unstable-styles          = [clap_builder/unstable-styles]
+  unstable-v5              = [clap_builder/unstable-v5, clap_derive?/unstable-v5, deprecated]
+  wrap_help                = [clap_builder/wrap_help]
+cargo-audit #cargo-subcommand #security #audit #vulnerability
+Audit Cargo.lock for crates with security vulnerabilities
+version: 0.22.2
+license: Apache-2.0 OR MIT
+rust-version: 1.88
+documentation: https://docs.rs/cargo-audit/0.22.2
+homepage: https://rustsec.org
+repository: https://github.com/rustsec/rustsec
+crates.io: https://crates.io/crates/cargo-audit/0.22.2
+features:
+ +default         = [binary-scanning]
+  binary-scanning = [rustsec/binary-scanning, dep:object, dep:rustc-demangle, dep:syn]
+  fix             = []

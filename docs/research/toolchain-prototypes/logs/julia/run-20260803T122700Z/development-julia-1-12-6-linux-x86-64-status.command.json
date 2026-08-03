@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+    "--startup-file=no",
+    "--history-file=no",
+    "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+    "-e",
+    "using Pkg; Pkg.status(; mode=Pkg.PKGMODE_PROJECT); Pkg.status(; mode=Pkg.PKGMODE_MANIFEST)"
+  ],
+  "cwd": "/tmp/statqed-preflight-9bf9922",
+  "end": "2026-08-03T12:28:25.869587+00:00",
+  "environment_variables": {
+    "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.12.6-bcq97lt3/depot",
+    "JULIA_LOAD_PATH": "@:@stdlib",
+    "JULIA_NUM_THREADS": "1",
+    "JULIA_PKG_OFFLINE": "true",
+    "JULIA_PKG_PRECOMPILE_AUTO": "0",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8"
+  },
+  "exit_status": 1,
+  "id": "status",
+  "start": "2026-08-03T12:28:17.335046+00:00",
+  "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/development-julia-1-12-6-linux-x86-64-status.stderr",
+  "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/development-julia-1-12-6-linux-x86-64-status.stdout"
+}

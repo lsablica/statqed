@@ -1,0 +1,384 @@
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--version"]
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project", "-e", "using InteractiveUtils; versioninfo(verbose=true); println(\"Sys.MACHINE=\", Sys.MACHINE); println(\"Sys.KERNEL=\", Sys.KERNEL)"]
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project", "-e", "using Pkg; Pkg.instantiate(; verbose=true)"]
+  Installing known registries into `/tmp/statqed-julia-1.10.11-2_2znva3/depot`
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+     Cloning registry from "https://github.com/JuliaRegistries/General.git"
+ERROR: failed to clone from https://github.com/JuliaRegistries/General.git, error: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] pkgerror(msg::String)
+    @ Pkg.Types /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Types.jl:70
+  [2] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:136
+  [3] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [4] #96
+    @ ./error.jl:291 [inlined]
+  [5] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [6] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+  [7] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+  [8] mktempdir
+    @ ./file.jl:762 [inlined]
+  [9] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [10] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [11] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [12] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [13] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [14] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [15] download_default_registries(io::Base.PipeEndpoint)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98
+ [16] instantiate(ctx::Pkg.Types.Context; manifest::Nothing, update_registry::Bool, verbose::Bool, platform::Base.BinaryPlatforms.Platform, allow_build::Bool, allow_autoprecomp::Bool, kwargs::@Kwargs{})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1112
+ [17] instantiate
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1108 [inlined]
+ [18] instantiate(; kwargs::@Kwargs{verbose::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1107
+ [19] top-level scope
+    @ none:1
+
+caused by: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] macro expansion
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/error.jl:112 [inlined]
+  [2] clone(repo_url::SubString{String}, repo_path::String, clone_opts::LibGit2.CloneOptions)
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/repository.jl:459
+  [3] clone(repo_url::SubString{String}, repo_path::String; branch::String, isbare::Bool, remote_cb::Ptr{Nothing}, credentials::LibGit2.CachedCredentials, callbacks::Dict{Symbol, Tuple{Ptr{Nothing}, Any}})
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:585
+  [4] clone
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:558 [inlined]
+  [5] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:125
+  [6] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [7] #96
+    @ ./error.jl:291 [inlined]
+  [8] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [9] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+ [10] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+ [11] mktempdir
+    @ ./file.jl:762 [inlined]
+ [12] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [13] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [14] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [15] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [16] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [17] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [18] download_default_registries(io::Base.PipeEndpoint)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98
+ [19] instantiate(ctx::Pkg.Types.Context; manifest::Nothing, update_registry::Bool, verbose::Bool, platform::Base.BinaryPlatforms.Platform, allow_build::Bool, allow_autoprecomp::Bool, kwargs::@Kwargs{})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1112
+ [20] instantiate
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1108 [inlined]
+ [21] instantiate(; kwargs::@Kwargs{verbose::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1107
+ [22] top-level scope
+    @ none:1
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project", "-e", "using Pkg; Pkg.precompile(; strict=true)"]
+  Installing known registries into `/tmp/statqed-julia-1.10.11-2_2znva3/depot`
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+     Cloning registry from "https://github.com/JuliaRegistries/General.git"
+ERROR: failed to clone from https://github.com/JuliaRegistries/General.git, error: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] pkgerror(msg::String)
+    @ Pkg.Types /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Types.jl:70
+  [2] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:136
+  [3] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [4] #96
+    @ ./error.jl:291 [inlined]
+  [5] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [6] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+  [7] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+  [8] mktempdir
+    @ ./file.jl:762 [inlined]
+  [9] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [10] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [11] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [12] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [13] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [14] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [15] download_default_registries(io::Base.PipeEndpoint)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98
+ [16] instantiate(ctx::Pkg.Types.Context; manifest::Nothing, update_registry::Bool, verbose::Bool, platform::Base.BinaryPlatforms.Platform, allow_build::Bool, allow_autoprecomp::Bool, kwargs::@Kwargs{io::Base.PipeEndpoint})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1112
+ [17] instantiate
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1108 [inlined]
+ [18] precompile(ctx::Pkg.Types.Context, pkgs::Vector{Pkg.Types.PackageSpec}; internal_call::Bool, strict::Bool, warn_loaded::Bool, already_instantiated::Bool, timing::Bool, _from_loading::Bool, kwargs::@Kwargs{io::Base.PipeEndpoint})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1070
+ [19] precompile(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{strict::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:159
+ [20] precompile(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{strict::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [21] top-level scope
+    @ none:1
+
+caused by: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] macro expansion
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/error.jl:112 [inlined]
+  [2] clone(repo_url::SubString{String}, repo_path::String, clone_opts::LibGit2.CloneOptions)
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/repository.jl:459
+  [3] clone(repo_url::SubString{String}, repo_path::String; branch::String, isbare::Bool, remote_cb::Ptr{Nothing}, credentials::LibGit2.CachedCredentials, callbacks::Dict{Symbol, Tuple{Ptr{Nothing}, Any}})
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:585
+  [4] clone
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:558 [inlined]
+  [5] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:125
+  [6] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [7] #96
+    @ ./error.jl:291 [inlined]
+  [8] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [9] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+ [10] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+ [11] mktempdir
+    @ ./file.jl:762 [inlined]
+ [12] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [13] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [14] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [15] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [16] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [17] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [18] download_default_registries(io::Base.PipeEndpoint)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98
+ [19] instantiate(ctx::Pkg.Types.Context; manifest::Nothing, update_registry::Bool, verbose::Bool, platform::Base.BinaryPlatforms.Platform, allow_build::Bool, allow_autoprecomp::Bool, kwargs::@Kwargs{io::Base.PipeEndpoint})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1112
+ [20] instantiate
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1108 [inlined]
+ [21] precompile(ctx::Pkg.Types.Context, pkgs::Vector{Pkg.Types.PackageSpec}; internal_call::Bool, strict::Bool, warn_loaded::Bool, already_instantiated::Bool, timing::Bool, _from_loading::Bool, kwargs::@Kwargs{io::Base.PipeEndpoint})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:1070
+ [22] precompile(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{strict::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:159
+ [23] precompile(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{strict::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [24] top-level scope
+    @ none:1
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project", "-e", "using Pkg; Pkg.test(; coverage=false)"]
+  Installing known registries into `/tmp/statqed-julia-1.10.11-2_2znva3/depot`
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+     Cloning registry from "https://github.com/JuliaRegistries/General.git"
+ERROR: failed to clone from https://github.com/JuliaRegistries/General.git, error: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] pkgerror(msg::String)
+    @ Pkg.Types /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Types.jl:70
+  [2] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:136
+  [3] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [4] #96
+    @ ./error.jl:291 [inlined]
+  [5] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [6] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+  [7] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+  [8] mktempdir
+    @ ./file.jl:762 [inlined]
+  [9] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [10] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [11] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [12] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [13] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [14] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [15] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98 [inlined]
+ [16] test(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:149
+ [17] test(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [18] top-level scope
+    @ none:1
+
+caused by: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] macro expansion
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/error.jl:112 [inlined]
+  [2] clone(repo_url::SubString{String}, repo_path::String, clone_opts::LibGit2.CloneOptions)
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/repository.jl:459
+  [3] clone(repo_url::SubString{String}, repo_path::String; branch::String, isbare::Bool, remote_cb::Ptr{Nothing}, credentials::LibGit2.CachedCredentials, callbacks::Dict{Symbol, Tuple{Ptr{Nothing}, Any}})
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:585
+  [4] clone
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:558 [inlined]
+  [5] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:125
+  [6] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [7] #96
+    @ ./error.jl:291 [inlined]
+  [8] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [9] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+ [10] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+ [11] mktempdir
+    @ ./file.jl:762 [inlined]
+ [12] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [13] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [14] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [15] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [16] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [17] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [18] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98 [inlined]
+ [19] test(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:149
+ [20] test(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [21] top-level scope
+    @ none:1
+$ ["/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia", "--startup-file=no", "--history-file=no", "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project", "-e", "using Pkg; Pkg.status(; mode=Pkg.PKGMODE_PROJECT); Pkg.status(; mode=Pkg.PKGMODE_MANIFEST)"]
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+┌ Warning: could not download https://pkg.julialang.org/registries
+│   exception = RequestError: Could not resolve host: pkg.julialang.org while requesting https://pkg.julialang.org/registries
+└ @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:69
+ERROR: failed to clone from https://github.com/JuliaRegistries/General.git, error: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] pkgerror(msg::String)
+    @ Pkg.Types /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Types.jl:70
+  [2] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:136
+  [3] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [4] #96
+    @ ./error.jl:291 [inlined]
+  [5] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [6] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+  [7] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+  [8] mktempdir
+    @ ./file.jl:762 [inlined]
+  [9] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [10] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [11] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [12] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [13] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [14] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [15] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98 [inlined]
+ [16] status(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{mode::Pkg.Types.PackageMode})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:149
+ [17] status(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [18] top-level scope
+    @ none:1
+
+caused by: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] macro expansion
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/error.jl:112 [inlined]
+  [2] clone(repo_url::SubString{String}, repo_path::String, clone_opts::LibGit2.CloneOptions)
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/repository.jl:459
+  [3] clone(repo_url::SubString{String}, repo_path::String; branch::String, isbare::Bool, remote_cb::Ptr{Nothing}, credentials::LibGit2.CachedCredentials, callbacks::Dict{Symbol, Tuple{Ptr{Nothing}, Any}})
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:585
+  [4] clone
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/LibGit2/src/LibGit2.jl:558 [inlined]
+  [5] clone(io::Base.PipeEndpoint, url::String, source_path::String; header::String, credentials::Nothing, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/GitTools.jl:125
+  [6] (::Base.var"#96#98"{Base.var"#96#97#99"{Vector{Float64}, Pkg.Registry.var"#51#55", typeof(Pkg.GitTools.clone)}})(::Base.PipeEndpoint, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:296
+  [7] #96
+    @ ./error.jl:291 [inlined]
+  [8] (::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:239
+  [9] mktempdir(fn::Pkg.Registry.var"#50#54"{Pkg.Registry.RegistrySpec, Nothing, Base.PipeEndpoint, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:766
+ [10] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem ./file.jl:762
+ [11] mktempdir
+    @ ./file.jl:762 [inlined]
+ [12] (::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:203
+ [13] mkpidlock(f::Pkg.Registry.var"#48#52"{Base.PipeEndpoint, Vector{Pkg.Registry.RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:93
+ [14] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:90 [inlined]
+ [15] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/FileWatching/src/pidfile.jl:88 [inlined]
+ [16] download_registries(io::Base.PipeEndpoint, regs::Vector{Pkg.Registry.RegistrySpec}, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:168
+ [17] download_default_registries(io::Base.PipeEndpoint; only_if_empty::Bool, depot::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:111
+ [18] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/Registry/Registry.jl:98 [inlined]
+ [19] status(pkgs::Vector{Pkg.Types.PackageSpec}; io::Base.PipeEndpoint, kwargs::@Kwargs{mode::Pkg.Types.PackageMode})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:149
+ [20] status(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::Pkg.Types.PackageMode, subdir::Nothing, kwargs::@Kwargs{})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.10.11/share/julia/stdlib/v1.10/Pkg/src/API.jl:174
+ [21] top-level scope
+    @ none:1

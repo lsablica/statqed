@@ -1,0 +1,7 @@
+Using CPython 3.11.15 interpreter at: /tmp/statqed-sq0002-python-runtimes/cpython-3.11.15-linux-x86_64-gnu/bin/python3.11
+Creating virtual environment with seed packages at: /tmp/statqed-sq0002-python/wheelhouse-download
+ + packaging==26.2
+ + pip==26.2
+ + setuptools==83.0.0
+ + wheel==0.47.0
+Activate with: source /tmp/statqed-sq0002-python/wheelhouse-download/bin/activate

@@ -1,0 +1,36 @@
+{
+  "audit_id": "SA-SQ0002-RUST",
+  "subject": "Rust and Cargo development baseline",
+  "source": {
+    "work": "Rust 1.97.1 release and Cargo reference",
+    "version": "rustc 1.97.1; cargo 1.97.1; retrieved 2026-08-03",
+    "locator": "https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/; https://doc.rust-lang.org/stable/cargo/reference/rust-version.html",
+    "persistent_id": "cargo 1.97.1 (8bab26f4f 2026-07-14)"
+  },
+  "controlled_statement": "Rust 1.97.1 was the current stable point release observed on 2026-08-03. Cargo package.rust-version expresses a supported minimum but can be bypassed; the project must keep development pin, minimum supported Rust version, and CI matrix as separate decisions.",
+  "hypotheses": [
+    {"name": "rust_current_stable", "class": "source_explicit", "source_anchor": "https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/", "notes": "Released 2026-07-16; fixes an LLVM miscompilation present since at least Rust 1.87."},
+    {"name": "cargo_matching_release", "class": "source_explicit", "source_anchor": "https://doc.rust-lang.org/cargo/CHANGELOG.html#cargo-197-2026-07-09", "notes": "Cargo documentation identifies 1.97.1 and commit 8bab26f4f dated 2026-07-14."},
+    {"name": "rust_version_is_support_floor", "class": "source_explicit", "source_anchor": "https://doc.rust-lang.org/stable/cargo/reference/rust-version.html", "notes": "package.rust-version declares the supported Rust version; Cargo respects it since 1.56, but --ignore-rust-version bypasses the check."},
+    {"name": "rust_upstream_supports_old_compilers", "class": "strengthening_unjustified", "source_anchor": "https://doc.rust-lang.org/stable/cargo/reference/rust-version.html#support-expectations", "notes": "Official Cargo docs say Rust itself provides bug and security fixes only for the latest release; N-2 and similar MSRV policies are examples for downstream projects, not upstream guarantees."},
+    {"name": "supported_targets_build_this_workspace", "class": "formalization_obligation", "source_anchor": "https://forge.rust-lang.org/release/platform-support.html", "notes": "Target tiers describe Rust distribution guarantees; they do not prove this workspace or its native dependencies build there."}
+  ],
+  "variants": [
+    {"name": "version_roles", "source_variant": "latest Rust receives upstream fixes", "controlled_variant": "separate pinned developer toolchain, package rust-version floor, and CI-tested versions", "reason": "Cargo documents these as different concerns."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Tier 1 with host tools", "project_concept": "candidate CI platform", "caveat": "Not equivalent to dependency or repository compatibility."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["Cargo 1.97.1 reports commit 8bab26f4f in the official documentation."],
+  "strengthenings": [],
+  "weakenings": ["Phrase platform claims as tested configurations, not all installations of a target triple."],
+  "attribution": [
+    {"work": "Rust platform support", "locator": "https://forge.rust-lang.org/release/platform-support.html", "role": "upstream target tiers"},
+    {"work": "Cargo workspaces", "locator": "https://doc.rust-lang.org/cargo/reference/workspaces.html", "role": "shared lock and resolver semantics"},
+    {"work": "Rust repository", "locator": "https://github.com/rust-lang/rust", "role": "MIT OR Apache-2.0 license"},
+    {"work": "RustSec", "locator": "https://rustsec.org/", "role": "crate advisory ecosystem; not the compiler release authority"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

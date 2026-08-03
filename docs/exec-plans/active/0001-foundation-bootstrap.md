@@ -182,7 +182,7 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 
 - [x] Architecture and agent scaffold installed — bootstrap commit.
 - [x] SQ-0001 constitutional baseline ratified and integrated — DONE 2026-08-03; distinct source, statistical, formal, interoperability, security, adversarial, and integration reviews approved the content-addressed surface.
-- [ ] SQ-0002 toolchain research — IN_PROGRESS 2026-08-03 on `agent/SQ-0002-toolchain-research`, starting from `9bf99227240550a6c84f417eccd99c48f43be6ec`; direct probes run on Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64.
+- [ ] SQ-0002 toolchain research — IN_REVIEW 2026-08-03 on `agent/SQ-0002-toolchain-research`, starting from `9bf99227240550a6c84f417eccd99c48f43be6ec`; 60 attempted combinations, five toolchain recommendations, 72 primary-source records, and 88 content-addressed prototype subjects are frozen for independent review. Direct probes ran only on Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64.
 - [ ] SQ-0003 through SQ-0020.
 
 ## Surprises & Discoveries
@@ -197,6 +197,9 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 - A second work-list implementation that ignores decision prerequisites can contradict the repository guardrail; both commands now share one readiness calculation and distinguish eligible active work from unclaimed READY work.
 - Registered RFCs support only Draft and Accepted until a reviewed, non-cyclic successor relation exists; invalid or mistyped statuses cannot silently release downstream work. The lifecycle guard fails closed and has exhaustive supported-status/owner-state corruption fixtures.
 - A non-Accepted RFC cannot remain assigned to a completed task. RFC-0006 is therefore assigned to detailed task SQ-0027 before real data, while RFC-0007/RFC-0009 keep SQ-0020 blocked until acceptance.
+- The newest standalone Lean release was not the newest proven Lean/Mathlib pair: Lean 4.32.2 existed at retrieval time, while Mathlib's current stable immutable revision selected Lean 4.32.1. A no-cache source build and separate binary-cache run were both required; a stale cache link failed and was retained.
+- Python packaging became reproducible only after binding the exact CPython standalone archives, uv archive, wheelhouse, and built artifacts by SHA-256. R development required a SHA-locked CRAN source closure because conda-forge's R 4.6.1/testthat 3.3.2 combination was unsatisfiable; the R floor was independently recreated offline from an explicit conda lock.
+- A fresh Julia depot still tried to bootstrap the mutable General registry. A fixed empty local registry made the dependency-free package probes deterministic. Arrow file and stream IPC forms differed physically, CBOR libraries exposed permissive and divergent edge behavior, and `cddl` 0.10.6 required Rust 1.88 despite the proposed Rust 1.85.1 floor.
 
 ## Decision Log
 
@@ -214,7 +217,11 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 - 2026-08-03: Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 against the reviewed surface preserved in commit `31fbd22`. ADR-0004, ADR-0005, and ADR-0007 remain Proposed behind their named RFC/tasks.
 - 2026-08-03: Kept RFC-0001 through RFC-0009 Draft. RFC-0002 is review-eligible but remains owned by SQ-0008 so the evidence taxonomy, narrow statistical ontology, and concrete public types are resolved together without silent semantics.
 - 2026-08-03: Independent integration review approved the immutable candidate and the disposition-only delta, integrated in commit `ab5e937c0f36d605dd75fef86a84ada0868ab326`. SQ-0001 is DONE and SQ-0002 is the sole READY task; no language toolchain was initialized.
+- 2026-08-03: Proposed distinct SQ-0002 development pins and support floors: Lean 4.32.1 with Mathlib `520045ab14e26149ee970e2e617ca04b09bde5d6` as an exact pair; Rust 1.97.1 with Rust 1.85.1 MSRV; Python 3.14.6 with Python 3.11.15 floor; R 4.6.1 with R 4.4.3 tested floor; Julia 1.12.6 with Julia 1.10.11 LTS floor. The CI proposal separates directly tested Linux entries from planned macOS and Windows validation.
+- 2026-08-03: Kept Arrow 25.0.0, the tested CBOR libraries, and `cddl` 0.10.6 as experimental compatibility candidates only. SQ-0002 does not define canonical bytes, logical-data identity, decoder acceptance, artifact envelopes, or accept RFC-0001/RFC-0006.
 
 ## Outcomes & Retrospective
 
 SQ-0001 outcome: eight high-level architectural ADRs are Accepted; three narrower ADRs and all nine RFCs remain explicitly Proposed/Draft with machine-checked owners and gates. The exact first slice is data-free, test-only, and non-statistical. Distinct source, statistical, formal, interoperability, security, adversarial, and integration reviewers approved the frozen surface preserved in commit `31fbd22` and its disposition-only integration delta. SQ-0001 is complete, SQ-0002 is the sole READY task, and no language toolchain was initialized. Full Plan 0001 retrospective remains SQ-0020 work.
+
+SQ-0002 candidate outcome: a strict verifier binds the report to 60 successful, failed, or unknown attempts, five exact toolchain recommendations, primary sources, logs, locks, and 88 prototype subjects; corruption fixtures test mutable recommendations, platform-evidence laundering, arbitrary reruns, failure normalization, and empty locks. Independent review is pending, so the task is not DONE and SQ-0003/SQ-0004 remain blocked. No production toolchain, package, RFC, schema, or workflow was changed.

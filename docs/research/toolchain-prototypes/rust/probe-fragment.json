@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-03T12:06:00+00:00",
+  "recommendations": [
+    {
+      "id": "rust-development-pin",
+      "component": "rust",
+      "candidate": "rustc/cargo 1.97.1",
+      "value": "1.97.1",
+      "policy": "Exact patched-stable development pin; never use a moving stable alias in gating CI.",
+      "source_refs": ["rust-release-1.97.1", "rust-cargo-version-evidence"]
+    },
+    {
+      "id": "rust-msrv-floor",
+      "component": "rust-msrv",
+      "candidate": "rustc/cargo 1.85.1",
+      "value": "1.85.1",
+      "policy": "Fixed through the foundation milestone; Edition 2024, resolver 3, raise only through a dedicated compatibility review and dual-toolchain clean rerun.",
+      "source_refs": ["rust-release-1.85.1", "rust-release-1.85.0-edition-2024", "cargo-rust-version", "cargo-resolver3"]
+    },
+    {
+      "id": "rust-ci-entries",
+      "component": "rust-ci",
+      "candidate": "1.97.1 cross-platform plus 1.85.1 Linux MSRV",
+      "value": "ubuntu-24.04@1.97.1; ubuntu-24.04@1.85.1; ubuntu-24.04-arm@1.97.1; macos-15@1.97.1; macos-15-intel@1.97.1; windows-2025@1.97.1",
+      "policy": "Only Ubuntu x86_64 is directly tested. Other entries are mandatory validation, not current support claims.",
+      "source_refs": ["github-hosted-runners-2026-08-03", "rust-platform-support"]
+    },
+    {
+      "id": "rust-dependency-candidates",
+      "component": "rust-dependencies",
+      "candidate": "serde 1.0.229; serde_json 1.0.151; arrow 59.1.0; zip 7.2.0; blake3 1.8.5; sha2 0.11.0; clap 4.6.5",
+      "value": "Cargo.lock sha256:8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040",
+      "policy": "Compatibility candidates only; no normative semantic selection. Keep the committed lock and rerun RustSec plus both exact compiler jobs on updates.",
+      "source_refs": ["crates-io-metadata-2026-08-03", "arrow-rs-readme-policy", "rustsec-db-d91a8fc9492378f23cba86b81770c6d16de6ebba"]
+    }
+  ],
+  "attempts": [
+    {
+      "id": "rust-install-dev-isolated-cargo-home-failure",
+      "component": "rust",
+      "candidate": "Rust 1.97.1 with new isolated CARGO_HOME and RUSTUP_HOME",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; Linux 7.0.0-28-generic; glibc 2.39"},
+      "commands": [["/home/lukas/.cargo/bin/rustup", "toolchain", "install", "1.97.1", "--profile", "minimal", "--component", "clippy", "--component", "rustfmt"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "rustc-version", "value": "1.97.1 (8bab26f4f 2026-07-14)"}],
+      "start": "2026-08-03T11:53:17+00:00", "end": "2026-08-03T11:53:30+00:00", "exit_status": 1,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-dev-isolated-cargo-home-failure.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-dev-isolated-cargo-home-failure.stderr",
+      "classification": "failure", "reason": "The toolchain downloaded, but rustup rejected a CARGO_HOME that did not contain its installed proxy.",
+      "source_refs": ["rustup-profiles"], "disposition": "rejected",
+      "version_output": "rustc 1.97.1 (8bab26f4f 2026-07-14); partial install followed by rustup exit 1",
+      "rerun": {"runnable": true, "command": ["env", "RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME=/tmp/statqed-sq0002-rust-cache/empty-cargo", "rustup", "toolchain", "install", "1.97.1", "--profile", "minimal", "--component", "clippy", "--component", "rustfmt"], "cwd": "."}
+    },
+    {
+      "id": "rust-install-dev",
+      "component": "rust", "candidate": "Rust 1.97.1 exact development toolchain",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; Linux 7.0.0-28-generic; glibc 2.39"},
+      "commands": [["env", "CARGO_HOME=/home/lukas/.cargo", "/home/lukas/.cargo/bin/rustup", "toolchain", "install", "1.97.1", "--profile", "minimal", "--component", "clippy", "--component", "rustfmt"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "rustc-commit", "value": "8bab26f4f68e0e26f0bb7960be334d5b520ea452"}, {"kind": "cargo-commit", "value": "c980f4866141969fab6254a680546a277789d6f0"}],
+      "start": "2026-08-03T11:54:08+00:00", "end": "2026-08-03T11:54:08+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-dev.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-dev.stderr",
+      "classification": "success", "reason": "Exact patched stable toolchain, rustfmt, and Clippy installed in isolated RUSTUP_HOME.",
+      "source_refs": ["rust-release-1.97.1", "rustup-profiles"], "disposition": "recommended",
+      "version_output": "rustc 1.97.1 (8bab26f4f 2026-07-14); cargo 1.97.1 (c980f4866 2026-06-30); host x86_64-unknown-linux-gnu; LLVM 22.1.6",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "install"], "cwd": "."}
+    },
+    {
+      "id": "rust-install-msrv",
+      "component": "rust-msrv", "candidate": "Rust 1.85.1 exact MSRV toolchain",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; Linux 7.0.0-28-generic; glibc 2.39"},
+      "commands": [["env", "CARGO_HOME=/home/lukas/.cargo", "/home/lukas/.cargo/bin/rustup", "toolchain", "install", "1.85.1", "--profile", "minimal", "--component", "clippy", "--component", "rustfmt"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "rustc-commit", "value": "4eb161250e340c8f48f66e2b929ef4a5bed7c181"}, {"kind": "cargo-commit", "value": "d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7"}],
+      "start": "2026-08-03T11:54:08+00:00", "end": "2026-08-03T11:54:35+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-msrv.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-msrv.stderr",
+      "classification": "success", "reason": "Patched first Edition-2024 toolchain installed with rustfmt and Clippy.",
+      "source_refs": ["rust-release-1.85.1", "rust-release-1.85.0-edition-2024"], "disposition": "recommended",
+      "version_output": "rustc 1.85.1 (4eb161250 2025-03-15); cargo 1.85.1 (d73d2caf9 2024-12-31); host x86_64-unknown-linux-gnu; LLVM 19.1.7",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "install"], "cwd": "."}
+    },
+    {
+      "id": "rust-dev-prototype",
+      "component": "rust-dependencies", "candidate": "1.97.1 plus locked serialization/Arrow/archive/digest/CLI bundle",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; native x86_64-unknown-linux-gnu target; fresh development target directory"},
+      "commands": [["cargo", "+1.97.1", "generate-lockfile"], ["cargo", "+1.97.1", "metadata", "--locked", "--offline", "--format-version", "1"], ["cargo", "+1.97.1", "fmt", "--all", "--", "--check"], ["cargo", "+1.97.1", "clippy", "--locked", "--offline", "--workspace", "--all-targets", "--all-features", "--", "-D", "warnings"], ["cargo", "+1.97.1", "test", "--locked", "--offline", "--workspace", "--all-targets", "--all-features"], ["cargo", "+1.97.1", "run", "--locked", "--offline", "--package", "statqed-rust-compat-probe", "--", "--json"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/dev-1.97.1", "CARGO_NET_OFFLINE": "true", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}],
+      "start": "2026-08-03T13:12:49+00:00", "end": "2026-08-03T13:12:50+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-run.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-run.stderr",
+      "classification": "success", "reason": "Resolution, offline metadata, formatting, Clippy with warnings denied, tests, and API runtime smoke passed.",
+      "source_refs": ["cargo-rust-version", "cargo-resolver3", "crates-io-metadata-2026-08-03", "arrow-rs-readme-policy"], "disposition": "recommended",
+      "version_output": "rustc 1.97.1 (8bab26f4f 2026-07-14); cargo 1.97.1 (c980f4866 2026-06-30)",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "checks"], "cwd": "."}
+    },
+    {
+      "id": "rust-msrv-prototype",
+      "component": "rust-msrv-dependencies", "candidate": "1.85.1 with the development Cargo.lock",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; native x86_64-unknown-linux-gnu target; fresh MSRV target directory"},
+      "commands": [["cargo", "+1.85.1", "metadata", "--locked", "--offline", "--format-version", "1"], ["cargo", "+1.85.1", "fmt", "--all", "--", "--check"], ["cargo", "+1.85.1", "clippy", "--locked", "--offline", "--workspace", "--all-targets", "--all-features", "--", "-D", "warnings"], ["cargo", "+1.85.1", "test", "--locked", "--offline", "--workspace", "--all-targets", "--all-features"], ["cargo", "+1.85.1", "run", "--locked", "--offline", "--package", "statqed-rust-compat-probe", "--", "--json"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/msrv-1.85.1", "CARGO_NET_OFFLINE": "true", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}],
+      "start": "2026-08-03T13:12:50+00:00", "end": "2026-08-03T13:12:50+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/msrv-run.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/msrv-run.stderr",
+      "classification": "success", "reason": "The same lock passed offline metadata, formatting, Clippy with warnings denied, tests, and runtime smoke at the proposed floor.",
+      "source_refs": ["rust-release-1.85.1", "cargo-rust-version", "cargo-resolver3"], "disposition": "recommended",
+      "version_output": "rustc 1.85.1 (4eb161250 2025-03-15); cargo 1.85.1 (d73d2caf9 2024-12-31)",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "checks"], "cwd": "."}
+    },
+    {
+      "id": "rust-unsafe-policy-rejection", "component": "rust-unsafe-policy", "candidate": "crate containing an unsafe block under forbid(unsafe_code)",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host"},
+      "commands": [["cargo", "+1.97.1", "check", "--manifest-path", "rejections/unsafe-code/Cargo.toml"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "fixture-cargo-lock-sha256", "value": "fdb7a6c43fc400636ce84a11533e2d14309a74a22018c9e5bb3eb761c247e870"}],
+      "start": "2026-08-03T11:59:06+00:00", "end": "2026-08-03T11:59:06+00:00", "exit_status": 101,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/unsafe-policy-rejection.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/unsafe-policy-rejection.stderr",
+      "classification": "failure", "reason": "Expected compiler rejection confirms project code cannot contain an unsafe block; transitive dependency unsafe usage is outside this claim.",
+      "source_refs": ["rust-lint-unsafe-code"], "disposition": "rejected", "version_output": "rustc 1.97.1; error: usage of an unsafe block",
+      "rerun": {"runnable": true, "command": ["cargo", "+1.97.1", "check", "--manifest-path", "rejections/unsafe-code/Cargo.toml"], "cwd": "docs/research/toolchain-prototypes/rust"}
+    },
+    {
+      "id": "zip-8.1-development", "component": "rust-archive", "candidate": "zip 8.1.0 on Rust 1.97.1",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host"},
+      "commands": [["cargo", "+1.97.1", "check", "--manifest-path", "rejections/archive-msrv/Cargo.toml"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "fixture-cargo-lock-sha256", "value": "0e85549ba43c18f41e3160f71bbe6e015e5a14e938222dae91d01ade74309e71"}],
+      "start": "2026-08-03T11:59:06+00:00", "end": "2026-08-03T11:59:09+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-dev-compatible.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-dev-compatible.stderr",
+      "classification": "success", "reason": "Compiles on development Rust but is rejected overall because it cannot satisfy the proposed floor.",
+      "source_refs": ["crates-io-zip-8.1.0"], "disposition": "rejected", "version_output": "rustc 1.97.1; zip 8.1.0 declares rust-version 1.88",
+      "rerun": {"runnable": true, "command": ["cargo", "+1.97.1", "check", "--manifest-path", "rejections/archive-msrv/Cargo.toml"], "cwd": "docs/research/toolchain-prototypes/rust"}
+    },
+    {
+      "id": "zip-8.1-msrv-rejection", "component": "rust-archive-msrv", "candidate": "zip 8.1.0 on Rust 1.85.1",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host"},
+      "commands": [["cargo", "+1.85.1", "check", "--manifest-path", "rejections/archive-msrv/Cargo.toml"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "fixture-cargo-lock-sha256", "value": "0e85549ba43c18f41e3160f71bbe6e015e5a14e938222dae91d01ade74309e71"}],
+      "start": "2026-08-03T11:59:09+00:00", "end": "2026-08-03T11:59:09+00:00", "exit_status": 101,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-msrv-rejection.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-msrv-rejection.stderr",
+      "classification": "failure", "reason": "Cargo rejects zip 8.1.0 because it requires rustc 1.88.",
+      "source_refs": ["crates-io-zip-8.1.0", "cargo-rust-version"], "disposition": "rejected", "version_output": "rustc 1.85.1; zip 8.1.0 requires rustc 1.88",
+      "rerun": {"runnable": true, "command": ["cargo", "+1.85.1", "check", "--manifest-path", "rejections/archive-msrv/Cargo.toml"], "cwd": "docs/research/toolchain-prototypes/rust"}
+    },
+    {
+      "id": "rustsec-audit", "component": "rust-security", "candidate": "Cargo.lock with cargo-audit 0.22.2",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; networked RustSec database refresh"},
+      "commands": [["cargo", "+1.97.1", "install", "cargo-audit", "--version", "0.22.2", "--locked", "--root", "/tmp/statqed-sq0002-rust-cache/cargo-audit"], ["/tmp/statqed-sq0002-rust-cache/cargo-audit/bin/cargo-audit", "audit", "--file", "Cargo.lock", "--json"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}, {"kind": "rustsec-db-commit", "value": "d91a8fc9492378f23cba86b81770c6d16de6ebba"}],
+      "start": "2026-08-03T12:00:06+00:00", "end": "2026-08-03T12:03:24+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/cargo-audit-rustsec.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/cargo-audit-rustsec.stderr",
+      "classification": "success", "reason": "Point-in-time scan of 128 locked dependencies found zero vulnerabilities and no warnings.",
+      "source_refs": ["rustsec-db-d91a8fc9492378f23cba86b81770c6d16de6ebba"], "disposition": "recommended", "version_output": "cargo-audit 0.22.2; RustSec DB last updated 2026-08-02T19:56:20+02:00",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "security"], "cwd": "."}
+    },
+    {
+      "id": "rustfmt-initial-rejection", "component": "rustfmt", "candidate": "initial unformatted prototype",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host"},
+      "commands": [["cargo", "+1.97.1", "fmt", "--all", "--", "--check"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}],
+      "start": "2026-08-03T11:54:40+00:00", "end": "2026-08-03T11:54:40+00:00", "exit_status": 1,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-fmt-check-initial-failure.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-fmt-check-initial-failure.stderr",
+      "classification": "failure", "reason": "rustfmt identified two source formatting differences; corrected source later passes.",
+      "source_refs": ["rustfmt-component"], "disposition": "rejected", "version_output": "rustfmt component from Rust 1.97.1",
+      "rerun": {"runnable": false, "unavailable_reason": "The source has been corrected; the exact initial diff remains in the preserved stdout artifact."}
+    },
+    {
+      "id": "sha2-initial-api-failure", "component": "rust-digest-api", "candidate": "sha2 0.11.0 with LowerHex output assumption",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host"},
+      "commands": [["cargo", "+1.97.1", "clippy", "--locked", "--offline", "--workspace", "--all-targets", "--all-features", "--", "-D", "warnings"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/dev-1.97.1", "CARGO_NET_OFFLINE": "true", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}],
+      "start": "2026-08-03T11:55:51+00:00", "end": "2026-08-03T11:56:21+00:00", "exit_status": 101,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-clippy-initial-compile-failure.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-clippy-initial-compile-failure.stderr",
+      "classification": "failure", "reason": "SHA-2 0.11 digest output did not implement the assumed LowerHex trait; explicit byte formatting fixed the prototype.",
+      "source_refs": ["crates-io-sha2-0.11.0"], "disposition": "rejected", "version_output": "rustc 1.97.1; sha2 0.11.0; E0277 LowerHex not implemented",
+      "rerun": {"runnable": false, "unavailable_reason": "The incorrect API assumption has been corrected; exact compiler diagnostics remain preserved."}
+    },
+    {
+      "id": "rust-registry-metadata", "component": "rust-dependency-metadata", "candidate": "exact direct candidates and rejected zip releases",
+      "platform": {"os": "Ubuntu", "version": "24.04.4 LTS", "architecture": "x86_64", "environment": "direct host; crates.io network metadata"},
+      "commands": [["bash", "-c", "for specification in serde@1.0.229 serde_json@1.0.151 arrow@59.1.0 zip@7.2.0 zip@8.1.0 zip@9.0.0-pre2 blake3@1.8.5 sha2@0.11.0 clap@4.6.5 cargo-audit@0.22.2; do \"$1\" +1.97.1 info \"${specification}\"; done", "_", "/home/lukas/.cargo/bin/cargo"]],
+      "environment_variables": {"RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup", "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo", "LC_ALL": "C.UTF-8", "TZ": "UTC"},
+      "dependency_locks": [{"kind": "cargo-lock-sha256", "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"}],
+      "start": "2026-08-03T12:05:26+00:00", "end": "2026-08-03T12:05:27+00:00", "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/candidate-registry-metadata.stdout", "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/candidate-registry-metadata.stderr",
+      "classification": "success", "reason": "Exact registry metadata captured declared Rust versions, licenses, repositories, and feature sets.",
+      "source_refs": ["crates-io-metadata-2026-08-03"], "disposition": "recommended", "version_output": "cargo 1.97.1; exact package versions embedded in candidate",
+      "rerun": {"runnable": true, "command": ["docs/research/toolchain-prototypes/rust/run-probes.sh", "metadata"], "cwd": "."}
+    }
+  ]
+}

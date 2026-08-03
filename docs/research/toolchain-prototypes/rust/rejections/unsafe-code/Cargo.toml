@@ -1,0 +1,11 @@
+[package]
+name = "rejected-unsafe-code"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85.1"
+publish = false
+
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"

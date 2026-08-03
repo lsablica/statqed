@@ -1,0 +1,36 @@
+{
+  "audit_id": "SA-SQ0002-PYTHON",
+  "subject": "Python packaging and support baseline",
+  "source": {
+    "work": "CPython 3.14.6 release, developer branch-status table, and Python Packaging User Guide",
+    "version": "CPython v3.14.6; retrieved 2026-08-03",
+    "locator": "https://github.com/python/cpython/releases/tag/v3.14.6; https://devguide.python.org/versions/; https://packaging.python.org/en/latest/guides/writing-pyproject-toml/",
+    "persistent_id": "cpython:c63aec69bd59c55314c06c23f4c22c03de76fe45"
+  },
+  "controlled_statement": "Python 3.14.6 was the current stable release observed on 2026-08-03; 3.14.7 was scheduled for the following day and was not treated as current. pyproject.toml and requires-python declare build and interpreter constraints, while actual supported combinations require tests.",
+  "hypotheses": [
+    {"name": "python_current_stable", "class": "source_explicit", "source_anchor": "https://github.com/python/cpython/releases/tag/v3.14.6", "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45, dated 2026-06-10."},
+    {"name": "scheduled_release_is_available", "class": "strengthening_unjustified", "source_anchor": "https://peps.python.org/pep-0745/#schedule", "notes": "PEP 745 scheduled 3.14.7 for 2026-08-04, after the audit date; a schedule is not a release artifact."},
+    {"name": "python_support_phases", "class": "source_explicit", "source_anchor": "https://devguide.python.org/versions/#supported-versions", "notes": "3.14 and 3.13 were bugfix branches; 3.12, 3.11, and 3.10 were security branches; 3.9 was end-of-life. Security phase generally means source-only security releases."},
+    {"name": "requires_python_is_minimum_constraint", "class": "source_explicit", "source_anchor": "https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#requires-python", "notes": "The field states supported Python versions; it does not itself execute a compatibility test."},
+    {"name": "declared_python_range_works", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by package build/install/test evidence over the declared CI matrix."}
+  ],
+  "variants": [
+    {"name": "release_state", "source_variant": "3.14.7 scheduled", "controlled_variant": "3.14.6 released and tagged", "reason": "The audit cutoff precedes the scheduled release."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "requires-python", "project_concept": "declared interpreter support range", "caveat": "Metadata constraint, not compatibility evidence."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["The immutable v3.14.6 tag resolves to c63aec69bd59c55314c06c23f4c22c03de76fe45."],
+  "strengthenings": [],
+  "weakenings": ["Describe security-phase Python branches as source-only unless a specific platform binary is evidenced."],
+  "attribution": [
+    {"work": "Python Packaging flow", "locator": "https://packaging.python.org/en/latest/flow/", "role": "sdist/wheel and pyproject workflow"},
+    {"work": "PEP 517", "locator": "https://peps.python.org/pep-0517/", "role": "build-system interface"},
+    {"work": "Python security policy", "locator": "https://devguide.python.org/security/policy/", "role": "supported security-report branches"},
+    {"work": "Python license", "locator": "https://docs.python.org/3/license.html", "role": "PSF License v2 and documentation-code licensing"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

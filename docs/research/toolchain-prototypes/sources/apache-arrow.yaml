@@ -1,0 +1,36 @@
+{
+  "audit_id": "SA-SQ0002-ARROW",
+  "subject": "Apache Arrow format and implementation baseline",
+  "source": {
+    "work": "Apache Arrow 25.0.0 release and format documentation",
+    "version": "Apache Arrow 25.0.0 (2026-07-10); retrieved 2026-08-03",
+    "locator": "https://arrow.apache.org/release/25.0.0.html; https://arrow.apache.org/docs/format/Versioning.html; https://arrow.apache.org/docs/status.html",
+    "persistent_id": "apache-arrow-25.0.0@59bea6e (immutable GitHub release)"
+  },
+  "controlled_statement": "Apache Arrow 25.0.0 was the current library release observed on 2026-08-03. Arrow format versioning is independent from library versions, and implementation coverage differs by language. A prototype can establish transport behavior only; it cannot establish StatQED logical-data identity, canonical digests, or scientific semantics.",
+  "hypotheses": [
+    {"name": "arrow_current_release", "class": "source_explicit", "source_anchor": "https://github.com/apache/arrow/releases/tag/apache-arrow-25.0.0", "notes": "Immutable release dated 2026-07-10, short tag commit 59bea6e."},
+    {"name": "format_library_versions_are_separate", "class": "source_explicit", "source_anchor": "https://arrow.apache.org/docs/format/Versioning.html#format-and-library-versioning", "notes": "Libraries use semantic versions; Arrow format has its own version identifiers and compatibility rules."},
+    {"name": "all_bindings_have_same_features", "class": "strengthening_unjustified", "source_anchor": "https://arrow.apache.org/docs/status.html", "notes": "The official status table has materially different Rust and Julia coverage, including Julia gaps for multiple types, C interfaces, and Parquet."},
+    {"name": "untrusted_arrow_is_safe_without_validation", "class": "strengthening_unjustified", "source_anchor": "https://arrow.apache.org/docs/format/Security.html", "notes": "Arrow warns invalid data may crash or leak data and explicitly recommends validation; the C Data Interface must not be consumed from an untrusted producer."},
+    {"name": "arrow_defines_statqed_logical_identity", "class": "not_applicable", "source_anchor": "", "notes": "Arrow is a candidate transport. StatQED's logical-data identity and digest domain are separate project semantics."},
+    {"name": "binding_round_trip_preserves_project_values", "class": "formalization_obligation", "source_anchor": "", "notes": "Requires typed cross-language fixtures and byte/log evidence for the exact chosen subset."}
+  ],
+  "variants": [
+    {"name": "implementation_coverage", "source_variant": "Rust supports C Data/Stream and Parquet in the v25 status table", "controlled_variant": "Julia cells are blank for those interfaces/features", "reason": "Record the official per-binding status rather than collapsing it to an Arrow-wide claim."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Arrow IPC file/stream", "project_concept": "candidate tabular transport", "caveat": "Transport versioning and structural validation do not define application-level data identity."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["The v25 implementation-status table reports IPC file and stream support for both Rust and Julia for the common subset."],
+  "strengthenings": [],
+  "weakenings": ["Limit any recommendation to an explicitly tested common type/IPC subset."],
+  "attribution": [
+    {"work": "Arrow security", "locator": "https://arrow.apache.org/docs/format/Security.html", "role": "validation and trust-boundary limitations"},
+    {"work": "Apache Arrow security reporting", "locator": "https://arrow.apache.org/security/", "role": "official vulnerability reporting/advisory route"},
+    {"work": "Apache Arrow 25.0.0 license", "locator": "https://raw.githubusercontent.com/apache/arrow/apache-arrow-25.0.0/LICENSE.txt", "role": "Apache-2.0 project license plus bundled third-party notices"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

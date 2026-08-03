@@ -1,0 +1,7 @@
+Precompiling packages...
+  67641.6 ms  ✓ Pkg (serial)
+  1 dependency successfully precompiled in 68 seconds
+    Updating `/tmp/statqed-julia-1.12.6-m7a_cwmh/project/Project.toml`
+  [ea8e919c] ~ SHA ⇒ v0.7.0
+    Updating `/tmp/statqed-julia-1.12.6-m7a_cwmh/project/Manifest.toml`
+  [ea8e919c] ~ SHA ⇒ v0.7.0

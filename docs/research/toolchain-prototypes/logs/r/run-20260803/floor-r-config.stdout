@@ -1,0 +1,87 @@
+CC = x86_64-conda-linux-gnu-cc
+CFLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CPICFLAGS = -fpic
+CPPFLAGS = -DNDEBUG -D_FORTIFY_SOURCE=2 -O2 -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -I/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -Wl,-rpath-link,/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib
+CC17 = x86_64-conda-linux-gnu-cc -std=gnu17
+C17FLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CC23 = x86_64-conda-linux-gnu-cc -std=gnu2x
+C23FLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CC90 = x86_64-conda-linux-gnu-cc -std=gnu90
+C90FLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CC99 = x86_64-conda-linux-gnu-cc -std=gnu99
+C99FLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CXX = x86_64-conda-linux-gnu-c++ -std=gnu++17
+CXXFLAGS = -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CXXPICFLAGS = -fpic
+CXX11 = x86_64-conda-linux-gnu-c++
+CXX11STD = -std=gnu++11
+CXX11FLAGS = -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+CXX11PICFLAGS = -fpic
+CXX14 = x86_64-conda-linux-gnu-c++
+CXX14STD = -std=gnu++14
+CXX14FLAGS = -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix -O3 -march=native -pipe
+CXX14PICFLAGS = -fpic
+CXX17 = x86_64-conda-linux-gnu-c++
+CXX17STD = -std=gnu++17
+CXX17FLAGS = -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix -O3 -march=native -pipe
+CXX17PICFLAGS = -fpic
+CXX20 =
+CXX20STD = -std=gnu++20
+CXX20FLAGS = -O3 -march=native -pipe
+CXX20PICFLAG =
+CXX23 =
+CXX23STD =
+CXX23FLAGS =
+CXX23PICFLAGS =
+DYLIB_EXT = .so
+DYLIB_LD = x86_64-conda-linux-gnu-cc
+DYLIB_LDFLAGS = -shared -fopenmp
+FC = x86_64-conda-linux-gnu-gfortran
+FFLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+FPICFLAGS = -fpic
+FLIBS = -lgfortran -lm -lquadmath
+FCFLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix
+SAFE_FFLAGS = -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/work=/usr/local/src/conda/r-base-4.4.3 -fdebug-prefix-map=/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942=/usr/local/src/conda-prefix -msse2 -mfpmath=sse
+OBJC = x86_64-conda-linux-gnu-cc
+OBJCFLAGS = -g -O2 -fobjc-exceptions
+JAVA = /home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/bin/java
+JAVAC = /home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/bin/javac
+JAVAH =
+JAR = /home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/bin/jar
+JAVA_HOME = /home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/lib/jvm
+JAVA_LIBS = -L/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/lib/jvm/lib/server -ljvm
+JAVA_CPPFLAGS = -I/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/lib/jvm/include -I/home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/lib/jvm/include/linux
+LDFLAGS = -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib -Wl,-rpath-link,/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib -L/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib
+SHLIB_CFLAGS =
+SHLIB_CXXFLAGS =
+SHLIB_CXXLD = x86_64-conda-linux-gnu-c++ -std=gnu++17
+SHLIB_CXXLDFLAGS = -shared
+SHLIB_CXX11LD = x86_64-conda-linux-gnu-c++ -std=gnu++11
+SHLIB_CXX11LDFLAGS = -shared
+SHLIB_CXX14LD = x86_64-conda-linux-gnu-c++ -std=gnu++14
+SHLIB_CXX14LDFLAGS = -shared
+SHLIB_CXX17LD = x86_64-conda-linux-gnu-c++ -std=gnu++17
+SHLIB_CXX17LDFLAGS = -shared
+SHLIB_CXX20LD = -std=gnu++20
+SHLIB_CXX20LDFLAGS = -shared
+SHLIB_CXX23LD =
+SHLIB_CXX23LDFLAGS = -shared
+SHLIB_EXT = .so
+SHLIB_FFLAGS =
+SHLIB_LD = x86_64-conda-linux-gnu-cc
+SHLIB_LDFLAGS = -shared
+TCLTK_CPPFLAGS = -I/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include -I/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/include
+TCLTK_LIBS = -L/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib -ltcl8.6 -L/tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942/lib -ltk8.6 -lX11
+BLAS_LIBS = -lblas
+LAPACK_LIBS = -llapack
+MAKE = make
+LIBnn = lib
+AR = x86_64-conda-linux-gnu-ar
+NM = /home/conda/feedstock_root/build_artifacts/r-base-split_1759444343764/_build_env/bin/x86_64-conda-linux-gnu-nm
+RANLIB = x86_64-conda-linux-gnu-ranlib
+LTO =
+LTO_FC =
+LTO_LD =
+
+## The following variables are defunct
+CPP CXXCPP

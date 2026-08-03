@@ -1,0 +1,12 @@
+[package]
+name = "statqed-cbor-probe"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+ciborium = "=0.2.2"
+minicbor = { version = "=2.3.0", features = ["std"] }
+
+[profile.dev]
+debug = 0

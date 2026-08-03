@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/cbor-cddl/probe.py", line 84, in <module>
+    main()
+  File "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/cbor-cddl/probe.py", line 62, in main
+    print(f"cbor2_version={cbor2.__version__}")
+                           ^^^^^^^^^^^^^^^^^
+AttributeError: module 'cbor2' has no attribute '__version__'
+

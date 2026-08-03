@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling==1.31.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "statqed-python-toolchain-probe"
+version = "0.0.0"
+description = "SQ-0002 packaging compatibility probe; not a production frontend"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "StatQED contributors" },
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = []
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/README.md",
+  "/pyproject.toml",
+  "/src",
+  "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/statqed_python_toolchain_probe"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]

@@ -1,0 +1,7 @@
+name = "StatQEDRejectedCompatProbe"
+uuid = "f8df36a8-493c-4c0d-a57e-d5df6c28ed8f"
+authors = ["StatQED contributors"]
+version = "0.0.0"
+
+[compat]
+julia = "1.13"

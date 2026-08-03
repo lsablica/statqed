@@ -1,0 +1,442 @@
+* installing *source* package ‘brio’ ...
+** this is package ‘brio’ version ‘1.1.5’
+** package ‘brio’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-brio/00new/brio/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (brio)
+* installing *source* package ‘cli’ ...
+** this is package ‘cli’ version ‘3.6.6’
+** package ‘cli’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-cli/00new/cli/libs
+** R
+** exec
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (cli)
+* installing *source* package ‘crayon’ ...
+** this is package ‘crayon’ version ‘1.5.3’
+** package ‘crayon’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (crayon)
+* installing *source* package ‘evaluate’ ...
+** this is package ‘evaluate’ version ‘1.0.5’
+** package ‘evaluate’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (evaluate)
+* installing *source* package ‘fs’ ...
+** this is package ‘fs’ version ‘2.1.0’
+** package ‘fs’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C++ compiler: ‘x86_64-linux-gnu-g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-fs/00new/fs/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (fs)
+* installing *source* package ‘glue’ ...
+** this is package ‘glue’ version ‘1.8.1’
+** package ‘glue’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-glue/00new/glue/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (glue)
+* installing *source* package ‘jsonlite’ ...
+** this is package ‘jsonlite’ version ‘2.0.0’
+** package ‘jsonlite’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-jsonlite/00new/jsonlite/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (jsonlite)
+* installing *source* package ‘magrittr’ ...
+** this is package ‘magrittr’ version ‘2.0.5’
+** package ‘magrittr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-magrittr/00new/magrittr/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (magrittr)
+* installing *source* package ‘otel’ ...
+** this is package ‘otel’ version ‘0.2.0’
+** package ‘otel’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (otel)
+* installing *source* package ‘praise’ ...
+** this is package ‘praise’ version ‘1.0.0’
+** package ‘praise’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (praise)
+* installing *source* package ‘ps’ ...
+** this is package ‘ps’ version ‘1.9.3’
+** package ‘ps’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+In file included from /usr/include/features.h:502,
+                 from /usr/include/unistd.h:25,
+                 from px.c:6:
+In function ‘read’,
+    inlined from ‘echo_from_fd’ at px.c:83:9:
+/usr/include/x86_64-linux-gnu/bits/unistd.h:28:10: warning: ‘*read’ specified size 18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   28 |   return __glibc_fortify (read, __nbytes, sizeof (char),
+      |          ^~~~~~~~~~~~~~~
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h: In function ‘echo_from_fd’:
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h:29:16: note: in a call to function ‘*read’ declared with attribute ‘access (write_only, 2, 3)’
+   29 | extern ssize_t __REDIRECT_FORTIFY (__read_alias, (int __fd, void *__buf,
+      |                ^~~~~~~~~~~~~~~~~~
+In function ‘read’,
+    inlined from ‘echo_from_fd’ at px.c:83:9,
+    inlined from ‘main’ at px.c:203:11:
+/usr/include/x86_64-linux-gnu/bits/unistd.h:28:10: warning: ‘__read_alias’ specified size 18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   28 |   return __glibc_fortify (read, __nbytes, sizeof (char),
+      |          ^
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h: In function ‘main’:
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h:29:16: note: in a call to function ‘__read_alias’ declared with attribute ‘access (write_only, 2, 3)’
+   29 | extern ssize_t __REDIRECT_FORTIFY (__read_alias, (int __fd, void *__buf,
+      |                ^
+installing via 'install.libs.R' to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-ps/00new/ps
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (ps)
+* installing *source* package ‘R6’ ...
+** this is package ‘R6’ version ‘2.6.1’
+** package ‘R6’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (R6)
+* installing *source* package ‘rlang’ ...
+** this is package ‘rlang’ version ‘1.2.0’
+** package ‘rlang’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-rlang/00new/rlang/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rlang)
+* installing *source* package ‘rprojroot’ ...
+** this is package ‘rprojroot’ version ‘2.1.1’
+** package ‘rprojroot’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rprojroot)
+* installing *source* package ‘withr’ ...
+** this is package ‘withr’ version ‘3.0.3’
+** package ‘withr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (withr)
+* installing *source* package ‘processx’ ...
+** this is package ‘processx’ version ‘3.9.0’
+** package ‘processx’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+In file included from /usr/include/features.h:502,
+                 from /usr/include/unistd.h:25,
+                 from tools/px.c:11:
+In function ‘read’,
+    inlined from ‘echo_from_fd’ at tools/px.c:100:9:
+/usr/include/x86_64-linux-gnu/bits/unistd.h:28:10: warning: ‘*read’ specified size 18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   28 |   return __glibc_fortify (read, __nbytes, sizeof (char),
+      |          ^~~~~~~~~~~~~~~
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h: In function ‘echo_from_fd’:
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h:29:16: note: in a call to function ‘*read’ declared with attribute ‘access (write_only, 2, 3)’
+   29 | extern ssize_t __REDIRECT_FORTIFY (__read_alias, (int __fd, void *__buf,
+      |                ^~~~~~~~~~~~~~~~~~
+In function ‘read’,
+    inlined from ‘echo_from_fd’ at tools/px.c:100:9,
+    inlined from ‘main’ at tools/px.c:208:11:
+/usr/include/x86_64-linux-gnu/bits/unistd.h:28:10: warning: ‘__read_alias’ specified size 18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   28 |   return __glibc_fortify (read, __nbytes, sizeof (char),
+      |          ^
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h: In function ‘main’:
+/usr/include/x86_64-linux-gnu/bits/unistd-decl.h:29:16: note: in a call to function ‘__read_alias’ declared with attribute ‘access (write_only, 2, 3)’
+   29 | extern ssize_t __REDIRECT_FORTIFY (__read_alias, (int __fd, void *__buf,
+      |                ^
+installing via 'install.libs.R' to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-processx/00new/processx
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (processx)
+* installing *source* package ‘callr’ ...
+** this is package ‘callr’ version ‘3.8.0’
+** package ‘callr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (callr)
+* installing *source* package ‘desc’ ...
+** this is package ‘desc’ version ‘1.4.3’
+** package ‘desc’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (desc)
+* installing *source* package ‘diffobj’ ...
+** this is package ‘diffobj’ version ‘0.3.6’
+** package ‘diffobj’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-diffobj/00new/diffobj/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (diffobj)
+* installing *source* package ‘lifecycle’ ...
+** this is package ‘lifecycle’ version ‘1.0.5’
+** package ‘lifecycle’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (lifecycle)
+* installing *source* package ‘waldo’ ...
+** this is package ‘waldo’ version ‘0.6.2’
+** package ‘waldo’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (waldo)
+* installing *source* package ‘pkgbuild’ ...
+** this is package ‘pkgbuild’ version ‘1.4.8’
+** package ‘pkgbuild’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (pkgbuild)
+* installing *source* package ‘pkgload’ ...
+** this is package ‘pkgload’ version ‘1.5.3’
+** package ‘pkgload’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (pkgload)
+* installing *source* package ‘testthat’ ...
+** this is package ‘testthat’ version ‘3.3.2’
+** package ‘testthat’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+using C++ compiler: ‘x86_64-linux-gnu-g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+installing to /tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/test-library/00LOCK-testthat/00new/testthat/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (testthat)

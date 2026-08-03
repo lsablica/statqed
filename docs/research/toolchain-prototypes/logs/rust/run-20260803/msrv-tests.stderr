@@ -1,0 +1,3 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.09s
+     Running unittests src/lib.rs (/tmp/statqed-sq0002-rust-cache/target/msrv-1.85.1/debug/deps/statqed_rust_compat_probe-c4165e13409c28ce)
+     Running unittests src/main.rs (/tmp/statqed-sq0002-rust-cache/target/msrv-1.85.1/debug/deps/statqed_rust_compat_probe-86422f139a7d7c6c)

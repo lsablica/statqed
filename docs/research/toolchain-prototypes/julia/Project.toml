@@ -1,0 +1,16 @@
+name = "StatQEDProbe"
+uuid = "a5ce49cd-07d3-4bba-9bde-773b90756a0b"
+authors = ["StatQED contributors"]
+version = "0.0.0"
+
+[deps]
+SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

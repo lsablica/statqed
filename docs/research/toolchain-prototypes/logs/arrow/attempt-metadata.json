@@ -1,0 +1,65 @@
+[
+  {
+    "id": "arrow-pyarrow25-arrow-rs59-cross-lineage",
+    "command": [
+      "bash",
+      "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/arrow/run-probes.sh"
+    ],
+    "environment": {
+      "STATQED_UV": "/tmp/statqed-sq0002-python-tools/uv",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "started_at": "2026-08-03T14:35:54+02:00",
+    "ended_at": "2026-08-03T14:36:20+02:00",
+    "exit_status": 0
+  },
+  {
+    "id": "arrow-r-package-unavailable",
+    "command": [
+      "Rscript",
+      "-e",
+      "if (!requireNamespace('arrow', quietly=TRUE)) { message('R arrow package unavailable'); quit(status=42) } else { print(packageVersion('arrow')) }"
+    ],
+    "environment": {
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "started_at": "2026-08-03T14:36:20+02:00",
+    "ended_at": "2026-08-03T14:36:20+02:00",
+    "exit_status": 42
+  },
+  {
+    "id": "arrow-julia-host-command-unavailable",
+    "command": [
+      "bash",
+      "-lc",
+      "command -v julia && julia --version"
+    ],
+    "environment": {
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "started_at": "2026-08-03T14:36:20+02:00",
+    "ended_at": "2026-08-03T14:36:20+02:00",
+    "exit_status": 1
+  },
+  {
+    "id": "arrow-pyarrow25-arrow-rs59-cross-lineage-hash-bound",
+    "command": [
+      "bash",
+      "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/arrow/run-probes.sh"
+    ],
+    "environment": {
+      "STATQED_UV": "/tmp/statqed-sq0002-python-tools/uv",
+      "STATQED_ARROW_PYTHON": "/tmp/statqed-sq0002-python-runtimes/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14",
+      "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
+      "RUSTUP_TOOLCHAIN": "1.97.1",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "started_at": "2026-08-03T14:40:36+02:00",
+    "ended_at": "2026-08-03T14:41:03+02:00",
+    "exit_status": 0
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "audit_id": "SA-SQ0002-LEAN",
+  "subject": "Lean, Mathlib, Lake, and Elan development baseline",
+  "source": {
+    "work": "Lean 4.32.1 and Mathlib 4.32.1 matching release pair, with Lean 4.32.2 standalone release recorded separately",
+    "version": "matching pair Lean v4.32.1 / Mathlib v4.32.1; standalone Lean latest v4.32.2; retrieved 2026-08-03",
+    "locator": "https://github.com/leanprover/lean4/releases/tag/v4.32.1; https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.1; https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.1/lean-toolchain",
+    "persistent_id": "lean4:v4.32.1@f054605aea4b840552cca2e725580bffd1e1b704; mathlib4:v4.32.1@520045ab14e26149ee970e2e617ca04b09bde5d6; lean4:v4.32.2@f3b06c705e6c85f5314019d5d3baab0fec5b580c"
+  },
+  "controlled_statement": "As observed on 2026-08-03, Lean v4.32.2 was the latest standalone stable compiler release, while v4.32.1 was the latest stable version having a matching Mathlib v4.32.1 release. The controlled development pair is therefore Lean/Mathlib v4.32.1, not the stale v4.30.0 search result and not unmatched Lean v4.32.2. A project should pin the exact Lean toolchain and commit its Lake manifest; documentation is policy evidence, while a successful local or CI build is separate compatibility evidence.",
+  "hypotheses": [
+    {"name": "lean_latest_standalone_release", "class": "source_explicit", "source_anchor": "https://github.com/leanprover/lean4/releases/tag/v4.32.2", "notes": "Released 2026-07-28; tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. No matching Mathlib v4.32.2 release was listed at cutoff."},
+    {"name": "lean_mathlib_matching_release", "class": "source_explicit", "source_anchor": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.1/lean-toolchain", "notes": "The Mathlib v4.32.1 tagged file is exactly leanprover/lean4:v4.32.1; Lean tag commit f054605aea4b840552cca2e725580bffd1e1b704; Mathlib tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6."},
+    {"name": "stale_v4_30_latest_result", "class": "strengthening_unjustified", "source_anchor": "https://github.com/leanprover/lean4/releases", "notes": "An earlier search-index result labeled v4.30.0 latest, but the live official releases list showed v4.32.2 latest and the live Mathlib releases list showed v4.32.1 latest. v4.30.0 remains a real historical release but was rejected as current."},
+    {"name": "same_lean_toolchain_required", "class": "source_explicit", "source_anchor": "https://github.com/leanprover-community/mathlib4/wiki/Using-mathlib4-as-a-dependency#user-content-using-mathlib4-as-a-dependency", "notes": "Mathlib's dependency guide says the consuming project must use the same Lean toolchain."},
+    {"name": "lake_manifest_is_lock_evidence", "class": "source_explicit", "source_anchor": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Lake/#concepts-and-terminology", "notes": "Lake says the configuration plus manifest identifies transitive dependency versions and the manifest should normally be committed."},
+    {"name": "monthly_release_is_compatibility_guarantee", "class": "strengthening_unjustified", "source_anchor": "https://github.com/leanprover/lean4/blob/master/RELEASES.md#lean-4-releases", "notes": "The source states an approximately monthly cadence and explicitly does not provide a strong backwards-compatibility guarantee."},
+    {"name": "cross_platform_build", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by the prototype/CI matrix; release and build-tool documentation do not establish that this repository builds on every target."}
+  ],
+  "variants": [
+    {"name": "toolchain_selector", "source_variant": "elan channels such as stable", "controlled_variant": "exact leanprover/lean4:v4.32.1 in lean-toolchain", "reason": "Official Elan docs recommend a specific version in project toolchain files."},
+    {"name": "release_selection", "source_variant": "standalone Lean latest v4.32.2", "controlled_variant": "latest matched Lean/Mathlib pair v4.32.1", "reason": "Mathlib requires the same Lean toolchain, and no stable Mathlib v4.32.2 release was listed at cutoff."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Lake manifest", "project_concept": "development dependency lock", "caveat": "A lock is reproducibility metadata, not proof that the locked state builds on a target host."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["Tagged Mathlib v4.32.1 names Lean v4.32.1 in its lean-toolchain file."],
+  "strengthenings": [],
+  "weakenings": ["Treat release-currentness as a dated observation, not a permanent latest-version claim."],
+  "attribution": [
+    {"work": "Lean Language Reference: Lake", "locator": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Lake/", "role": "build and manifest semantics"},
+    {"work": "Managing Toolchains with Elan", "locator": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Managing-Toolchains-with-Elan/", "role": "exact toolchain pin guidance"},
+    {"work": "Lean release policy", "locator": "https://github.com/leanprover/lean4/blob/master/RELEASES.md", "role": "cadence and compatibility limitation"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

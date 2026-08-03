@@ -1,0 +1,11 @@
+name = "statqed_lean_no_binary_cache_probe"
+version = "0.1.0"
+defaultTargets = ["StatQEDLeanNoBinaryCacheProbe"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "520045ab14e26149ee970e2e617ca04b09bde5d6"
+
+[[lean_lib]]
+name = "StatQEDLeanNoBinaryCacheProbe"

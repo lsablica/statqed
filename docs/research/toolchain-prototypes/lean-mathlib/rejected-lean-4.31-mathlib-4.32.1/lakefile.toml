@@ -1,0 +1,11 @@
+name = "statqed_lean_rejected_probe"
+version = "0.1.0"
+defaultTargets = ["StatQEDLeanRejectedProbe"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "520045ab14e26149ee970e2e617ca04b09bde5d6"
+
+[[lean_lib]]
+name = "StatQEDLeanRejectedProbe"

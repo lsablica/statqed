@@ -1,0 +1,11 @@
+uv 0.11.32 executable sha256 da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb
+cpython-3.14.6-linux-x86_64-gnu installed-tree-manifest sha256 0a7e8d480cec7c5bb4fd8614b911dde57c484068d04fde006ea56b09ef1a32f3
+cpython-3.11.15-linux-x86_64-gnu installed-tree-manifest sha256 2e6821e603c0347a1e855204ce35fd64169ca05f1a8504e6e7c59c08366da00a
+cpython-3.10.20-linux-x86_64-gnu installed-tree-manifest sha256 f1b5dfab0b58f4b2a90e8de2352404db05c63c3a2e4f3d57578c2464ab2d5af0
+
+Tree-manifest recipe (run once per explicit runtime directory with LC_ALL=C):
+find RUNTIME -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+
+These values bind the exact installed trees tested on 2026-08-03. They do not
+bind the original python-build-standalone release assets and do not turn those
+third-party distributions into official CPython binaries.

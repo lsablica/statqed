@@ -1,0 +1,33 @@
+Python 3.14.6
+uv 0.11.32 (x86_64-unknown-linux-gnu)
+rustc 1.97.1 (8bab26f4f 2026-07-14)
+cargo 1.97.1 (c980f4866 2026-06-30)
+b48ca90c270c065266d625e8d26a024217ac1559247d530de6b9348969bedaed  /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/arrow/Cargo.lock
+bfd009e1da9d19fc65296c52f9d94b7666f468ce146f2437de435984a59439f3  /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/arrow/probe-requirements.lock
+wheel_filename=pyarrow-25.0.0-cp314-cp314-manylinux_2_28_x86_64.whl
+wheel_sha256=447df764beb07c544f0178a5f6b70ef44b9ecf382b3cdfad4c2d7867353c3887
+pyarrow_version=25.0.0
+arrow_cpp_version=25.0.0
+compiler=GNU-14.2.1
+ipc_metadata_default=V5
+stream_repeat_equal=true
+file_repeat_equal=true
+stream_file_bytes_equal=false
+round_trip_equal=true
+stream_len=608
+file_len=898
+physical_file_sha256=a8f5d41157a3622f198733d583c57a4daca6bea2ecb681d0cfe1ef047a1a6748
+arrow_rs_version=59.1.0
+ipc_metadata_default=V5
+stream_repeat_equal=true
+file_repeat_equal=true
+stream_file_bytes_equal=false
+round_trip_equal=true
+stream_len=1096
+file_len=1442
+python_wrote_file=true
+rust_read_foreign_file=true
+rust_wrote_file=true
+python_read_foreign_file=true
+python_rejected_malformed=true error=ArrowInvalid:File is too small: 6
+rust_rejected_malformed=true error=Io error: Invalid argument (os error 22)
