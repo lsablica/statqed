@@ -1,5 +1,7 @@
 # Security and Soundness Incident Response
 
+Status: **Draft**.
+
 Triage whether a report affects confidentiality, availability, artifact integrity, canonicalization, theorem resolution, checker soundness, or scientific interpretation.
 
 For conclusion-changing issues:

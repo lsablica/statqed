@@ -1,5 +1,7 @@
 # StatQED Architecture
 
+Status: **Draft**.
+
 This document is the top-level architectural map. Detailed specifications live under `docs/design/`, `docs/spec/`, and accepted ADRs.
 
 ## System decomposition
@@ -76,13 +78,13 @@ A Rust reference implementation will:
 - parse versioned source representations;
 - validate structural constraints;
 - lower supported constructs to canonical form;
-- encode deterministic CBOR;
+- encode according to the Accepted normative profile (deterministic CBOR is the current RFC-0001 candidate);
 - compute logical data and theorem-lock digests;
 - expose a stable CLI;
 - generate or consume language bindings;
 - run shared conformance vectors.
 
-Rust is not the semantic authority. The normative specification and Lean model remain authoritative. Rust is the reference operational implementation and is treated according to the trust mode used.
+Rust is not the semantic authority. Accepted normative specifications govern cross-language meaning; reviewed Lean definitions and statements govern the propositions checked by the initial proof backend. Rust is the reference operational implementation and is treated according to the named verification mode.
 
 ### 4. Certificate producers
 
@@ -139,11 +141,11 @@ A typed directed acyclic graph records:
 - unresolved obligations;
 - provenance.
 
-Graph composition is valid only when node and edge types align. Diagnostics cannot be promoted to assumptions without an explicit theorem or attestation rule.
+Graph composition is valid only when node and edge types align. A diagnostic may inform a non-deductive judgment, but neither a diagnostic nor an attestation discharges an external assumption. A registered theorem may derive a distinct formal proposition only from all of its explicit premises.
 
 ### 7. Artifact bundle
 
-The provisional extension is `.statqed`.
+The provisional extension is `.statqed`. The exact outer container remains a Draft SQ-0010 decision.
 
 The bundle contains:
 
@@ -157,7 +159,7 @@ The bundle contains:
 - citations;
 - optional reports.
 
-Normative structured objects use deterministic CBOR governed by CDDL schemas. JSON/YAML views are for inspection and authoring only. Arrow is used as an interoperable tabular transport, while the logical data digest is defined independently of Arrow’s physical encoding.
+The candidate direction for normative structured objects is deterministic CBOR governed by versioned CDDL files. JSON/YAML views would be for inspection and authoring only. RFC-0001/SQ-0005 must select and validate the complete encoding profile before this becomes normative. Arrow is a candidate interoperable tabular transport; RFC-0006 must define any transport-independent logical data object and digest.
 
 ### 8. Theorem registry
 
@@ -165,7 +167,7 @@ Every public theorem has:
 
 - stable identifier;
 - Lean declaration;
-- normalized statement hash;
+- canonical elaborated statement bytes, normalization/environment version, and statement digest;
 - version and maturity;
 - claim class;
 - randomness scopes;
@@ -174,19 +176,22 @@ Every public theorem has:
 - source anchors;
 - source-fidelity review;
 - statistical-semantic review;
-- proof status and axiom report;
+- canonical registry record and its content lock;
+- proof/build lock, proof status, and actual transitive axiom report;
 - examples, nonexamples, and ablation tests;
 - compatibility relations to predecessor versions.
+
+Registry resolution also records the independently selected authorization root/policy, its historical or revocation status, and the exact resolution result. An artifact-supplied registry record or root has no governed authority merely because it is self-consistent.
 
 ### 9. Frontends
 
 Frontends operate in three assurance modes:
 
 1. **Native declarative mode:** build the IR directly using supported typed constructors.
-2. **Checked adapter mode:** inspect common language objects and independently lower them to canonical form.
+2. **Checked adapter mode:** inspect common language objects and independently lower them to the accepted semantic IR.
 3. **Opaque capture mode:** commit an external output and verify only downstream obligations.
 
-A frontend may improve ergonomics but must not redefine core semantics.
+A frontend may improve ergonomics but must not redefine core semantics. Production frontends may share the Rust canonical encoder; agreement among callers of that same encoder is an integration test, not independent encoder-conformance evidence.
 
 ## Repository modules
 
@@ -208,17 +213,17 @@ docs/              system of record for design and execution
 
 ### Kernel mode
 
-The artifact is decoded into Lean terms or verified structures, a proof is constructed/replayed, and the Lean kernel checks the final result.
+The exact artifact bytes are rebound to Lean terms or verified structures through an accepted RFC-0003 path, and the Lean kernel checks the resulting exact proposition under locked dependencies and an actual axiom report. Until that path is implemented, documentation may describe a kernel-checked proposition but not an artifact-level kernel-verification result.
 
 ### Compiled-checker mode
 
-A compiled checker validates the artifact. This is faster, but the operational trusted computing base includes the compiler/runtime and platform named in the verification report.
+A compiled checker establishes only its exact accepted checker propositions under the reported operational trusted computing base, which includes the relied-upon compiler/runtime and platform. It does not globally validate every artifact claim or any external premise.
 
 ### Structural mode
 
 Only schema, digest, and reference integrity are checked. No mathematical verification claim is made.
 
-Every report names its mode.
+Every verification-result record names exactly one mode. A document may contain several separately identified results, but it never unions their evidence or emits an overall stronger status.
 
 ## Version boundaries
 
@@ -233,7 +238,7 @@ StatQED versions separately:
 - frontend adapters;
 - CLI protocol.
 
-An artifact contains exact versions and content hashes. “Compatible” must be justified by a migration or implication/equivalence proof, not merely by semantic version ranges.
+An artifact contains the exact semantic and verification locks it uses: IR, encoding profile, envelope, assurance graph, data-digest profile when applicable, theorem/method/checker records, and proof environment. Frontend, CLI, and report-generator versions are provenance unless their transformation semantics are referenced by a claim. Wire and error protocols are versioned separately. “Compatible” must be justified by canonical equality in the same locked environment or by a checked migration/implication/equivalence in the required direction, not merely by semantic-version ranges or registry metadata.
 
 ## Architectural prohibitions
 

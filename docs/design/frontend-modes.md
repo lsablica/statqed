@@ -1,5 +1,7 @@
 # Frontend Assurance Modes
 
+Status: **Draft**.
+
 ## Native declarative mode
 
 The user constructs typed StatQED objects directly. Highest source-language fidelity within supported semantics.

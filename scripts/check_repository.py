@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_TASK_STATUS = {"READY", "IN_PROGRESS", "BLOCKED", "IN_REVIEW", "DONE", "SUPERSEDED"}
+ALLOWED_DECISION_STATUS = {"Draft", "Accepted"}
 REQUIRED_FILES = [
     "README.md", "CHARTER.md", "ARCHITECTURE.md", "ROADMAP.md", "START_HERE.md",
     "AGENTS.md", "GOVERNANCE.md", "SECURITY.md", "CONTRIBUTING.md", "CITATION.cff",
@@ -36,6 +37,73 @@ def load_json(path: Path):
         fail(f"{path.relative_to(ROOT)} is not valid JSON-compatible YAML: {exc}")
 
 
+def document_status(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r"(?m)^- Status:\s*([A-Za-z_]+)\s*$", text)
+    if not match:
+        fail(f"{path.relative_to(ROOT)} has no machine-readable '- Status:' line")
+    status = match.group(1)
+    if status not in ALLOWED_DECISION_STATUS:
+        fail(f"{path.relative_to(ROOT)} has invalid decision status {status!r}")
+    return status
+
+
+def decision_owner_state_valid(decision_status: str, owner_status: str) -> bool:
+    return (
+        decision_status in ALLOWED_DECISION_STATUS
+        and (
+            decision_status == "Accepted"
+            or owner_status not in {"DONE", "SUPERSEDED"}
+        )
+    )
+
+
+def path_allowed(path_value: str, patterns: list[str]) -> bool:
+    for pattern in patterns:
+        if pattern == path_value:
+            return True
+        if pattern.endswith("/**") and path_value.startswith(pattern[:-3] + "/"):
+            return True
+    return False
+
+
+def prerequisites_satisfied(
+    prerequisites: list[dict], decision_statuses: dict[str, str]
+) -> bool:
+    return all(
+        decision_statuses.get(prerequisite.get("id")) == prerequisite.get("status")
+        for prerequisite in prerequisites
+    )
+
+
+def check_readiness_regression_fixtures() -> None:
+    accepted_requirement = [{"id": "RFC-FIXTURE", "status": "Accepted"}]
+    if prerequisites_satisfied(accepted_requirement, {"RFC-FIXTURE": "Draft"}):
+        fail("readiness fixture promoted a task whose required RFC remains Draft")
+    if not prerequisites_satisfied(accepted_requirement, {"RFC-FIXTURE": "Accepted"}):
+        fail("readiness fixture blocked a task whose required RFC is Accepted")
+
+    active_owner_states = {"BLOCKED", "READY", "IN_PROGRESS", "IN_REVIEW"}
+    completed_owner_states = {"DONE", "SUPERSEDED"}
+    for decision_status in ALLOWED_DECISION_STATUS:
+        for owner_status in active_owner_states | completed_owner_states:
+            expected = (
+                decision_status == "Accepted"
+                or owner_status in active_owner_states
+            )
+            if decision_owner_state_valid(decision_status, owner_status) != expected:
+                fail(
+                    "decision lifecycle fixture failed for "
+                    f"{decision_status}/{owner_status}"
+                )
+    for owner_status in {"IN_PROGRESS", "DONE"}:
+        if decision_owner_state_valid("Accepetd", owner_status):
+            fail(
+                "decision lifecycle fixture accepted an invalid/typo status "
+                f"for owner {owner_status}"
+            )
+
+
 def check_required_files() -> None:
     missing = [name for name in REQUIRED_FILES if not (ROOT / name).is_file()]
     if missing:
@@ -51,7 +119,7 @@ def check_required_files() -> None:
         fail(f"temporary bootstrap transport remains: {', '.join(present)}")
 
 
-def check_backlog() -> tuple[list[dict], set[str]]:
+def check_backlog() -> tuple[list[dict], set[str], set[str], set[str]]:
     payload = load_json(ROOT / "work/backlog.yaml")
     tasks = payload.get("tasks")
     if not isinstance(tasks, list) or len(tasks) != 60:
@@ -63,6 +131,47 @@ def check_backlog() -> tuple[list[dict], set[str]]:
         fail("task IDs must be unique and sequential SQ-0001 through SQ-0060")
 
     by_id = {task["id"]: task for task in tasks}
+    decision_entries = payload.get("decision_register", [])
+    if not isinstance(decision_entries, list):
+        fail("decision_register must be a list")
+    decisions: dict[str, dict] = {}
+    decision_paths: set[str] = set()
+    for entry in decision_entries:
+        if not isinstance(entry, dict):
+            fail("decision_register entries must be objects")
+        decision_id = entry.get("id")
+        path_value = entry.get("path")
+        owner = entry.get("owner")
+        if not isinstance(decision_id, str) or decision_id in decisions:
+            fail(f"invalid or duplicate decision id {decision_id!r}")
+        if not isinstance(path_value, str) or not (ROOT / path_value).is_file():
+            fail(f"{decision_id} references missing decision path {path_value!r}")
+        if path_value in decision_paths:
+            fail(f"decision path {path_value!r} is registered more than once")
+        expected_prefix = decision_id.removeprefix("RFC-")
+        if not path_value.startswith(f"rfcs/{expected_prefix}-"):
+            fail(f"{decision_id} does not match decision path {path_value!r}")
+        if owner not in by_id:
+            fail(f"{decision_id} references unknown owner task {owner!r}")
+        contract_value = by_id[owner].get("contract")
+        if not isinstance(contract_value, str) or not (ROOT / contract_value).is_file():
+            fail(f"{decision_id} owner {owner} has no detailed contract")
+        owner_contract = load_json(ROOT / contract_value)
+        allowed_paths = owner_contract.get("allowed_paths", [])
+        if not isinstance(allowed_paths, list) or not path_allowed(path_value, allowed_paths):
+            fail(f"{decision_id} path {path_value!r} is not writable by owner {owner}")
+        decisions[decision_id] = entry
+        decision_paths.add(path_value)
+
+    rfc_paths = {
+        str(path.relative_to(ROOT))
+        for path in (ROOT / "rfcs").glob("[0-9][0-9][0-9][0-9]-*.md")
+    }
+    if decision_paths != rfc_paths:
+        missing = sorted(rfc_paths - decision_paths)
+        stale = sorted(decision_paths - rfc_paths)
+        fail(f"decision_register RFC coverage mismatch; missing={missing}, stale={stale}")
+
     for task in tasks:
         if task.get("status") not in ALLOWED_TASK_STATUS:
             fail(f"{task['id']} has invalid status {task.get('status')!r}")
@@ -74,6 +183,16 @@ def check_backlog() -> tuple[list[dict], set[str]]:
         plan = task.get("plan")
         if not isinstance(plan, str) or not (ROOT / plan).is_file():
             fail(f"{task['id']} references missing plan {plan!r}")
+        prerequisites = task.get("decision_prerequisites", [])
+        if not isinstance(prerequisites, list):
+            fail(f"{task['id']} decision_prerequisites must be a list")
+        for prerequisite in prerequisites:
+            if not isinstance(prerequisite, dict):
+                fail(f"{task['id']} has malformed decision prerequisite")
+            decision_id = prerequisite.get("id")
+            required_status = prerequisite.get("status")
+            if decision_id not in decisions or required_status != "Accepted":
+                fail(f"{task['id']} has invalid decision prerequisite {prerequisite!r}")
 
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -93,23 +212,46 @@ def check_backlog() -> tuple[list[dict], set[str]]:
         visit(task_id)
 
     done = {task["id"] for task in tasks if task["status"] == "DONE"}
-    computed_ready = {
+
+    decision_statuses = {
+        decision_id: document_status(ROOT / entry["path"])
+        for decision_id, entry in decisions.items()
+    }
+    for decision_id, entry in decisions.items():
+        decision_state = decision_statuses[decision_id]
+        owner_state = by_id[entry["owner"]]["status"]
+        if not decision_owner_state_valid(decision_state, owner_state):
+            fail(
+                f"non-Accepted {decision_id} has completed owner {entry['owner']}; "
+                "owner handoff must be atomic"
+            )
+
+    def decisions_ready(task: dict) -> bool:
+        return prerequisites_satisfied(
+            task.get("decision_prerequisites", []), decision_statuses
+        )
+
+    computed_eligible = {
         task["id"]
         for task in tasks
         if task["status"] not in {"DONE", "SUPERSEDED"}
         and all(dep in done for dep in task["dependencies"])
+        and decisions_ready(task)
     }
     declared_ready = {task["id"] for task in tasks if task["status"] == "READY"}
-    if computed_ready != declared_ready:
-        fail(f"declared READY tasks {sorted(declared_ready)} do not match dependency-ready tasks {sorted(computed_ready)}")
-    if declared_ready != {"SQ-0001"}:
-        fail(f"initial ready set must be only SQ-0001, found {sorted(declared_ready)}")
-
-    return tasks, done
+    declared_active = {
+        task["id"] for task in tasks if task["status"] in {"IN_PROGRESS", "IN_REVIEW"}
+    }
+    if computed_eligible != declared_ready | declared_active:
+        fail(
+            f"declared READY/active tasks {sorted(declared_ready | declared_active)} "
+            f"do not match dependency/decision-eligible tasks {sorted(computed_eligible)}"
+        )
+    return tasks, done, declared_ready, declared_active
 
 
 def check_contracts(tasks: list[dict]) -> int:
-    expected_ids = {f"SQ-{number:04d}" for number in range(1, 21)}
+    expected_ids = {task["id"] for task in tasks if task.get("contract") is not None}
     files = sorted((ROOT / "work/contracts").glob("SQ-*.yaml"))
     found_ids: set[str] = set()
     for path in files:
@@ -122,11 +264,17 @@ def check_contracts(tasks: list[dict]) -> int:
         missing = [field for field in required if field not in contract]
         if missing:
             fail(f"{path.name} missing fields: {', '.join(missing)}")
-        backlog_task = next(task for task in tasks if task["id"] == task_id)
+        backlog_task = next((task for task in tasks if task["id"] == task_id), None)
+        if backlog_task is None:
+            fail(f"contract {path.name} has no backlog task")
+        if backlog_task.get("contract") != str(path.relative_to(ROOT)):
+            fail(f"{task_id} backlog contract path differs from {path.relative_to(ROOT)}")
+        if contract.get("status") != backlog_task["status"]:
+            fail(f"{task_id} contract status differs from backlog")
         if contract["dependencies"] != backlog_task["dependencies"]:
             fail(f"{task_id} contract dependencies differ from backlog")
     if found_ids != expected_ids:
-        fail(f"expected detailed contracts SQ-0001..SQ-0020, found {sorted(found_ids)}")
+        fail(f"detailed contract set differs from backlog: expected {sorted(expected_ids)}, found {sorted(found_ids)}")
     return len(files)
 
 
@@ -158,28 +306,37 @@ def check_trusted_placeholders() -> None:
             fail(f"trusted placeholder found in {path.relative_to(ROOT)}")
 
 
-def check_status(done: set[str]) -> None:
+def check_status(
+    tasks: list[dict], done: set[str], ready: set[str], active: set[str]
+) -> None:
     status = load_json(ROOT / "work/status.yaml")
     if set(status.get("done", [])) != done:
         fail("work/status.yaml done set differs from backlog")
-    if status.get("ready") != ["SQ-0001"]:
-        fail("initial status ready list must be [SQ-0001]")
+    if status.get("ready") != sorted(ready):
+        fail("work/status.yaml ready set differs from backlog")
+    if status.get("in_progress") != sorted(active):
+        fail("work/status.yaml in_progress set differs from backlog")
+    blocked_count = sum(task["status"] == "BLOCKED" for task in tasks)
+    if status.get("blocked_count") != blocked_count:
+        fail("work/status.yaml blocked_count differs from backlog")
     if status.get("project_maturity") != "Draft":
         fail("initial project maturity must be Draft")
 
 
 def main() -> None:
+    check_readiness_regression_fixtures()
     check_required_files()
-    tasks, done = check_backlog()
+    tasks, done, ready, active = check_backlog()
     contract_count = check_contracts(tasks)
     check_plans()
     check_agent_wrappers()
     check_trusted_placeholders()
-    check_status(done)
+    check_status(tasks, done, ready, active)
     print("StatQED repository checks passed:")
     print(f"  {len(tasks)} backlog tasks")
     print(f"  {contract_count} detailed task contracts")
-    print("  initial dependency-ready task: SQ-0001")
+    print(f"  dependency-ready tasks: {', '.join(sorted(ready)) or 'none'}")
+    print(f"  active tasks: {', '.join(sorted(active)) or 'none'}")
 
 
 if __name__ == "__main__":

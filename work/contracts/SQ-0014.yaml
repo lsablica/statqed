@@ -4,9 +4,9 @@
   "allowed_paths":["frontends/python/**","generated/python/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],
   "public_changes":["provisional Python package API for toy IR"],
-  "steps":["Create pyproject/src/tests layout","Pin supported Python from SQ-0002","Generate/shared structural models","Use explicit integer/Fraction/IEEE-bit types","Implement reference-backend bridge","Capture environment/provenance","Add type, unit, and packaging checks","Document unsupported semantics"],
-  "tests":["pytest","static type check","build/install wheel","toy fixture","numeric and missing-value boundaries","backend equality"],
+  "steps":["Recheck live PyPI/public-name policy and record point-in-time ownership/availability limits before freezing the manifest","Create pyproject/src/tests layout","Pin supported Python from SQ-0002","Generate/shared structural models","Use explicit integer/Fraction/IEEE-bit types","Implement reference-backend bridge","Capture only RFC-0008 allowlisted provenance without tokens, secrets, raw environment dumps, unnecessary user paths, or private identifiers","Add type, unit, and packaging checks","Document unsupported semantics"],
+  "tests":["pytest","static type check","build/install wheel","ADR-0011 data-free toy fixture","exact numeric constructor tests only for accepted fixture fields","missing/data features rejected as unsupported until RFC-0006 semantics are Accepted","backend equality"],
   "reviewers":{"semantic_source":[],"formal_conformance":["Python frontend reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Typed package builds/installs","No implicit float/exact coercion","No Python-only normative meaning","Output matches shared fixture"],
+  "acceptance":["Live public-name/policy recheck recorded without claiming reservation or legal clearance","Typed package builds/installs","No implicit float/exact coercion","No Python-only normative meaning","Output matches shared fixture"],
   "commands":["cd frontends/python && python -m pytest","cd frontends/python && python -m build","make check"],"handoff_outputs":["Package skeleton","test/type logs","toy example"]
 }

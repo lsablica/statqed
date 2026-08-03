@@ -4,9 +4,9 @@
   "allowed_paths":["backend/**","conformance/golden/**","docs/implementation/rust-backend.md","docs/implementation/schema-development.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","docs/design/**","lean/**","frontends/**"],
   "public_changes":["Rust reference API/CLI for accepted schema v0"],
-  "steps":["Generate or hand-map accepted schema types with traceable provenance","Implement strict decoder and validators","Implement canonical encoder and digests","Define stable machine-readable error taxonomy","Add inspect/validate/canonicalize CLI commands","Add property/differential/resource tests","Document non-authority of Rust semantics"],
+  "steps":["Generate or hand-map accepted data-free schema types with traceable provenance","Implement strict decoder and validators","Implement the Accepted RFC-0001 canonical encoder and domain-separated content digests for the data-free fixture; omit logical-data schemas, lowering, and digests owned by RFC-0006/SQ-0027","Define stable machine-readable error taxonomy","Add inspect/validate/canonicalize CLI commands","Add property/differential/resource tests against independently reviewed vectors","Document non-authority of Rust semantics"],
   "tests":["cargo fmt/clippy/test","golden byte/digest vectors","all negative fixtures","decode-encode idempotence","no panic under malformed corpus","bounded allocation/depth"],
   "reviewers":{"semantic_source":[],"formal_conformance":["conformance-reviewer","rust reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["All accepted vectors match","All rejected vectors have stable failure class","No network or code execution","No schema drift"],
+  "acceptance":["All accepted vectors match an independent semantic/oracle record","All rejected vectors have stable failure class","No network or code execution","No schema drift","No logical-data binding claim unless RFC-0006 is Accepted and implemented"],
   "commands":["cd backend && cargo fmt --check","cd backend && cargo clippy --all-targets --all-features -- -D warnings","cd backend && cargo test --workspace","make check"],"handoff_outputs":["CLI/API docs","test logs","fuzz corpus seed"]
 }

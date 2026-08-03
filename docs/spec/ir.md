@@ -1,6 +1,6 @@
 # Statistical IR Specification
 
-Status: **Draft 0**.
+Status: **Draft; public ontology blocked on RFC-0002 and RFC-0004**.
 
 The IR is a typed, language-neutral graph of analysis semantics. It is not source-language AST and contains no R/Python/Julia-specific object.
 
@@ -22,8 +22,8 @@ The IR is a typed, language-neutral graph of analysis semantics. It is not sourc
 - stable identifiers within an artifact;
 - explicit numeric types: integer, rational, dyadic, fixed decimal, IEEE bits, interval;
 - explicit missing values and categorical levels;
-- typed weights and randomness scopes;
-- deterministic maps/lists and Unicode normalization;
+- typed weights and structured probability contexts once RFC-0004 is accepted;
+- deterministic maps/lists and a governed Unicode policy once RFC-0001 is accepted;
 - no unknown critical extension acceptance;
 - lossless round trip through the normative encoding.
 

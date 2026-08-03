@@ -1,12 +1,12 @@
 {
-  "id":"SQ-0019","title":"Produce trivial cross-language artifact","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"R, Python, and Julia independently construct one toy semantic object that yields identical canonical bytes and a structurally verified `.statqed` bundle.",
+  "id":"SQ-0019","title":"Produce trivial cross-language artifact","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"R, Python, and Julia construct the exact ADR-0011 data-free toy semantic object, yielding identical canonical bytes and a mode-accurate `.statqed` bundle/report.",
   "dependencies":["SQ-0007","SQ-0010","SQ-0012","SQ-0016","SQ-0017","SQ-0018"],
   "allowed_paths":["examples/0000-toy/**","conformance/golden/toy/**","artifacts/toy/**","docs/tutorials/toy-artifact.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md","docs/quality/dashboard.md"],
   "forbidden_paths":["docs/design/**","schemas/**","lean/StatQED/**/*.lean","backend/**/src/**","frontends/**/src/**"],
   "public_changes":[],
-  "steps":["Specify toy object and nonclaim","Construct in each frontend","Canonicalize through reference backend","Compare bytes/digests","Bundle with toy theorem lock and provenance","Run structural and kernel/bridge path as available","Render trust report","Document full reproduction"],
-  "tests":["Three-language byte equality","tampered data/lock rejection","offline verification","clean checkout reproduction","report status assertions"],
+  "steps":["Instantiate the already accepted ADR-0011 fixture and exhaustive nonclaims without adding data/statistical semantics","Construct in each frontend","Canonicalize through reference backend","Compare bytes/digests with independent-oracle evidence from SQ-0016","Bundle with toy theorem/environment/proof/axiom locks and provenance records","Run structural mode and the kernel/bridge path only if RFC-0003 acceptance evidence exists, producing separate single-mode result records","Render a document that never unions evidence or strengthens status across results","Document full reproduction"],
+  "tests":["Three-language byte equality","independent-oracle agreement","tampered lock/environment/registry/provenance-record rejection as applicable","structural success cannot inherit a kernel label","kernel result cannot hide structural-only failures","offline verification","clean checkout reproduction","every ADR-0011 overclaim sentence rejected"],
   "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["conformance reviewer","lean reviewer"],"adversarial":["counterexample reviewer","security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Artifact reproducible","Only toy structural claim accepted","All nonclaims explicit","No uncommitted/generated drift"],
+  "acceptance":["Artifact reproducible","Only the exact toy proposition/structural obligations are accepted under the named mode","All ADR-0011 nonclaims explicit","Lock resolution is not called proof","No artifact-level kernel claim without the Accepted RFC-0003 path","No uncommitted/generated drift"],
   "commands":["python3 scripts/run_conformance.py","make check"],"handoff_outputs":["Toy artifact and digests","reproduction guide","trust report"]
 }

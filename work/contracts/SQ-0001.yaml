@@ -1,12 +1,157 @@
 {
-  "id":"SQ-0001","title":"Ratify constitutional baseline","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Every foundational semantic/architectural choice is accepted, explicitly deferred, or represented by a blocking RFC/task.",
-  "dependencies":[],
-  "allowed_paths":["CHARTER.md","ARCHITECTURE.md","README.md","ROADMAP.md","GOVERNANCE.md","docs/adr/**","docs/design/**","docs/governance/**","docs/spec/**","rfcs/**","work/status.yaml","work/backlog.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
-  "forbidden_paths":["lean/**/*.lean","backend/**/*.rs","frontends/**/src/**"],
-  "public_changes":["mission","non-goals","ontology boundaries","TCB","monorepo","naming","encoding direction","first vertical slice"],
-  "steps":["Review all constitutional docs for contradictions","Research current package/name and ecosystem constraints","Run statistical, formal, interoperability, and security review","Open RFCs for unresolved choices","Mark ADR status/date/reviewers","Update dependency tasks and plan decision log"],
-  "tests":["Repository link/ledger checks","Terminology consistency search","Reviewer checklist","No planned feature described as implemented"],
-  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["formal-methods reviewer","interoperability reviewer"],"adversarial":["counterexample-reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["No unresolved choice is silently assumed","Initial ready-set remains valid","Accepted status is evidence-backed","make check passes"],
-  "commands":["make check","make list-work"],"handoff_outputs":["Accepted ADR/RFC list","decision log","updated status"]
+  "id": "SQ-0001",
+  "title": "Ratify constitutional baseline",
+  "status": "IN_PROGRESS",
+  "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
+  "milestone": "Milestone A — Ratify the constitution",
+  "objective": "Every foundational semantic or architectural choice needed to begin SQ-0002 is evidence-backed and Accepted, explicitly deferred without becoming an implementation assumption, or represented by an explicit blocking RFC/task; the first vertical slice and its nonclaims are unambiguous.",
+  "dependencies": [],
+  "dependency_evidence": [
+    "work/backlog.yaml lists SQ-0001 as IN_PROGRESS with no dependencies and every later Plan 0001 task as BLOCKED",
+    "work/status.yaml lists SQ-0001 as the sole active task",
+    "task branch codex/SQ-0001-constitutional-baseline starts at 2ad5c72f7adc402024152d6fa4af9c86cdf9b588"
+  ],
+  "allowed_paths": [
+    "work/contracts/SQ-0001.yaml",
+    "work/contracts/SQ-0003.yaml",
+    "work/contracts/SQ-0005.yaml",
+    "work/contracts/SQ-0006.yaml",
+    "work/contracts/SQ-0007.yaml",
+    "work/contracts/SQ-0008.yaml",
+    "work/contracts/SQ-0009.yaml",
+    "work/contracts/SQ-0010.yaml",
+    "work/contracts/SQ-0011.yaml",
+    "work/contracts/SQ-0012.yaml",
+    "work/contracts/SQ-0013.yaml",
+    "work/contracts/SQ-0014.yaml",
+    "work/contracts/SQ-0015.yaml",
+    "work/contracts/SQ-0016.yaml",
+    "work/contracts/SQ-0017.yaml",
+    "work/contracts/SQ-0019.yaml",
+    "work/contracts/SQ-0020.yaml",
+    "work/contracts/SQ-0027.yaml",
+    "CHARTER.md",
+    "ARCHITECTURE.md",
+    "README.md",
+    "ROADMAP.md",
+    "GOVERNANCE.md",
+    "docs/glossary.md",
+    "docs/adr/**",
+    "docs/design/**",
+    "docs/governance/**",
+    "docs/spec/**",
+    "docs/research/SQ-0001-constitutional-source-audit.md",
+    "docs/standards/ecosystem-map.md",
+    "docs/standards/references.md",
+    "rfcs/**",
+    "docs/exec-plans/active/0001-foundation-bootstrap.md",
+    "docs/exec-plans/active/0002-randomization-vertical-slice.md",
+    "work/README.md",
+    "work/backlog.yaml",
+    "work/status.yaml",
+    "scripts/check_repository.py",
+    "scripts/list_work.py",
+    "work/reviews/SQ-0001.md",
+    "work/handoffs/SQ-0001.md"
+  ],
+  "forbidden_paths": [
+    "lean/**",
+    "backend/**",
+    "frontends/**",
+    "schemas/**",
+    "conformance/**",
+    "theorem-registry/**",
+    "generated/**",
+    "scripts/** except scripts/check_repository.py and scripts/list_work.py",
+    "Makefile"
+  ],
+  "public_changes": [
+    "mission and non-goals",
+    "statistical ontology and separation boundaries",
+    "evidence taxonomy and assurance semantics",
+    "trusted computing base and verification-mode language",
+    "monorepo and package boundaries",
+    "project and package naming",
+    "normative serialization direction",
+    "theorem-registry identity and lock model",
+    "first vertical-slice scope and nonclaims"
+  ],
+  "accepted_decisions": [],
+  "sources": [
+    "Repository constitution, proposed ADRs, draft RFCs, glossary, governance, design, and specification documents",
+    "Official package-registry and organization/name records for Rust, Python, R, Julia, GitHub, and relevant documentation hosts",
+    "Official Lean, Mathlib, Rust, CBOR, CDDL, IETF, and package-tool documentation where a constitutional choice depends on current constraints",
+    "Original standards documents for deterministic CBOR and CDDL; secondary summaries may only clarify"
+  ],
+  "assumptions": [
+    "No language toolchain is initialized or pinned by SQ-0001",
+    "Proposed ADRs and draft RFCs are inputs for review, not accepted mandates",
+    "No real statistical method, theorem, checker, canonical encoder, artifact verifier, or frontend is implemented at this milestone",
+    "Ambiguous statistical semantics are blocked or deferred through governance rather than resolved by implementation convenience",
+    "External producers, solvers, frontends, report generators, and AI agents are not trusted merely because they emit an output; any component whose output is not independently rebound and checked joins the relevant operational trusted computing base"
+  ],
+  "steps": [
+    "Audit the charter, architecture, proposed ADRs, trust model, naming, package boundaries, evidence taxonomy, serialization direction, theorem-registry model, and first vertical slice for contradictions and hidden commitments",
+    "Research current primary standards, official tool/package constraints, and name availability only where needed to support a constitutional decision",
+    "Record sources, exact locators, retrieval dates, implications, and unresolved availability limitations",
+    "Obtain distinct statistical, formal, interoperability, adversarial, security/trust, and integration reviews, plus source curation where external evidence is used",
+    "Convert every unresolved constitutional decision into an RFC or explicit blocking/deferred task; do not improvise statistical meaning",
+    "Amend and mark ADRs Accepted only when their evidence, consequences, date, and reviewer record are complete",
+    "Confirm the exact first vertical slice and enumerate prohibited claims",
+    "Make the repository ledger/status guardrail derive the ready set from task dependencies so the required SQ-0001 completion transition remains checkable",
+    "Update the active plan Progress, Surprises & Discoveries, Decision Log, and Outcomes sections",
+    "Run all applicable merge gates, update backlog/status only after integration review, and produce the task handoff"
+  ],
+  "tests": [
+    "Repository structural, link, ledger, status-vocabulary, and placeholder checks via make check",
+    "Dependency-ready scheduling check via make list-work",
+    "Terminology and maturity-language consistency review across every changed constitutional document",
+    "Contradiction matrix covering ADR/RFC status, trust modes, evidence classes, serialization authority, registry identity, package boundaries, and vertical-slice claims",
+    "Reviewer-independence and disposition checklist",
+    "Negative review for planned features described as implemented, replay described as verification, or numerical evidence promoted to identification/inference"
+  ],
+  "reviewers": {
+    "semantic_source": [
+      "source-curator — primary standards, official ecosystem constraints, and attribution",
+      "statistical-architect — ontology, evidence taxonomy, randomness/claim boundaries, and first-slice semantics"
+    ],
+    "formal_conformance": [
+      "formal-methods reviewer — theorem-registry model, statement governance, formal/empirical boundary, and TCB claims",
+      "interoperability reviewer — package boundaries, naming, serialization direction, versioning, and cross-language consequences"
+    ],
+    "adversarial": [
+      "counterexample-reviewer — contradiction, non-vacuity, assumption-ablation, corruption, and overclaim review"
+    ],
+    "security_trust": [
+      "security reviewer — parser/archive threats, registry authorization, cryptographic boundaries, privacy, resource limits, and mode-specific TCB"
+    ],
+    "integrator": [
+      "integration-reviewer — scope, review independence, merge gates, status/plan accuracy, and clean repository checks"
+    ]
+  },
+  "acceptance": [
+    "No known unresolved contradiction remains within the enumerated, content-addressed SQ-0001 review surface",
+    "Every constitutional choice is backed by an Accepted ADR/RFC or an explicit blocked/deferred item with no downstream silent assumption",
+    "Each Accepted ADR records acceptance date, decision evidence, consequences, named independent reviewer roles, and the exact reviewed commit or content digest",
+    "Naming and package-boundary conclusions distinguish verified official facts from availability that could not be authoritatively established",
+    "The evidence taxonomy never promotes diagnostics, attestations, computations, or provenance into deductive proof or external-assumption truth",
+    "The serialization decision remains a governed direction pending SQ-0005 prototype evidence and does not falsely claim canonicalization is implemented",
+    "The theorem-registry model distinguishes stable semantic identity, statement locks, proof bodies, source lineage, and compatibility",
+    "The first vertical slice is a trivial structural/toy artifact and states that no real statistical method or guarantee is complete",
+    "Distinct statistical, formal, interoperability, adversarial, security/trust, and integration reviewers record dispositions",
+    "Only SQ-0001 is executed; no Lean, Rust, R, Python, Julia, schema, conformance, or theorem-registry implementation file changes",
+    "make check and make list-work exit successfully after plan, backlog, status, review, and handoff records are current"
+  ],
+  "commands": [
+    "make check",
+    "make list-work"
+  ],
+  "handoff_outputs": [
+    "Accepted ADR and RFC disposition list with explicit deferrals/blockers",
+    "Primary-source and ecosystem-constraint audit",
+    "Independent statistical, formal, interoperability, adversarial, security/trust, and integration review record",
+    "Updated active-plan Progress, Surprises & Discoveries, Decision Log, and Outcomes sections",
+    "Updated work/backlog.yaml and work/status.yaml integration state",
+    "work/handoffs/SQ-0001.md with exact commands, results, decisions, limitations, and next dependency-ready task"
+  ]
 }

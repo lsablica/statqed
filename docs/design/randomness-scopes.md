@@ -1,8 +1,10 @@
 # Randomness Scopes
 
+Status: **Draft; public ontology blocked on RFC-0004**.
+
 Probability statements must name what is random and what is fixed.
 
-Initial scope taxonomy:
+Research catalogue (not a flat public enumeration):
 
 - `sampling`: observations drawn from a population/model;
 - `assignment`: treatment or exposure assigned by a design;
@@ -15,4 +17,4 @@ Initial scope taxonomy:
 - `measurement`: explicit measurement-error mechanism;
 - `privacy`: randomness introduced by a privacy mechanism.
 
-A claim records conditioning and nested scopes. For example, a Monte Carlo approximation to an assignment-randomization p-value has two distinct probability layers. Frontends may not collapse them into a generic `probability` field.
+These entries mix sources, regimes, computational purposes, temporal/index structures, and interpretations. RFC-0004 must separate those dimensions and define laws, fixed objects, conditioning, nesting/coupling, and quantifier scope before SQ-0008 freezes a public type. For example, a Monte Carlo approximation to an assignment-randomization p-value has two distinct probability contexts. Frontends may not collapse them into a generic `probability` field.

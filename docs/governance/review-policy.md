@@ -1,5 +1,7 @@
 # Review Policy
 
+Status: **Draft**.
+
 High-risk changes require distinct evidence:
 
 - source fidelity;
@@ -8,4 +10,4 @@ High-risk changes require distinct evidence:
 - adversarial/counterexample testing;
 - integration.
 
-Reviewers name the exact statement hash/schema digest/commit reviewed. Reviews expire when that subject changes. Low-risk exceptions must be documented. The repository owner remains merge authority initially but may not waive missing scientific evidence.
+Reviewers name the exact canonical proposition/environment/registry record when applicable, or the exact schema/content digest/commit reviewed. A digest is an integrity identifier, not proof of semantic equality. Reviews expire when that subject or meaning-bearing metadata changes. Low-risk exceptions must be documented. The repository owner remains merge authority initially but may not waive missing scientific evidence.

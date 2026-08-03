@@ -1,5 +1,7 @@
 # Method-Pack Contract
 
+Status: **Draft**.
+
 A method pack is the unit of scientific extension.
 
 ## Required components

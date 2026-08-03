@@ -1,12 +1,12 @@
 {
-  "id":"SQ-0006","title":"Define schema v0 and golden vectors","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Versioned CDDL modules and independently reviewed canonical vectors define the toy IR envelope.",
+  "id":"SQ-0006","title":"Define schema v0 and golden vectors","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Versioned CDDL files and independently reviewed canonical vectors define the ADR-0011 data-free semantic fixture without freezing the artifact envelope.",
   "dependencies":["SQ-0005"],
   "allowed_paths":["schemas/**","conformance/golden/**","docs/spec/ir.md","docs/spec/canonicalization.md","docs/implementation/schema-development.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
   "forbidden_paths":["generated/**","frontends/**","lean/**","backend/src/**"],
   "public_changes":["schema v0"],
-  "steps":["Split CDDL into numeric/common/envelope/toy modules","Define feature and extension behavior","Create minimal/maximal valid examples","Create malformed/numeric/Unicode/unknown-critical negatives","Generate canonical bytes/digests from reviewed semantics","Document error codes and version policy"],
+  "steps":["Split accepted-RFC CDDL syntax into versioned numeric/common/toy files; avoid draft module/import syntax unless pinned and labeled Experimental","Define feature and extension behavior","Freeze ADR-0011 exact field names without data/table semantics or artifact-envelope fields","Keep v0 explicitly data-free; RFC-0006 and every normative data dialect/digest remain owned and blocked by SQ-0027","Create minimal/maximal valid examples","Create malformed/numeric/Unicode/unknown-critical negatives","Generate canonical bytes/digests from independently reviewed semantics","Document error codes and version policy"],
   "tests":["CDDL parser validation","positive and negative fixtures","independent byte/digest comparison","roundtrip/idempotence"],
   "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["conformance-reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Every field has semantic prose","Golden output independently approved","Unknown critical fields fail","No generic ambiguous number"],
+  "acceptance":["RFC-0001 is Accepted","Schema is explicitly data-free and contains no normative logical-data field/digest; RFC-0006 remains owned by SQ-0027","Every field has semantic prose and matches ADR-0011","Golden output is independently approved and not merely copied from Rust","Unknown critical fields fail","No generic ambiguous number","Artifact envelope semantics are not silently frozen"],
   "commands":["make check"],"handoff_outputs":["Schema digest","fixture manifest","review record"]
 }

@@ -1,6 +1,6 @@
 # Core Beliefs
 
-Status: **Draft constitutional design**.
+Status: **Draft**.
 
 1. A statistical output is not a statistical claim until its target, design/model, procedure, assumptions, randomness, and interpretation are explicit.
 2. Identification, inference, numerical correctness, data binding, and interpretation are separate arguments.

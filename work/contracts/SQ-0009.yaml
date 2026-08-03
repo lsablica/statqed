@@ -4,9 +4,9 @@
   "allowed_paths":["lean/StatQED/Assurance/**","schemas/assurance/**","docs/spec/assurance-graph.md","docs/design/assurance-profile.md","conformance/assurance/**","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["methods/**","frontends/**"],
   "public_changes":["assurance node/edge v0"],
-  "steps":["Define toy node and edge kinds","Define stable IDs and DAG validation","Encode allowed dependency rules","Prohibit diagnostic-to-deductive promotion","Add unresolved/external leaves","Specify dependency closure and report projection"],
-  "tests":["Valid toy graph","cycle rejection","forbidden edge rejection","unknown critical kind rejection","Lean examples and schema vectors"],
+  "steps":["Define toy node and edge kinds under Accepted RFC-0002","Define stable IDs and DAG validation","Encode allowed dependency rules","Prohibit diagnostic, attestation, citation, provenance, policy, and unresolved-obligation discharge of deductive premises","Require checked proof locks for deductive refinement/weakening/compatibility edges","Add unresolved/external leaves","Specify dependency closure and report projection"],
+  "tests":["Valid toy graph","cycle rejection","each prohibited discharge edge rejected","unresolved obligation blocks accepted closure","metadata-only refinement/compatibility rejected","unknown critical kind rejection","Lean examples and schema vectors"],
   "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["lean reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Graph semantics match docs and schema","Type/validator prevents prohibited promotion","Dependency closure deterministic"],
+  "acceptance":["RFC-0002 is Accepted","Graph semantics match docs and schema","Type/validator prevents every prohibited promotion","Dependency closure deterministic"],
   "commands":["cd lean && lake build","make check"],"handoff_outputs":["Graph signatures","golden/negative graphs","review records"]
 }

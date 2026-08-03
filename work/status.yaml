@@ -1,16 +1,16 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0001"],
-  "in_progress": [],
+  "ready": [],
+  "in_progress": ["SQ-0001"],
   "blocked_count": 59,
   "done": [],
   "last_integrated_commit": "605f70e872d7bf44278e037667e72dc6cc704d31",
-  "last_updated": "2026-08-02",
+  "last_updated": "2026-08-03",
   "notes": [
     "Repository architecture and agent scaffold installed in commit 605f70e872d7bf44278e037667e72dc6cc704d31.",
     "The permanent scaffold contains 203 files; temporary bootstrap transport was removed.",
     "No statistical method or executable verifier is implemented yet.",
-    "SQ-0001 must ratify provisional ADRs before toolchain bootstrap."
+    "SQ-0001 is in independent review; no toolchain bootstrap has begun."
   ]
 }

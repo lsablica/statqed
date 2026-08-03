@@ -4,9 +4,9 @@
   "allowed_paths":["frontends/r/**","generated/r/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],
   "public_changes":["provisional R package API for toy IR"],
-  "steps":["Create DESCRIPTION/NAMESPACE/package layout","Choose minimum R and package tooling from SQ-0002","Generate/shared structural types","Implement exact integer/rational constructors","Call reference backend for canonical bytes","Add provenance/session capture","Add testthat and R CMD check CI","Document unsupported semantics"],
-  "tests":["R CMD check","toy object fixture","integer/rational/missing-value tests","unsupported feature failure","reference-backend equality"],
+  "steps":["Recheck live CRAN/public-name policy and record point-in-time ownership/availability limits before freezing the manifest","Create DESCRIPTION/NAMESPACE/package layout","Choose minimum R and package tooling from SQ-0002","Generate/shared structural types","Implement exact integer/rational constructors","Call reference backend for canonical bytes","Add RFC-0008 allowlisted provenance capture without tokens, secrets, raw environment dumps, unnecessary user paths, or private identifiers","Add testthat and R CMD check CI","Document unsupported semantics"],
+  "tests":["R CMD check","ADR-0011 data-free toy fixture","exact numeric constructor tests only for accepted fixture fields","missing/data features rejected as unsupported until RFC-0006 semantics are Accepted","reference-backend equality"],
   "reviewers":{"semantic_source":[],"formal_conformance":["R frontend reviewer","conformance reviewer"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Package checks cleanly","No silent double coercion","No R-only normative meaning","Output matches shared fixture"],
+  "acceptance":["Live public-name/policy recheck recorded without claiming reservation or legal clearance","Package checks cleanly","No silent double coercion","No R-only normative meaning","Output matches shared fixture"],
   "commands":["R CMD build frontends/r","R CMD check --no-manual frontends/r/*.tar.gz","make check"],"handoff_outputs":["Package skeleton","check log","toy example"]
 }

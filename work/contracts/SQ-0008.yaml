@@ -1,12 +1,12 @@
 {
-  "id":"SQ-0008","title":"Define minimal Lean claim and evidence types","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Reviewed minimal Lean interfaces distinguish claims, evidence, assumptions, randomness, and verification modes.",
+  "id":"SQ-0008","title":"Define minimal Lean claim and evidence types","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0002 and an accepted narrow RFC-0004 boundary, reviewed minimal Lean interfaces distinguish propositions/claims, evidence objects, assurance inputs, external assumptions, probability context, and verification modes.",
   "dependencies":["SQ-0001","SQ-0003"],
-  "allowed_paths":["lean/StatQED/Assurance/**","lean/StatQED/Guarantee/**","source-audits/core/**","docs/design/core-beliefs.md","docs/design/randomness-scopes.md","docs/glossary.md","theorem-registry/core/**","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "allowed_paths":["lean/StatQED/Assurance/**","lean/StatQED/Guarantee/**","source-audits/core/**","docs/design/core-beliefs.md","docs/design/randomness-scopes.md","docs/glossary.md","theorem-registry/core/**","rfcs/0002-evidence-taxonomy.md","rfcs/0004-core-statistical-ontology.md","docs/adr/0005-typed-assurance-graph.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["lean/StatQED/Methods/**","backend/**","frontends/**"],
   "public_changes":["core Lean types"],
-  "steps":["Draft source-grounded interfaces","Provide examples/nonexamples","Audit external-vs-formal evidence","Review quantifier/randomness representation","Freeze public signatures","Implement and document"],
-  "tests":["Lean examples compile","nonexamples rejected where type-level","statement hash locks","axiom report"],
+  "steps":["Accept RFC-0002 and an explicitly narrow RFC-0004 subset before freezing types","Draft source-grounded interfaces","Provide examples/nonexamples","Separate evidence objects from attestations, diagnostics, citations, provenance, and unresolved obligations","Review random/fixed/conditioned/nested probability context and quantifier representation","Freeze public signatures","Implement and document"],
+  "tests":["Lean examples compile","nonexamples rejected where type-level","content-addressed public-signature and review records without freezing RFC-0005 theorem identity","actual axiom report"],
   "reviewers":{"semantic_source":["ontology-architect","hypothesis-auditor"],"formal_conformance":["lean reviewer","mathlib-scout"],"adversarial":["counterexample reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["No evidence category conflation","External assumptions cannot be constructed as kernel proof accidentally","No overgeneralized experiment design"],
+  "acceptance":["RFC-0002 and the implemented RFC-0004 subset are Accepted","No evidence/assurance-input category conflation","External assumptions cannot be discharged by kernel proof, attestation, diagnostic, citation, provenance, or policy accidentally","No overgeneralized experiment or flat randomness enumeration"],
   "commands":["cd lean && lake build","python3 scripts/check_lean_trust.py","make check"],"handoff_outputs":["Frozen signatures","source/review records","examples"]
 }
