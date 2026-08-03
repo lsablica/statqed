@@ -5,7 +5,7 @@
   "in_progress": [],
   "blocked_count": 58,
   "done": ["SQ-0001"],
-  "last_integrated_commit": "31fbd22876b5613d3d32c94ce07c4368811630d8",
+  "last_integrated_commit": "ab5e937c0f36d605dd75fef86a84ada0868ab326",
   "last_updated": "2026-08-03",
   "notes": [
     "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8.",

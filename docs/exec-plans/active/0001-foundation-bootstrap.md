@@ -212,7 +212,7 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 - 2026-08-03: Classified ADR-0011's definitionally trivial `True` as a test-only conformance record that cannot satisfy public-theorem non-vacuity.
 - 2026-08-03: Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 against the reviewed surface preserved in commit `31fbd22`. ADR-0004, ADR-0005, and ADR-0007 remain Proposed behind their named RFC/tasks.
 - 2026-08-03: Kept RFC-0001 through RFC-0009 Draft. RFC-0002 is review-eligible but remains owned by SQ-0008 so the evidence taxonomy, narrow statistical ontology, and concrete public types are resolved together without silent semantics.
-- 2026-08-03: Independent integration review approved the immutable candidate and the disposition-only delta. SQ-0001 is DONE and SQ-0002 is the sole READY task; no language toolchain was initialized.
+- 2026-08-03: Independent integration review approved the immutable candidate and the disposition-only delta, integrated in commit `ab5e937c0f36d605dd75fef86a84ada0868ab326`. SQ-0001 is DONE and SQ-0002 is the sole READY task; no language toolchain was initialized.
 
 ## Outcomes & Retrospective
 
