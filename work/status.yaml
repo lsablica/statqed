@@ -1,8 +1,8 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0002"],
-  "in_progress": [],
+  "ready": [],
+  "in_progress": ["SQ-0002"],
   "blocked_count": 58,
   "done": ["SQ-0001"],
   "last_integrated_commit": "8d2720e0fcdafd784b86641a05cab67e1dd9a76e",
@@ -11,6 +11,7 @@
     "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8 and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
     "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
     "Post-merge review found no blocking constitutional defect; it corrected stale launch/handoff wording and expanded the SQ-0002 execution contract without changing task states or accepted semantics.",
-    "No statistical method, executable verifier, or production language toolchain is implemented; SQ-0002 is the sole dependency-ready task."
+    "No statistical method, executable verifier, or production language toolchain is implemented.",
+    "SQ-0002 started from reviewed main commit 9bf99227240550a6c84f417eccd99c48f43be6ec on 2026-08-03; it is the sole active task and no later task has begun."
   ]
 }

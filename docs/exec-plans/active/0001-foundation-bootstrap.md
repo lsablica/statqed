@@ -182,7 +182,8 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 
 - [x] Architecture and agent scaffold installed — bootstrap commit.
 - [x] SQ-0001 constitutional baseline ratified and integrated — DONE 2026-08-03; distinct source, statistical, formal, interoperability, security, adversarial, and integration reviews approved the content-addressed surface.
-- [ ] SQ-0002 through SQ-0020.
+- [ ] SQ-0002 toolchain research — IN_PROGRESS 2026-08-03 on `agent/SQ-0002-toolchain-research`, starting from `9bf99227240550a6c84f417eccd99c48f43be6ec`; direct probes run on Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64.
+- [ ] SQ-0003 through SQ-0020.
 
 ## Surprises & Discoveries
 
