@@ -1,12 +1,157 @@
 {
-  "id":"SQ-0002","title":"Research and pin compatible toolchains","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Produce a reproduced compatibility matrix and exact pin proposal for every foundation toolchain.",
-  "dependencies":["SQ-0001"],
-  "allowed_paths":["docs/implementation/toolchain-compatibility.md","docs/research/toolchain-prototypes/**","scripts/bootstrap/**","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
-  "forbidden_paths":["lean/lean-toolchain","lean/lakefile.toml","backend/rust-toolchain.toml","frontends/**"],
-  "public_changes":[],
-  "steps":["Identify current official Lean/Mathlib compatibility","Prototype minimal Lake project","Prototype Rust/CBOR/Arrow candidates","Check R/Python/Julia minimum versions and package tooling","Test Linux/macOS and record Windows plan","Record installation, caching, licensing, and maintenance risks","Recommend exact pins with rejected alternatives"],
-  "tests":["Fresh-environment reproduction","Version command capture","Tiny compile/run for each proposed tool","Dependency/license review"],
-  "reviewers":{"semantic_source":[],"formal_conformance":["lean maintainer","rust engineer","frontend maintainers"],"adversarial":["release engineer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Every pin is current and reproduced","No untested compatibility claim","Bootstrap tasks receive exact versions/commands"],
-  "commands":["make check"],"handoff_outputs":["Compatibility report","pin proposal","prototype logs"]
+  "id": "SQ-0002",
+  "title": "Research and pin compatible toolchains",
+  "status": "READY",
+  "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
+  "milestone": "Milestone B — Pin and bootstrap toolchains",
+  "objective": "Produce a source-grounded, reproducible compatibility matrix and exact pin proposal for the foundation toolchains without initializing production toolchains, accepting Draft RFC semantics, or making unsupported platform/package claims.",
+  "dependencies": ["SQ-0001"],
+  "dependency_evidence": [
+    "SQ-0001 is DONE in work/backlog.yaml",
+    "SQ-0001 was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e",
+    "work/status.yaml and the shared readiness calculation identify SQ-0002 as the sole READY task",
+    "work/reviews/SQ-0001.md and work/handoffs/SQ-0001.md record the accepted decisions and explicit deferrals inherited by this task"
+  ],
+  "allowed_paths": [
+    "work/contracts/SQ-0002.yaml",
+    "docs/implementation/toolchain-compatibility.md",
+    "docs/research/toolchain-prototypes/**",
+    "scripts/bootstrap/**",
+    "docs/exec-plans/active/0001-foundation-bootstrap.md",
+    "work/backlog.yaml",
+    "work/status.yaml",
+    "work/reviews/SQ-0002.md",
+    "work/handoffs/SQ-0002.md"
+  ],
+  "forbidden_paths": [
+    "lean/lean-toolchain",
+    "lean/lakefile.toml",
+    "lean/lake-manifest.json",
+    "lean/**/*.lean",
+    "backend/rust-toolchain.toml",
+    "backend/Cargo.toml",
+    "backend/Cargo.lock",
+    "backend/**/*.rs",
+    "frontends/**",
+    "schemas/**",
+    "conformance/**",
+    "theorem-registry/**",
+    "generated/**",
+    "rfcs/**",
+    "docs/adr/**",
+    ".github/workflows/**",
+    "Makefile"
+  ],
+  "public_changes": [
+    "A reviewed toolchain recommendation and compatibility evidence only; no production pin, package API, normative encoding, theorem identity, artifact, data, or statistical semantic interface is created by this task"
+  ],
+  "accepted_decisions": [
+    "ADR-0001 — foundation-phase monorepo",
+    "ADR-0002 — Lean 4 with pinned Mathlib as the initial normative proof backend",
+    "ADR-0003 — Rust as reference operational backend rather than semantic authority",
+    "ADR-0006 — thin R/Python/Julia frontends",
+    "ADR-0008 — mode-specific minimal TCB and conditionally untrusted producers",
+    "ADR-0009 — source-tree naming only",
+    "ADR-0010 — MIT/CFF/source-attribution policy",
+    "ADR-0011 — exact data-free structural foundation slice"
+  ],
+  "sources": [
+    "Current official Lean release/reference documentation, Lake documentation, and the exact Mathlib repository/toolchain metadata used by tested candidate revisions",
+    "Official Rust release/channel, Cargo workspace/MSRV, target-platform, lint, and installation documentation",
+    "Official Python release/support and packaging documentation plus the build/test tools proposed for the frontend",
+    "Official R release, platform, package-development, R CMD check, and repository documentation",
+    "Official Julia release/LTS, Pkg, package-testing, platform, and registry documentation",
+    "Official Apache Arrow specifications and implementation support matrices relevant to future frontends/backends",
+    "Official CBOR/CDDL standards and official documentation for candidate libraries used only as compatibility prototypes",
+    "Official GitHub Actions runner/tool-cache documentation if CI/platform claims are made",
+    "Authoritative license and security/advisory records for every recommended foundation dependency"
+  ],
+  "assumptions": [
+    "SQ-0002 selects recommendations; SQ-0003 and SQ-0004 create production Lean/Rust locks and workspaces",
+    "Current/latest versions are unstable facts and must be re-queried from primary sources on the execution date",
+    "A development/reference pin, a minimum supported version, and a CI test matrix are different decisions and must be reported separately",
+    "A successful serialization-library prototype does not accept RFC-0001 or make its output the semantic oracle",
+    "A successful Arrow prototype does not accept RFC-0006 or define logical-data identity",
+    "Availability on one operating system or architecture does not imply support elsewhere",
+    "Unavailable or untested combinations are reported as unknown or rejected, never silently inferred",
+    "Prototype manifests and lock files live only under docs/research/toolchain-prototypes during this task"
+  ],
+  "steps": [
+    "Run make check, make list-work, and git diff --check; record the starting commit and verify SQ-0002 is the sole READY task",
+    "Mark SQ-0002 IN_PROGRESS atomically in its contract, backlog, status, and active-plan Progress section before substantive work",
+    "Create docs/implementation/toolchain-compatibility.md with separate columns for proposed development pin, minimum support floor, CI matrix, tested platforms, evidence date, exact source, prototype result, license, maintenance/security risk, and rejected alternatives",
+    "Create docs/research/toolchain-prototypes/matrix.json as a machine-readable inventory of every candidate combination, command, environment, result, and evidence artifact",
+    "Create isolated prototype directories for Lean/Mathlib/Lake, Rust/Cargo, Python packaging/testing, R package tooling, Julia/Pkg, and candidate Arrow/CBOR/CDDL libraries; production paths remain untouched",
+    "Create scripts/bootstrap/run_toolchain_probes.py as the reproducible entry point that runs available probes, validates matrix/report consistency, records exact version output, and fails on an unexplained recommended-pin failure",
+    "For Lean, test exact Lean/Mathlib combinations in a minimal prototype, including dependency resolution, build, a trivial Mathlib import, cache behavior if used, and a proof/axiom inspection smoke test; distinguish a commit pin from a release label",
+    "For Rust, test exact stable/MSRV candidates in a minimal prototype with workspace resolution, formatting, clippy, tests, target/platform information, unsafe-code policy, and candidate dependency compatibility",
+    "For Python, R, and Julia, test the proposed development version and support-floor candidates using minimal package-native build/test/install probes without creating production frontend packages",
+    "For Arrow and CBOR/CDDL candidates, test only build/runtime compatibility, deterministic-behavior observability, API suitability, licensing, active maintenance, and independent-lineage options needed by later tasks; do not select normative semantics",
+    "Run actual probes on every available host/platform and record OS, architecture, container/runner image, locale, network/cache state, and timestamps; make no claim for unavailable macOS/Windows/architecture combinations and provide a concrete later validation plan",
+    "Record all failed combinations, incompatibilities, security/licensing concerns, and rejected alternatives rather than deleting unsuccessful prototype evidence",
+    "Recommend exact pins and support policies with a reasoned rollback/update policy; give SQ-0003 and SQ-0004 exact installation/build commands and expected smoke outputs",
+    "Obtain independent source, Lean, Rust, frontend, interoperability/licensing, release/security, and integration review of the exact report and prototype manifest",
+    "Run the full contract commands from a clean state, create work/reviews/SQ-0002.md and work/handoffs/SQ-0002.md, then transition SQ-0002 to DONE and expose the dependency-ready successor set atomically"
+  ],
+  "tests": [
+    "make check and make list-work before and after the task-state transition",
+    "git diff --check",
+    "python3 -m json.tool docs/research/toolchain-prototypes/matrix.json",
+    "python3 scripts/bootstrap/run_toolchain_probes.py --verify",
+    "Fresh-directory rerun of every recommended-pin prototype with caches disabled or explicitly isolated",
+    "Exact version-command capture and lock/commit digest capture for every recommendation",
+    "A deliberately unsupported or altered candidate must be detected and recorded as failed rather than normalized to success",
+    "Report/matrix consistency checks: every recommendation has a successful named probe and every failed probe appears in rejected/unknown evidence",
+    "Dependency-license and known-advisory review for every recommended library",
+    "No changes under production Lean, Rust, frontend, schema, conformance, registry, RFC, ADR, or workflow paths",
+    "No Draft RFC or prototype behavior described as Accepted or implemented semantics"
+  ],
+  "reviewers": {
+    "semantic_source": [
+      "source curator — current official release/support/compatibility and license evidence"
+    ],
+    "formal_conformance": [
+      "Lean/Mathlib compatibility reviewer — exact Lean/Mathlib/Lake evidence",
+      "Rust/tooling reviewer — exact Rust/Cargo/MSRV/dependency evidence",
+      "R/Python/Julia frontend compatibility reviewers — package-native support-floor and development-version evidence",
+      "interoperability reviewer — Arrow/CBOR/CDDL candidate boundaries and cross-platform claims"
+    ],
+    "adversarial": [
+      "release/security reviewer — stale-version, unsupported-platform, supply-chain, cache, maintenance, and reproducibility failure review"
+    ],
+    "integrator": [
+      "integration reviewer — task scope, evidence completeness, exact commands, status transition, and successor readiness"
+    ]
+  },
+  "acceptance": [
+    "Every proposed development pin is identified by an exact immutable version or commit and has a successful reproducible prototype on a named environment",
+    "Minimum supported versions and CI matrix entries are separate, justified recommendations rather than copies of the development pin",
+    "Every current-version or support-policy statement cites a primary official source with retrieval date",
+    "The report contains actual failures and rejected alternatives, not only the selected stack",
+    "Lean/Mathlib compatibility is demonstrated by a real minimal build and import, not inferred from matching version labels",
+    "Rust and each frontend language have package-native smoke evidence for the recommended policy",
+    "Arrow/CBOR/CDDL findings remain library/tool compatibility evidence and do not settle RFC-0001 or RFC-0006",
+    "Platform support is claimed only where directly tested or officially documented and clearly labeled; untested platforms have a concrete validation plan",
+    "Dependency licenses, maintenance state, and known security risks are recorded",
+    "No production toolchain, package, schema, registry, or workflow file is initialized or modified",
+    "SQ-0003 and SQ-0004 receive exact, tested bootstrap commands and expected results",
+    "Independent specialist and integration reviews approve the exact report/manifest subject",
+    "All required commands pass, SQ-0002 becomes DONE, and the repository computes the correct next READY set"
+  ],
+  "commands": [
+    "make check",
+    "make list-work",
+    "git diff --check",
+    "python3 -m json.tool docs/research/toolchain-prototypes/matrix.json",
+    "python3 scripts/bootstrap/run_toolchain_probes.py --verify"
+  ],
+  "handoff_outputs": [
+    "docs/implementation/toolchain-compatibility.md",
+    "docs/research/toolchain-prototypes/matrix.json and preserved prototype sources/logs",
+    "scripts/bootstrap/run_toolchain_probes.py",
+    "Exact recommended development pins, minimum support floors, CI matrix, platform evidence, cache policy, and update/rollback policy",
+    "Rejected/unknown combination inventory with failure evidence",
+    "Independent source/specialist/security/integration review record",
+    "Updated active plan, backlog, status, and work/handoffs/SQ-0002.md"
+  ]
 }
