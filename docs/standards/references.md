@@ -1,5 +1,7 @@
 # Primary Reference Policy
 
+Status: **Draft**.
+
 Before an RFC or implementation claims conformance, its source audit must link exact current primary documents.
 
 Expected primary-source classes:
@@ -13,4 +15,4 @@ Expected primary-source classes:
 - original statistical theorem papers/books;
 - formal-methods and certified-numerics source repositories/papers.
 
-This file intentionally does not freeze URLs or versions during scaffold installation. SQ-0001/SQ-0002 create a reviewed, versioned bibliography.
+The current constitutional bibliography and exact retrieval date are in `docs/research/SQ-0001-constitutional-source-audit.md`. It includes RFC 8949; RFC 8610 and accepted updates; Unicode normalization sources; official Lean/Mathlib, Cargo, Python, R, Julia, GitHub, CFF, licensing, and registry-policy sources. SQ-0002 adds reproduced, version-specific toolchain and library evidence rather than silently treating this policy as a compatibility report.

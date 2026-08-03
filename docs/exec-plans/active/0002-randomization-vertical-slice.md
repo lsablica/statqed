@@ -30,6 +30,8 @@ Prove the frozen theorem using finite probability/combinatorics and upstream gen
 
 ## Milestone C — Exact witness/checker (SQ-0027–SQ-0029)
 
+Before introducing any normative real-data field, digest, or backend path, SQ-0027 must source-audit and Accept RFC-0006's logical-data object, physical lowering, exact numeric/missingness/categorical semantics, canonical digest domain/profile, privacy limits, and resource rules. Foundation tasks remain deliberately data-free.
+
 Witness content:
 
 - canonical design/assignment-set digest;
@@ -61,7 +63,7 @@ Outputs:
 
 - reproducible scripts in all three languages;
 - byte-identical canonical semantic objects;
-- verified artifact and trust report;
+- artifact carrying a named mode-specific verification result and trust report;
 - human-readable methods narrative;
 - benchmark items derived from failures;
 - draft software/formalization paper case study.

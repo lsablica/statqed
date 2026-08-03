@@ -1,5 +1,7 @@
 # Assumption Calculus Research Programme
 
+Status: **Draft**.
+
 StatQED should support machine-readable reasoning over premise sets.
 
 Research questions:
@@ -11,4 +13,4 @@ Research questions:
 - Does changing procedure reduce the empirical assumption burden?
 - Did selection, stopping, or multiplicity add unrecorded premises?
 
-The calculus must avoid treating diagnostic evidence as logical implication. Formal relations among assumptions require registered theorems or explicit policy rules. The initial implementation should support named sets, implication edges, provenance, and unresolved comparisons before attempting automated minimization.
+The calculus must avoid treating diagnostic evidence as logical implication. Deductive relations among assumptions require locked, kernel-checked theorems; policy may classify or leave a relation unresolved but is not a proof rule. The initial implementation should support named sets, proof-locked implication edges, visibly non-deductive review classifications, provenance, and unresolved comparisons before attempting automated minimization.

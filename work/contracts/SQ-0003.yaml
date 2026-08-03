@@ -5,8 +5,8 @@
   "forbidden_paths":["docs/design/**","schemas/**","backend/**","frontends/**"],
   "public_changes":[],
   "steps":["Create pinned lean-toolchain and Lake configuration","Add minimal StatQED namespace/library/test executable","Configure Mathlib dependency and lock","Add formatting/lint conventions","Add axiom/trusted-path report script","Document local setup and cache","Add clean CI job"],
-  "tests":["lake build","lake test or executable test","axiom report","clean checkout build","forbidden sorry/admit scan"],
+  "tests":["lake build","lake test or executable test","actual transitive axiom report","clean checkout build","forbidden sorry/admit/sorryAx/project-axiom/unreviewed-native-trust scan"],
   "reviewers":{"semantic_source":[],"formal_conformance":["mathlib-scout","lean-formalizer"],"adversarial":["integration-reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Pinned build is reproducible","No statistical semantics introduced","No trusted placeholder","CI and docs match commands"],
+  "acceptance":["Pinned build is reproducible","No statistical semantics introduced","No trusted placeholder or project-defined axiom","Actual axiom report proposes the versioned RFC-0005 baseline without treating the baseline as permission to add axioms","CI and docs match commands"],
   "commands":["cd lean && lake build","python3 scripts/check_lean_trust.py","make check"],"handoff_outputs":["Toolchain lock","build logs","axiom baseline"]
 }

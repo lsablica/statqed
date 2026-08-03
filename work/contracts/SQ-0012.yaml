@@ -1,12 +1,12 @@
 {
-  "id":"SQ-0012","title":"Implement Lean structural verification path","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Lean accepts the toy structural object through an explicitly documented decoder/bridge trust boundary.",
-  "dependencies":["SQ-0003","SQ-0006","SQ-0010"],
-  "allowed_paths":["lean/StatQED/Artifact/**","lean/StatQED/Generated/**","scripts/generate_lean_artifact.py","conformance/lean/**","docs/design/trust-model.md","docs/implementation/lean-core.md","docs/spec/artifact.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
+  "id":"SQ-0012","title":"Implement Lean structural verification path","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0003 acceptance, the ADR-0011 toy bytes are rebound to the exact Lean proposition through a documented and tested decoder/bridge adequacy path.",
+  "dependencies":["SQ-0003","SQ-0006","SQ-0007","SQ-0010"],
+  "allowed_paths":["lean/StatQED/Artifact/**","lean/StatQED/Generated/**","scripts/generate_lean_artifact.py","conformance/lean/**","docs/design/trust-model.md","docs/implementation/lean-core.md","docs/spec/artifact.md","rfcs/0003-artifact-decoder-trust.md","docs/adr/0008-minimal-tcb-and-untrusted-producers.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","backend/src/**","frontends/**","lean/StatQED/Methods/**"],
   "public_changes":["structural verification bridge v0"],
-  "steps":["Evaluate direct decoder versus generated checked source","Document TCB for each option","Implement minimum toy path","Bind schema/version/digests","Reject unsupported critical features","Add independently generated fixtures","Produce kernel and compiled-mode reports"],
-  "tests":["Lean build","accepted toy object","malformed/changed digest rejection","bridge determinism","axiom report","clean generated-source reproduction"],
+  "steps":["Evaluate direct decoder, generated checked source, compiled checker, and hybrid byte-to-term paths","Accept RFC-0003 and document logical/semantic/artifact-binding/operational/cryptographic/external trust categories","Implement the minimum ADR-0011 path","Bind exact bytes, schema/profile, theorem/environment/proof/axiom locks, and interpreted proposition","Reject unsupported critical features","Add independently generated fixtures and malicious misbinding cases","Produce mode-specific reports"],
+  "tests":["Lean build","accepted toy object and exact proposition","malformed/changed digest rejection","bytes-for-False mapped to True misbinding rejection","bridge determinism","actual axiom report","generated-source injection case","clean generated-source reproduction"],
   "reviewers":{"semantic_source":[],"formal_conformance":["lean reviewer","conformance reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Trust boundary is explicit","No parser magic hidden from report","Toy structural fact checked reproducibly","No trusted placeholder"],
+  "acceptance":["RFC-0003 and RFC-0005 are Accepted","Trust categories and byte-to-term adequacy are explicit","No parser/generator/native magic hidden from report","Toy structural proposition checked reproducibly","No artifact-level kernel claim before the accepted path succeeds","No trusted placeholder"],
   "commands":["cd lean && lake build","python3 scripts/check_lean_trust.py","make check"],"handoff_outputs":["Trust analysis","bridge source","verification fixtures"]
 }

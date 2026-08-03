@@ -1,5 +1,7 @@
 # StatQED Governance
 
+Status: **Draft**.
+
 StatQED begins as a founder-led academic project but is designed to become community-governed.
 
 ## Current authority
@@ -14,7 +16,7 @@ Until a formal steering body is constituted, the repository owner is the release
 - **Interoperability Council:** schemas, canonicalization, frontends, compatibility.
 - **Community Council:** contribution policy, credit, releases, conduct, accessibility.
 
-Membership criteria and voting rules require an RFC before the first Candidate release.
+Membership criteria and voting rules are deferred to Draft RFC-0009. The planned bodies have no current membership or voting authority; SQ-0020 must resolve or explicitly schedule the RFC before the first Candidate governance claim.
 
 ## Decision classes
 

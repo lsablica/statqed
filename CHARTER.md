@@ -1,5 +1,7 @@
 # StatQED Project Charter
 
+Status: **Draft**.
+
 ## Mission
 
 StatQED will establish a rigorous, reusable, language-independent foundation for proof-carrying statistical analysis.
@@ -27,8 +29,10 @@ A statistical analysis is not adequately represented by source code plus output.
 \text{procedure},
 \text{claim},
 \text{assumptions},
+\text{probability context and quantifier scope},
 \text{evidence},
-\text{provenance}).
+\text{provenance},
+\text{interpretation and nonclaims}).
 \]
 
 The project thesis is that this object can be made compositional, portable, and checkable without requiring the entire source-language runtime or numerical solver to enter the trusted computing base.

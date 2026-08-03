@@ -41,16 +41,16 @@ StatQED will never use a single undifferentiated “verified” badge. It will r
 | Component | Planned role |
 |---|---|
 | `StatQED` Lean library | Statistical semantics, theorem interfaces, certificate checkers, artifact verification |
-| `statqed-core` Rust crates | Canonical IR, deterministic encodings, digests, registry tooling, CLI |
+| Rust reference workspace (crate names deferred) | Canonical IR, deterministic encodings, digests, registry tooling, CLI |
 | `statqed` CLI | Build, inspect, validate, and verify `.statqed` artifacts |
 | `statqed` for R | R-native constructors, model adapters, reports, certificate producers |
 | `statqed` for Python | Python-native constructors, adapters, reports, certificate producers |
 | `StatQED.jl` | Julia-native constructors, adapters, reports, certificate producers |
 | StatQED Method Packs | End-to-end formal methods, witnesses, checkers, examples, and citations |
 | StatQEDBench | Source-aligned benchmark for formal statistical reasoning and agent systems |
-| StatQED Registry | Stable theorem identifiers, statement hashes, assumptions, provenance, and review metadata |
+| StatQED Registry | Governed theorem identities, proposition/environment/registry/proof/axiom locks, assumptions, provenance, and review metadata |
 
-Package names remain provisional until registry availability and naming policies are formally checked.
+The source-tree names are Accepted foundation conventions under ADR-0009. Public registry names, Rust crate/Lake package names, publication layouts, reservation, and legal clearance remain task-specific and must be rechecked before publication.
 
 ## First three vertical slices
 
@@ -75,7 +75,7 @@ The following constraints are constitutional:
 - Every public theorem requires source lineage, non-vacuity evidence, assumption-ablation tests where meaningful, and an axiom report.
 - No unresolved `sorry` or project-introduced axiom is permitted in a trusted release path.
 - General mathematics should be upstreamed to Mathlib when appropriate.
-- Statistical diagnostics are evidence, not automatic proofs of model assumptions.
+- Statistical diagnostics are non-deductive assurance inputs that may inform judgment, not automatic proofs of model assumptions.
 - Asymptotic validity is not silently upgraded to finite-sample accuracy.
 
 See [CHARTER.md](CHARTER.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [docs/design/core-beliefs.md](docs/design/core-beliefs.md).
@@ -100,14 +100,9 @@ make list-work
 
 ## Scope of trust
 
-The intended trusted computing base is deliberately small:
+The trust model distinguishes the Lean kernel TCB, the semantic review base, artifact byte-to-term binding, operational compiler/runtime/platform trust, cryptographic assumptions, and external empirical premises. A producer is outside the relevant TCB only when its output is independently rebound and checked for the proposition used.
 
-- the Lean kernel and pinned formal sources;
-- the artifact decoder used by the trusted verifier;
-- certificate checkers and their soundness proofs;
-- cryptographic/data-binding primitives named by the artifact.
-
-R, Python, Julia, numerical solvers, BLAS/LAPACK, report generators, LLM agents, and certificate producers are treated as untrusted unless a narrower component is separately verified.
+R, Python, Julia, numerical solvers, BLAS/LAPACK, report generators, LLM agents, and certificate producers are untrusted by default. A decoder, bridge, compiler, native checker, or generator joins a mode's operational TCB whenever its unchecked output determines the interpreted artifact or proposition. Artifact-level kernel-verification claims remain blocked on RFC-0003.
 
 ## Project maturity
 

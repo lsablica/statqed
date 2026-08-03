@@ -1,5 +1,7 @@
 # RFC Process
 
+Status: **Draft**.
+
 An RFC is required for core ontology, evidence taxonomy, normative encoding, theorem ID semantics, TCB, compatibility, public method-pack contract, or guarantee interpretation.
 
 1. Open a Draft using `agents/templates/rfc.md`.

@@ -1,5 +1,7 @@
 # Release Policy
 
+Status: **Draft**.
+
 ## Pre-alpha
 
 No stability or verification claims. Interfaces may change.

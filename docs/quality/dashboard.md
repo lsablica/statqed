@@ -1,6 +1,6 @@
 # Quality Dashboard
 
-Status: **Scaffold only**.
+Status: **Draft**.
 
 | Area | Draft | Experimental | Candidate | Stable |
 |---|---:|---:|---:|---:|
@@ -12,4 +12,4 @@ Status: **Scaffold only**.
 | Frontend conformance paths | 0 | 0 | 0 | 0 |
 | Verified end-to-end artifacts | 0 | 0 | 0 | 0 |
 
-Current evidence: repository design and agent execution scaffold only. No statistical analysis is currently verified by this repository.
+Current evidence: SQ-0001 independently reviewed and accepted eight high-level constitutional ADRs while retaining three Proposed ADRs and nine Draft RFC blockers; see `work/reviews/SQ-0001.md`. Counts above do not increase because no ontology interface, schema, public theorem, checker, method pack, frontend conformance path, or end-to-end artifact was implemented. No statistical analysis is currently verified by this repository.

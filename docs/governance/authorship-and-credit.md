@@ -1,5 +1,7 @@
 # Authorship and Credit
 
+Status: **Draft**.
+
 StatQED separates credit for original mathematics, formalization, software, numerical certificates, benchmark design, semantic review, source curation, maintenance, and project leadership.
 
 Original theorem authors remain cited in registry entries and artifacts. Formalization does not transfer authorship of prior results.

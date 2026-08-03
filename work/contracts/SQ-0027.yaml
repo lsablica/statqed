@@ -1,0 +1,89 @@
+{
+  "id": "SQ-0027",
+  "title": "Resolve logical data and define exact-count witness schema",
+  "status": "BLOCKED",
+  "plan": "docs/exec-plans/active/0002-randomization-vertical-slice.md",
+  "objective": "Before StatQED introduces a normative real-data field, digest, or backend path, RFC-0006 is source-audited and Accepted and the exact-count witness binds the accepted logical data/design/statistic semantics to exact integer counts and a rational result.",
+  "dependencies": ["SQ-0006", "SQ-0023"],
+  "dependency_evidence": [
+    "SQ-0006 supplies only the Accepted data-free foundation encoding profile and shared numeric atoms",
+    "SQ-0023 supplies the reviewed design, assignment, statistic, tail, tie, and p-value semantics that determine witness meaning"
+  ],
+  "allowed_paths": [
+    "rfcs/0006-canonical-logical-data-digest.md",
+    "docs/spec/ir.md",
+    "docs/spec/canonicalization.md",
+    "schemas/data/**",
+    "schemas/witnesses/randomization/**",
+    "backend/crates/statqed-core/src/data/**",
+    "backend/crates/statqed-core/src/digest/**",
+    "conformance/golden/data/**",
+    "conformance/golden/randomization/**",
+    "source-audits/data/**",
+    "docs/exec-plans/active/0002-randomization-vertical-slice.md",
+    "work/status.yaml"
+  ],
+  "forbidden_paths": [
+    "lean/StatQED/Theorems/**",
+    "lean/StatQED/Methods/**",
+    "frontends/**",
+    "schemas/artifact/**",
+    "theorem-registry/**"
+  ],
+  "public_changes": [
+    "logical-data object and digest profile",
+    "exact-count randomization witness schema"
+  ],
+  "sources": [
+    "Primary Arrow/logical-type and cryptographic sources required by RFC-0006",
+    "Accepted RFC-0001 encoding profile and RFC-0006 source audit",
+    "Accepted SQ-0023 randomization-test semantics"
+  ],
+  "assumptions": [
+    "No physical transport, source-language table, decimal text, or binary float silently defines the logical data model",
+    "A logical digest establishes only the named commitment relation under explicit cryptographic assumptions, not physical provenance truth",
+    "Uniform-count and weighted-design witness semantics are not conflated"
+  ],
+  "steps": [
+    "Source-audit physical/logical data, exact type, missingness, categorical, ordering, hashing, privacy, and resource semantics",
+    "Prototype at least two independently originated logical-lowering/digest oracles and mutation detection",
+    "Resolve and Accept RFC-0006 with statistical, interoperability, formal, security, adversarial, and integration review",
+    "Define versioned logical-data and exact-count witness schemas only after RFC-0006 acceptance",
+    "Implement the minimal bounded reference lowering/digest path omitted from the data-free SQ-0011 backend",
+    "Bind design, observed assignment, logical outcomes, statistic, tail/tie convention, exact counts, rational result, profiles, and locks",
+    "Add positive, negative, malformed, corruption, ablation, conformance, privacy, resource, and overclaim fixtures"
+  ],
+  "tests": [
+    "Equivalent accepted physical layouts lower to the same logical object and digest",
+    "Row/order/type/missingness/category/numeric/profile/domain mutations change identity or fail explicitly",
+    "Raw transport checksum cannot substitute for logical digest",
+    "Uniform-count witness cannot be replayed as a weighted-design witness",
+    "Assignment, outcome, statistic, tail, count, denominator, rational, and theorem-lock corruptions fail",
+    "Digest-domain replay, downgrade, fallback, truncation, collision-assumption, privacy-linkability, and resource cases",
+    "Independent oracle detects deliberate Rust divergence"
+  ],
+  "reviewers": {
+    "semantic_source": ["source curator", "design-based inference statistician", "statistical architect"],
+    "formal_conformance": ["formal reviewer", "conformance reviewer"],
+    "adversarial": ["counterexample reviewer", "security reviewer", "privacy reviewer"],
+    "integrator": ["integration-reviewer"]
+  },
+  "acceptance": [
+    "RFC-0006 is Accepted before any normative real-data field, digest, witness, or backend implementation lands",
+    "Logical and physical data identity, exact numeric/type semantics, missingness, categories, ordering, digest domain/profile, privacy, and resources are explicit",
+    "Witness semantics match the Accepted SQ-0023 probability/design convention",
+    "Independent implementations/oracles agree and deliberate divergence is detected",
+    "No digest or structural check is described as physical provenance, identification, inference, or scientific validity"
+  ],
+  "commands": [
+    "make check",
+    "python3 scripts/run_conformance.py",
+    "cd backend && cargo test --workspace"
+  ],
+  "handoff_outputs": [
+    "Accepted RFC-0006 and source audit",
+    "logical-data/digest and exact-count witness schemas",
+    "independent canonical/digest vectors and mutations",
+    "bounded reference implementation and trust report"
+  ]
+}

@@ -1,5 +1,7 @@
 # Numerical Certificate Design
 
+Status: **Draft**.
+
 The producer is optimized for finding an answer; the checker is optimized for establishing a proposition cheaply and independently.
 
 ## Preferred witness families
