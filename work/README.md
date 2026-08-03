@@ -14,7 +14,14 @@ A task is dependency-ready only when:
 
 `backlog.yaml` records every numbered RFC in `decision_register`, with one non-complete owner task whose contract can edit the decision file. Until a reviewed successor relation is implemented, registered RFCs support only `Draft` and `Accepted`; rejection, withdrawal, or supersession must first extend the ledger with non-cyclic successor semantics and negative tests. The repository guardrail rejects unregistered or stale RFC paths, invalid decision statuses, and any non-Accepted RFC whose owner is already DONE or SUPERSEDED. A task may declare only an `Accepted` `decision_prerequisite`; both repository checking and work listing exclude the task from the ready set until that status is present. A task that owns and resolves an RFC does not list that RFC as its own prerequisite; owner completion itself proves the owned RFC is Accepted.
 
-The initial ready set must contain only SQ-0001.
+At scaffold bootstrap the ready set contained only SQ-0001. That was a historical invariant, not a permanent instruction. After every integration, derive the current ready and active sets from the ledger by running:
+
+```bash
+make check
+make list-work
+```
+
+Do not hardcode a prior task as current work in prompts or planning documents. At the post-SQ-0001 state, SQ-0002 is the sole READY task.
 
 ## Updating state
 
