@@ -1,16 +1,15 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": [],
-  "in_progress": ["SQ-0001"],
-  "blocked_count": 59,
-  "done": [],
-  "last_integrated_commit": "605f70e872d7bf44278e037667e72dc6cc704d31",
+  "ready": ["SQ-0002"],
+  "in_progress": [],
+  "blocked_count": 58,
+  "done": ["SQ-0001"],
+  "last_integrated_commit": "31fbd22876b5613d3d32c94ce07c4368811630d8",
   "last_updated": "2026-08-03",
   "notes": [
-    "Repository architecture and agent scaffold installed in commit 605f70e872d7bf44278e037667e72dc6cc704d31.",
-    "The permanent scaffold contains 203 files; temporary bootstrap transport was removed.",
-    "No statistical method or executable verifier is implemented yet.",
-    "SQ-0001 is in independent review; no toolchain bootstrap has begun."
+    "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8.",
+    "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
+    "No statistical method, executable verifier, or language toolchain is implemented; SQ-0002 is the sole dependency-ready task."
   ]
 }

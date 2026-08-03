@@ -50,7 +50,7 @@ StatQED will never use a single undifferentiated “verified” badge. It will r
 | StatQEDBench | Source-aligned benchmark for formal statistical reasoning and agent systems |
 | StatQED Registry | Governed theorem identities, proposition/environment/registry/proof/axiom locks, assumptions, provenance, and review metadata |
 
-The source-tree names are proposed foundation conventions pending SQ-0001 ratification. Public registry names, Rust crate/Lake package names, publication layouts, reservation, and legal clearance remain task-specific and must be rechecked before publication; see ADR-0009.
+The source-tree names are Accepted foundation conventions under ADR-0009. Public registry names, Rust crate/Lake package names, publication layouts, reservation, and legal clearance remain task-specific and must be rechecked before publication.
 
 ## First three vertical slices
 

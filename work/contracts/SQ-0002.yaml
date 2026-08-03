@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0002","title":"Research and pin compatible toolchains","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Produce a reproduced compatibility matrix and exact pin proposal for every foundation toolchain.",
+  "id":"SQ-0002","title":"Research and pin compatible toolchains","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Produce a reproduced compatibility matrix and exact pin proposal for every foundation toolchain.",
   "dependencies":["SQ-0001"],
   "allowed_paths":["docs/implementation/toolchain-compatibility.md","docs/research/toolchain-prototypes/**","scripts/bootstrap/**","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
   "forbidden_paths":["lean/lean-toolchain","lean/lakefile.toml","backend/rust-toolchain.toml","frontends/**"],

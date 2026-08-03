@@ -1,7 +1,11 @@
 # ADR-0002: Lean 4 is the initial normative proof backend
 
-- Status: Proposed
-- Proposed ratification date: 2026-08-03
+- Status: Accepted
+- Accepted: 2026-08-03
+- Review surface: sha256:5793ce0b5c7e819090c74480e93e7167f6821897b96567c8b6c737bc8fa1ff96
+- Review commit: `31fbd22`
+- Review record: `work/reviews/SQ-0001.md`
+- Independent reviewers: source curator, statistical architect, formal-methods reviewer, counterexample reviewer
 - Decision owner: SQ-0001
 
 ## Context

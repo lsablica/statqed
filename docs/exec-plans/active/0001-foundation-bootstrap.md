@@ -181,7 +181,7 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 ## Progress
 
 - [x] Architecture and agent scaffold installed — bootstrap commit.
-- [ ] SQ-0001 constitutional baseline ratified — in progress 2026-08-03 on `codex/SQ-0001-constitutional-baseline`; corrected formal and statistical surfaces approved, with final interoperability/adversarial/security/integration gates pending.
+- [x] SQ-0001 constitutional baseline ratified and integrated — DONE 2026-08-03; distinct source, statistical, formal, interoperability, security, adversarial, and integration reviews approved the content-addressed surface.
 - [ ] SQ-0002 through SQ-0020.
 
 ## Surprises & Discoveries
@@ -210,7 +210,10 @@ As tasks land, the plan must replace placeholders with exact commands for Lean, 
 - 2026-08-03: Fixed provenance-redaction identity: changing committed/normative provenance always creates new normative artifact/result identity; inert-report-only redaction preserves normative identity but changes physical bundle bytes/file commitment and records disclosure; unresolved leaves apply only to external/uncommitted references or newly identified objects/results.
 - 2026-08-03: Constrained registered RFCs to Draft/Accepted and decision prerequisites to Accepted until successor semantics are reviewed. Every completed/superseded owner must have an Accepted RFC; a pure exhaustive fixture covers all supported decision/owner states and a non-vacuous typo rejection.
 - 2026-08-03: Classified ADR-0011's definitionally trivial `True` as a test-only conformance record that cannot satisfy public-theorem non-vacuity.
+- 2026-08-03: Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 against the reviewed surface preserved in commit `31fbd22`. ADR-0004, ADR-0005, and ADR-0007 remain Proposed behind their named RFC/tasks.
+- 2026-08-03: Kept RFC-0001 through RFC-0009 Draft. RFC-0002 is review-eligible but remains owned by SQ-0008 so the evidence taxonomy, narrow statistical ontology, and concrete public types are resolved together without silent semantics.
+- 2026-08-03: Independent integration review approved the immutable candidate and the disposition-only delta. SQ-0001 is DONE and SQ-0002 is the sole READY task; no language toolchain was initialized.
 
 ## Outcomes & Retrospective
 
-SQ-0001 interim outcome: the architecture directions are being separated from unresolved governed interfaces. The milestone remains open pending corrected-surface statistical/formal/interoperability/adversarial/security/integration approval, ADR/RFC dispositions, final status, checks, and handoff. Full Plan 0001 retrospective remains SQ-0020 work.
+SQ-0001 outcome: eight high-level architectural ADRs are Accepted; three narrower ADRs and all nine RFCs remain explicitly Proposed/Draft with machine-checked owners and gates. The exact first slice is data-free, test-only, and non-statistical. Distinct source, statistical, formal, interoperability, security, adversarial, and integration reviewers approved the frozen surface preserved in commit `31fbd22` and its disposition-only integration delta. SQ-0001 is complete, SQ-0002 is the sole READY task, and no language toolchain was initialized. Full Plan 0001 retrospective remains SQ-0020 work.

@@ -1,18 +1,19 @@
 {
   "id": "SQ-0001",
   "title": "Ratify constitutional baseline",
-  "status": "IN_PROGRESS",
+  "status": "DONE",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Milestone A — Ratify the constitution",
   "objective": "Every foundational semantic or architectural choice needed to begin SQ-0002 is evidence-backed and Accepted, explicitly deferred without becoming an implementation assumption, or represented by an explicit blocking RFC/task; the first vertical slice and its nonclaims are unambiguous.",
   "dependencies": [],
   "dependency_evidence": [
-    "work/backlog.yaml lists SQ-0001 as IN_PROGRESS with no dependencies and every later Plan 0001 task as BLOCKED",
-    "work/status.yaml lists SQ-0001 as the sole active task",
+    "At task start, the baseline backlog/status ledger identified dependency-free SQ-0001 as the sole dependency-ready task",
+    "During execution and review, the ledger identified SQ-0001 as the sole active task",
     "task branch codex/SQ-0001-constitutional-baseline starts at 2ad5c72f7adc402024152d6fa4af9c86cdf9b588"
   ],
   "allowed_paths": [
     "work/contracts/SQ-0001.yaml",
+    "work/contracts/SQ-0002.yaml",
     "work/contracts/SQ-0003.yaml",
     "work/contracts/SQ-0005.yaml",
     "work/contracts/SQ-0006.yaml",
@@ -41,6 +42,7 @@
     "docs/governance/**",
     "docs/spec/**",
     "docs/research/SQ-0001-constitutional-source-audit.md",
+    "docs/quality/dashboard.md",
     "docs/standards/ecosystem-map.md",
     "docs/standards/references.md",
     "rfcs/**",
@@ -76,7 +78,16 @@
     "theorem-registry identity and lock model",
     "first vertical-slice scope and nonclaims"
   ],
-  "accepted_decisions": [],
+  "accepted_decisions": [
+    "ADR-0001 — foundation-phase monorepo",
+    "ADR-0002 — Lean 4 as initial normative proof backend",
+    "ADR-0003 — Rust reference operational backend",
+    "ADR-0006 — thin R/Python/Julia frontends",
+    "ADR-0008 — minimal TCB and conditionally untrusted producers",
+    "ADR-0009 — project and foundation source-tree naming",
+    "ADR-0010 — MIT, citation, and source-attribution policy",
+    "ADR-0011 — data-free structural foundation slice"
+  ],
   "sources": [
     "Repository constitution, proposed ADRs, draft RFCs, glossary, governance, design, and specification documents",
     "Official package-registry and organization/name records for Rust, Python, R, Julia, GitHub, and relevant documentation hosts",
