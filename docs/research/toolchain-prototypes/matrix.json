@@ -69,7 +69,7 @@
       "id": "rust-linux-arm64-planned",
       "os": "Ubuntu",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "arm64",
@@ -78,7 +78,7 @@
       "id": "rust-macos-planned",
       "os": "macOS",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "x86_64",
@@ -87,7 +87,7 @@
       "id": "rust-windows-planned",
       "os": "Windows",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "x86_64",
@@ -5744,7 +5744,7 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/README.md",
-      "sha256": "2fe6abd3679db99a2d0b9893de87843f798cfd28584597a6abbe59c0d5f2c8f1"
+      "sha256": "914e36f84ca465d0eb506732d0494ddac77e8d7209082b95932ed944bb4695c1"
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/crates/compat-probe/Cargo.toml",
@@ -5852,7 +5852,7 @@
       "role": "reference operational backend research pin",
       "rollback_policy": "Restore the prior reviewed toolchain and Cargo.lock; retain Cargo CVE-2026-5222/CVE-2026-5223 mitigations",
       "support_floor": "Compatibility-only Rust 1.85.1 MSRV (rustc 4eb161250e340c8f48f66e2b929ef4a5bed7c181; Cargo d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7); fetch with current patched Cargo, then isolated uncredentialed crates.io-only offline 1.85 checks",
-      "update_policy": "Advance only after development and MSRV share the exact lock and fmt, clippy -D warnings, tests, unsafe rejection, license inventory, and advisory checks pass; do not use Cargo <1.96 with credentials or third-party registries"
+      "update_policy": "Advance only after development and MSRV share the exact lock and pass fmt, clippy -D warnings, and tests; development must also pass unsafe rejection, license inventory, and advisory checks; do not use Cargo <1.96 with credentials or third-party registries"
     },
     {
       "ci_matrix": [
@@ -6000,7 +6000,7 @@
         "id": "rust-linux-arm64-planned",
         "os": "Ubuntu",
         "status": "planned_validation",
-        "version": "1.97.1/1.85.1"
+        "version": "1.97.1 development pin"
       },
       {
         "architecture": "arm64",
@@ -6009,7 +6009,7 @@
         "id": "rust-macos-planned",
         "os": "macOS",
         "status": "planned_validation",
-        "version": "1.97.1/1.85.1"
+        "version": "1.97.1 development pin"
       },
       {
         "architecture": "x86_64",
@@ -6018,7 +6018,7 @@
         "id": "rust-windows-planned",
         "os": "Windows",
         "status": "planned_validation",
-        "version": "1.97.1/1.85.1"
+        "version": "1.97.1 development pin"
       },
       {
         "architecture": "x86_64",
@@ -6211,7 +6211,7 @@
         "role": "reference operational backend research pin",
         "rollback_policy": "Restore the prior reviewed toolchain and Cargo.lock; retain Cargo CVE-2026-5222/CVE-2026-5223 mitigations",
         "support_floor": "Compatibility-only Rust 1.85.1 MSRV (rustc 4eb161250e340c8f48f66e2b929ef4a5bed7c181; Cargo d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7); fetch with current patched Cargo, then isolated uncredentialed crates.io-only offline 1.85 checks",
-        "update_policy": "Advance only after development and MSRV share the exact lock and fmt, clippy -D warnings, tests, unsafe rejection, license inventory, and advisory checks pass; do not use Cargo <1.96 with credentials or third-party registries"
+        "update_policy": "Advance only after development and MSRV share the exact lock and pass fmt, clippy -D warnings, and tests; development must also pass unsafe rejection, license inventory, and advisory checks; do not use Cargo <1.96 with credentials or third-party registries"
       },
       {
         "ci_matrix": [
@@ -6343,14 +6343,14 @@
       "url": "https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.2"
     },
     {
-      "authority": "Mathlib immutable tagged source file",
+      "authority": "Mathlib full-commit source file",
       "id": "mathlib-v4.32.2-toolchain",
       "license": "Apache-2.0 repository",
-      "maintenance_security": "Immutable content at the stable Mathlib tag.",
-      "notes": "Exact content: leanprover/lean4:v4.32.2. This is the decisive current matching-pair locator.",
+      "maintenance_security": "Immutable content at the selected Mathlib commit.",
+      "notes": "Exact content: leanprover/lean4:v4.32.2 followed by LF; body SHA-256 2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273. This is the decisive current matching-pair locator.",
       "retrieved_at": "2026-08-05T20:01:03+02:00",
       "title": "Mathlib v4.32.2 lean-toolchain",
-      "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.2/lean-toolchain"
+      "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/905b95818eb32af7874a58b427f50c1711a5e96c/lean-toolchain"
     },
     {
       "authority": "Lean project policy",

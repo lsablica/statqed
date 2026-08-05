@@ -3,7 +3,7 @@
   "subject": "Apache Arrow format and implementation baseline",
   "source": {
     "work": "Apache Arrow 25.0.0 release and format documentation, PyArrow 25.0.0 registry metadata, and arrow-rs 59.1.0 registry/source metadata",
-    "version": "Apache Arrow/PyArrow 25.0.0; arrow-rs arrow crate 59.1.0; retrieved 2026-08-03 and refreshed 2026-08-05",
+    "version": "Apache Arrow/PyArrow 25.0.0; arrow-rs arrow crate 59.1.0; records retrieved 2026-08-03 and 2026-08-05 as itemized in sources.json",
     "locator": "https://arrow.apache.org/release/25.0.0.html; https://arrow.apache.org/docs/format/Versioning.html; https://arrow.apache.org/docs/status.html; https://pypi.org/project/pyarrow/25.0.0/; https://crates.io/crates/arrow/59.1.0; https://github.com/apache/arrow-rs/tree/59.1.0",
     "persistent_id": "apache-arrow-25.0.0@59bea6e; PyPI pyarrow==25.0.0; crates.io arrow@59.1.0 checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b"
   },

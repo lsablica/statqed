@@ -2,7 +2,8 @@
 
 Status: **Experimental**.
 
-Evidence dates: 2026-08-03, refreshed 2026-08-05. This prototype tests toolchain and dependency
+Evidence records were collected on 2026-08-03 and selectively on 2026-08-05,
+with exact dates in the matrix. This prototype tests toolchain and dependency
 compatibility only. It defines no StatQED serialization, Arrow, archive,
 digest, CLI, artifact, canonicalization, or statistical semantics. Successful
 execution is not verification and does not accept any Draft RFC.
@@ -123,7 +124,7 @@ following concrete CI entries before claiming those platforms:
 |---|---|---|---|
 | `rust-dev-linux-x64` | `ubuntu-24.04`, `1.97.1` | metadata locked, fmt check, Clippy all targets/features with `-D warnings`, tests, runtime smoke, RustSec audit | Direct host analogue passed. |
 | `rust-msrv-linux-x64` | `ubuntu-24.04`, `1.85.1`; isolated, offline after exact crates.io-only fetch, uncredentialed | metadata/test/Clippy with the committed lock and warnings denied | Direct host analogue passed; compatibility only, not security support. |
-| `rust-dev-linux-arm64` | `ubuntu-24.04-arm`, `1.97.1` | locked metadata, Clippy, tests, runtime smoke | Untested; required before support claim. |
+| `rust-dev-linux-arm64` | `ubuntu-24.04-arm`, `1.97.1` | locked metadata, Clippy, tests, runtime smoke | Untested; required before support claim. MSRV remains Linux x64-only until separately planned and tested. |
 | `rust-dev-macos-arm64` | `macos-15`, `1.97.1` | locked metadata, Clippy, tests, runtime smoke | Untested; required before support claim. |
 | `rust-dev-macos-x64` | `macos-15-intel`, `1.97.1` | locked metadata, Clippy, tests, runtime smoke | Untested; required before support claim. |
 | `rust-dev-windows-x64` | `windows-2025`, `1.97.1` | locked metadata, Clippy, tests, runtime smoke | Untested; required before support claim. |
@@ -202,23 +203,49 @@ after final integration so downstream review does not trigger large downloads.
 
 For SQ-0004, initialize the production workspace with `rust-version =
 "1.85.1"`, Edition 2024, resolver `3`, workspace `unsafe_code = "forbid"`,
-and an exact `rust-toolchain.toml` channel `1.97.1`. Commit `Cargo.lock`, then
-run:
+and an exact `rust-toolchain.toml` channel `1.97.1`. Commit `Cargo.lock`. Before
+acquisition, confirm the workspace has no source-replacing Cargo configuration;
+then fetch the locked crates.io graph with current Cargo into a fresh,
+credential-free Cargo home. Preserve the shell's rustup proxy path and exact
+rustup home explicitly, then run every old-Cargo command offline:
 
 ```bash
-cargo +1.97.1 metadata --locked --format-version 1
-cargo +1.97.1 fmt --all -- --check
-cargo +1.97.1 clippy --locked --workspace --all-targets --all-features -- -D warnings
-cargo +1.97.1 test --locked --workspace --all-targets --all-features
-cargo +1.85.1 clippy --locked --workspace --all-targets --all-features -- -D warnings
-cargo +1.85.1 test --locked --workspace --all-targets --all-features
+test ! -e .cargo/config && test ! -e .cargo/config.toml
+SQ0004_HOME="$(mktemp -d /tmp/statqed-sq0004-cargo.XXXXXX)"
+SQ0004_CARGO_HOME="${SQ0004_HOME}/cargo"
+SQ0004_PATH="${PATH}"
+SQ0004_RUSTUP_HOME="${RUSTUP_HOME:-${HOME}/.rustup}"
+mkdir -p "${SQ0004_CARGO_HOME}"
+env -i HOME="${SQ0004_HOME}" XDG_CONFIG_HOME="${SQ0004_HOME}/xdg" \
+  PATH="${SQ0004_PATH}" RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" \
+  CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse \
+  cargo +1.97.1 fetch --locked
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.97.1 metadata --locked --offline --format-version 1
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.97.1 fmt --all -- --check
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.97.1 clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.97.1 test --locked --offline --workspace --all-targets --all-features
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.85.1 clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
+env -i HOME="${SQ0004_HOME}" PATH="${SQ0004_PATH}" \
+  RUSTUP_HOME="${SQ0004_RUSTUP_HOME}" CARGO_HOME="${SQ0004_CARGO_HOME}" \
+  CARGO_NET_OFFLINE=true cargo +1.85.1 test --locked --offline --workspace --all-targets --all-features
 ```
 
 Expected result: every command exits `0`. The bootstrap task must use its own
 toy, non-semantic smoke output; the compatibility JSON above is not production
 behavior.
 
-## Primary sources retrieved 2026-08-03 and refreshed 2026-08-05
+## Primary sources with per-record retrieval dates in the matrix
 
 - Rust 1.97.1 release and miscompilation fix:
   <https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/>

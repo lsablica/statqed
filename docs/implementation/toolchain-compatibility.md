@@ -8,7 +8,7 @@ data, reserves no package name, and claims no untested platform. Runtimes,
 package managers, registries, caches, solvers, report generators, and agents
 remain outside the trusted computing base.
 
-Matrix SHA-256: `sha256:71b6c85ff75f130f37c762e45d19c9c7757b2579e3e64221031ebabff238a78e`
+Matrix SHA-256: `sha256:4080a44937e3e0f4e58d61200d562c48b0ea658b0bc33f5c0cf0317daf74ec5d`
 
 ## Recommendation and CI summary
 
@@ -23,7 +23,7 @@ workflows are authorized; a mutable `*-latest` label is not support evidence.
 | Component and role | Development/reference pin | Support floor | Proposed CI |
 |---|---|---|---|
 | Lean/Mathlib/Lake, proof-backend bootstrap | Lean 4.32.2 commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`; Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`; bundled Lake `5.0.0-src+f3b06c7` | exact pair only | Linux cached and no-cache; macOS/Windows planned |
-| Rust/Cargo, operational-backend bootstrap | Rust 1.97.1, rustc `8bab26f4f68e0e26f0bb7960be334d5b520ea452`, Cargo `c980f4866141969fab6254a680546a277789d6f0` | compatibility-only Rust 1.85.1, rustc `4eb161250e340c8f48f66e2b929ef4a5bed7c181`, Cargo `d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7` | Linux dev/MSRV; Linux arm64, macOS, Windows planned |
+| Rust/Cargo, operational-backend bootstrap | Rust 1.97.1, rustc `8bab26f4f68e0e26f0bb7960be334d5b520ea452`, Cargo `c980f4866141969fab6254a680546a277789d6f0` | compatibility-only Rust 1.85.1, rustc `4eb161250e340c8f48f66e2b929ef4a5bed7c181`, Cargo `d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7` | Linux dev/MSRV; Linux arm64, macOS, Windows development-pin validation planned |
 | Python thin frontend | CPython 3.14.7; tested python-build-standalone 20260805 target `76b41240bc8dfe753a54b2e32c8941e536568be8` | Python `>=3.11`; exact patch 3.11.15 | Linux 3.14/3.11; 3.12/3.13 and other OSes planned |
 | R thin frontend | R 4.6.1/testthat 3.3.2 | `R >=4.4.0`; exact patch R 4.4.3/testthat 3.2.3 | Linux dev/floor; macOS/Windows planned |
 | Julia thin frontend | Julia 1.12.6 | maintained LTS policy; exact LTS 1.10.11 | Linux Stable/LTS; macOS/Windows planned |
@@ -39,11 +39,13 @@ with credentials or third-party registries.
 
 ## Lean, Mathlib, Lake, and Elan
 
-- **Primary sources and retrieval.** Official Lean and Mathlib v4.32.2 release
-  records, immutable repository blobs, Lake reference, Mathlib dependency/cache
-  guidance, and Elan release data were retrieved 2026-08-05. Exact locators and
-  timestamps are the `official-lean-4.32.2`, `official-mathlib-v4.32.2`,
-  `immutable-mathlib-4.32.2-lean-toolchain`, and related matrix source records.
+- **Primary sources and retrieval.** The official Lean v4.32.2 release record,
+  Lake reference, and Mathlib dependency/cache guidance were retrieved
+  2026-08-03. The official Mathlib v4.32.2 release and full-commit toolchain
+  blob, plus Elan 4.2.3 release/license data, were retrieved 2026-08-05. Exact
+  locators and timestamps are the `lean-release-v4.32.2`,
+  `mathlib-release-v4.32.2`, `mathlib-v4.32.2-toolchain`, and related matrix
+  source records.
 - **Install/version evidence.** The preparation command installs exact Elan
   4.2.3 and `leanprover/lean4:v4.32.2`; `lean --version` reported commit
   `f3b06c7…`, and `lake --version` reported `5.0.0-src+f3b06c7`. The owned
@@ -66,9 +68,10 @@ with credentials or third-party registries.
 
 ## Rust and Cargo
 
-- **Primary sources and retrieval.** Official Rust 1.97.1/1.85.1 releases,
-  Cargo resolver/MSRV references, target tiers, crates.io records, RustSec, and
-  Rust security advisories were refreshed 2026-08-05. Source IDs include
+- **Primary sources and retrieval.** The Rust 1.97.1 release, Cargo
+  resolver/MSRV references, target tiers, crates.io records, and RustSec were
+  retrieved 2026-08-03. The Rust 1.85.1 identity, Cargo and bundled-libssh2
+  advisories, and rustup 1.29.0 data were retrieved 2026-08-05. Source IDs include
   `rust-release-1.97.1`, `rust-release-1.85.1`, `cargo-cve-2026-5222`,
   `cargo-cve-2026-5223`, and `rust-release-1.96.1-libssh2-security`.
 - **Install/version evidence.** Exact rustup commands install 1.97.1 and 1.85.1
@@ -97,9 +100,10 @@ with credentials or third-party registries.
 
 ## Python
 
-- **Primary sources and retrieval.** The PSF 3.14.7 and 3.11.15 release pages,
-  supported-versions/security policy, packaging flow, Astral releases, and uv
-  0.11.32 were retrieved 2026-08-05. Source IDs are
+- **Primary sources and retrieval.** The PSF 3.14.7, 3.13.15, 3.12.13, and
+  3.11.15 release pages and python-build-standalone 20260805 data were retrieved
+  2026-08-05. The supported-versions/security policy, packaging flow, and uv
+  0.11.32 records were retrieved 2026-08-03. Source IDs are
   `python-release-v3.14.7`, `python-release-v3.13.15`,
   `python-release-v3.12.13`, `python-release-v3.11.15`,
   `python-build-standalone-20260805`, and `python-packaging-flow`.
@@ -131,9 +135,10 @@ with credentials or third-party registries.
 
 ## R
 
-- **Primary sources and retrieval.** Official R 4.6.1 and 4.4.3 releases,
-  Writing R Extensions, CRAN policy, R SDLC, and testthat records were refreshed
-  2026-08-05 (`r-release-4.6.1`, `r-release-4.4.3`, and related source IDs).
+- **Primary sources and retrieval.** Official R 4.6.1, Writing R Extensions,
+  CRAN policy, and R SDLC records were retrieved 2026-08-03. The exact R 4.4.3
+  and testthat 3.3.2/3.2.3 records were retrieved 2026-08-05
+  (`r-release-4.6.1`, `r-release-4.4.3`, and related source IDs).
 - **Install/version/prototype.** Development uses R 4.6.1/testthat 3.3.2 and a
   24-package CRAN/Archive URL+SHA-256 source lock, SHA-256
   `34578de2ad22a24e2ffb1f5584731618f9862a1a063623b6c5523a635a5f9721`.
@@ -156,8 +161,9 @@ with credentials or third-party registries.
 ## Julia and Pkg
 
 - **Primary sources and retrieval.** Official Julia release/support, Pkg,
-  registry, license, and security sources were retrieved 2026-08-03 and checked
-  current on 2026-08-05. Exact source IDs include `julia-release-v1.12.6`,
+  registry, license, and security sources were retrieved 2026-08-03. Independent
+  source review on 2026-08-05 confirmed that the Stable/LTS selections were
+  unchanged. Exact source IDs include `julia-release-v1.12.6`,
   `julia-release-v1.10.11`, and `julia-support-policy`.
 - **Immutable assets/version evidence.** Official Linux x86-64 archives are
   `https://julialang-s3.julialang.org/bin/linux/x64/1.12/julia-1.12.6-linux-x86_64.tar.gz`
@@ -182,9 +188,10 @@ with credentials or third-party registries.
 
 ## Arrow interoperability boundary
 
-- **Primary sources/pins.** Apache Arrow 25.0.0 release, format versioning,
-  implementation status, security guidance, PyArrow, and arrow-rs policies were
-  retrieved 2026-08-03 and refreshed 2026-08-05. Exact candidates are PyArrow
+- **Primary sources/pins.** The Apache Arrow 25.0.0 release, format versioning,
+  implementation status, and security guidance were retrieved 2026-08-03.
+  Exact PyArrow and arrow-rs registry/policy records were retrieved 2026-08-05.
+  Exact candidates are PyArrow
   25.0.0/Arrow C++ 25.0.0 and arrow-rs 59.1.0.
 - **Immutable/install evidence.** CPython 3.14.7 and uv assets are the Python
   pins above; PyArrow wheel SHA-256 is
@@ -209,8 +216,8 @@ with credentials or third-party registries.
 ## CBOR and CDDL boundary
 
 - **Primary sources/pins.** RFC 8949, RFC 8610, RFC 9682, the current CDDL
-  modules draft, official package records, release histories, repositories,
-  licenses, and advisories were retrieved 2026-08-03 and refreshed 2026-08-05.
+  modules draft, and the broad library records were retrieved 2026-08-03.
+  The cbor2 6.1.4 release record was retrieved 2026-08-05.
   Current cbor2 6.1.4 uses exact wheel SHA-256
   `c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c`
   and requirements-lock SHA-256
@@ -431,7 +438,7 @@ prototype subject, and corruption fixture.
       "id": "rust-linux-arm64-planned",
       "os": "Ubuntu",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "arm64",
@@ -440,7 +447,7 @@ prototype subject, and corruption fixture.
       "id": "rust-macos-planned",
       "os": "macOS",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "x86_64",
@@ -449,7 +456,7 @@ prototype subject, and corruption fixture.
       "id": "rust-windows-planned",
       "os": "Windows",
       "status": "planned_validation",
-      "version": "1.97.1/1.85.1"
+      "version": "1.97.1 development pin"
     },
     {
       "architecture": "x86_64",
@@ -642,7 +649,7 @@ prototype subject, and corruption fixture.
       "role": "reference operational backend research pin",
       "rollback_policy": "Restore the prior reviewed toolchain and Cargo.lock; retain Cargo CVE-2026-5222/CVE-2026-5223 mitigations",
       "support_floor": "Compatibility-only Rust 1.85.1 MSRV (rustc 4eb161250e340c8f48f66e2b929ef4a5bed7c181; Cargo d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7); fetch with current patched Cargo, then isolated uncredentialed crates.io-only offline 1.85 checks",
-      "update_policy": "Advance only after development and MSRV share the exact lock and fmt, clippy -D warnings, tests, unsafe rejection, license inventory, and advisory checks pass; do not use Cargo <1.96 with credentials or third-party registries"
+      "update_policy": "Advance only after development and MSRV share the exact lock and pass fmt, clippy -D warnings, and tests; development must also pass unsafe rejection, license inventory, and advisory checks; do not use Cargo <1.96 with credentials or third-party registries"
     },
     {
       "ci_matrix": [

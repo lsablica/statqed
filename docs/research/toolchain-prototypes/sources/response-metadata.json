@@ -3,15 +3,17 @@
   "retrieval_started_at": "2026-08-03T12:37:00+02:00",
   "retrieval_finalized_at": "2026-08-03T14:09:00+02:00",
   "currentness_refreshed_at": "2026-08-05T20:14:38+02:00",
-  "cutoff_date": "2026-08-03",
+  "initial_cutoff_date": "2026-08-03",
+  "cutoff_date": "2026-08-05",
   "source_policy": "Primary official sources only; registry metadata is used for published package facts; documentation claims are not substituted for prototype execution evidence.",
   "currentness_policy": "Words such as current, stable, and latest are dated observations at the associated cutoff or refresh. A scheduled release is not treated as available at the earlier cutoff; a later official release is recorded as a currentness correction and does not retroactively change prototype chronology.",
-  "locator_policy": "Prefer immutable release tags and full commits; use section anchors for standards/policy; record a short tag commit when GitHub did not expose the full object through the retrieved page.",
+  "locator_policy": "Prefer full commits or content-digested release artifacts for immutable identity; use release tags only as dated release metadata, section anchors for standards/policy, and record a short tag commit when GitHub did not expose the full object through the retrieved page.",
+  "currentness_refresh_scope": "The August 5 timestamp records the overall re-audit. Every individual source keeps its own retrieved_at timestamp; only itemized records and the two currentness corrections were actually opened on August 5.",
   "failures": [
     {
       "request": "Initial search-index current Lean/Mathlib release resolution",
       "outcome": "stale result labeled v4.30.0 as latest",
-      "preservation": "The original August 3 re-query corrected v4.30.0 to the then-observed v4.32.1 matching pair. A separate August 5 currentness audit opened the exact official Mathlib v4.32.2 release, its immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c, and its tagged lean-toolchain selecting Lean v4.32.2. The recommendation source was therefore corrected to the immutable v4.32.2 pair after direct prototype evidence, while the v4.32.1 observation remains explicitly superseded historical evidence."
+      "preservation": "The original August 3 re-query corrected v4.30.0 to the then-observed v4.32.1 matching pair. A separate August 5 currentness audit opened the exact official Mathlib v4.32.2 release, its immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c, and the full-commit lean-toolchain selecting Lean v4.32.2. The recommendation source was therefore corrected to the immutable v4.32.2 pair after direct prototype evidence, while the v4.32.1 observation remains explicitly superseded historical evidence."
     },
     {
       "request": "Lean Apache-2.0 raw license retrieval",
@@ -48,7 +50,7 @@
     {
       "subject": "Mathlib matching release",
       "original_observation": "On August 3, the retrieved releases response exposed v4.32.1 as the latest matching Mathlib release.",
-      "corrected_observation": "On August 5, the exact official v4.32.2 release page exposed immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c and the tagged lean-toolchain selected leanprover/lean4:v4.32.2.",
+      "corrected_observation": "On August 5, the exact official v4.32.2 release page exposed immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c and the full-commit lean-toolchain selected leanprover/lean4:v4.32.2.",
       "disposition": "v4.32.1 is retained as superseded evidence; v4.32.2 is the current matching source pair."
     },
     {

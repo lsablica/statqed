@@ -3,7 +3,7 @@
   "subject": "R package and support baseline",
   "source": {
     "work": "R 4.6.1 development release, R 4.4.3 support-floor release artifact, testthat 3.3.2/3.2.3 package artifacts, Writing R Extensions, and CRAN Repository Policy",
-    "version": "R 4.6.1 (2026-06-24); R 4.4.3 (2025-02-28); testthat 3.3.2 and 3.2.3; refreshed 2026-08-05",
+    "version": "R 4.6.1 (2026-06-24); R 4.4.3 (2025-02-28); testthat 3.3.2 and 3.2.3; records retrieved 2026-08-03 and 2026-08-05 as itemized in sources.json",
     "locator": "https://developer.r-project.org/; https://www.r-project.org/; https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz; https://cran.r-project.org/web/packages/testthat/DESCRIPTION; https://cran.r-project.org/src/contrib/testthat_3.3.2.tar.gz; https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz; https://cran.r-project.org/doc/manuals/r-release/R-exts.html; https://cran.r-project.org/web/packages/policies.html",
     "persistent_id": "R 4.6.1 Happy Hop; R 4.4.3 Trophy Case source archive; testthat_3.3.2.tar.gz sha256 5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808; testthat_3.2.3.tar.gz sha256 180b794a5bbc016acec5d882e600e0c5ff4c455513dd451960b217e0e53dc1af"
   },

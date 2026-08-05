@@ -6,7 +6,7 @@
   "blocked_count": 58,
   "done": ["SQ-0001"],
   "last_integrated_commit": "8d2720e0fcdafd784b86641a05cab67e1dd9a76e",
-  "last_updated": "2026-08-03",
+  "last_updated": "2026-08-05",
   "notes": [
     "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8 and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
     "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",

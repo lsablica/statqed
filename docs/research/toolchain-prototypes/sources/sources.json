@@ -52,12 +52,12 @@
   {
     "id": "mathlib-v4.32.2-toolchain",
     "title": "Mathlib v4.32.2 lean-toolchain",
-    "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.2/lean-toolchain",
+    "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/905b95818eb32af7874a58b427f50c1711a5e96c/lean-toolchain",
     "retrieved_at": "2026-08-05T20:01:03+02:00",
-    "authority": "Mathlib immutable tagged source file",
+    "authority": "Mathlib full-commit source file",
     "license": "Apache-2.0 repository",
-    "maintenance_security": "Immutable content at the stable Mathlib tag.",
-    "notes": "Exact content: leanprover/lean4:v4.32.2. This is the decisive current matching-pair locator."
+    "maintenance_security": "Immutable content at the selected Mathlib commit.",
+    "notes": "Exact content: leanprover/lean4:v4.32.2 followed by LF; body SHA-256 2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273. This is the decisive current matching-pair locator."
   },
   {
     "id": "lean-release-policy",
