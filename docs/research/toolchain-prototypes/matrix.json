@@ -5627,22 +5627,6 @@
       "sha256": "504646f3674b9b8fff4a543ba9cfbedd811bfd5fad1628c8d98152a47887e1a5"
     },
     {
-      "path": "docs/research/toolchain-prototypes/python/.pytest_cache/.gitignore",
-      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd"
-    },
-    {
-      "path": "docs/research/toolchain-prototypes/python/.pytest_cache/CACHEDIR.TAG",
-      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4"
-    },
-    {
-      "path": "docs/research/toolchain-prototypes/python/.pytest_cache/README.md",
-      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad"
-    },
-    {
-      "path": "docs/research/toolchain-prototypes/python/.pytest_cache/v/cache/nodeids",
-      "sha256": "1a628653c6c7f64284c025f0bbb47b20178fbf4f399150564829190423ed8101"
-    },
-    {
       "path": "docs/research/toolchain-prototypes/python/README.md",
       "sha256": "68898daaf577f619a21e1bdd3bcda080ba753196610d2c1a9dfd753d47f6396f"
     },
