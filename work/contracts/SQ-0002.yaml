@@ -1,7 +1,7 @@
 {
   "id": "SQ-0002",
   "title": "Research and pin compatible toolchains",
-  "status": "IN_REVIEW",
+  "status": "DONE",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Milestone B — Pin and bootstrap toolchains",
   "objective": "Produce a source-grounded, reproducible compatibility matrix and exact pin proposal for the foundation toolchains without initializing production toolchains, accepting Draft RFC semantics, or making unsupported platform/package claims.",
@@ -14,6 +14,8 @@
   ],
   "allowed_paths": [
     "work/contracts/SQ-0002.yaml",
+    "work/contracts/SQ-0003.yaml",
+    "work/contracts/SQ-0004.yaml",
     "docs/implementation/toolchain-compatibility.md",
     "docs/research/toolchain-prototypes/**",
     "scripts/bootstrap/**",
