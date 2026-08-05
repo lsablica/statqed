@@ -8,7 +8,7 @@ data, reserves no package name, and claims no untested platform. Runtimes,
 package managers, registries, caches, solvers, report generators, and agents
 remain outside the trusted computing base.
 
-Matrix SHA-256: `sha256:4080a44937e3e0f4e58d61200d562c48b0ea658b0bc33f5c0cf0317daf74ec5d`
+Matrix SHA-256: `sha256:9e6e09085ffe1b1877492fe8835f75ad5961583ceaa7886e778ab3edbf16c3cf`
 
 ## Recommendation and CI summary
 
