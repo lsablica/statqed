@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "query_osv.py",
+    "--record"
+  ],
+  "ecosystem": "PyPI",
+  "ended_at": "2026-08-05T18:21:24+00:00",
+  "endpoint": "https://api.osv.dev/v1/querybatch",
+  "exit_status": 0,
+  "id": "pypi-osv-exact-lock-query",
+  "package_count": 12,
+  "started_at": "2026-08-05T18:21:23+00:00"
+}

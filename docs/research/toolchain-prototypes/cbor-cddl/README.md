@@ -10,12 +10,13 @@ normalization, inferential validity, or kernel verification.
 
 ## Exact candidates and preparation
 
-The final successful run used Ubuntu 24.04.4 LTS x86_64, CPython 3.14.6,
+The cross-language run used Ubuntu 24.04.4 LTS x86_64, CPython 3.14.6,
 uv 0.11.32, rustc 1.97.1, and Cargo 1.97.1:
 
 | Candidate | Role observed | License / maintenance note |
 |---|---|---|
-| cbor2 6.1.3 | Python encoder/decoder | MIT; current release, Python >=3.10; project documentation says malicious-input testing has not been performed |
+| cbor2 6.1.4 | Python encoder/decoder | MIT; current release retrieved 2026-08-05, Python >=3.10; project documentation says malicious-input testing has not been performed |
+| cbor2 6.1.3 | Historical cross-lineage observation | Superseded on 2026-08-01; retained because it was the version in the differential run |
 | ciborium 0.2.2 | Rust serde/value encoder/decoder | Apache-2.0; maintained candidate; declared Rust 1.58 |
 | minicbor 2.3.0 | independent low-level Rust encoder/decoder | BlueOak-1.0.0; current maintained candidate; no crate MSRV declared |
 | cddl 0.10.6 | CDDL compile/CBOR shape-validation CLI | MIT; actively developed metadata; declared Rust 1.88.0 |
@@ -24,9 +25,10 @@ uv 0.11.32, rustc 1.97.1, and Cargo 1.97.1:
 unmaintained, so it is rejected as a new foundation candidate. Its own README
 points users to ciborium or minicbor.
 
-The cbor2 CPython 3.14 manylinux x86_64 wheel is hash-bound as
-`ad4f3c6dfc6b83331eb04c6975efb2839ab65a3aa81502bc2b3f7945d4c4aa44`
-and installed offline with `--no-index --require-hashes`. The direct Rust CBOR
+The current cbor2 CPython 3.14 manylinux x86_64 wheel is hash-bound as
+`c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c`
+and installed offline with `--no-index --require-hashes`. The earlier 6.1.3
+wheel is retained in the historical matrix entry. The direct Rust CBOR
 graph is the checked-in `Cargo.lock`, SHA-256
 `141d50267ec9db74ecd09cd32e37ec7c41a7c6e5bb10cc85741429532549d871`.
 
@@ -76,6 +78,17 @@ decoder semantic recommendation from SQ-0002. A later strict profile validator
 must operate before lossy generic-value conversion and must test duplicates,
 indefinite items, depth, size, tags, Unicode, and numeric boundaries.
 
+## Current cbor2 security-regression probe
+
+The owned `verify-cbor2-6.1.4.sh` dispatcher used exact CPython 3.14.7 and the
+hash-bound 6.1.4 wheel. It directly confirmed all four security-relevant fixes
+listed in the release history: an indefinite map missing its final value and a
+non-byte bignum payload were rejected; the tested frozendict construction with
+the same key and value sets but different pairing produced distinct hashes;
+and a bytearray followed by an equal byte string round-tripped through a string
+reference without namespace desynchronization. This is narrow regression
+evidence, not an assurance that malicious CBOR is safe.
+
 ## CDDL shape-only observation and MSRV conflict
 
 cddl 0.10.6 on Rust 1.97.1 compiled `schema.cddl`, accepted the valid map,
@@ -97,6 +110,8 @@ version-pinned if later enabled; tool support does not make a draft an RFC.
 ## Reproduction
 
 ```bash
+python3 record_cbor2_6_1_4.py
+
 STATQED_UV=/tmp/statqed-sq0002-python-tools/uv \
 STATQED_CBOR_PYTHON=/tmp/statqed-sq0002-python-runtimes/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14 \
 RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup \
@@ -104,6 +119,9 @@ RUSTUP_TOOLCHAIN=1.97.1 \
 bash docs/research/toolchain-prototypes/cbor-cddl/run-probes.sh
 ```
 
-All downloaded wheels, registries, compilation outputs, validators, and binary
-vectors live under a fresh `/tmp` directory and are removed on exit. Exact logs
-and retained failures are in `../logs/cbor-cddl/`.
+The current-version dispatcher rechecks the Python archive, uv binary, wheel,
+and lock digests; uses fresh HOME, uv, XDG, venv, runtime, and wheelhouse paths;
+and removes them on exit. The historical cross-language script likewise keeps
+downloaded wheels, registries, compilation outputs, validators, and binary
+vectors under a fresh `/tmp` directory. Exact logs and retained failures are in
+`../logs/cbor-cddl/`.

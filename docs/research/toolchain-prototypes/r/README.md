@@ -60,17 +60,18 @@ env XDG_CACHE_HOME=/tmp/statqed-sq0002-r/cache \
   'r-testthat=3.2.3=r44h3697838_2'
 ```
 
-Then, from the repository root:
+After the exact source/conda artifacts have been prepared, the owned reruns are:
 
 ```sh
-docs/research/toolchain-prototypes/r/run-probes.sh all
-docs/research/toolchain-prototypes/r/run-probes.sh floor-recreate
-docs/research/toolchain-prototypes/r/run-probes.sh conda-development-rejection
+/usr/bin/bash docs/research/toolchain-prototypes/r/verify-probe.sh development
+/usr/bin/bash docs/research/toolchain-prototypes/r/verify-probe.sh floor
 ```
 
-Build trees, `.Rcheck` directories, installed packages, downloaded conda
-artifacts, and source tarballs remain under `/tmp`. Only concise logs and the
-machine-readable fragment are retained. The conda solve requires the network.
+Each verifier uses a fresh task directory and removes its prefix, libraries,
+build trees, `.Rcheck` directories, and transient logs on exit. The external
+prepared source and conda artifact caches are digest-checked and retained for
+network-independent reruns; missing preparation returns 77. The initial conda
+solve and artifact acquisition required the network.
 The retained full explicit lock is content-addressed and includes per-artifact
 SHA-256 fragments. A new conda prefix was recreated offline from that exact
 lock and passed the floor probe. The development dependency closure was also

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 from pathlib import Path
 import sys
 import urllib.request
@@ -17,13 +18,23 @@ EXPECTED = "447df764beb07c544f0178a5f6b70ef44b9ecf382b3cdfad4c2d7867353c3887"
 def main() -> None:
     destination = Path(sys.argv[1])
     destination.mkdir(parents=True, exist_ok=True)
-    payload = urllib.request.urlopen(URL, timeout=60).read()
+    prepared = os.environ.get("STATQED_PYARROW_WHEEL")
+    if prepared:
+        source = Path(prepared)
+        if not source.is_file():
+            raise SystemExit(f"prepared wheel does not exist: {source}")
+        payload = source.read_bytes()
+        origin = f"prepared:{source}"
+    else:
+        payload = urllib.request.urlopen(URL, timeout=60).read()
+        origin = URL
     actual = hashlib.sha256(payload).hexdigest()
     if actual != EXPECTED:
         raise SystemExit(f"wheel SHA-256 mismatch: expected {EXPECTED}, got {actual}")
     (destination / FILENAME).write_bytes(payload)
     print(f"wheel_filename={FILENAME}")
     print(f"wheel_sha256={actual}")
+    print(f"wheel_origin={origin}")
 
 
 if __name__ == "__main__":

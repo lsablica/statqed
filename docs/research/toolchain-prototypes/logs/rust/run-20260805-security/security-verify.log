@@ -1,0 +1,11 @@
+timestamp_start=2026-08-05T18:12:59+00:00
+timestamp_end=2026-08-05T18:12:59+00:00
+cwd=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/rust
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=env STATQED_RUST_CACHE_ROOT=/tmp/statqed-sq0002-rust-cache STATQED_CARGO_AUDIT_ARCHIVE=/tmp/statqed-sq0002-cargo-audit-0.22.2.tgz STATQED_RUSTSEC_ARCHIVE=/tmp/statqed-sq0002-rustsec-d91a8fc.tar.gz /tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/rust/verify-probe.sh security 
+stdout_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-security/security-verify.stdout
+stderr_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-security/security-verify.stderr
+exit_code=0

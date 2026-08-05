@@ -2,15 +2,16 @@
   "audit_task": "SQ-0002 role A source curation",
   "retrieval_started_at": "2026-08-03T12:37:00+02:00",
   "retrieval_finalized_at": "2026-08-03T14:09:00+02:00",
+  "currentness_refreshed_at": "2026-08-05T20:14:38+02:00",
   "cutoff_date": "2026-08-03",
   "source_policy": "Primary official sources only; registry metadata is used for published package facts; documentation claims are not substituted for prototype execution evidence.",
-  "currentness_policy": "Words such as current, stable, and latest are observations at the cutoff. Scheduled releases after the cutoff are not treated as available.",
+  "currentness_policy": "Words such as current, stable, and latest are dated observations at the associated cutoff or refresh. A scheduled release is not treated as available at the earlier cutoff; a later official release is recorded as a currentness correction and does not retroactively change prototype chronology.",
   "locator_policy": "Prefer immutable release tags and full commits; use section anchors for standards/policy; record a short tag commit when GitHub did not expose the full object through the retrieved page.",
   "failures": [
     {
       "request": "Initial search-index current Lean/Mathlib release resolution",
       "outcome": "stale result labeled v4.30.0 as latest",
-      "preservation": "Re-querying the live official release lists showed standalone Lean v4.32.2 latest and Mathlib v4.32.1 latest. The tagged Mathlib v4.32.1 lean-toolchain names Lean v4.32.1, so v4.30.0 was rejected as current and v4.32.1 retained as the latest matching pair."
+      "preservation": "The original August 3 re-query corrected v4.30.0 to the then-observed v4.32.1 matching pair. A separate August 5 currentness audit opened the exact official Mathlib v4.32.2 release, its immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c, and its tagged lean-toolchain selecting Lean v4.32.2. The recommendation source was therefore corrected to the immutable v4.32.2 pair after direct prototype evidence, while the v4.32.1 observation remains explicitly superseded historical evidence."
     },
     {
       "request": "Lean Apache-2.0 raw license retrieval",
@@ -20,7 +21,7 @@
     {
       "request": "Direct Rust/Cargo 2026 advisory URLs inferred from the Rust blog index",
       "outcome": "safe-URL/open failure",
-      "preservation": "No claim that a particular compiler/Cargo release fixes CVE-2026-5222 or CVE-2026-5223. RustSec is cited only for crate advisory infrastructure."
+      "preservation": "The original failed inferred URLs produced no security claim. The August 5 refresh independently located the exact official Rust Security Response Team posts at https://blog.rust-lang.org/2026/05/25/cve-2026-5222/ and https://blog.rust-lang.org/2026/05/25/cve-2026-5223/. Their affected ranges and mitigations are now recorded directly; RustSec remains cited only for crate advisory infrastructure."
     },
     {
       "request": "GitHub API full tag objects for Julia v1.12.6, Julia v1.10.11, Arrow 25.0.0, and Lean v4.30.0",
@@ -41,6 +42,20 @@
       "request": "cbor2 canonical map ordering variant in stable API docs",
       "outcome": "API states canonical/sorted output but does not name RFC 8949 section 4.2.1 or 4.2.3",
       "preservation": "Marked as a prototype obligation requiring discriminating byte vectors."
+    }
+  ],
+  "currentness_corrections": [
+    {
+      "subject": "Mathlib matching release",
+      "original_observation": "On August 3, the retrieved releases response exposed v4.32.1 as the latest matching Mathlib release.",
+      "corrected_observation": "On August 5, the exact official v4.32.2 release page exposed immutable revision 905b95818eb32af7874a58b427f50c1711a5e96c and the tagged lean-toolchain selected leanprover/lean4:v4.32.2.",
+      "disposition": "v4.32.1 is retained as superseded evidence; v4.32.2 is the current matching source pair."
+    },
+    {
+      "subject": "CPython development-release currentness",
+      "original_observation": "Python 3.14.6 was current and Python 3.14.7 was only scheduled at the August 3 probe cutoff.",
+      "corrected_observation": "The official Python release page records Python 3.14.7 as released on August 5 and marks 3.14.6 superseded.",
+      "disposition": "3.14.6 remains the exact historical tested SQ-0002 pin. 3.14.7 is the current source release, and the 20260805 managed-runtime artifact has separate immutable provenance; its actual probe result must be taken only from the matrix and retained logs."
     }
   ],
   "prototype_boundary": "These files establish source lineage, versions, licenses, policy, and documented limitations. They do not claim that StatQED builds, packages, validates CBOR/CDDL, or round-trips Arrow on any host. Those are prototype/test obligations."

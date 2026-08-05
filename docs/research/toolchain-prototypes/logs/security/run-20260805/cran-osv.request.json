@@ -1,0 +1,207 @@
+{
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "brio"
+      },
+      "version": "1.1.5"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "callr"
+      },
+      "version": "3.7.6"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "callr"
+      },
+      "version": "3.8.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "cli"
+      },
+      "version": "3.6.6"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "crayon"
+      },
+      "version": "1.5.3"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "desc"
+      },
+      "version": "1.4.3"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "diffobj"
+      },
+      "version": "0.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "diffobj"
+      },
+      "version": "0.3.8"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "digest"
+      },
+      "version": "0.6.39"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "evaluate"
+      },
+      "version": "1.0.5"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "fs"
+      },
+      "version": "2.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "glue"
+      },
+      "version": "1.8.1"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "jsonlite"
+      },
+      "version": "2.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "lifecycle"
+      },
+      "version": "1.0.5"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "magrittr"
+      },
+      "version": "2.0.5"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "otel"
+      },
+      "version": "0.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "pkgbuild"
+      },
+      "version": "1.4.8"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "pkgload"
+      },
+      "version": "1.5.3"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "praise"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "processx"
+      },
+      "version": "3.9.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "ps"
+      },
+      "version": "1.9.3"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "R6"
+      },
+      "version": "2.6.1"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "rlang"
+      },
+      "version": "1.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "rlang"
+      },
+      "version": "1.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "rprojroot"
+      },
+      "version": "2.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "testthat"
+      },
+      "version": "3.2.3"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "testthat"
+      },
+      "version": "3.3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "waldo"
+      },
+      "version": "0.6.2"
+    },
+    {
+      "package": {
+        "ecosystem": "CRAN",
+        "name": "withr"
+      },
+      "version": "3.0.3"
+    }
+  ]
+}

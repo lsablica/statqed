@@ -10,7 +10,7 @@ about particular physical outputs only.
 ## Exact candidates and environment
 
 The final successful run used Ubuntu 24.04.4 LTS, Linux
-7.0.0-28-generic, x86_64, `C.UTF-8`, CPython 3.14.6, uv 0.11.32,
+7.0.0-28-generic, x86_64, `C.UTF-8`, CPython 3.14.7, uv 0.11.32,
 rustc 1.97.1, and Cargo 1.97.1. It compared two implementation lineages:
 
 | Candidate | Implementation lineage | Tested subset | License and floor |
@@ -36,6 +36,10 @@ SHA-256
 - Each implementation constructed and read its own typed table successfully.
 - Each implementation read the other implementation's IPC file and recovered
   the tested schema, rows, nulls, UTF-8 code-point sequence, and byte strings.
+- The Rust foreign reader compared the complete schema and all IDs, labels,
+  payload bytes, and null positions. It rejected a same-schema Python file
+  whose ID and payload were deliberately changed, preventing a labels-only
+  cross-language oracle.
 - Two writes by the same implementation in the same process were byte-equal
   for each IPC container kind. This is repeatability evidence for this exact
   build and fixture, not a cross-build guarantee or canonical-byte rule.
@@ -67,7 +71,7 @@ collapse that status to an Arrow-wide support claim.
 ## Maintenance, licensing, and security
 
 Apache Arrow 25.0.0 and arrow-rs 59.1.0 were active current candidates on the
-2026-08-03 evidence date and are Apache-2.0. Apache publishes a security route,
+2026-08-05 evidence date and are Apache-2.0. Apache publishes a security route,
 and its format security guidance warns that invalid data may crash or disclose
 data and that untrusted C Data Interface inputs are unsafe without validation.
 The probe never used C Data Interface inputs.
@@ -79,17 +83,16 @@ transport recommendation remains subordinate to Draft RFC-0006.
 
 ## Reproduction
 
-The exact evidence run used:
+The exact owned evidence rerun is:
 
 ```bash
-STATQED_UV=/tmp/statqed-sq0002-python-tools/uv \
-STATQED_ARROW_PYTHON=/tmp/statqed-sq0002-python-runtimes/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14 \
-RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup \
-RUSTUP_TOOLCHAIN=1.97.1 \
-bash docs/research/toolchain-prototypes/arrow/run-probes.sh
+/usr/bin/bash docs/research/toolchain-prototypes/arrow/verify-probe.sh
 ```
 
-The script uses a fresh `/tmp` directory and removes the wheelhouse, virtual
-environment, Cargo home, build target, and exchanged Arrow files on exit.
+The script uses fresh `/tmp` verification and scratch directories and removes
+the extracted runtime, uv/XDG cache, wheelhouse, virtual environment, build
+target, and exchanged Arrow files on exit. It deliberately reuses the prepared,
+task-shared Cargo registry/cache at `/tmp/statqed-sq0002-rust-cache/cargo` in
+offline mode; it neither creates nor removes that preparation cache.
 Exact stdout, stderr, intervals, superseded preparation attempts, and explicit
 unknowns are under `../logs/arrow/` and summarized in `probe-fragment.json`.

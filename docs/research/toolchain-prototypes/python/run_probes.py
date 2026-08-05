@@ -17,7 +17,12 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[3]
-LOG_ROOT = ROOT.parent / "logs" / "python" / "run-20260803"
+LOG_ROOT = Path(
+    os.environ.get(
+        "SQ0002_PYTHON_LOG_ROOT",
+        ROOT.parent / "logs" / "python" / "run-20260803",
+    )
+)
 TMP_ROOT = Path(os.environ.get("SQ0002_PYTHON_TMP", "/tmp/statqed-sq0002-python"))
 UV = Path(os.environ.get("SQ0002_UV", "/tmp/statqed-sq0002-python-tools/uv"))
 UV_CACHE = Path(os.environ.get("UV_CACHE_DIR", "/tmp/statqed-sq0002-python-cache"))
@@ -29,7 +34,7 @@ WHEELHOUSE = Path(
 )
 LOCK = ROOT / "probe-requirements.lock"
 VERSIONS = {
-    "development": "3.14.6",
+    "development": "3.14.7",
     "floor": "3.11.15",
     "rejected": "3.10.20",
 }
@@ -38,7 +43,9 @@ COMMON_ENV = {
     "LC_ALL": "C.UTF-8",
     "PYTHONHASHSEED": "0",
     "PIP_DISABLE_PIP_VERSION_CHECK": "1",
-    "PIP_CACHE_DIR": "/tmp/statqed-sq0002-python-pip-cache",
+    "PIP_CACHE_DIR": os.environ.get(
+        "PIP_CACHE_DIR", "/tmp/statqed-sq0002-python-pip-cache"
+    ),
     "PIP_NO_INPUT": "1",
     "UV_CACHE_DIR": str(UV_CACHE),
     "UV_PYTHON_INSTALL_DIR": str(PYTHON_INSTALLS),
@@ -439,7 +446,7 @@ def run_rejection() -> int:
         [str(rejected_python), "-m", "pip", "install", "pip==26.2"],
         env_additions=offline_pip,
     )
-    dev_dist = TMP_ROOT / "supported-3-14-6" / "dist"
+    dev_dist = TMP_ROOT / "supported-3-14-7" / "dist"
     wheel = next(dev_dist.glob("*.whl"), None)
     if wheel is None:
         run_supported("development")

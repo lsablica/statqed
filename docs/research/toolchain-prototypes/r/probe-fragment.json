@@ -59,7 +59,7 @@
         "os": "Ubuntu",
         "version": "24.04.4 LTS",
         "architecture": "x86_64",
-        "environment": "direct host; Linux 7.0.0-28-generic; x86_64-pc-linux-gnu; isolated copied test dependency library and fresh build/check/install directories under /tmp"
+        "environment": "direct host; Linux 7.0.0-28-generic; x86_64-pc-linux-gnu; exact 24-package URL+SHA-256-locked CRAN/Archive source closure installed into a fresh library; fresh build/check/install directories under /tmp"
       },
       "commands": [
         ["R", "--version"],

@@ -3,8 +3,8 @@
 
 The script intentionally uses only the Python standard library. Downloaded
 Julia runtimes, depots, compiled caches, and working copies stay under /tmp.
-Only concise command/output metadata and version-specific manifests are
-written to the repository research tree.
+Only concise command/output metadata is retained. Generated manifests are
+compared byte-for-byte with versioned locks retained under ``locks/``.
 """
 
 from __future__ import annotations
@@ -22,7 +22,12 @@ from datetime import datetime, timezone
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
 PROBE_ROOT = Path(__file__).resolve().parent
-LOG_ROOT = REPOSITORY_ROOT / "docs/research/toolchain-prototypes/logs/julia"
+LOG_ROOT = Path(
+    os.environ.get(
+        "SQ0002_JULIA_LOG_ROOT",
+        REPOSITORY_ROOT / "docs/research/toolchain-prototypes/logs/julia",
+    )
+)
 SOURCE_REFS = [
     "julia-support-policy",
     "julia-release-v1.12.6",
@@ -30,17 +35,18 @@ SOURCE_REFS = [
     "julia-pkg-toml",
     "julia-pkg-registries",
 ]
+LOCK_ROOT = PROBE_ROOT / "locks"
 
 RUNTIMES = {
     "1.12.6": {
-        "binary": Path("/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia"),
-        "archive": Path("/tmp/julia-1.12.6-linux-x86_64.tar.gz"),
+        "binary": Path(os.environ.get("SQ0002_JULIA_DEVELOPMENT_BINARY", "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia")),
+        "archive": Path(os.environ.get("SQ0002_JULIA_DEVELOPMENT_ARCHIVE", "/tmp/julia-1.12.6-linux-x86_64.tar.gz")),
         "archive_sha256": "bbabf3bef19421a9dbd24a767d807606ab85e444323b5a1c73ffe293fa3d079a",
         "role": "development",
     },
     "1.10.11": {
-        "binary": Path("/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia"),
-        "archive": Path("/tmp/julia-1.10.11-linux-x86_64.tar.gz"),
+        "binary": Path(os.environ.get("SQ0002_JULIA_FLOOR_BINARY", "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia")),
+        "archive": Path(os.environ.get("SQ0002_JULIA_FLOOR_ARCHIVE", "/tmp/julia-1.10.11-linux-x86_64.tar.gz")),
         "archive_sha256": "fb49c6b174600cd2051e37ba3f7330f8acf06dd00bce609bab6611387fdb37bf",
         "role": "floor-lts",
     },
@@ -60,7 +66,12 @@ def sha256(path: Path) -> str:
 
 
 def relative(path: Path) -> str:
-    return path.relative_to(REPOSITORY_ROOT).as_posix()
+    try:
+        return path.relative_to(REPOSITORY_ROOT).as_posix()
+    except ValueError:
+        # Owned verification dispatchers deliberately place all generated
+        # logs outside the repository and remove them on exit.
+        return str(path)
 
 
 def run_command(
@@ -149,6 +160,36 @@ def prepare_working_copy(version: str) -> tuple[Path, Path, Path]:
     shutil.copytree(PROBE_ROOT / "src", project / "src")
     shutil.copytree(PROBE_ROOT / "test", project / "test")
     return work_root, project, depot
+
+
+def bind_manifest(version: str, generated: Path) -> tuple[Path, str]:
+    """Bind a generated manifest to its reviewed, retained lock bytes.
+
+    ``SQ0002_JULIA_RECORD_LOCKS=1`` is a deliberate evidence-capture mode. A
+    normal probe never refreshes a lock: it requires the retained bytes and
+    fails closed on drift.
+    """
+
+    if not generated.is_file():
+        raise RuntimeError(f"Julia {version} did not generate Manifest.toml")
+    retained = LOCK_ROOT / f"Manifest-{version}.toml"
+    if os.environ.get("SQ0002_JULIA_RECORD_LOCKS") == "1":
+        LOCK_ROOT.mkdir(parents=True, exist_ok=True)
+        if retained.exists() and retained.read_bytes() != generated.read_bytes():
+            raise RuntimeError(
+                f"refusing to overwrite drifting retained Julia lock: {retained}"
+            )
+        if not retained.exists():
+            shutil.copy2(generated, retained)
+    if not retained.is_file():
+        raise RuntimeError(
+            f"retained Julia lock is absent for {version}: {retained}"
+        )
+    if retained.read_bytes() != generated.read_bytes():
+        raise RuntimeError(
+            f"generated Julia {version} manifest differs from {retained}"
+        )
+    return retained, sha256(retained)
 
 
 def run_candidate(
@@ -262,14 +303,10 @@ def run_candidate(
         )
 
     manifest = project / "Manifest.toml"
-    manifest_directory = PROBE_ROOT / "manifests" / f"julia-{version}"
-    manifest_directory.mkdir(parents=True, exist_ok=True)
-    manifest_evidence = manifest_directory / "Manifest.toml"
-    if manifest.is_file():
-        shutil.copy2(manifest, manifest_evidence)
-        manifest_sha256: str | None = sha256(manifest_evidence)
-    else:
-        manifest_sha256 = None
+    retained_manifest: Path | None = None
+    manifest_sha256: str | None = None
+    if classification == "compatible":
+        retained_manifest, manifest_sha256 = bind_manifest(version, manifest)
 
     combined_stdout, combined_stderr = combine_logs(
         attempt_id, command_records, run_log_root
@@ -296,8 +333,8 @@ def run_candidate(
             "runtime_archive_sha256": observed_archive_sha256,
             "project_toml": relative(PROBE_ROOT / "Project.toml"),
             "project_toml_sha256": sha256(PROBE_ROOT / "Project.toml"),
-            "manifest_toml": relative(manifest_evidence)
-            if manifest_evidence.is_file()
+            "manifest_toml": relative(retained_manifest)
+            if retained_manifest is not None
             else None,
             "manifest_toml_sha256": manifest_sha256,
             "registry_packages": [],
@@ -419,6 +456,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="reuse the isolated project/depot paths from a preserved failed attempts-generated.json",
     )
+    parser.add_argument(
+        "--mode",
+        choices=("all", "development", "floor"),
+        default="all",
+        help="run both endpoints or one exact endpoint",
+    )
     return parser.parse_args()
 
 
@@ -430,18 +473,38 @@ def main() -> int:
     if args.reuse_from is not None:
         prior_attempts = json.loads(args.reuse_from.read_text(encoding="utf-8"))
     attempts = []
-    for index, (version, details) in enumerate(RUNTIMES.items()):
+    selected = [
+        (version, details)
+        for version, details in RUNTIMES.items()
+        if args.mode == "all"
+        or (args.mode == "development" and details["role"] == "development")
+        or (args.mode == "floor" and details["role"] == "floor-lts")
+    ]
+    for index, (version, details) in enumerate(selected):
         prior_attempt = prior_attempts[index] if prior_attempts is not None else None
         attempts.append(run_candidate(version, details, run_log_root, prior_attempt))
-    attempts.append(run_rejection(run_log_root, attempts[0]))
+    candidate_count = len(attempts)
+    if args.mode in {"all", "development"}:
+        attempts.append(run_rejection(run_log_root, attempts[0]))
     generated_path = run_log_root / "attempts-generated.json"
     generated_path.write_text(
         json.dumps(attempts, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
 
+    for attempt in attempts[:candidate_count]:
+        depot = Path(str(attempt["environment_variables"]["JULIA_DEPOT_PATH"]))
+        work_root = depot.parent.resolve()
+        if work_root.parent == Path("/tmp") and work_root.name.startswith("statqed-julia-"):
+            shutil.rmtree(work_root)
+        else:
+            raise ValueError(f"refusing unsafe Julia cleanup target: {work_root}")
+
     expected_success = all(
-        attempt["classification"] == "compatible" for attempt in attempts[:2]
-    ) and attempts[2]["classification"] == "expected_rejection"
+        attempt["classification"] == "compatible"
+        for attempt in attempts[:candidate_count]
+    )
+    if args.mode in {"all", "development"}:
+        expected_success = expected_success and attempts[-1]["classification"] == "expected_rejection"
     return 0 if expected_success else 1
 
 

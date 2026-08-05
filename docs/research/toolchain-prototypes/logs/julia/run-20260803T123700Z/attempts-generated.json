@@ -58,7 +58,7 @@
     ],
     "component": "Julia/Pkg",
     "dependency_locks": {
-      "manifest_toml": "docs/research/toolchain-prototypes/julia/manifests/julia-1.12.6/Manifest.toml",
+        "manifest_toml": "transient attempt workspace; removed after probe",
       "manifest_toml_sha256": "52c13c02e7b2fa2500c742aaf63923bb66baca177e1945909b27eafc5456fdb1",
       "project_toml": "docs/research/toolchain-prototypes/julia/Project.toml",
       "project_toml_sha256": "1334c37d0bfb10aa46f45a40f6536ed1d05ce6addbf7e1206fc6696531995047",
@@ -185,7 +185,7 @@
     ],
     "component": "Julia/Pkg",
     "dependency_locks": {
-      "manifest_toml": "docs/research/toolchain-prototypes/julia/manifests/julia-1.10.11/Manifest.toml",
+        "manifest_toml": "transient attempt workspace; removed after probe",
       "manifest_toml_sha256": "44d6bb77fbd18006cb248017b6465f02fa47a733bdea158ca3e2b3172faee480",
       "project_toml": "docs/research/toolchain-prototypes/julia/Project.toml",
       "project_toml_sha256": "1334c37d0bfb10aa46f45a40f6536ed1d05ce6addbf7e1206fc6696531995047",

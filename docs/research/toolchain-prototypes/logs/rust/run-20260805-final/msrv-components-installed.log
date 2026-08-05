@@ -1,0 +1,11 @@
+timestamp_start=2026-08-05T18:10:14+00:00
+timestamp_end=2026-08-05T18:10:14+00:00
+cwd=/tmp/statqed-sq0002-resume
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=/home/lukas/.cargo/bin/rustup component list --installed --toolchain 1.85.1 
+stdout_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-final/msrv-components-installed.stdout
+stderr_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-final/msrv-components-installed.stderr
+exit_code=0

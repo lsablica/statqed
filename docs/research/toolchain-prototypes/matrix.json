@@ -9,7 +9,7 @@
       "id": "lean-linux-exact",
       "os": "Ubuntu 24.04.4",
       "status": "direct_success",
-      "version": "4.32.1/520045ab"
+      "version": "4.32.2/905b95818eb32af7874a58b427f50c1711a5e96c"
     },
     {
       "architecture": "x86_64",
@@ -20,7 +20,7 @@
       "id": "lean-linux-no-cache",
       "os": "Ubuntu 24.04.4",
       "status": "direct_success",
-      "version": "4.32.1/520045ab no-cache"
+      "version": "4.32.2/905b95818eb32af7874a58b427f50c1711a5e96c no-cache"
     },
     {
       "architecture": "arm64",
@@ -66,6 +66,15 @@
       "architecture": "arm64",
       "component": "Rust/Cargo",
       "evidence_probe_ids": [],
+      "id": "rust-linux-arm64-planned",
+      "os": "Ubuntu",
+      "status": "planned_validation",
+      "version": "1.97.1/1.85.1"
+    },
+    {
+      "architecture": "arm64",
+      "component": "Rust/Cargo",
+      "evidence_probe_ids": [],
       "id": "rust-macos-planned",
       "os": "macOS",
       "status": "planned_validation",
@@ -84,18 +93,18 @@
       "architecture": "x86_64",
       "component": "Python",
       "evidence_probe_ids": [
-        "python-development-3-14-6"
+        "python-development-3-14-7"
       ],
       "id": "python-linux-314",
       "os": "Ubuntu 24.04.4",
       "status": "direct_success",
-      "version": "3.14.6"
+      "version": "3.14.7"
     },
     {
       "architecture": "x86_64",
       "component": "Python",
       "evidence_probe_ids": [
-        "python-floor-3-11-15"
+        "python-floor-3-11-15-owned"
       ],
       "id": "python-linux-311",
       "os": "Ubuntu 24.04.4",
@@ -109,7 +118,7 @@
       "id": "python-linux-312-planned",
       "os": "Ubuntu",
       "status": "planned_validation",
-      "version": "3.12 latest security patch"
+      "version": "3.12.13"
     },
     {
       "architecture": "x86_64",
@@ -118,7 +127,7 @@
       "id": "python-linux-313-planned",
       "os": "Ubuntu",
       "status": "planned_validation",
-      "version": "3.13 latest patch"
+      "version": "3.13.15"
     },
     {
       "architecture": "arm64",
@@ -217,9 +226,20 @@
       "os": "Windows",
       "status": "planned_validation",
       "version": "Stable/LTS"
+    },
+    {
+      "architecture": "x86_64",
+      "component": "Apache Arrow libraries",
+      "evidence_probe_ids": [
+        "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened"
+      ],
+      "id": "arrow-linux-candidates",
+      "os": "Ubuntu 24.04.4",
+      "status": "direct_success",
+      "version": "25.0.0/59.1.0"
     }
   ],
-  "generated_at": "2026-08-03T13:12:50+00:00",
+  "generated_at": "2026-08-05T18:38:32+00:00",
   "host": {
     "architecture": "x86_64",
     "kernel": "Linux 7.0.0-28-generic",
@@ -308,6 +328,79 @@
       "stdout_path": "docs/research/toolchain-prototypes/logs/arrow/arrow-julia-host-command-unavailable.stdout.log",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "version_output": "julia command not found on host PATH; Arrow.jl untested"
+    },
+    {
+      "candidate": "PyArrow/Arrow C++ 25.0.0 and arrow-rs 59.1.0 on CPython 3.14.7/Rust 1.97.1",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/bash",
+          "/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/arrow/verify-probe.sh"
+        ]
+      ],
+      "component": "Apache Arrow interoperability candidates",
+      "dependency_locks": [
+        {
+          "kind": "python_runtime_archive_sha256",
+          "value": "a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9"
+        },
+        {
+          "kind": "pyarrow_wheel_sha256",
+          "value": "447df764beb07c544f0178a5f6b70ef44b9ecf382b3cdfad4c2d7867353c3887"
+        },
+        {
+          "kind": "python_requirements_lock_sha256",
+          "value": "bfd009e1da9d19fc65296c52f9d94b7666f468ce146f2437de435984a59439f3"
+        },
+        {
+          "kind": "cargo_lock_sha256",
+          "value": "b48ca90c270c065266d625e8d26a024217ac1559247d530de6b9348969bedaed"
+        },
+        {
+          "kind": "uv_binary_sha256",
+          "value": "da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb"
+        }
+      ],
+      "disposition": "recommended",
+      "ended_at": "2026-08-05T18:38:32+00:00",
+      "environment_variables": {
+        "CARGO_NET_OFFLINE": "true",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONHASHSEED": "0"
+      },
+      "exit_status": 0,
+      "id": "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh extracted CPython runtime and Python environment; exact prepared PyArrow wheel; fresh Cargo target with hash-bound offline task cache; C.UTF-8",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The exact current Python and Rust candidates passed self-round-trips, complete schema/value/null cross-reads in both directions, same-schema altered-value rejection with the expected differential, repeat-write observation, and malformed magic-only rejection. This recommends only further experimental evaluation; it does not define logical identity, canonical bytes, or RFC-0006 semantics.",
+      "rerun": {
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/arrow",
+        "runnable": true
+      },
+      "source_refs": [
+        "python-release-v3.14.7",
+        "python-build-standalone-20260805",
+        "arrow-release-25.0.0",
+        "pyarrow-25.0.0",
+        "arrow-rs-readme-policy",
+        "arrow-format-versioning",
+        "arrow-format-security"
+      ],
+      "started_at": "2026-08-05T18:37:42+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/arrow/arrow-pyarrow25-arrow-rs59-cross-lineage-hardened.stderr.log",
+      "stderr_sha256": "7db988996141b96ed637ed117b2dd0c1aed6d6b0d494b9e1ca134ead4fce3a9e",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/arrow/arrow-pyarrow25-arrow-rs59-cross-lineage-hardened.stdout.log",
+      "stdout_sha256": "c58b70dfa43e7498bb92b491c163f7ce6bc882ecb191015eb024a2ee2d313974",
+      "version_output": "Python 3.14.7; PyArrow/Arrow C++ 25.0.0; rustc/Cargo 1.97.1; arrow-rs 59.1.0"
     },
     {
       "candidate": "PyArrow/Arrow C++ 25.0.0 plus arrow-rs 59.1.0 on proposed development runtimes",
@@ -592,6 +685,68 @@
       "version_output": "CPython 3.14.6; cbor2 6.1.3; rustc/cargo 1.97.1; ciborium 0.2.2; minicbor 2.3.0"
     },
     {
+      "candidate": "cbor2 6.1.4 on CPython 3.14.7",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/bash",
+          "/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/cbor-cddl/verify-cbor2-6.1.4.sh"
+        ]
+      ],
+      "component": "cbor2",
+      "dependency_locks": [
+        {
+          "kind": "python_runtime_archive_sha256",
+          "value": "a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9"
+        },
+        {
+          "kind": "cbor2_wheel_sha256",
+          "value": "c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c"
+        },
+        {
+          "kind": "requirements_lock_sha256",
+          "value": "547717250bbd70c0857bedfd3a0ab7ddf8f78e86f1b0c523b5dc6ed510de7667"
+        },
+        {
+          "kind": "uv_binary_sha256",
+          "value": "da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb"
+        }
+      ],
+      "disposition": "unresolved",
+      "ended_at": "2026-08-05T18:15:29+00:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONHASHSEED": "0"
+      },
+      "exit_status": 0,
+      "id": "cbor2-6.1.4-security-regressions",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh extracted runtime, HOME, XDG, uv cache, venv, and wheelhouse; C.UTF-8; PYTHONHASHSEED=0",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The exact current wheel rejected an incomplete indefinite map and a non-byte bignum, produced distinct hashes for the tested adversarial frozendict pairing, and round-tripped bytearray string references. This is narrow release-regression evidence, not a decoder-profile or canonical-byte decision.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "Current candidate is non-normative; run verify-cbor2-6.1.4.sh directly after exact asset preparation."
+      },
+      "source_refs": [
+        "python-release-v3.14.7",
+        "python-build-standalone-20260805",
+        "python-cbor2-6.1.4",
+        "python-cbor2-api-6.1.3",
+        "rfc8949-cbor"
+      ],
+      "started_at": "2026-08-05T18:15:27+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/cbor-cddl/cbor2-6.1.4-security-regressions.stderr.log",
+      "stderr_sha256": "f02e93d3ca1da73d5d7d05c13a9ec99010b528f0aa9ef9b8ba74cb55a25d6997",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/cbor-cddl/cbor2-6.1.4-security-regressions.stdout.log",
+      "stdout_sha256": "969d1b9b44a4171cd34e1303a273f3be2d49b579636cf69e24d2c8290c0ec19d",
+      "version_output": "Python 3.14.7; cbor2 6.1.4; four release-regression controls passed"
+    },
+    {
       "candidate": "cbor2 6.1.3 malformed top-level break behavior",
       "classification": "failure",
       "commands": [
@@ -835,6 +990,64 @@
       "stdout_path": "docs/research/toolchain-prototypes/logs/cbor-cddl/cbor-cddl-full-dev-rust-hash-bound.stdout.log",
       "stdout_sha256": "2eeffa1ff8c097656f51237620bf2ac068d5ac58cf6e674907abd36b62d02433",
       "version_output": "rustc/cargo 1.97.1; cddl 0.10.6; published locked graph 154 packages; declared MSRV 1.88.0"
+    },
+    {
+      "candidate": "29 distinct exact package/version pairs from the R development and floor inventories",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/python3",
+          "query_osv.py",
+          "--record"
+        ]
+      ],
+      "component": "CRAN dependency advisory observation",
+      "dependency_locks": [
+        {
+          "kind": "source_lock_sha256",
+          "value": "34578de2ad22a24e2ffb1f5584731618f9862a1a063623b6c5523a635a5f9721"
+        },
+        {
+          "kind": "osv_request_sha256",
+          "value": "5f4feb997e252557dee5c46bffe42a99db861ee4c9853198a7f31d7480a9c049"
+        },
+        {
+          "kind": "osv_response_sha256",
+          "value": "dc2db559eac85a5630fd84fbe272934d376edd738a14c97aa22197db157c1687"
+        }
+      ],
+      "disposition": "unresolved",
+      "ended_at": "2026-08-05T18:21:24+00:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "exit_status": 0,
+      "id": "cran-osv-exact-lock-query",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "Python 3.12 standard-library HTTPS client; live official OSV API; response retained",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The official OSV batch API returned one aligned, unpaginated result per exact CRAN query and zero vulnerability records at the recorded 2026-08-05 query time. This covers only the selected prototype package lock and is not a security guarantee.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "Live advisory state is mutable; query_osv.py --verify performs a fresh, non-retaining check."
+      },
+      "source_refs": [
+        "r-release-4.6.1",
+        "r-release-4.4.3",
+        "cran-testthat-3.3.2",
+        "cran-testthat-3.2.3",
+        "osv-querybatch-api"
+      ],
+      "started_at": "2026-08-05T18:21:24+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.stdout.log",
+      "stdout_sha256": "a3fe872f93de7e9ca30b1237489fb80ab1f2bc9f000ab3a0da4fbf4729298dc0",
+      "version_output": "OSV querybatch; 29 exact CRAN package versions; zero returned vulnerability records"
     },
     {
       "candidate": "1.12.6",
@@ -1118,7 +1331,7 @@
       "dependency_locks": [
         {
           "kind": "manifest_toml",
-          "value": "docs/research/toolchain-prototypes/julia/manifests/julia-1.12.6/Manifest.toml"
+          "value": "docs/research/toolchain-prototypes/julia/locks/Manifest-1.12.6.toml"
         },
         {
           "kind": "manifest_toml_sha256",
@@ -1167,8 +1380,13 @@
       },
       "reason": "Exact official runtime passed isolated offline Pkg instantiate, precompile, test, and status commands on the named host.",
       "rerun": {
-        "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "development"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/julia",
+        "runnable": true
       },
       "source_refs": [
         "julia-support-policy",
@@ -1245,7 +1463,7 @@
       "dependency_locks": [
         {
           "kind": "manifest_toml",
-          "value": "docs/research/toolchain-prototypes/julia/manifests/julia-1.12.6/Manifest.toml"
+          "value": "transient attempt workspace; removed after probe"
         },
         {
           "kind": "manifest_toml_sha256",
@@ -1352,9 +1570,9 @@
       ],
       "started_at": "2026-08-03T13:47:00+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "elan 4.2.1 (3d5138e15 2026-03-18); Version 4.2.3 of elan is available"
     },
     {
@@ -1639,7 +1857,7 @@
       "dependency_locks": [
         {
           "kind": "manifest_toml",
-          "value": "docs/research/toolchain-prototypes/julia/manifests/julia-1.10.11/Manifest.toml"
+          "value": "docs/research/toolchain-prototypes/julia/locks/Manifest-1.10.11.toml"
         },
         {
           "kind": "manifest_toml_sha256",
@@ -1688,8 +1906,13 @@
       },
       "reason": "Exact official runtime passed isolated offline Pkg instantiate, precompile, test, and status commands on the named host.",
       "rerun": {
-        "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "floor"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/julia",
+        "runnable": true
       },
       "source_refs": [
         "julia-support-policy",
@@ -1766,7 +1989,7 @@
       "dependency_locks": [
         {
           "kind": "manifest_toml",
-          "value": "docs/research/toolchain-prototypes/julia/manifests/julia-1.10.11/Manifest.toml"
+          "value": "transient attempt workspace; removed after probe"
         },
         {
           "kind": "manifest_toml_sha256",
@@ -1833,6 +2056,76 @@
       "version_output": "julia version 1.10.11"
     },
     {
+      "candidate": "Lean v4.32.1 + Mathlib v4.32.2 commit 905b9581",
+      "classification": "unknown",
+      "commands": [
+        [
+          "lake",
+          "update",
+          "--keep-toolchain"
+        ],
+        [
+          "lake",
+          "build",
+          "StatQEDLeanRejectedProbe4322"
+        ]
+      ],
+      "component": "Lean/Mathlib adjacent-version exploratory compile",
+      "dependency_locks": [
+        {
+          "kind": "lean_toolchain",
+          "value": "leanprover/lean4:v4.32.1"
+        },
+        {
+          "kind": "lean_git_commit",
+          "value": "f054605aea4b840552cca2e725580bffd1e1b704"
+        },
+        {
+          "kind": "mathlib_git_commit",
+          "value": "905b95818eb32af7874a58b427f50c1711a5e96c"
+        },
+        {
+          "kind": "mathlib_required_toolchain",
+          "value": "leanprover/lean4:v4.32.2"
+        },
+        {
+          "kind": "lake_manifest_sha256",
+          "value": "0a30181171c157d4034b6e286b30dc79420c39d2010f4ff25940bb1369393637"
+        }
+      ],
+      "disposition": "unresolved",
+      "ended_at": "2026-08-05T20:20:45+02:00",
+      "environment_variables": {
+        "ELAN_HOME": "/tmp/statqed-sq0002-lean-recovery/elan",
+        "LAKE_NO_CACHE": "1",
+        "MATHLIB_NO_CACHE_ON_UPDATE": "1"
+      },
+      "exit_status": 130,
+      "id": "lean-adjacent-mismatch-build-interrupted",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh disposable directory, caches disabled",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The exploratory compile reached 571 of 1,710 jobs without a diagnostic and was manually interrupted to avoid turning a partial build into compatibility evidence. The pair is rejected independently by its immutable toolchain mismatch.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "The partial exploratory compile is preserved as unknown; rerun the deterministic mismatch control instead."
+      },
+      "source_refs": [
+        "lean-release-v4.32.1-matched",
+        "mathlib-release-v4.32.2",
+        "mathlib-v4.32.2-toolchain"
+      ],
+      "started_at": "2026-08-05T20:16:36+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean 4.32.1; Mathlib requires v4.32.2; partial build interrupted at 571/1710; no compatibility result"
+    },
+    {
       "candidate": "post-update cache hook after incomplete clone",
       "classification": "failure",
       "commands": [
@@ -1872,9 +2165,9 @@
       ],
       "started_at": "2026-08-03T13:50:00+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "ld.lld undefined lp_mathlib_Cache_Requests_*; Lean 4.32.1; Lake 5.0.0-src+f054605"
     },
     {
@@ -1920,10 +2213,130 @@
       ],
       "started_at": "2026-08-03T13:46:16+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "elan: not found; lean: not found; lake: not found"
+    },
+    {
+      "candidate": "reviewed v4.32.2 manifest with Mathlib revision mutated to superseded v4.32.1",
+      "classification": "failure",
+      "commands": [
+        [
+          "cmp",
+          "-s",
+          "recommended/lake-manifest.json",
+          "mutated-lake-manifest.json"
+        ]
+      ],
+      "component": "Lean dependency-lock integrity control",
+      "dependency_locks": [
+        {
+          "kind": "reviewed_lake_manifest_sha256",
+          "value": "ff2ecf31ced1cb1cff770a54d281c92a9c6bd9fa3826b243eac4dac2d5dca93f"
+        },
+        {
+          "kind": "mutated_mathlib_git_commit",
+          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-05T20:18:01+02:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "exit_status": 1,
+      "id": "lean-manifest-mutation-rejection",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "disposable local copy; no network",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The byte comparison rejected the deliberately altered dependency lock; the verifier treats an unexpected match as its own failure.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "lean-lake-reference",
+        "mathlib-v4.32.2-toolchain"
+      ],
+      "started_at": "2026-08-05T20:18:00+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "reviewed manifest ff2ecf31; mutated Mathlib revision 520045ab; cmp exit 1 as expected"
+    },
+    {
+      "candidate": "root Lean v4.32.1 versus Mathlib v4.32.2 immutable required toolchain",
+      "classification": "failure",
+      "commands": [
+        [
+          "lake",
+          "update",
+          "--keep-toolchain"
+        ],
+        [
+          "cmp",
+          "-s",
+          "lean-toolchain",
+          ".lake/packages/mathlib/lean-toolchain"
+        ]
+      ],
+      "component": "Lean/Mathlib fixed-toolchain policy control",
+      "dependency_locks": [
+        {
+          "kind": "root_lean_toolchain",
+          "value": "leanprover/lean4:v4.32.1"
+        },
+        {
+          "kind": "mathlib_git_commit",
+          "value": "905b95818eb32af7874a58b427f50c1711a5e96c"
+        },
+        {
+          "kind": "mathlib_required_toolchain",
+          "value": "leanprover/lean4:v4.32.2"
+        },
+        {
+          "kind": "lake_manifest_sha256",
+          "value": "0a30181171c157d4034b6e286b30dc79420c39d2010f4ff25940bb1369393637"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-05T20:22:00+02:00",
+      "environment_variables": {
+        "ELAN_HOME": "/tmp/statqed-sq0002-lean-recovery/elan",
+        "LAKE_NO_CACHE": "1",
+        "MATHLIB_NO_CACHE_ON_UPDATE": "1"
+      },
+      "exit_status": 1,
+      "id": "lean-mathlib-toolchain-mismatch",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh disposable dependency resolution, caches disabled",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The root selected adjacent Lean v4.32.1 while the resolved immutable Mathlib revision selected v4.32.2; the verifier rejected this altered pair before it could be presented as a supported environment.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "lean-release-v4.32.1-matched",
+        "mathlib-release-v4.32.2",
+        "mathlib-v4.32.2-toolchain",
+        "lean-lake-reference"
+      ],
+      "started_at": "2026-08-05T20:21:00+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "root leanprover/lean4:v4.32.1; Mathlib requires leanprover/lean4:v4.32.2; mismatch detected"
     },
     {
       "candidate": "Lean v4.31.0 + Mathlib v4.32.1 commit 520045ab",
@@ -1990,9 +2403,9 @@
       ],
       "started_at": "2026-08-03T14:09:21+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "Lean 4.31.0 (68218e876d2a38b1985b8590fff244a83c321783, Release); Mathlib requires leanprover/lean4:v4.32.1; exit 1"
     },
     {
@@ -2037,13 +2450,13 @@
       ],
       "started_at": "2026-08-03T13:54:00+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "Lean 4.32.1; Lake 5.0.0-src+f054605"
     },
     {
-      "candidate": "Lean v4.32.1 + Mathlib 520045ab + bundled Lake 5.0.0",
+      "candidate": "Lean v4.32.2 + Mathlib 905b9581 + bundled Lake 5.0.0",
       "classification": "success",
       "commands": [
         [
@@ -2054,55 +2467,73 @@
         [
           "lake",
           "build"
+        ],
+        [
+          "lake",
+          "env",
+          "lean",
+          "StatQEDLeanNoBinaryCacheProbe.lean"
         ]
       ],
       "component": "Lean/Mathlib source build without binary cache",
       "dependency_locks": [
         {
           "kind": "lean_toolchain",
-          "value": "leanprover/lean4:v4.32.1"
+          "value": "leanprover/lean4:v4.32.2"
+        },
+        {
+          "kind": "lean_git_commit",
+          "value": "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
         },
         {
           "kind": "mathlib_git_commit",
-          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+          "value": "905b95818eb32af7874a58b427f50c1711a5e96c"
         },
         {
           "kind": "lake_manifest_sha256",
-          "value": "9a8dffda84bde64eb08cbb8e3b948ffb85e678016c558a78aee8661810d86a72"
+          "value": "0dc9be6725815434799a9ed732f335924ac4daf6f9ff38c59bae4ed2cd8be73c"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T14:06:14+02:00",
+      "ended_at": "2026-08-05T20:12:29+02:00",
       "environment_variables": {
-        "ELAN_HOME": "/tmp/statqed-elan-home-v4.2.1",
+        "ELAN_HOME": "/tmp/statqed-sq0002-lean-recovery/elan",
         "LAKE_NO_CACHE": "1",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
         "MATHLIB_NO_CACHE_ON_UPDATE": "1",
-        "PATH": "/tmp/statqed-elan-home-v4.2.1/bin:/usr/bin:/bin"
+        "PATH": "/tmp/statqed-sq0002-lean-recovery/elan/bin:/usr/bin:/bin"
       },
       "exit_status": 0,
       "id": "lean-no-cache-success",
       "platform": {
         "architecture": "x86_64",
-        "environment": "fresh directory, Mathlib update hook and Lake caches disabled",
+        "environment": "fresh disposable directory, Mathlib update hook and Lake caches disabled",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
-      "reason": "Fresh locked dependency resolution and 1,710-job source build succeeded without binary cache; axiom set matched cached result and had no sorryAx.",
+      "reason": "A fresh locked dependency resolution and 1,710-job source build succeeded with both binary-cache controls disabled; the relevant probability import built, the reviewed manifest matched regeneration, and the exact axiom set contained no sorryAx.",
       "rerun": {
-        "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "no-binary-cache"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/lean-mathlib",
+        "runnable": true
       },
       "source_refs": [
-        "official-lean-4.32.1",
-        "official-mathlib-v4.32.1",
-        "official-lake-reference"
+        "lean-release-v4.32.2",
+        "mathlib-release-v4.32.2",
+        "mathlib-v4.32.2-toolchain",
+        "lean-lake-reference"
       ],
-      "started_at": "2026-08-03T13:56:04+02:00",
+      "started_at": "2026-08-05T20:01:59+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
-      "version_output": "Lean 4.32.1 (f054605aea4b840552cca2e725580bffd1e1b704, Release); Lake 5.0.0-src+f054605; axioms [propext, Classical.choice, Quot.sound]"
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean 4.32.2 (f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release); Lake 5.0.0-src+f3b06c7; axioms [propext, Classical.choice, Quot.sound]"
     },
     {
       "candidate": "three rejected proof bodies before final namespace-qualified theorem",
@@ -2151,19 +2582,25 @@
       ],
       "started_at": "2026-08-03T13:52:00+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "three exit-1 builds; successful successor has no sorryAx"
     },
     {
-      "candidate": "Lean v4.32.1 + Mathlib 520045ab + bundled Lake 5.0.0",
+      "candidate": "Lean v4.32.2 + Mathlib 905b9581 + bundled Lake 5.0.0",
       "classification": "success",
       "commands": [
         [
           "lake",
           "update",
           "--keep-toolchain"
+        ],
+        [
+          "lake",
+          "exe",
+          "cache",
+          "get"
         ],
         [
           "lake",
@@ -2180,52 +2617,59 @@
       "dependency_locks": [
         {
           "kind": "lean_toolchain",
-          "value": "leanprover/lean4:v4.32.1"
+          "value": "leanprover/lean4:v4.32.2"
         },
         {
           "kind": "lean_git_commit",
-          "value": "f054605aea4b840552cca2e725580bffd1e1b704"
+          "value": "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
         },
         {
           "kind": "mathlib_git_commit",
-          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+          "value": "905b95818eb32af7874a58b427f50c1711a5e96c"
         },
         {
           "kind": "lake_manifest_sha256",
-          "value": "4cb47b0ffe066119d123624f018f3e4b736abffddca830f5578aae5a92933502"
+          "value": "ff2ecf31ced1cb1cff770a54d281c92a9c6bd9fa3826b243eac4dac2d5dca93f"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T13:53:22+02:00",
+      "ended_at": "2026-08-05T20:15:59+02:00",
       "environment_variables": {
-        "ELAN_HOME": "/tmp/statqed-elan-home-v4.2.1",
-        "PATH": "/tmp/statqed-elan-home-v4.2.1/bin:/usr/bin:/bin"
+        "ELAN_HOME": "/tmp/statqed-sq0002-lean-recovery/elan",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PATH": "/tmp/statqed-sq0002-lean-recovery/elan/bin:/usr/bin:/bin"
       },
       "exit_status": 0,
       "id": "lean-recommended-cache-success",
       "platform": {
         "architecture": "x86_64",
-        "environment": "isolated elan v4.2.3; Mathlib post-update cache from Azure endpoint",
+        "environment": "fresh disposable directory; isolated elan v4.2.3; Mathlib binary cache from official Azure endpoints",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
-      "reason": "Immutable dependency resolution, relevant probability import, build, and explicit transitive axiom inspection succeeded; no sorryAx.",
+      "reason": "The official cache client observed no matching files at its first endpoint, automatically fell back to the second endpoint, downloaded and decompressed all 8,639 artifacts, and the locked build plus explicit axiom inspection succeeded without sorryAx.",
       "rerun": {
-        "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "recommended"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/lean-mathlib",
+        "runnable": true
       },
       "source_refs": [
-        "official-lean-4.32.1",
-        "official-mathlib-v4.32.1",
-        "official-lake-reference",
+        "lean-release-v4.32.2",
+        "mathlib-release-v4.32.2",
+        "lean-lake-reference",
         "official-mathlib-cache-guide"
       ],
-      "started_at": "2026-08-03T13:50:49+02:00",
+      "started_at": "2026-08-05T20:12:30+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
-      "version_output": "Lean 4.32.1 (f054605aea4b840552cca2e725580bffd1e1b704, Release); Lake 5.0.0-src+f054605; axioms [propext, Classical.choice, Quot.sound]"
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean 4.32.2 (f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release); Lake 5.0.0-src+f3b06c7; cache 8639/8639; axioms [propext, Classical.choice, Quot.sound]"
     },
     {
       "candidate": "Lean v4.32.1 + Mathlib 520045ab, first approved clone",
@@ -2267,9 +2711,9 @@
       ],
       "started_at": "2026-08-03T13:49:08+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "Lean 4.32.1; Lake 5.0.0-src+f054605"
     },
     {
@@ -2318,65 +2762,83 @@
       ],
       "started_at": "2026-08-03T13:49:00+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "Lean 4.32.1; Lake 5.0.0-src+f054605; curl exited 6"
     },
     {
-      "candidate": "official v4.32.1 tags",
+      "candidate": "official v4.32.2 tags",
       "classification": "success",
       "commands": [
         [
           "git",
           "ls-remote",
           "https://github.com/leanprover-community/mathlib4.git",
-          "refs/tags/v4.32.1"
+          "refs/tags/v4.32.2"
         ],
         [
           "git",
           "ls-remote",
           "https://github.com/leanprover/lean4.git",
-          "refs/tags/v4.32.1"
+          "refs/tags/v4.32.2"
+        ],
+        [
+          "lean",
+          "--version"
         ]
       ],
       "component": "Lean/Mathlib tag resolution",
       "dependency_locks": [
         {
+          "kind": "lean_toolchain",
+          "value": "leanprover/lean4:v4.32.2"
+        },
+        {
           "kind": "lean_git_commit",
-          "value": "f054605aea4b840552cca2e725580bffd1e1b704"
+          "value": "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
         },
         {
           "kind": "mathlib_git_commit",
-          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+          "value": "905b95818eb32af7874a58b427f50c1711a5e96c"
+        },
+        {
+          "kind": "elan_archive_sha256",
+          "value": "df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T13:46:26+02:00",
-      "environment_variables": {},
+      "ended_at": "2026-08-05T12:52:00+02:00",
+      "environment_variables": {
+        "ELAN_HOME": "/tmp/statqed-sq0002-lean-recovery/elan",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
       "exit_status": 0,
       "id": "lean-tag-resolution-approved",
       "platform": {
         "architecture": "x86_64",
-        "environment": "approved read-only network",
+        "environment": "approved read-only network and isolated elan v4.2.3",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
-      "reason": "Resolved both release tags to full immutable and distinct commits.",
+      "reason": "The currentness correction resolved both v4.32.2 tags to full immutable commits; the installed Lean binary independently reported the exact Lean commit.",
       "rerun": {
         "runnable": false,
         "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
       },
       "source_refs": [
         "official-lean-releases",
-        "official-mathlib-releases"
+        "lean-release-v4.32.2",
+        "official-mathlib-releases",
+        "mathlib-release-v4.32.2"
       ],
-      "started_at": "2026-08-03T13:46:17+02:00",
+      "started_at": "2026-08-05T12:51:02+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
-      "version_output": "Lean v4.32.1 -> f054605aea4b840552cca2e725580bffd1e1b704; Mathlib v4.32.1 -> 520045ab14e26149ee970e2e617ca04b09bde5d6"
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean v4.32.2 -> f3b06c705e6c85f5314019d5d3baab0fec5b580c; Mathlib v4.32.2 -> 905b95818eb32af7874a58b427f50c1711a5e96c"
     },
     {
       "candidate": "official v4.32.1 tags, sandboxed network",
@@ -2419,13 +2881,256 @@
       ],
       "started_at": "2026-08-03T13:46:16+02:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
-      "stderr_sha256": "5a6d674fcbe2ad6b01e302f0fb4782f7e16a894399cd04c3d8ef52721da2b830",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
       "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
-      "stdout_sha256": "c1baf3ed02bd274a7138e9e5a9dcb2dec64ea72825a0b3a9e9e0b1843504bd85",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
       "version_output": "fatal: Could not resolve host: github.com"
     },
     {
-      "candidate": "CPython 3.14.6; upstream tag c63aec69bd59c55314c06c23f4c22c03de76fe45; python-build-standalone 20260718",
+      "candidate": "official v4.32.1 tags",
+      "classification": "success",
+      "commands": [
+        [
+          "git",
+          "ls-remote",
+          "https://github.com/leanprover-community/mathlib4.git",
+          "refs/tags/v4.32.1"
+        ],
+        [
+          "git",
+          "ls-remote",
+          "https://github.com/leanprover/lean4.git",
+          "refs/tags/v4.32.1"
+        ]
+      ],
+      "component": "Lean/Mathlib tag resolution",
+      "dependency_locks": [
+        {
+          "kind": "lean_git_commit",
+          "value": "f054605aea4b840552cca2e725580bffd1e1b704"
+        },
+        {
+          "kind": "mathlib_git_commit",
+          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-03T13:46:26+02:00",
+      "environment_variables": {},
+      "exit_status": 0,
+      "id": "lean-tag-resolution-v4.32.1-superseded",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "approved read-only network",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "Resolved both release tags to full immutable and distinct commits; the successful pair was later superseded by the v4.32.2 currentness correction.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "official-lean-releases",
+        "official-mathlib-releases"
+      ],
+      "started_at": "2026-08-03T13:46:17+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean v4.32.1 -> f054605aea4b840552cca2e725580bffd1e1b704; Mathlib v4.32.1 -> 520045ab14e26149ee970e2e617ca04b09bde5d6"
+    },
+    {
+      "candidate": "Lean v4.32.1 + Mathlib 520045ab + bundled Lake 5.0.0",
+      "classification": "success",
+      "commands": [
+        [
+          "lake",
+          "update",
+          "--keep-toolchain"
+        ],
+        [
+          "lake",
+          "build"
+        ],
+        [
+          "lake",
+          "env",
+          "lean",
+          "StatQEDLeanProbe.lean"
+        ]
+      ],
+      "component": "Lean/Mathlib/Lake cached build and axiom inspection",
+      "dependency_locks": [
+        {
+          "kind": "lean_toolchain",
+          "value": "leanprover/lean4:v4.32.1"
+        },
+        {
+          "kind": "lean_git_commit",
+          "value": "f054605aea4b840552cca2e725580bffd1e1b704"
+        },
+        {
+          "kind": "mathlib_git_commit",
+          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+        },
+        {
+          "kind": "lake_manifest_sha256",
+          "value": "4cb47b0ffe066119d123624f018f3e4b736abffddca830f5578aae5a92933502"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-03T13:53:22+02:00",
+      "environment_variables": {
+        "ELAN_HOME": "/tmp/statqed-elan-home-v4.2.1",
+        "PATH": "/tmp/statqed-elan-home-v4.2.1/bin:/usr/bin:/bin"
+      },
+      "exit_status": 0,
+      "id": "lean-v4.32.1-cache-success-superseded",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "isolated elan v4.2.3; Mathlib post-update cache from Azure endpoint",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "Immutable dependency resolution, relevant probability import, build, and explicit transitive axiom inspection succeeded; no sorryAx. This successful pair is preserved but superseded by v4.32.2.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "official-lean-4.32.1",
+        "official-mathlib-v4.32.1",
+        "official-lake-reference",
+        "official-mathlib-cache-guide"
+      ],
+      "started_at": "2026-08-03T13:50:49+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean 4.32.1 (f054605aea4b840552cca2e725580bffd1e1b704, Release); Lake 5.0.0-src+f054605; axioms [propext, Classical.choice, Quot.sound]"
+    },
+    {
+      "candidate": "Lean v4.32.1 + Mathlib 520045ab + bundled Lake 5.0.0",
+      "classification": "success",
+      "commands": [
+        [
+          "lake",
+          "update",
+          "--keep-toolchain"
+        ],
+        [
+          "lake",
+          "build"
+        ]
+      ],
+      "component": "Lean/Mathlib source build without binary cache",
+      "dependency_locks": [
+        {
+          "kind": "lean_toolchain",
+          "value": "leanprover/lean4:v4.32.1"
+        },
+        {
+          "kind": "mathlib_git_commit",
+          "value": "520045ab14e26149ee970e2e617ca04b09bde5d6"
+        },
+        {
+          "kind": "lake_manifest_sha256",
+          "value": "9a8dffda84bde64eb08cbb8e3b948ffb85e678016c558a78aee8661810d86a72"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-03T14:06:14+02:00",
+      "environment_variables": {
+        "ELAN_HOME": "/tmp/statqed-elan-home-v4.2.1",
+        "LAKE_NO_CACHE": "1",
+        "MATHLIB_NO_CACHE_ON_UPDATE": "1",
+        "PATH": "/tmp/statqed-elan-home-v4.2.1/bin:/usr/bin:/bin"
+      },
+      "exit_status": 0,
+      "id": "lean-v4.32.1-no-cache-success-superseded",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh directory, Mathlib update hook and Lake caches disabled",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "Fresh locked dependency resolution and 1,710-job source build succeeded without binary cache; axiom set matched cached result and had no sorryAx. This successful pair is preserved but superseded by v4.32.2.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "official-lean-4.32.1",
+        "official-mathlib-v4.32.1",
+        "official-lake-reference"
+      ],
+      "started_at": "2026-08-03T13:56:04+02:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/lean/stderr.log",
+      "stderr_sha256": "8fd8b72c50bac99af9b3eb6be2e9f53223e0e7588e5f0eee5d7f314780867593",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/lean/stdout.log",
+      "stdout_sha256": "c87c6edb0806fe740e4a0536668379563e86aa4ae74686563e6740ce111bf2cb",
+      "version_output": "Lean 4.32.1 (f054605aea4b840552cca2e725580bffd1e1b704, Release); Lake 5.0.0-src+f054605; axioms [propext, Classical.choice, Quot.sound]"
+    },
+    {
+      "candidate": "12 exact packages from the Python prototype lock",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/python3",
+          "query_osv.py",
+          "--record"
+        ]
+      ],
+      "component": "PyPI dependency advisory observation",
+      "dependency_locks": [
+        {
+          "kind": "source_lock_sha256",
+          "value": "0fcf65ff2348ef6356caad22169b7b907f6899069749b70660ef76e7ba7730b3"
+        },
+        {
+          "kind": "osv_request_sha256",
+          "value": "ef6d6bc51e60b351a2dacc951e1c5ee7b9c6ba7c8ac79e465c0cc5b435ef47ae"
+        },
+        {
+          "kind": "osv_response_sha256",
+          "value": "535fedd0f0c7066c6ff1a8ec2882c57c30f693c7e14092bd5116f70994a92131"
+        }
+      ],
+      "disposition": "unresolved",
+      "ended_at": "2026-08-05T18:21:24+00:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "exit_status": 0,
+      "id": "pypi-osv-exact-lock-query",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "Python 3.12 standard-library HTTPS client; live official OSV API; response retained",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The official OSV batch API returned one aligned, unpaginated result per exact PyPI query and zero vulnerability records at the recorded 2026-08-05 query time. This covers only the selected prototype package lock and is not a security guarantee.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "Live advisory state is mutable; query_osv.py --verify performs a fresh, non-retaining check."
+      },
+      "source_refs": [
+        "python-packaging-flow",
+        "osv-querybatch-api"
+      ],
+      "started_at": "2026-08-05T18:21:23+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.stdout.log",
+      "stdout_sha256": "504646f3674b9b8fff4a543ba9cfbedd811bfd5fad1628c8d98152a47887e1a5",
+      "version_output": "OSV querybatch; 12 exact PyPI package versions; zero returned vulnerability records"
+    },
+    {
+      "candidate": "CPython 3.14.6 historical development candidate",
       "classification": "success",
       "commands": [
         [
@@ -2486,17 +3191,9 @@
         {
           "kind": "runtime_archive_sha256",
           "value": "86bf107f65fc30b56f2b263b26797fcbb1661f5315910cdbf27f733eb8738b74"
-        },
-        {
-          "kind": "extracted_runtime_tree_manifest_sha256",
-          "value": "c41a9b71760ee232683bde1bf919f3dc95822922104feee3ef3acc7edbe876ad"
-        },
-        {
-          "kind": "wheel_sha256",
-          "value": "99137bdaa71c96a9fce94ee7a141c8c9c7b4ddc3c4b3df6257d6e09a47b4a643"
         }
       ],
-      "disposition": "recommended",
+      "disposition": "rejected",
       "ended_at": "2026-08-03T15:11:15+02:00",
       "environment_variables": {
         "LANG": "C.UTF-8",
@@ -2510,17 +3207,17 @@
         "UV_PYTHON_INSTALL_DIR": "/tmp/statqed-sq0002-python-runtimes"
       },
       "exit_status": 0,
-      "id": "python-development-3-14-6",
+      "id": "python-development-3-14-6-historical",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
-      "reason": "Fresh SHA-verified release asset passed offline hash-locked PEP 517 sdist/wheel build, separate install, pip check, pytest, metadata, and artifact digest checks.",
+      "reason": "The exact package-native sequence passed, but Python 3.14.7 superseded this patch on 2026-08-05; retained as successful historical evidence and rejected as the final development pin.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
         "python-release-v3.14.6",
@@ -2530,11 +3227,75 @@
         "uv-release-0.11.32"
       ],
       "started_at": "2026-08-03T15:11:09+02:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/development-3-14-6.stderr",
-      "stderr_sha256": "684aab8afac78ba523f43f649fec6a3148e76885407bce2a5bac6580d813c29c",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/development-3-14-6.stdout",
-      "stdout_sha256": "b634d5a7230d0903abc383e454b9188c801297516ae7ddaceb3f74fdc7f257b6",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/development-3-14-6-artifact-digests.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/development-3-14-6-artifact-digests.stdout",
+      "stdout_sha256": "b66cf4cbd7f28c1b6e433bee1850ed426f21461800b582da7e07186d03127b10",
       "version_output": "Python 3.14.6; pip 26.2; build 1.5.0; Hatchling 1.31.0; pytest 9.1.1"
+    },
+    {
+      "candidate": "CPython 3.14.7; python-build-standalone tag 20260805 target 76b41240bc8dfe753a54b2e32c8941e536568be8",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/bash",
+          "/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/python/verify-probe.sh",
+          "development"
+        ]
+      ],
+      "component": "Python packaging",
+      "dependency_locks": [
+        {
+          "kind": "requirements_lock_sha256",
+          "value": "0fcf65ff2348ef6356caad22169b7b907f6899069749b70660ef76e7ba7730b3"
+        },
+        {
+          "kind": "uv_0.11.32_binary_sha256",
+          "value": "da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb"
+        },
+        {
+          "kind": "runtime_archive_sha256",
+          "value": "a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9"
+        }
+      ],
+      "disposition": "recommended",
+      "ended_at": "2026-08-05T18:15:11+00:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONHASHSEED": "0"
+      },
+      "exit_status": 0,
+      "id": "python-development-3-14-7",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh extracted python-build-standalone runtime; fresh HOME/XDG/uv/pip caches and venvs; hash-locked offline wheelhouse; C.UTF-8",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The owned dispatcher rechecked runtime, uv, and lock digests; built sdist and wheel with the package-native PEP 517 path; installed in a separate venv; ran pip check and pytest; and removed all extracted runtime, build, log, and cache state on exit.",
+      "rerun": {
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "development"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/python",
+        "runnable": true
+      },
+      "source_refs": [
+        "python-release-v3.14.7",
+        "python-build-standalone-20260805",
+        "python-supported-versions",
+        "python-packaging-flow",
+        "uv-release-0.11.32"
+      ],
+      "started_at": "2026-08-05T18:14:57+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260805/python-development-owned-verify.stderr.log",
+      "stderr_sha256": "8f06d019e5fd0a29b94a1392efc710b093103775f7267d9d83ab024c66c5e108",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260805/python-development-owned-verify.stdout.log",
+      "stdout_sha256": "b4fc8c3e38e135f5e0888f48d9fb3c12c8b19bb921bc90541ea8eb727b642b97",
+      "version_output": "Python 3.14.7; pip 26.2; build 1.5.0; Hatchling 1.31.0; pytest 9.1.1; 2 passed"
     },
     {
       "candidate": "CPython 3.14.6 PEP 517 build without wheelhouse",
@@ -2579,14 +3340,14 @@
       "id": "python-development-pep517-network-failure",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
       "reason": "PEP 517 isolation attempted to resolve Hatchling and failed without DNS.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
         "python-release-v3.14.6",
@@ -2646,14 +3407,14 @@
       "id": "python-development-uv-seed-cache-failure",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
       "reason": "uv seed cache was interpreter-specific and still attempted a network fetch.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
         "python-release-v3.14.6",
@@ -2670,7 +3431,7 @@
       "version_output": "uv 0.11.32; DNS resolution failure"
     },
     {
-      "candidate": "CPython 3.11.15; declared support floor >=3.11; python-build-standalone 20260718",
+      "candidate": "CPython 3.11.15 original floor run",
       "classification": "success",
       "commands": [
         [
@@ -2731,13 +3492,9 @@
         {
           "kind": "runtime_archive_sha256",
           "value": "23ccae6f1ff73e8aa8378436f869da003b8eb7d6c95f2bc706f494115ba1447d"
-        },
-        {
-          "kind": "extracted_runtime_tree_manifest_sha256",
-          "value": "63cf815a25d02d2b88031d46c0b11b9c5548dab53ea24b98c6168e179f050716"
         }
       ],
-      "disposition": "recommended",
+      "disposition": "rejected",
       "ended_at": "2026-08-03T14:52:42+02:00",
       "environment_variables": {
         "LANG": "C.UTF-8",
@@ -2751,31 +3508,95 @@
         "UV_PYTHON_INSTALL_DIR": "/tmp/statqed-sq0002-python-runtimes"
       },
       "exit_status": 0,
-      "id": "python-floor-3-11-15",
+      "id": "python-floor-3-11-15-historical",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
-      "reason": "The identical package-native offline sequence passed from the fresh SHA-verified floor release asset.",
+      "reason": "The original floor run passed and is retained, but the final recommendation is bound to the later owned dispatcher evidence.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
-        "python-release-v3.14.6",
+        "python-release-v3.11.15",
         "python-supported-versions",
         "python-packaging-flow",
         "python-build-standalone-20260718",
         "uv-release-0.11.32"
       ],
       "started_at": "2026-08-03T14:52:35+02:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/floor-3-11-15.stderr",
-      "stderr_sha256": "e69ace45c864fb6caafb76b2e5071af5c68003c339287cb603f6dcb44e068c8c",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/floor-3-11-15.stdout",
-      "stdout_sha256": "3ffbd1ba0b8dcc5e42785cf27f0de4adec75d0b2f5298b44dfc367429b1c067d",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/floor-3-11-15-artifact-digests.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260803/floor-3-11-15-artifact-digests.stdout",
+      "stdout_sha256": "b66cf4cbd7f28c1b6e433bee1850ed426f21461800b582da7e07186d03127b10",
       "version_output": "Python 3.11.15; pip 26.2; build 1.5.0; Hatchling 1.31.0; pytest 9.1.1"
+    },
+    {
+      "candidate": "CPython 3.11.15; declared project support floor Python >=3.11; python-build-standalone 20260718",
+      "classification": "success",
+      "commands": [
+        [
+          "/usr/bin/bash",
+          "/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/python/verify-probe.sh",
+          "floor"
+        ]
+      ],
+      "component": "Python packaging",
+      "dependency_locks": [
+        {
+          "kind": "requirements_lock_sha256",
+          "value": "0fcf65ff2348ef6356caad22169b7b907f6899069749b70660ef76e7ba7730b3"
+        },
+        {
+          "kind": "uv_0.11.32_binary_sha256",
+          "value": "da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb"
+        },
+        {
+          "kind": "runtime_archive_sha256",
+          "value": "23ccae6f1ff73e8aa8378436f869da003b8eb7d6c95f2bc706f494115ba1447d"
+        }
+      ],
+      "disposition": "recommended",
+      "ended_at": "2026-08-05T18:15:24+00:00",
+      "environment_variables": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONHASHSEED": "0"
+      },
+      "exit_status": 0,
+      "id": "python-floor-3-11-15-owned",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "fresh extracted python-build-standalone runtime; fresh HOME/XDG/uv/pip caches and venvs; hash-locked offline wheelhouse; C.UTF-8",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
+      },
+      "reason": "The owned dispatcher rechecked runtime, uv, and lock digests; built sdist and wheel with the package-native PEP 517 path; installed in a separate venv; ran pip check and pytest; and removed all extracted runtime, build, log, and cache state on exit.",
+      "rerun": {
+        "command": [
+          "/usr/bin/bash",
+          "verify-probe.sh",
+          "floor"
+        ],
+        "cwd": "docs/research/toolchain-prototypes/python",
+        "runnable": true
+      },
+      "source_refs": [
+        "python-release-v3.11.15",
+        "python-build-standalone-20260718",
+        "python-supported-versions",
+        "python-packaging-flow",
+        "uv-release-0.11.32"
+      ],
+      "started_at": "2026-08-05T18:15:11+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/python/run-20260805/python-floor-owned-verify.stderr.log",
+      "stderr_sha256": "8f06d019e5fd0a29b94a1392efc710b093103775f7267d9d83ab024c66c5e108",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/python/run-20260805/python-floor-owned-verify.stdout.log",
+      "stdout_sha256": "f72015171cc693e47ddeb82a3e7e60499b58039f02dd9435df82c74ad8c70e21",
+      "version_output": "Python 3.11.15; pip 26.2; build 1.5.0; Hatchling 1.31.0; pytest 9.1.1; 2 passed"
     },
     {
       "candidate": "CPython 3.11.15 cold uv seeded venv",
@@ -2821,17 +3642,17 @@
       "id": "python-floor-cold-seed-network-failure",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
       "reason": "Cold uv seed required absent packages and failed DNS; ordinary cache state was insufficient.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
-        "python-release-v3.14.6",
+        "python-release-v3.11.15",
         "python-supported-versions",
         "python-packaging-flow",
         "python-build-standalone-20260718",
@@ -2870,10 +3691,6 @@
         {
           "kind": "uv_0.11.32_binary_sha256",
           "value": "da15297d6879b2cfbe5ea3cb03725c1613d51ba72892cc996468d871f0a532fb"
-        },
-        {
-          "kind": "installed_runtime_tree_manifest_sha256",
-          "value": "f1b5dfab0b58f4b2a90e8de2352404db05c63c3a2e4f3d57578c2464ab2d5af0"
         }
       ],
       "disposition": "rejected",
@@ -2895,20 +3712,18 @@
       "id": "python-rejected-3-10-20-metadata-rejection",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
       "reason": "pip rejected the wheel because 3.10.20 is outside Requires-Python >=3.11.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
-        "python-release-v3.14.6",
         "python-supported-versions",
         "python-packaging-flow",
-        "python-build-standalone-20260718",
         "uv-release-0.11.32"
       ],
       "started_at": "2026-08-03T14:19:05+02:00",
@@ -2958,20 +3773,17 @@
       "id": "python-rejected-pip-cache-network-failure",
       "platform": {
         "architecture": "x86_64",
-        "environment": "uv 0.11.32 managed python-build-standalone runtime; isolated venv and hash-locked wheelhouse",
+        "environment": "historical python-build-standalone/uv attempt on C.UTF-8",
         "os": "Ubuntu",
         "version": "24.04.4 LTS; Linux 7.0.0-28-generic"
       },
       "reason": "Pinning pip from an ordinary cache still attempted mutable index metadata retrieval.",
       "rerun": {
         "runnable": false,
-        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+        "unavailable_reason": "Historical attempt retained; use the owned current dispatcher for fresh validation."
       },
       "source_refs": [
-        "python-release-v3.14.6",
-        "python-supported-versions",
         "python-packaging-flow",
-        "python-build-standalone-20260718",
         "uv-release-0.11.32"
       ],
       "started_at": "2026-08-03T14:08:41+02:00",
@@ -3272,15 +4084,15 @@
       "id": "r-development-4.6.1-package-native",
       "platform": {
         "architecture": "x86_64",
-        "environment": "direct host; Linux 7.0.0-28-generic; x86_64-pc-linux-gnu; isolated copied test dependency library and fresh build/check/install directories under /tmp",
+        "environment": "direct host; Linux 7.0.0-28-generic; x86_64-pc-linux-gnu; exact 24-package URL+SHA-256-locked CRAN/Archive source closure installed into a fresh library; fresh build/check/install directories under /tmp",
         "os": "Ubuntu",
         "version": "24.04.4 LTS"
       },
       "reason": "A fresh library installed the exact 24-package CRAN/Archive source closure from URL+SHA-256 lock without copying the host library; R CMD build/check (Status: OK), installation, five testthat expectations, and installed smoke passed.",
       "rerun": {
         "command": [
-          "bash",
-          "run-probes.sh",
+          "/usr/bin/bash",
+          "verify-probe.sh",
           "development"
         ],
         "cwd": "docs/research/toolchain-prototypes/r",
@@ -3406,8 +4218,8 @@
       "reason": "A fresh prefix recreated offline from the full explicit URL+SHA-256 lock; R CMD build, built-tarball check (Status: OK), installation, five expectations, and smoke passed in that recreated prefix.",
       "rerun": {
         "command": [
-          "bash",
-          "run-probes.sh",
+          "/usr/bin/bash",
+          "verify-probe.sh",
           "floor"
         ],
         "cwd": "docs/research/toolchain-prototypes/r",
@@ -3677,79 +4489,85 @@
       "version_output": "julia version 1.12.6"
     },
     {
-      "candidate": "1.97.1 plus locked serialization/Arrow/archive/digest/CLI bundle",
-      "classification": "success",
+      "candidate": "zip 8.1.0 rejection fixture before its exact lock was fetched into the rebuilt isolated cache",
+      "classification": "failure",
       "commands": [
         [
           "cargo",
           "+1.97.1",
-          "generate-lockfile"
-        ],
-        [
-          "cargo",
-          "+1.97.1",
-          "metadata",
-          "--locked",
+          "check",
           "--offline",
-          "--format-version",
-          "1"
-        ],
-        [
-          "cargo",
-          "+1.97.1",
-          "fmt",
-          "--all",
-          "--",
-          "--check"
-        ],
-        [
-          "cargo",
-          "+1.97.1",
-          "clippy",
           "--locked",
-          "--offline",
-          "--workspace",
-          "--all-targets",
-          "--all-features",
-          "--",
-          "-D",
-          "warnings"
-        ],
+          "--manifest-path",
+          "rejections/archive-msrv/Cargo.toml"
+        ]
+      ],
+      "component": "rust-archive-cache",
+      "dependency_locks": [
+        {
+          "kind": "fixture-cargo-lock-sha256",
+          "value": "0e85549ba43c18f41e3160f71bbe6e015e5a14e938222dae91d01ade74309e71"
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-05T18:11:50+00:00",
+      "environment_variables": {
+        "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
+        "CARGO_NET_OFFLINE": "true",
+        "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-rejections.7tZPcV/archive-dev",
+        "LC_ALL": "C.UTF-8",
+        "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
+        "TZ": "UTC"
+      },
+      "exit_status": 101,
+      "id": "rust-archive-offline-cache-miss",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "direct host; rebuilt isolated Cargo cache; offline mode",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS"
+      },
+      "reason": "The offline probe correctly refused to download the rejected zip 8.1.0 fixture after crash recovery. An exact locked fetch populated only that fixture; the separately retained development-success and MSRV-rejection probes then passed as expected.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "The isolated cache now contains the exact fixture; the cache-miss evidence is intentionally retained and the corrected policy rerun is separately recorded."
+      },
+      "source_refs": [
+        "crates-io-zip-8.1.0"
+      ],
+      "started_at": "2026-08-05T18:11:50+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/archive-8.1-dev-compatible.stderr",
+      "stderr_sha256": "9461b4e59bc4eeee18a7f15c48bca6ec21fcf22754e351c6b3b5d794884c6d53",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/archive-8.1-dev-compatible.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "version_output": "cargo 1.97.1; failed to download zip 8.1.0 because --offline was specified"
+    },
+    {
+      "candidate": "1.97.1 plus locked serialization/Arrow/archive/digest/CLI bundle",
+      "classification": "success",
+      "commands": [
         [
-          "cargo",
-          "+1.97.1",
-          "test",
-          "--locked",
-          "--offline",
-          "--workspace",
-          "--all-targets",
-          "--all-features"
-        ],
-        [
-          "cargo",
-          "+1.97.1",
-          "run",
-          "--locked",
-          "--offline",
-          "--package",
-          "statqed-rust-compat-probe",
-          "--",
-          "--json"
+          "docs/research/toolchain-prototypes/rust/verify-probe.sh",
+          "development"
         ]
       ],
       "component": "rust-dependencies",
       "dependency_locks": [
         {
           "kind": "cargo-lock-sha256",
-          "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"
+          "value": "993f587b7dee5a7e18bff312ae76ac7ab84031ccc771b5e9789915d2bfd3883b"
+        },
+        {
+          "kind": "dependency-license-inventory-sha256",
+          "value": "e13f2450893fa02a668b3cd722a909f7abc267a23868b88b99bfbded299d6374"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T13:12:50+00:00",
+      "ended_at": "2026-08-05T18:10:59+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
         "CARGO_NET_OFFLINE": "true",
-        "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/dev-1.97.1",
+        "CARGO_TARGET_DIR": "owned disposable directory under /tmp",
         "LC_ALL": "C.UTF-8",
         "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
         "TZ": "UTC"
@@ -3762,11 +4580,11 @@
         "os": "Ubuntu",
         "version": "24.04.4 LTS"
       },
-      "reason": "Resolution, offline metadata, formatting, Clippy with warnings denied, tests, and API runtime smoke passed.",
+      "reason": "Exact version/commit assertions, offline metadata, formatting, Clippy with warnings denied, tests, runtime smoke, and unsafe-code rejection passed in owned fresh targets that were deleted on exit.",
       "rerun": {
         "command": [
-          "bash",
-          "run-probes.sh",
+          "/usr/bin/bash",
+          "verify-probe.sh",
           "development"
         ],
         "cwd": "docs/research/toolchain-prototypes/rust",
@@ -3778,12 +4596,68 @@
         "crates-io-metadata-2026-08-03",
         "arrow-rs-readme-policy"
       ],
-      "started_at": "2026-08-03T13:12:49+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-run.stderr",
-      "stderr_sha256": "0c513e8688796412ed47fc53a110479c33e2a7a366631756debcfff880b7494d",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/dev-run.stdout",
-      "stdout_sha256": "5bd649ca322a621e83f25210d458152c711e77ec77466b804f5ece21d6bdccc7",
+      "started_at": "2026-08-05T18:10:15+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/development-verify.stderr",
+      "stderr_sha256": "698e84090d1d066fc1ea70c2a7ed90e69a8260507c77495c3cb9d25b4d93dfdf",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/development-verify.stdout",
+      "stdout_sha256": "8adfd9f3fcceeabc4846cbeb7634dfe2079aa60f32b700f656a1544cc6b8e0f6",
       "version_output": "rustc 1.97.1 (8bab26f4f 2026-07-14); cargo 1.97.1 (c980f4866 2026-06-30)"
+    },
+    {
+      "candidate": "previous reviewed Cargo.lock under a fresh 2026-08-05 crates.io resolution",
+      "classification": "failure",
+      "commands": [
+        [
+          "bash",
+          "-c",
+          "printf '%s  %s\\n' 8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040 docs/research/toolchain-prototypes/rust/Cargo.lock | sha256sum -c -"
+        ]
+      ],
+      "component": "rust-dependency-resolution",
+      "dependency_locks": [
+        {
+          "kind": "superseded-cargo-lock-sha256",
+          "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"
+        },
+        {
+          "kind": "reviewed-cargo-lock-sha256",
+          "value": "993f587b7dee5a7e18bff312ae76ac7ab84031ccc771b5e9789915d2bfd3883b"
+        },
+        {
+          "kind": "changed-package",
+          "value": "regex-automata 0.4.16 -> 0.4.18; checksum 8fcfdb36... -> ad8553b9..."
+        }
+      ],
+      "disposition": "rejected",
+      "ended_at": "2026-08-05T18:13:54+00:00",
+      "environment_variables": {
+        "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
+        "LC_ALL": "C.UTF-8",
+        "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
+        "TZ": "UTC"
+      },
+      "exit_status": 1,
+      "id": "rust-fresh-resolution-lock-drift",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "direct host; exact hash rejection followed by clean isolated resolution",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS"
+      },
+      "reason": "The superseded lock hash was rejected after a fresh resolver selected regex-automata 0.4.18 instead of 0.4.16. Review found this was the only lock change; both exact toolchains and the immutable security probe then passed the replacement lock.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
+      },
+      "source_refs": [
+        "crates-io-metadata-2026-08-03"
+      ],
+      "started_at": "2026-08-05T18:13:54+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-stale-lock/reviewed-stale-lock-rejection.stderr",
+      "stderr_sha256": "c21162752e0e9447063c54afadaabcd769aa943d1dc1e9641847e990d83020b9",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-stale-lock/reviewed-stale-lock-rejection.stdout",
+      "stdout_sha256": "2e2e83582e3fbd9d864836fdb088efc558f8e84c7d9cc14a50b68cdd0ddf8ee7",
+      "version_output": "old Cargo.lock sha256 8db0b054... rejected; reviewed replacement sha256 993f587b...; fresh replacement resolution reproduced exactly"
     },
     {
       "candidate": "Rust 1.97.1 exact development toolchain",
@@ -3948,14 +4822,17 @@
         "os": "Ubuntu",
         "version": "24.04.4 LTS"
       },
-      "reason": "Patched first Edition-2024 toolchain installed with rustfmt and Clippy.",
+      "reason": "Patched first Edition-2024 toolchain installed with rustfmt and Clippy. This establishes tool availability only; its Cargo is affected by the cited 2026 advisories and is not approved for networked bootstrap.",
       "rerun": {
         "runnable": false,
         "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
       },
       "source_refs": [
         "rust-release-1.85.1",
-        "rust-release-1.85.0-edition-2024"
+        "rust-release-1.85.0-edition-2024",
+        "cargo-cve-2026-5222",
+        "cargo-cve-2026-5223",
+        "rust-release-1.96.1-libssh2-security"
       ],
       "started_at": "2026-08-03T11:54:08+00:00",
       "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/install-msrv.stderr",
@@ -3969,70 +4846,24 @@
       "classification": "success",
       "commands": [
         [
-          "cargo",
-          "+1.85.1",
-          "metadata",
-          "--locked",
-          "--offline",
-          "--format-version",
-          "1"
-        ],
-        [
-          "cargo",
-          "+1.85.1",
-          "fmt",
-          "--all",
-          "--",
-          "--check"
-        ],
-        [
-          "cargo",
-          "+1.85.1",
-          "clippy",
-          "--locked",
-          "--offline",
-          "--workspace",
-          "--all-targets",
-          "--all-features",
-          "--",
-          "-D",
-          "warnings"
-        ],
-        [
-          "cargo",
-          "+1.85.1",
-          "test",
-          "--locked",
-          "--offline",
-          "--workspace",
-          "--all-targets",
-          "--all-features"
-        ],
-        [
-          "cargo",
-          "+1.85.1",
-          "run",
-          "--locked",
-          "--offline",
-          "--package",
-          "statqed-rust-compat-probe",
-          "--",
-          "--json"
+          "docs/research/toolchain-prototypes/rust/verify-probe.sh",
+          "msrv"
         ]
       ],
       "component": "rust-msrv-dependencies",
       "dependency_locks": [
         {
           "kind": "cargo-lock-sha256",
-          "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"
+          "value": "993f587b7dee5a7e18bff312ae76ac7ab84031ccc771b5e9789915d2bfd3883b"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T13:12:50+00:00",
+      "ended_at": "2026-08-05T18:11:50+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
         "CARGO_NET_OFFLINE": "true",
-        "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/msrv-1.85.1",
+        "CARGO_TARGET_DIR": "owned disposable directory under /tmp",
+        "CI_SECURITY_POSTURE": "isolated; offline; crates.io-only cache; uncredentialed; compatibility-only",
         "LC_ALL": "C.UTF-8",
         "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
         "TZ": "UTC"
@@ -4045,11 +4876,11 @@
         "os": "Ubuntu",
         "version": "24.04.4 LTS"
       },
-      "reason": "The same lock passed offline metadata, formatting, Clippy with warnings denied, tests, and runtime smoke at the proposed floor.",
+      "reason": "The reviewed lock passed exact version/commit assertions, offline metadata, formatting, Clippy with warnings denied, tests, and runtime smoke at the compatibility floor in an owned fresh target deleted on exit. This is not security-support evidence for Rust 1.85.1.",
       "rerun": {
         "command": [
-          "bash",
-          "run-probes.sh",
+          "/usr/bin/bash",
+          "verify-probe.sh",
           "msrv"
         ],
         "cwd": "docs/research/toolchain-prototypes/rust",
@@ -4058,13 +4889,16 @@
       "source_refs": [
         "rust-release-1.85.1",
         "cargo-rust-version",
-        "cargo-resolver3"
+        "cargo-resolver3",
+        "cargo-cve-2026-5222",
+        "cargo-cve-2026-5223",
+        "rust-release-1.96.1-libssh2-security"
       ],
-      "started_at": "2026-08-03T13:12:50+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/msrv-run.stderr",
-      "stderr_sha256": "df3ef72f1336bade7480deaf7a5c805175530eaa7e7424283323561dc86186b9",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/msrv-run.stdout",
-      "stdout_sha256": "5bd649ca322a621e83f25210d458152c711e77ec77466b804f5ece21d6bdccc7",
+      "started_at": "2026-08-05T18:10:59+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/msrv-verify.stderr",
+      "stderr_sha256": "4def3a84635c9bdbf951d0457dac38822b3d617eebe1d783cefe8287c3af0615",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-final/msrv-verify.stdout",
+      "stdout_sha256": "114f35a586b6505cece9bc73cd6cfbf1320271507e30caf2aea5bf7856b2781a",
       "version_output": "rustc 1.85.1 (4eb161250 2025-03-15); cargo 1.85.1 (d73d2caf9 2024-12-31)"
     },
     {
@@ -4118,6 +4952,54 @@
       "version_output": "cargo 1.97.1; exact package versions embedded in candidate"
     },
     {
+      "candidate": "rustup 1.29.0 under the restricted workspace sandbox",
+      "classification": "failure",
+      "commands": [
+        [
+          "rustup",
+          "--version"
+        ]
+      ],
+      "component": "rust-execution-environment",
+      "dependency_locks": [
+        {
+          "kind": "rustup-version",
+          "value": "1.29.0 (28d1352db 2026-03-05)"
+        }
+      ],
+      "disposition": "unresolved",
+      "ended_at": "2026-08-05T18:09:53+00:00",
+      "environment_variables": {
+        "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
+        "CARGO_NET_OFFLINE": "true",
+        "LC_ALL": "C.UTF-8",
+        "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
+        "TZ": "UTC"
+      },
+      "exit_status": 134,
+      "id": "rust-sandbox-seccomp-failure",
+      "platform": {
+        "architecture": "x86_64",
+        "environment": "restricted workspace sandbox on the direct host",
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS"
+      },
+      "reason": "rustup aborted when the sandbox denied an operation in wait-timeout's signal handling. The identical owned probes passed outside that sandbox, so this is retained as an environment limitation, not a Rust compatibility result.",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "This failure depends on the product sandbox's syscall policy; exact diagnostics are retained and direct-host probes are the compatibility evidence."
+      },
+      "source_refs": [
+        "rustup-profiles"
+      ],
+      "started_at": "2026-08-05T18:09:53+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-recovery/rustup-version.stderr",
+      "stderr_sha256": "5b121b9705ae58a9748dba70152f06b6fc9937182583b10de049280ac0e64f6c",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-recovery/rustup-version.stdout",
+      "stdout_sha256": "9dae8c966bd7c9f6a8626b928efcc5b08a7197fa713c5f908b3194bd86d360a7",
+      "version_output": "rustup 1.29.0; exit 134; Operation not permitted in wait-timeout 0.2.1"
+    },
+    {
       "candidate": "crate containing an unsafe block under forbid(unsafe_code)",
       "classification": "failure",
       "commands": [
@@ -4137,7 +5019,7 @@
         }
       ],
       "disposition": "rejected",
-      "ended_at": "2026-08-03T11:59:06+00:00",
+      "ended_at": "2026-08-05T18:12:47+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
         "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections",
@@ -4161,10 +5043,10 @@
       "source_refs": [
         "rust-lint-unsafe-code"
       ],
-      "started_at": "2026-08-03T11:59:06+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/unsafe-policy-rejection.stderr",
-      "stderr_sha256": "d58a506b275f4670fea2b4e654a97b009ca63c6b17e5cb9be24a19e0d27fa4f8",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/unsafe-policy-rejection.stdout",
+      "started_at": "2026-08-05T18:12:47+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/unsafe-policy-rejection.stderr",
+      "stderr_sha256": "592ef3b0d7aec94b516c2eba981f7adb85f069fb91c4e39f62f1e869057541e5",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/unsafe-policy-rejection.stdout",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "version_output": "rustc 1.97.1; error: usage of an unsafe block"
     },
@@ -4224,52 +5106,57 @@
       "classification": "success",
       "commands": [
         [
-          "cargo",
-          "+1.97.1",
-          "install",
-          "cargo-audit",
-          "--version",
-          "0.22.2",
-          "--locked",
-          "--root",
-          "/tmp/statqed-sq0002-rust-cache/cargo-audit"
-        ],
-        [
-          "/tmp/statqed-sq0002-rust-cache/cargo-audit/bin/cargo-audit",
-          "audit",
-          "--file",
-          "Cargo.lock",
-          "--json"
+          "docs/research/toolchain-prototypes/rust/verify-probe.sh",
+          "security"
         ]
       ],
       "component": "rust-security",
       "dependency_locks": [
         {
           "kind": "cargo-lock-sha256",
-          "value": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"
+          "value": "993f587b7dee5a7e18bff312ae76ac7ab84031ccc771b5e9789915d2bfd3883b"
+        },
+        {
+          "kind": "cargo-audit-release-archive-sha256",
+          "value": "ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39"
+        },
+        {
+          "kind": "cargo-audit-executable-sha256",
+          "value": "473b9a71e5cb5bde22f69c32f749c9b83931287d92dc36b91cb04f6705640ef2"
         },
         {
           "kind": "rustsec-db-commit",
           "value": "d91a8fc9492378f23cba86b81770c6d16de6ebba"
+        },
+        {
+          "kind": "rustsec-db-archive-sha256",
+          "value": "e6a7e9ac185d5a41cac57adb47b9d0a8b8796f66978b9a6b8788af9f238b3d7c"
+        },
+        {
+          "kind": "dependency-license-inventory-sha256",
+          "value": "e13f2450893fa02a668b3cd722a909f7abc267a23868b88b99bfbded299d6374"
         }
       ],
       "disposition": "recommended",
-      "ended_at": "2026-08-03T12:03:24+00:00",
+      "ended_at": "2026-08-05T18:12:59+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
+        "CARGO_NET_OFFLINE": "true",
         "LC_ALL": "C.UTF-8",
         "RUSTUP_HOME": "/tmp/statqed-sq0002-rust-cache/rustup",
+        "STATQED_CARGO_AUDIT_ARCHIVE": "/tmp/statqed-sq0002-cargo-audit-0.22.2.tgz",
+        "STATQED_RUSTSEC_ARCHIVE": "/tmp/statqed-sq0002-rustsec-d91a8fc.tar.gz",
         "TZ": "UTC"
       },
       "exit_status": 0,
       "id": "rustsec-audit",
       "platform": {
         "architecture": "x86_64",
-        "environment": "direct host; networked RustSec database refresh",
+        "environment": "direct host; immutable cargo-audit release archive and immutable RustSec source snapshot; no fetch during audit",
         "os": "Ubuntu",
         "version": "24.04.4 LTS"
       },
-      "reason": "Point-in-time scan of 128 locked dependencies found zero vulnerabilities and no warnings.",
+      "reason": "cargo-audit 0.22.2 verified its official release-asset and executable hashes, scanned the exact 128-package lock against an archive-hash-bound RustSec snapshot with no fetch, and reported zero crate vulnerabilities or warnings. This claim is limited to the locked crate graph.",
       "rerun": {
         "runnable": false,
         "unavailable_reason": "archived evidence; use the component README for full fresh preparation"
@@ -4277,12 +5164,12 @@
       "source_refs": [
         "rustsec-db-d91a8fc9492378f23cba86b81770c6d16de6ebba"
       ],
-      "started_at": "2026-08-03T12:00:06+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/cargo-audit-rustsec.stderr",
+      "started_at": "2026-08-05T18:12:59+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-security/security-verify.stderr",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/cargo-audit-rustsec.stdout",
-      "stdout_sha256": "645662c67c7a7656a4be771af655a1ee1ad94c58f261ea68d5632c434e82d78d",
-      "version_output": "cargo-audit 0.22.2; RustSec DB last updated 2026-08-02T19:56:20+02:00"
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-security/security-verify.stdout",
+      "stdout_sha256": "74e6409dc1613208ed22ad6f6f5ba50940f9c3c403dbc502f2df8603a751fdf0",
+      "version_output": "cargo-audit 0.22.2; RustSec DB commit d91a8fc9492378f23cba86b81770c6d16de6ebba; 128 locked packages"
     },
     {
       "candidate": "sha2 0.11.0 with LowerHex output assumption",
@@ -4362,7 +5249,7 @@
         }
       ],
       "disposition": "rejected",
-      "ended_at": "2026-08-03T11:59:09+00:00",
+      "ended_at": "2026-08-05T18:12:48+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
         "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections",
@@ -4386,10 +5273,10 @@
       "source_refs": [
         "crates-io-zip-8.1.0"
       ],
-      "started_at": "2026-08-03T11:59:06+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-dev-compatible.stderr",
-      "stderr_sha256": "6ee2146673e43b554ba14f8c9d52b0d2d008d7322aaa736ecbd000396d64c165",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-dev-compatible.stdout",
+      "started_at": "2026-08-05T18:12:47+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/archive-8.1-dev-compatible.stderr",
+      "stderr_sha256": "e488f4e9ce479f808b1352fba5715b7979afc818cb86007534241efb6130de8a",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/archive-8.1-dev-compatible.stdout",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "version_output": "rustc 1.97.1; zip 8.1.0 declares rust-version 1.88"
     },
@@ -4413,7 +5300,7 @@
         }
       ],
       "disposition": "rejected",
-      "ended_at": "2026-08-03T11:59:09+00:00",
+      "ended_at": "2026-08-05T18:12:48+00:00",
       "environment_variables": {
         "CARGO_HOME": "/tmp/statqed-sq0002-rust-cache/cargo",
         "CARGO_TARGET_DIR": "/tmp/statqed-sq0002-rust-cache/target/rejections",
@@ -4438,10 +5325,10 @@
         "crates-io-zip-8.1.0",
         "cargo-rust-version"
       ],
-      "started_at": "2026-08-03T11:59:09+00:00",
-      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-msrv-rejection.stderr",
+      "started_at": "2026-08-05T18:12:48+00:00",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/archive-8.1-msrv-rejection.stderr",
       "stderr_sha256": "6305b511864f7053f527235641f4efc7c496cfcfe9c9ffcf341beea99d3ae6a0",
-      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260803/archive-8.1-msrv-rejection.stdout",
+      "stdout_path": "docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/archive-8.1-msrv-rejection.stdout",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "version_output": "rustc 1.85.1; zip 8.1.0 requires rustc 1.88"
     }
@@ -4457,11 +5344,11 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/README.md",
-      "sha256": "06d6b6cd1fe77732e2820114d36acc4184c1d3648cdd02766532a56efdc0f9fe"
+      "sha256": "b787a715a75afc29adb26d80712c7a09d4bdcb5d802141514a933cf9340ee09d"
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/fetch_wheel.py",
-      "sha256": "48d84aabd48c0fabc6368940f1d341cb43898d39d3f5fd97f64a2d12bc72fa96"
+      "sha256": "696ef4d31a2a997ea1ee983517286bb79dee814adb15b43c209ad40908e9f081"
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/probe-fragment.json",
@@ -4473,19 +5360,27 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/probe.py",
-      "sha256": "17a2e73f5ebd127911dfe1174b0bac9623abbdaab1b47f1986fe5f43f1945461"
+      "sha256": "18b5273bc3d1df36d5e19f801c01c6c5a9720c8e7a4e512d87a98b8b802692c0"
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/record_attempts.py",
       "sha256": "eb7b13e083356f13789148d9d9cd20ecf5a4eeb66360da5c7ec701666ea0b2f5"
     },
     {
+      "path": "docs/research/toolchain-prototypes/arrow/record_verify_probe.py",
+      "sha256": "ccbe7ba19cd63b89d4734be56c905ace22df1bca7a143818d1d5cf5c139927da"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/arrow/run-probes.sh",
-      "sha256": "43a20f94819211cd68e45938f927b672d9a84fca3c094a4c7ada39fd57087c9a"
+      "sha256": "b4ac3cf7fc787865d3db48dc2929a7ed7fd0923e4d672d8c1925b085e533b70b"
     },
     {
       "path": "docs/research/toolchain-prototypes/arrow/src/main.rs",
-      "sha256": "1ff5597d7b2a2a7a904697d8f23f2c88f40ca6fd9d69680bd84c41976bc304c8"
+      "sha256": "ccc90b50136e031075dbd34a71b65015b7f60fbbb7e2212a657b893a2f504549"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/arrow/verify-probe.sh",
+      "sha256": "d96184226b30d1159995edcef96dbdc73b0e63cdb9a9d05d28daf8dedfaaf45c"
     },
     {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/Cargo.lock",
@@ -4497,11 +5392,15 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/README.md",
-      "sha256": "6478ebd16ab1d7c424c7ec83bec5200daef3dfbf679e9abb12ba9055684535ca"
+      "sha256": "cc92bf7ac884f51f1c316acbd7e89dd227268f375c377daacb56dc306afa60f0"
     },
     {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/capture_cddl_install_lock.py",
       "sha256": "145606a2b457f0ae5d4170c47495ebaea632091ab98b8c3ea3de6fceb697c4bf"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/cbor-cddl/cbor2-6.1.4-requirements.lock",
+      "sha256": "547717250bbd70c0857bedfd3a0ab7ddf8f78e86f1b0c523b5dc6ed510de7667"
     },
     {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/cddl-install-lock.json",
@@ -4540,8 +5439,16 @@
       "sha256": "efb2da384093a816c550d31d1494e22bfb3624df640d342c3eaa5fbdbc549cb3"
     },
     {
+      "path": "docs/research/toolchain-prototypes/cbor-cddl/probe_cbor2_6_1_4.py",
+      "sha256": "88dcaac32300f19ca115da365c2b7535382eb7fb6de7d05337f60086d1246d5c"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/record_attempts.py",
       "sha256": "c53a40535eeb4ddac59bb1dc087bf6ca7641af8fac913b9d501faa0917aca21d"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/cbor-cddl/record_cbor2_6_1_4.py",
+      "sha256": "67ab0eda8ca74a2c78a02aae68345e5cf98e529f0a4a02c9c29ae2d5d6d57eb8"
     },
     {
       "path": "docs/research/toolchain-prototypes/cbor-cddl/run-msrv-rejection.sh",
@@ -4560,19 +5467,23 @@
       "sha256": "429a6bf8b394761a024de14c58beb860d27aede8621d60fc019a31ccd48f7a16"
     },
     {
+      "path": "docs/research/toolchain-prototypes/cbor-cddl/verify-cbor2-6.1.4.sh",
+      "sha256": "5897d31bc46e13849bf6abc12dd9e1ed35076958228459f988e1b7a516ce1f54"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/julia/Project.toml",
       "sha256": "1334c37d0bfb10aa46f45a40f6536ed1d05ce6addbf7e1206fc6696531995047"
     },
     {
       "path": "docs/research/toolchain-prototypes/julia/README.md",
-      "sha256": "d1918079c86a646646814983e9fcdb365891463ac1e56395da0508f85349722c"
+      "sha256": "797260d59ff1a94bb17aa9a178e06ba035eef2c6979986104b2cf3e97dbfe6e2"
     },
     {
-      "path": "docs/research/toolchain-prototypes/julia/manifests/julia-1.10.11/Manifest.toml",
+      "path": "docs/research/toolchain-prototypes/julia/locks/Manifest-1.10.11.toml",
       "sha256": "44d6bb77fbd18006cb248017b6465f02fa47a733bdea158ca3e2b3172faee480"
     },
     {
-      "path": "docs/research/toolchain-prototypes/julia/manifests/julia-1.12.6/Manifest.toml",
+      "path": "docs/research/toolchain-prototypes/julia/locks/Manifest-1.12.6.toml",
       "sha256": "52c13c02e7b2fa2500c742aaf63923bb66baca177e1945909b27eafc5456fdb1"
     },
     {
@@ -4581,7 +5492,7 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/julia/run_probes.py",
-      "sha256": "dadf13d23de9fe229e18868d7be12959899ec719b072d49ccde160cc94c9927b"
+      "sha256": "3f9da14a78a02cb1663d3f0e0a025f16e499c02f0bf67a19c804900e02cb605e"
     },
     {
       "path": "docs/research/toolchain-prototypes/julia/src/StatQEDProbe.jl",
@@ -4592,8 +5503,12 @@
       "sha256": "a82a8d858507523e93b86ec5768337e2ed82bb1ba533524bdc87dcfc3ef27b53"
     },
     {
+      "path": "docs/research/toolchain-prototypes/julia/verify-probe.sh",
+      "sha256": "6945ebbb3ce1b06fd8183afb7ad55220a8eb5a10e123d9b10448e513770000cd"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/README.md",
-      "sha256": "b404b4b03590340b5c093a18c2ddd72ac71acb631bda7dffc4231d69066272df"
+      "sha256": "713abc05112ad8a302b2cad84244fc4aa963c2b082aee1d12027f3f5c01acfd2"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/no-binary-cache/StatQEDLeanNoBinaryCacheProbe.lean",
@@ -4601,19 +5516,19 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/no-binary-cache/lake-manifest.json",
-      "sha256": "9a8dffda84bde64eb08cbb8e3b948ffb85e678016c558a78aee8661810d86a72"
+      "sha256": "0dc9be6725815434799a9ed732f335924ac4daf6f9ff38c59bae4ed2cd8be73c"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/no-binary-cache/lakefile.toml",
-      "sha256": "23b20c89bdbef86068d2875ce903bdf69c342e9ea03511cbcabdadaa0908d56f"
+      "sha256": "0a7e57130e114d59f1e4e404ac0558d4ea0e24aac497076daf760fe62a6757a7"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/no-binary-cache/lean-toolchain",
-      "sha256": "8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af"
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/probe-fragment.json",
-      "sha256": "e5f7b7564ca1466856fc1d81912676b275ebacb5d94e5cf57a88e0d9c7886089"
+      "sha256": "77e53cbb02233019a89ee6cf40af36a9cca95768a572b85e6078371dbf5120d8"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/recommended/StatQEDLeanProbe.lean",
@@ -4621,15 +5536,15 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/recommended/lake-manifest.json",
-      "sha256": "4cb47b0ffe066119d123624f018f3e4b736abffddca830f5578aae5a92933502"
+      "sha256": "ff2ecf31ced1cb1cff770a54d281c92a9c6bd9fa3826b243eac4dac2d5dca93f"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/recommended/lakefile.toml",
-      "sha256": "b49310ab688dc486f940b585bbea0ee658315d1c0de1a2ecfa88d0a722300369"
+      "sha256": "dee49457bdc6cb473e0bcd0331f2cf202151a4c6df5d73400477eb617ae24dc6"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/recommended/lean-toolchain",
-      "sha256": "8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af"
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
     },
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.31-mathlib-4.32.1/StatQEDLeanRejectedProbe.lean",
@@ -4646,6 +5561,70 @@
     {
       "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.31-mathlib-4.32.1/lean-toolchain",
       "sha256": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.32.1-mathlib-4.32.2/StatQEDLeanRejectedProbe4322.lean",
+      "sha256": "2039c6abe52c5aefb15b4e119f1cfe07495c5a61d14dc1fdb68be3f96f18553e"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.32.1-mathlib-4.32.2/lake-manifest.json",
+      "sha256": "0a30181171c157d4034b6e286b30dc79420c39d2010f4ff25940bb1369393637"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.32.1-mathlib-4.32.2/lakefile.toml",
+      "sha256": "cd6bd162bbd6a8b380074bd64434bdcc5cbb3974ad7010a24e5b47558ac29e3a"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/lean-mathlib/rejected-lean-4.32.1-mathlib-4.32.2/lean-toolchain",
+      "sha256": "8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/lean-mathlib/verify-probe.sh",
+      "sha256": "083a34e80f29510836b329e4659b2d6e504833f7fc50b6b78beb49433ddb6d08"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/r/run-20260803/floor-package-lock.stdout",
+      "sha256": "f8af9e5155f8c6b5b017d5b67c60f798fe71722986d1e5da29502fcfcfe15222"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.command.json",
+      "sha256": "a9f25cb8c4187d09aa7bafafe602bcd58fcf65255099b6a99cdfc5bc272ade12"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.request.json",
+      "sha256": "5f4feb997e252557dee5c46bffe42a99db861ee4c9853198a7f31d7480a9c049"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.response.json",
+      "sha256": "dc2db559eac85a5630fd84fbe272934d376edd738a14c97aa22197db157c1687"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/cran-osv.stdout.log",
+      "sha256": "a3fe872f93de7e9ca30b1237489fb80ab1f2bc9f000ab3a0da4fbf4729298dc0"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.command.json",
+      "sha256": "e17363f10e8c57f11b48421356455421a08f97cf373e13d59d3335f0aa7f296d"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.request.json",
+      "sha256": "ef6d6bc51e60b351a2dacc951e1c5ee7b9c6ba7c8ac79e465c0cc5b435ef47ae"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.response.json",
+      "sha256": "535fedd0f0c7066c6ff1a8ec2882c57c30f693c7e14092bd5116f70994a92131"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/logs/security/run-20260805/pypi-osv.stdout.log",
+      "sha256": "504646f3674b9b8fff4a543ba9cfbedd811bfd5fad1628c8d98152a47887e1a5"
     },
     {
       "path": "docs/research/toolchain-prototypes/python/.pytest_cache/.gitignore",
@@ -4665,11 +5644,11 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/python/README.md",
-      "sha256": "393c5956a6deeb33bb2b4b7a6abe7c076d79fca6de9ef7bb6ea4091fedd00d53"
+      "sha256": "68898daaf577f619a21e1bdd3bcda080ba753196610d2c1a9dfd753d47f6396f"
     },
     {
       "path": "docs/research/toolchain-prototypes/python/RESULTS.md",
-      "sha256": "6ba1467ae7617072f98ace89d5843cd6794133bae6b8e476ccedf6ab99e4dd8f"
+      "sha256": "00d99897bff41d321f0d2293bc5f56665f1856a8453af3386584153508aaeff8"
     },
     {
       "path": "docs/research/toolchain-prototypes/python/probe-requirements.in",
@@ -4684,8 +5663,12 @@
       "sha256": "38f5ea6de9a5ec9512e9788b9104423d489a0cd5b39dbab939af5e0837bc8dbf"
     },
     {
+      "path": "docs/research/toolchain-prototypes/python/record_verify_probe.py",
+      "sha256": "2fcfa2cb60c113f1fc4a7206619a393b9987dbbb55fed963e20b9892d8cacfb8"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/python/run_probes.py",
-      "sha256": "3074b5757877fe8b4e5d0bd6e715a93230d27a6eea701ae67e16c6a2157587a8"
+      "sha256": "13c447fd6898eab2c0e4288ca486a76731d12a8bcee424db692c31c4556e1f0e"
     },
     {
       "path": "docs/research/toolchain-prototypes/python/src/statqed_python_toolchain_probe/__init__.py",
@@ -4696,8 +5679,12 @@
       "sha256": "097db4dd7d8ef302f53bc5e33f35e92075d762eb24c7998e986b863305be7c7f"
     },
     {
+      "path": "docs/research/toolchain-prototypes/python/verify-probe.sh",
+      "sha256": "bc9669e977330a0fc9128903505b8fa506fd290e8b7e4c6c3dc57d68eb3e9726"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/r/README.md",
-      "sha256": "5c9cab189751cc5bd81d907adc972385486ff859e53378304229aeade4f1bfaa"
+      "sha256": "6123b6f0b73292565c69960aa77f76f189004a5278ce3992a1b648280c7229b9"
     },
     {
       "path": "docs/research/toolchain-prototypes/r/development-cran-source-lock.tsv",
@@ -4733,15 +5720,23 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/r/probe-fragment.json",
-      "sha256": "246823121d4cbc112bf6e69ab8903c45ae6b16f414b95eb0514ab2a6089b9333"
+      "sha256": "7ba420861ca2e96f9d5e0da9957ea3ff7a908cf8a3bca64a959ba5b5c477f633"
     },
     {
       "path": "docs/research/toolchain-prototypes/r/run-probes.sh",
       "sha256": "e2ea9b330cc69b18ecd10e31073888488ec784f55a9e69eda9d32dab90e7ab5f"
     },
     {
+      "path": "docs/research/toolchain-prototypes/r/verify-probe.sh",
+      "sha256": "940576b4e783bc9a599a6d799a17f8611c7a76823e3cb1a89964c0dbff788697"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/r/verify_conda_lock.py",
+      "sha256": "727f5f094782f5d27d47c7589982c8c07e60908bcc787d342f93f9f303bbe8e1"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/rust/Cargo.lock",
-      "sha256": "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040"
+      "sha256": "993f587b7dee5a7e18bff312ae76ac7ab84031ccc771b5e9789915d2bfd3883b"
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/Cargo.toml",
@@ -4749,7 +5744,7 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/README.md",
-      "sha256": "7e5cdb9be0f16b8553a8f764385f37b7f306f944a950e4192cc515792bef92c0"
+      "sha256": "2fe6abd3679db99a2d0b9893de87843f798cfd28584597a6abbe59c0d5f2c8f1"
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/crates/compat-probe/Cargo.toml",
@@ -4764,8 +5759,12 @@
       "sha256": "2f56f6142ce7d462af74d2d79fcfbb54e27d0b6e3eb0e43e8e9ad1058ff2e2ee"
     },
     {
+      "path": "docs/research/toolchain-prototypes/rust/dependency-license-inventory.json",
+      "sha256": "e13f2450893fa02a668b3cd722a909f7abc267a23868b88b99bfbded299d6374"
+    },
+    {
       "path": "docs/research/toolchain-prototypes/rust/probe-fragment.json",
-      "sha256": "7961f3ef110ff1fa5cf25d77d2c96a00c598247a351db4007ff8e92372fdb904"
+      "sha256": "6e3b0071d1496ff1d388d2bcb405be8c5a30e20c95da31db4b3c786a5a0154fc"
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/rejections/archive-msrv/Cargo.lock",
@@ -4793,11 +5792,23 @@
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/run-probes.sh",
-      "sha256": "ee847e8018fdbf9d84f1cef857bf48938bf5ad8280bf61a054e4025ba3e511e6"
+      "sha256": "21855d0249e79fbc37f310d03835eee1c2ca2f610e4aa62ad9f0564501f0fbb2"
     },
     {
       "path": "docs/research/toolchain-prototypes/rust/rust-toolchain.toml",
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/rust/security-lock.json",
+      "sha256": "ef55a6faf904319e79f832bd4373abf964e9bc8689a37020082cd853ca05b5d7"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/rust/verify-probe.sh",
+      "sha256": "dc24a2ce3b772fb4acf0274c6a0a87878f276d7c49c6e55137748739c7498fa5"
+    },
+    {
+      "path": "docs/research/toolchain-prototypes/rust/verify_license_inventory.py",
+      "sha256": "77eb5abd9b87cc76134efb541364c51b1d8ffdf7f33b401e8c874535463aa363"
     }
   ],
   "recommendations": [
@@ -4809,26 +5820,27 @@
         "lean-windows-planned"
       ],
       "component": "Lean/Mathlib/Lake",
-      "development_pin": "Lean 4.32.1 commit f054605aea4b840552cca2e725580bffd1e1b704; Mathlib commit 520045ab14e26149ee970e2e617ca04b09bde5d6; bundled Lake 5.0.0-src+f054605",
+      "development_pin": "Lean 4.32.2 commit f3b06c705e6c85f5314019d5d3baab0fec5b580c; Mathlib commit 905b95818eb32af7874a58b427f50c1711a5e96c; bundled Lake 5.0.0-src+f3b06c7",
       "evidence_probe_ids": [
         "lean-recommended-cache-success",
         "lean-no-cache-success"
       ],
       "id": "lean-mathlib",
       "role": "initial normative proof backend research pin",
-      "rollback_policy": "Restore the prior exact Lean/Mathlib commits and manifest; never mix adjacent tags",
-      "support_floor": "No range: support only the exact Mathlib-selected Lean pair",
-      "update_policy": "Re-query releases, resolve both immutable commits, rerun cached and no-cache builds plus axiom inspection"
+      "rollback_policy": "Restore the prior exact Lean/Mathlib commits and reviewed manifests; never mix adjacent release names",
+      "support_floor": "No version range: support only the exact Mathlib-selected Lean pair",
+      "update_policy": "Re-query both official releases, resolve immutable commits, rerun cached and no-cache builds, mismatch/manifest controls, and axiom inspection"
     },
     {
       "ci_matrix": [
         "rust-linux-dev",
         "rust-linux-msrv",
+        "rust-linux-arm64-planned",
         "rust-macos-planned",
         "rust-windows-planned"
       ],
       "component": "Rust/Cargo",
-      "development_pin": "Rust 1.97.1; rustc build commit 8bab26f4f; Cargo build commit c980f4866",
+      "development_pin": "Rust 1.97.1; rustc build commit 8bab26f4f68e0e26f0bb7960be334d5b520ea452; Cargo build commit c980f4866141969fab6254a680546a277789d6f0",
       "evidence_probe_ids": [
         "rust-install-dev",
         "rust-dev-prototype",
@@ -4838,9 +5850,9 @@
       ],
       "id": "rust-cargo",
       "role": "reference operational backend research pin",
-      "rollback_policy": "Restore rust-toolchain and Cargo.lock from the prior reviewed pin",
-      "support_floor": "Rust 1.85.1 MSRV (rustc 4eb161250; Cargo d73d2caf9); Edition 2024; resolver 3",
-      "update_policy": "Advance stable only after dev and MSRV share one lock and fmt/clippy/test/audit pass"
+      "rollback_policy": "Restore the prior reviewed toolchain and Cargo.lock; retain Cargo CVE-2026-5222/CVE-2026-5223 mitigations",
+      "support_floor": "Compatibility-only Rust 1.85.1 MSRV (rustc 4eb161250e340c8f48f66e2b929ef4a5bed7c181; Cargo d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7); fetch with current patched Cargo, then isolated uncredentialed crates.io-only offline 1.85 checks",
+      "update_policy": "Advance only after development and MSRV share the exact lock and fmt, clippy -D warnings, tests, unsafe rejection, license inventory, and advisory checks pass; do not use Cargo <1.96 with credentials or third-party registries"
     },
     {
       "ci_matrix": [
@@ -4852,16 +5864,16 @@
         "python-windows-planned"
       ],
       "component": "Python",
-      "development_pin": "CPython 3.14.6 upstream tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45",
+      "development_pin": "CPython 3.14.7; python-build-standalone 20260805 target commit 76b41240bc8dfe753a54b2e32c8941e536568be8; runtime archive sha256 a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9",
       "evidence_probe_ids": [
-        "python-development-3-14-6",
-        "python-floor-3-11-15"
+        "python-development-3-14-7",
+        "python-floor-3-11-15-owned"
       ],
       "id": "python",
       "role": "thin frontend development/support research pin",
-      "rollback_policy": "Restore prior interpreter patch and universal hash lock",
-      "support_floor": "Python >=3.11; exact floor patch tested: 3.11.15 commit 2340a037f7450e70fccfe411e6531afb4d57a312",
-      "update_policy": "Test every supported minor; refresh security patches and hash lock before upgrade"
+      "rollback_policy": "Restore the prior reviewed interpreter archive digest and universal hash lock; never fall back to the superseded 3.14.6 pin silently",
+      "support_floor": "Python >=3.11; exact floor patch tested: CPython 3.11.15 source commit 2340a037f7450e70fccfe411e6531afb4d57a312",
+      "update_policy": "Test every supported minor in CI; refresh security patches, managed-runtime provenance, and the universal hash lock before upgrade"
     },
     {
       "ci_matrix": [
@@ -4900,6 +5912,21 @@
       "rollback_policy": "Restore prior official archive digest, compat entry, and generated manifest",
       "support_floor": "Julia LTS 1.10.11 archive sha256 fb49c6b174600cd2051e37ba3f7330f8acf06dd00bce609bab6611387fdb37bf",
       "update_policy": "Follow maintained Stable/LTS lines and rerun fresh-depot offline package-native probes"
+    },
+    {
+      "ci_matrix": [
+        "arrow-linux-candidates"
+      ],
+      "component": "Apache Arrow libraries",
+      "development_pin": "Apache Arrow 25.0.0 format release; PyArrow 25.0.0 and arrow-rs 59.1.0 candidates",
+      "evidence_probe_ids": [
+        "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened"
+      ],
+      "id": "arrow-candidates",
+      "role": "experimental interoperability candidates only",
+      "rollback_policy": "Remove candidate libraries; no production or normative dependency exists",
+      "support_floor": "None selected; experimental candidate, not logical-data identity",
+      "update_policy": "Refresh implementation matrix/security pages and cross-read probes before later RFC work"
     }
   ],
   "report_summary": {
@@ -4913,7 +5940,7 @@
         "id": "lean-linux-exact",
         "os": "Ubuntu 24.04.4",
         "status": "direct_success",
-        "version": "4.32.1/520045ab"
+        "version": "4.32.2/905b95818eb32af7874a58b427f50c1711a5e96c"
       },
       {
         "architecture": "x86_64",
@@ -4924,7 +5951,7 @@
         "id": "lean-linux-no-cache",
         "os": "Ubuntu 24.04.4",
         "status": "direct_success",
-        "version": "4.32.1/520045ab no-cache"
+        "version": "4.32.2/905b95818eb32af7874a58b427f50c1711a5e96c no-cache"
       },
       {
         "architecture": "arm64",
@@ -4970,6 +5997,15 @@
         "architecture": "arm64",
         "component": "Rust/Cargo",
         "evidence_probe_ids": [],
+        "id": "rust-linux-arm64-planned",
+        "os": "Ubuntu",
+        "status": "planned_validation",
+        "version": "1.97.1/1.85.1"
+      },
+      {
+        "architecture": "arm64",
+        "component": "Rust/Cargo",
+        "evidence_probe_ids": [],
         "id": "rust-macos-planned",
         "os": "macOS",
         "status": "planned_validation",
@@ -4988,18 +6024,18 @@
         "architecture": "x86_64",
         "component": "Python",
         "evidence_probe_ids": [
-          "python-development-3-14-6"
+          "python-development-3-14-7"
         ],
         "id": "python-linux-314",
         "os": "Ubuntu 24.04.4",
         "status": "direct_success",
-        "version": "3.14.6"
+        "version": "3.14.7"
       },
       {
         "architecture": "x86_64",
         "component": "Python",
         "evidence_probe_ids": [
-          "python-floor-3-11-15"
+          "python-floor-3-11-15-owned"
         ],
         "id": "python-linux-311",
         "os": "Ubuntu 24.04.4",
@@ -5013,7 +6049,7 @@
         "id": "python-linux-312-planned",
         "os": "Ubuntu",
         "status": "planned_validation",
-        "version": "3.12 latest security patch"
+        "version": "3.12.13"
       },
       {
         "architecture": "x86_64",
@@ -5022,7 +6058,7 @@
         "id": "python-linux-313-planned",
         "os": "Ubuntu",
         "status": "planned_validation",
-        "version": "3.13 latest patch"
+        "version": "3.13.15"
       },
       {
         "architecture": "arm64",
@@ -5121,6 +6157,17 @@
         "os": "Windows",
         "status": "planned_validation",
         "version": "Stable/LTS"
+      },
+      {
+        "architecture": "x86_64",
+        "component": "Apache Arrow libraries",
+        "evidence_probe_ids": [
+          "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened"
+        ],
+        "id": "arrow-linux-candidates",
+        "os": "Ubuntu 24.04.4",
+        "status": "direct_success",
+        "version": "25.0.0/59.1.0"
       }
     ],
     "recommendations": [
@@ -5132,26 +6179,27 @@
           "lean-windows-planned"
         ],
         "component": "Lean/Mathlib/Lake",
-        "development_pin": "Lean 4.32.1 commit f054605aea4b840552cca2e725580bffd1e1b704; Mathlib commit 520045ab14e26149ee970e2e617ca04b09bde5d6; bundled Lake 5.0.0-src+f054605",
+        "development_pin": "Lean 4.32.2 commit f3b06c705e6c85f5314019d5d3baab0fec5b580c; Mathlib commit 905b95818eb32af7874a58b427f50c1711a5e96c; bundled Lake 5.0.0-src+f3b06c7",
         "evidence_probe_ids": [
           "lean-recommended-cache-success",
           "lean-no-cache-success"
         ],
         "id": "lean-mathlib",
         "role": "initial normative proof backend research pin",
-        "rollback_policy": "Restore the prior exact Lean/Mathlib commits and manifest; never mix adjacent tags",
-        "support_floor": "No range: support only the exact Mathlib-selected Lean pair",
-        "update_policy": "Re-query releases, resolve both immutable commits, rerun cached and no-cache builds plus axiom inspection"
+        "rollback_policy": "Restore the prior exact Lean/Mathlib commits and reviewed manifests; never mix adjacent release names",
+        "support_floor": "No version range: support only the exact Mathlib-selected Lean pair",
+        "update_policy": "Re-query both official releases, resolve immutable commits, rerun cached and no-cache builds, mismatch/manifest controls, and axiom inspection"
       },
       {
         "ci_matrix": [
           "rust-linux-dev",
           "rust-linux-msrv",
+          "rust-linux-arm64-planned",
           "rust-macos-planned",
           "rust-windows-planned"
         ],
         "component": "Rust/Cargo",
-        "development_pin": "Rust 1.97.1; rustc build commit 8bab26f4f; Cargo build commit c980f4866",
+        "development_pin": "Rust 1.97.1; rustc build commit 8bab26f4f68e0e26f0bb7960be334d5b520ea452; Cargo build commit c980f4866141969fab6254a680546a277789d6f0",
         "evidence_probe_ids": [
           "rust-install-dev",
           "rust-dev-prototype",
@@ -5161,9 +6209,9 @@
         ],
         "id": "rust-cargo",
         "role": "reference operational backend research pin",
-        "rollback_policy": "Restore rust-toolchain and Cargo.lock from the prior reviewed pin",
-        "support_floor": "Rust 1.85.1 MSRV (rustc 4eb161250; Cargo d73d2caf9); Edition 2024; resolver 3",
-        "update_policy": "Advance stable only after dev and MSRV share one lock and fmt/clippy/test/audit pass"
+        "rollback_policy": "Restore the prior reviewed toolchain and Cargo.lock; retain Cargo CVE-2026-5222/CVE-2026-5223 mitigations",
+        "support_floor": "Compatibility-only Rust 1.85.1 MSRV (rustc 4eb161250e340c8f48f66e2b929ef4a5bed7c181; Cargo d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7); fetch with current patched Cargo, then isolated uncredentialed crates.io-only offline 1.85 checks",
+        "update_policy": "Advance only after development and MSRV share the exact lock and fmt, clippy -D warnings, tests, unsafe rejection, license inventory, and advisory checks pass; do not use Cargo <1.96 with credentials or third-party registries"
       },
       {
         "ci_matrix": [
@@ -5175,16 +6223,16 @@
           "python-windows-planned"
         ],
         "component": "Python",
-        "development_pin": "CPython 3.14.6 upstream tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45",
+        "development_pin": "CPython 3.14.7; python-build-standalone 20260805 target commit 76b41240bc8dfe753a54b2e32c8941e536568be8; runtime archive sha256 a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9",
         "evidence_probe_ids": [
-          "python-development-3-14-6",
-          "python-floor-3-11-15"
+          "python-development-3-14-7",
+          "python-floor-3-11-15-owned"
         ],
         "id": "python",
         "role": "thin frontend development/support research pin",
-        "rollback_policy": "Restore prior interpreter patch and universal hash lock",
-        "support_floor": "Python >=3.11; exact floor patch tested: 3.11.15 commit 2340a037f7450e70fccfe411e6531afb4d57a312",
-        "update_policy": "Test every supported minor; refresh security patches and hash lock before upgrade"
+        "rollback_policy": "Restore the prior reviewed interpreter archive digest and universal hash lock; never fall back to the superseded 3.14.6 pin silently",
+        "support_floor": "Python >=3.11; exact floor patch tested: CPython 3.11.15 source commit 2340a037f7450e70fccfe411e6531afb4d57a312",
+        "update_policy": "Test every supported minor in CI; refresh security patches, managed-runtime provenance, and the universal hash lock before upgrade"
       },
       {
         "ci_matrix": [
@@ -5223,10 +6271,25 @@
         "rollback_policy": "Restore prior official archive digest, compat entry, and generated manifest",
         "support_floor": "Julia LTS 1.10.11 archive sha256 fb49c6b174600cd2051e37ba3f7330f8acf06dd00bce609bab6611387fdb37bf",
         "update_policy": "Follow maintained Stable/LTS lines and rerun fresh-depot offline package-native probes"
+      },
+      {
+        "ci_matrix": [
+          "arrow-linux-candidates"
+        ],
+        "component": "Apache Arrow libraries",
+        "development_pin": "Apache Arrow 25.0.0 format release; PyArrow 25.0.0 and arrow-rs 59.1.0 candidates",
+        "evidence_probe_ids": [
+          "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened"
+        ],
+        "id": "arrow-candidates",
+        "role": "experimental interoperability candidates only",
+        "rollback_policy": "Remove candidate libraries; no production or normative dependency exists",
+        "support_floor": "None selected; experimental candidate, not logical-data identity",
+        "update_policy": "Refresh implementation matrix/security pages and cross-read probes before later RFC work"
       }
     ]
   },
-  "retrieval_date": "2026-08-03",
+  "retrieval_date": "2026-08-05",
   "schema_version": 1,
   "sources": [
     {
@@ -5234,7 +6297,7 @@
       "id": "lean-release-v4.32.2",
       "license": "Apache-2.0 (Lean source repository)",
       "maintenance_security": "Latest standalone stable observed; approximately monthly release cadence, with no strong backwards-compatibility guarantee.",
-      "notes": "Released 2026-07-28; full tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. No matching stable Mathlib v4.32.2 release was listed at cutoff.",
+      "notes": "Released 2026-07-28; full tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. The original August 3 response did not expose a matching Mathlib v4.32.2 release; the August 5 exact-release refresh did.",
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "Lean v4.32.2 standalone release",
       "url": "https://github.com/leanprover/lean4/releases/tag/v4.32.2"
@@ -5243,8 +6306,8 @@
       "authority": "Lean project official GitHub release",
       "id": "lean-release-v4.32.1-matched",
       "license": "Apache-2.0",
-      "maintenance_security": "Latest Lean release with a matching stable Mathlib tag observed.",
-      "notes": "Released 2026-07-22; full tag commit f054605aea4b840552cca2e725580bffd1e1b704.",
+      "maintenance_security": "Superseded matched release observation retained for chronology.",
+      "notes": "Released 2026-07-22; full tag commit f054605aea4b840552cca2e725580bffd1e1b704. Superseded as latest matching pair by Mathlib/Lean v4.32.2 at the August 5 currentness refresh.",
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "Lean v4.32.1 matched release",
       "url": "https://github.com/leanprover/lean4/releases/tag/v4.32.1"
@@ -5253,8 +6316,8 @@
       "authority": "Mathlib official GitHub release",
       "id": "mathlib-release-v4.32.1",
       "license": "Apache-2.0",
-      "maintenance_security": "Latest stable Mathlib release observed.",
-      "notes": "Released 2026-07-23; full tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6. Tagged lean-toolchain is leanprover/lean4:v4.32.1.",
+      "maintenance_security": "Superseded stable Mathlib release retained for chronology.",
+      "notes": "Released 2026-07-23; full tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6. Tagged lean-toolchain is leanprover/lean4:v4.32.1. Superseded as latest by v4.32.2 at the August 5 refresh.",
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "Mathlib v4.32.1 release",
       "url": "https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.1"
@@ -5264,10 +6327,30 @@
       "id": "mathlib-v4.32.1-toolchain",
       "license": "Apache-2.0 repository",
       "maintenance_security": "Immutable content at the stable Mathlib tag.",
-      "notes": "Exact content: leanprover/lean4:v4.32.1. This is the decisive matching-pair locator.",
+      "notes": "Exact content: leanprover/lean4:v4.32.1. Retained as the decisive locator for the superseded August 3 matching-pair observation.",
       "retrieved_at": "2026-08-03T14:09:00+02:00",
       "title": "Mathlib v4.32.1 lean-toolchain",
       "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.1/lean-toolchain"
+    },
+    {
+      "authority": "Mathlib official GitHub release",
+      "id": "mathlib-release-v4.32.2",
+      "license": "Apache-2.0",
+      "maintenance_security": "Latest stable Mathlib release exposed by the exact official release page at the refresh.",
+      "notes": "Full immutable release revision 905b95818eb32af7874a58b427f50c1711a5e96c; release page describes the toolchain bump to v4.32.2.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Mathlib v4.32.2 release",
+      "url": "https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.2"
+    },
+    {
+      "authority": "Mathlib immutable tagged source file",
+      "id": "mathlib-v4.32.2-toolchain",
+      "license": "Apache-2.0 repository",
+      "maintenance_security": "Immutable content at the stable Mathlib tag.",
+      "notes": "Exact content: leanprover/lean4:v4.32.2. This is the decisive current matching-pair locator.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Mathlib v4.32.2 lean-toolchain",
+      "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.2/lean-toolchain"
     },
     {
       "authority": "Lean project policy",
@@ -5298,6 +6381,16 @@
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "Managing Toolchains with Elan",
       "url": "https://lean-lang.org/doc/reference/latest/Build-Tools-and-Distribution/Managing-Toolchains-with-Elan/"
+    },
+    {
+      "authority": "Official Elan immutable tagged source manifest",
+      "id": "elan-release-v4.2.3-license",
+      "license": "MIT OR Apache-2.0",
+      "maintenance_security": "Official v4.2.3 release is dated 2026-06-08; bootstrap tool remains outside proof authority.",
+      "notes": "Manifest declares name elan, version 4.2.3, publish=false, and license MIT OR Apache-2.0; immutable LICENSE-APACHE and LICENSE-MIT files are present at the same tag. Exact bootstrap evidence reports b6cec7e10 and archive SHA-256 df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Elan v4.2.3 release and immutable package manifest",
+      "url": "https://raw.githubusercontent.com/leanprover/elan/v4.2.3/Cargo.toml"
     },
     {
       "authority": "Rust project official release announcement",
@@ -5340,14 +6433,114 @@
       "url": "https://rustsec.org/"
     },
     {
+      "authority": "Rust project official GitHub release",
+      "id": "rust-release-1.85.1",
+      "license": "Rust source is MIT OR Apache-2.0 with component-specific notices",
+      "maintenance_security": "Historical release used only as a compatibility-floor candidate; Rust upstream supplies fixes only to latest stable.",
+      "notes": "Exact rustc commit 4eb161250e340c8f48f66e2b929ef4a5bed7c181; exact bundled Cargo commit reported by the tested toolchain is d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7. Cargo 1.85.1 is within the affected ranges of CVE-2026-5222 and CVE-2026-5223.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Rust 1.85.1 support-floor release",
+      "url": "https://github.com/rust-lang/rust/releases/tag/1.85.1"
+    },
+    {
+      "authority": "Rust Security Response Team official advisory",
+      "id": "cargo-cve-2026-5222",
+      "license": "Rust project website terms; Rust source is MIT OR Apache-2.0",
+      "maintenance_security": "Low-severity sparse third-party-registry credential issue fixed in Rust/Cargo 1.96; no mitigation is stated for older Cargo.",
+      "notes": "Official affected range is Cargo shipped with Rust 1.68 through versions before 1.96. crates.io users are stated to be unaffected.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Security Advisory for Cargo (CVE-2026-5222)",
+      "url": "https://blog.rust-lang.org/2026/05/25/cve-2026-5222/"
+    },
+    {
+      "authority": "Rust Security Response Team official advisory",
+      "id": "cargo-cve-2026-5223",
+      "license": "Rust project website terms; Rust source is MIT OR Apache-2.0",
+      "maintenance_security": "Medium-severity malicious third-party-registry crate-tarball symlink extraction fixed in Rust/Cargo 1.96.0.",
+      "notes": "All Cargo versions shipped before Rust 1.96.0 are affected. crates.io forbids symlink uploads; users unable to upgrade are told to audit/reject symlinks in their registry.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Security Advisory for Cargo (CVE-2026-5223)",
+      "url": "https://blog.rust-lang.org/2026/05/25/cve-2026-5223/"
+    },
+    {
+      "authority": "Rust Release Team official point-release announcement",
+      "id": "rust-release-1.96.1-libssh2-security",
+      "license": "Rust source is MIT OR Apache-2.0 with component-specific notices",
+      "maintenance_security": "Point release applies three patches to libssh2 compiled into Cargo.",
+      "notes": "Official post names CVE-2025-15661, CVE-2026-55199, and CVE-2026-55200. It also records a Cargo HTTP retry/timeout fix and a rustc MIR miscompilation fix.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Rust 1.96.1 bundled libssh2 security fixes",
+      "url": "https://blog.rust-lang.org/2026/06/30/Rust-1.96.1/"
+    },
+    {
+      "authority": "Official rustup immutable tagged source manifest",
+      "id": "rustup-release-1.29.0-license",
+      "license": "MIT OR Apache-2.0",
+      "maintenance_security": "Signed official tag dated 2026-03-12; bootstrap tool and downloaded toolchains have separate provenance/security obligations.",
+      "notes": "Manifest declares rustup 1.29.0, Edition 2024, and license MIT OR Apache-2.0; immutable LICENSE-APACHE and LICENSE-MIT files are present at the same tag. Official release page exposes short commit 28d1352.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "rustup 1.29.0 release and immutable package manifest",
+      "url": "https://raw.githubusercontent.com/rust-lang/rustup/1.29.0/Cargo.toml"
+    },
+    {
       "authority": "CPython official GitHub release",
       "id": "python-release-v3.14.6",
       "license": "PSF License v2",
-      "maintenance_security": "Current stable observed; 3.14.7 was only scheduled for 2026-08-04 at cutoff.",
-      "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45.",
+      "maintenance_security": "Current stable at the August 3 cutoff; officially superseded by 3.14.7 on August 5.",
+      "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45. Retained as the exact tested development pin, not as a post-August-5 currentness claim.",
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "CPython v3.14.6 release",
       "url": "https://github.com/python/cpython/releases/tag/v3.14.6"
+    },
+    {
+      "authority": "Python Software Foundation official release page",
+      "id": "python-release-v3.14.7",
+      "license": "PSF License v2",
+      "maintenance_security": "Current 3.14 maintenance release at the August 5 refresh; prototype status is recorded separately.",
+      "notes": "Released 2026-08-05. Official XZ source tarball SHA-256 is 3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81. A source release record does not establish any prototype result.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Python 3.14.7 current release",
+      "url": "https://www.python.org/downloads/release/python-3147/"
+    },
+    {
+      "authority": "Python Software Foundation official release page",
+      "id": "python-release-v3.13.15",
+      "license": "PSF License v2",
+      "maintenance_security": "Current 3.13 maintenance release at the August 5 refresh; not directly tested by SQ-0002.",
+      "notes": "Released 2026-08-05. Official XZ source tarball SHA-256 is 1e66a7945a48390ee4c2a4268a0e4185884059a13c4aab6d148aa208deea4a76. This exact planned CI patch has no direct prototype evidence.",
+      "retrieved_at": "2026-08-05T20:55:00+02:00",
+      "title": "Python 3.13.15 planned CI intermediate release",
+      "url": "https://www.python.org/downloads/release/python-31315/"
+    },
+    {
+      "authority": "Python Software Foundation official release page",
+      "id": "python-release-v3.12.13",
+      "license": "PSF License v2",
+      "maintenance_security": "Current 3.12 source-only security release at the August 5 refresh; not directly tested by SQ-0002.",
+      "notes": "Released 2026-03-03. Official XZ source tarball SHA-256 is c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684. This exact planned CI patch has no direct prototype evidence or regular platform installer claim.",
+      "retrieved_at": "2026-08-05T20:55:00+02:00",
+      "title": "Python 3.12.13 planned CI intermediate release",
+      "url": "https://www.python.org/downloads/release/python-31213/"
+    },
+    {
+      "authority": "Astral official GitHub release API, immutable tagged license, and release asset",
+      "id": "python-build-standalone-20260805",
+      "license": "MPL-2.0 for python-build-standalone; the produced archive contains CPython and bundled components with their own notices",
+      "maintenance_security": "Active dated release; binary provenance and bundled-component security require separate periodic review.",
+      "notes": "Tag 20260805 targets commit 76b41240bc8dfe753a54b2e32c8941e536568be8. Exact asset cpython-3.14.7+20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz has GitHub-recorded digest sha256:a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9, size 35,931,360 bytes, and immutable locator https://github.com/astral-sh/python-build-standalone/releases/download/20260805/cpython-3.14.7%2B20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz. Tagged project license: https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/LICENSE. Tagged bundled-application notices: https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/python-licenses.rst.",
+      "retrieved_at": "2026-08-05T20:14:38+02:00",
+      "title": "python-build-standalone 20260805 CPython 3.14.7 x86-64 GNU/Linux runtime",
+      "url": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20260805"
+    },
+    {
+      "authority": "Python Software Foundation official release page and signed CPython tag",
+      "id": "python-release-v3.11.15",
+      "license": "PSF License v2",
+      "maintenance_security": "Source-only security release in the 3.11 security-fixes-only series; irregular source releases continue until October 2027.",
+      "notes": "Released 2026-03-03; signed Git tag commit 2340a037f7450e70fccfe411e6531afb4d57a312. Official XZ source SHA-256 is 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625. No regular platform installers are provided.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "Python 3.11.15 support-floor release",
+      "url": "https://www.python.org/downloads/release/python-31115/"
     },
     {
       "authority": "Official Python Developer's Guide",
@@ -5398,6 +6591,36 @@
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "R developer release status",
       "url": "https://developer.r-project.org/"
+    },
+    {
+      "authority": "R Core official CRAN source archive",
+      "id": "r-release-4.4.3",
+      "license": "GPL-2 | GPL-3",
+      "maintenance_security": "Historical wrap-up release of the 4.4.x series; archive availability is not a current R Core security-support promise.",
+      "notes": "R 4.4.3 Trophy Case was released 2025-02-28. The official archive returned HTTP 200 with content length 40234425 at the refresh. StatQED's 4.4 floor is downstream policy and uses separate executed-binary provenance.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "R 4.4.3 source release",
+      "url": "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz"
+    },
+    {
+      "authority": "CRAN official current package source archive and DESCRIPTION",
+      "id": "cran-testthat-3.3.2",
+      "license": "MIT + file LICENSE",
+      "maintenance_security": "Current CRAN release published 2026-01-11; CRAN publication is not a security audit.",
+      "notes": "DESCRIPTION declares Depends: R (>= 4.1.0). Exact source SHA-256 retained by the prototype is 5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "testthat 3.3.2 CRAN release",
+      "url": "https://cran.r-project.org/src/contrib/testthat_3.3.2.tar.gz"
+    },
+    {
+      "authority": "CRAN official archived package source",
+      "id": "cran-testthat-3.2.3",
+      "license": "MIT + file LICENSE",
+      "maintenance_security": "Archived historical package release published 2025-01-13; archive availability is not a maintenance guarantee.",
+      "notes": "DESCRIPTION declares Depends: R (>= 3.6.0). Streamed source SHA-256 at refresh: 180b794a5bbc016acec5d882e600e0c5ff4c455513dd451960b217e0e53dc1af. The executed floor uses a separately locked conda build.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "testthat 3.2.3 archived CRAN release",
+      "url": "https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz"
     },
     {
       "authority": "R Core official manual",
@@ -5518,6 +6741,26 @@
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "Apache Arrow 25.0.0 release",
       "url": "https://arrow.apache.org/release/25.0.0.html"
+    },
+    {
+      "authority": "PyPI exact release metadata owned by the verified Apache Arrow project account",
+      "id": "pyarrow-25.0.0",
+      "license": "Apache-2.0",
+      "maintenance_security": "Released 2026-07-10 with wheels for explicitly enumerated interpreter/platform tags; registry publication is not a security audit.",
+      "notes": "Python API over Arrow C++; Requires-Python >=3.10. The executed CPython 3.14 manylinux x86_64 wheel is separately locked by SHA-256 447df764beb07c544f0178a5f6b70ef44b9ecf382b3cdfad4c2d7867353c3887.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "PyArrow 25.0.0",
+      "url": "https://pypi.org/project/pyarrow/25.0.0/"
+    },
+    {
+      "authority": "Official crates.io exact-version registry metadata linked to apache/arrow-rs",
+      "id": "arrow-rs-readme-policy",
+      "license": "Apache-2.0",
+      "maintenance_security": "Released 2026-07-07; active Apache Arrow Rust implementation. Registry metadata is not a security audit.",
+      "notes": "Declares Edition 2024 and rust-version 1.85. Immutable crate checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b; official source tag https://github.com/apache/arrow-rs/tree/59.1.0.",
+      "retrieved_at": "2026-08-05T20:01:03+02:00",
+      "title": "arrow-rs arrow crate 59.1.0",
+      "url": "https://crates.io/crates/arrow/59.1.0"
     },
     {
       "authority": "Apache Arrow official format documentation",
@@ -5660,6 +6903,16 @@
       "url": "https://pypi.org/project/cbor2/6.1.3/"
     },
     {
+      "authority": "PyPI official release API and publisher-attested project metadata",
+      "id": "python-cbor2-6.1.4",
+      "license": "MIT",
+      "maintenance_security": "Released 2026-08-01; Python >=3.10; release history fixes four malformed-input or algorithmic-complexity defects and still warns that malicious input has not been tested.",
+      "notes": "CPython 3.14 manylinux_2_28 x86-64 wheel SHA256 c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c; sdist SHA256 01ecc79a28f33d17331943ce508fc1e21f4b06553c73f874f4c77120d72b2ef9; Trusted Publishing.",
+      "retrieved_at": "2026-08-05T20:05:00+02:00",
+      "title": "cbor2 6.1.4",
+      "url": "https://pypi.org/pypi/cbor2/6.1.4/json"
+    },
+    {
       "authority": "Official project documentation",
       "id": "python-cbor2-api-6.1.3",
       "license": "MIT project",
@@ -5688,6 +6941,16 @@
       "retrieved_at": "2026-08-03T13:52:14+02:00",
       "title": "GitHub Actions runner images",
       "url": "https://github.com/actions/runner-images"
+    },
+    {
+      "authority": "Official OSV.dev API documentation",
+      "id": "osv-querybatch-api",
+      "license": "Apache-2.0 project documentation/source repository",
+      "maintenance_security": "Live vulnerability service; results and coverage are temporally unstable and must be dated.",
+      "notes": "The API guarantees response ordering matches request ordering and documents pagination. A zero-result response is point-in-time evidence, not a security guarantee.",
+      "retrieved_at": "2026-08-05T20:17:00+02:00",
+      "title": "OSV.dev querybatch API",
+      "url": "https://google.github.io/osv.dev/post-v1-querybatch/"
     },
     {
       "authority": "Astral python-build-standalone official release",
@@ -5840,16 +7103,6 @@
       "url": "https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/"
     },
     {
-      "authority": "Rust project release",
-      "id": "rust-release-1.85.1",
-      "license": "See linked primary source and package/repository metadata",
-      "maintenance_security": "Point-in-time primary-source record; re-query before update.",
-      "notes": "Added during manager integration to retain the specialist's exact source identity rather than aliasing it to a non-equivalent source.",
-      "retrieved_at": "2026-08-03T15:10:00+02:00",
-      "title": "Rust 1.85.1 release tag",
-      "url": "https://github.com/rust-lang/rust/releases/tag/1.85.1"
-    },
-    {
       "authority": "Cargo official reference",
       "id": "cargo-resolver3",
       "license": "See linked primary source and package/repository metadata",
@@ -5898,16 +7151,6 @@
       "retrieved_at": "2026-08-03T15:10:00+02:00",
       "title": "rustup profiles",
       "url": "https://rust-lang.github.io/rustup/concepts/profiles.html"
-    },
-    {
-      "authority": "crates.io canonical package record",
-      "id": "arrow-rs-readme-policy",
-      "license": "See linked primary source and package/repository metadata",
-      "maintenance_security": "Point-in-time primary-source record; re-query before update.",
-      "notes": "Added during manager integration to retain the specialist's exact source identity rather than aliasing it to a non-equivalent source.",
-      "retrieved_at": "2026-08-03T15:10:00+02:00",
-      "title": "arrow-rs crate 59.1.0",
-      "url": "https://crates.io/crates/arrow/59.1.0"
     },
     {
       "authority": "crates.io package registry",

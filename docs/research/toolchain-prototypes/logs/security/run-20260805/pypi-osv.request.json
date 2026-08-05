@@ -1,0 +1,88 @@
+{
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "build"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "colorama"
+      },
+      "version": "0.4.6"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "hatchling"
+      },
+      "version": "1.31.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "iniconfig"
+      },
+      "version": "2.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "packaging"
+      },
+      "version": "26.2"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pathspec"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pip"
+      },
+      "version": "26.2"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pluggy"
+      },
+      "version": "1.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pygments"
+      },
+      "version": "2.20.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pyproject-hooks"
+      },
+      "version": "1.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pytest"
+      },
+      "version": "9.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "trove-classifiers"
+      },
+      "version": "2026.6.1.19"
+    }
+  ]
+}

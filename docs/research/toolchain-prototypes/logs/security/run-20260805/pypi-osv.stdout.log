@@ -1,0 +1,4 @@
+ecosystem=PyPI
+packages=12
+vulnerabilities=0
+endpoint=https://api.osv.dev/v1/querybatch

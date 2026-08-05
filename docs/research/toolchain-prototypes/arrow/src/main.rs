@@ -54,10 +54,15 @@ fn file_bytes(batch: &RecordBatch) -> Vec<u8> {
 }
 
 fn check_batch(batch: &RecordBatch) {
-    assert_eq!(batch.schema().field(0).data_type(), &DataType::Int64);
-    assert_eq!(batch.schema().field(1).data_type(), &DataType::Utf8);
-    assert_eq!(batch.schema().field(2).data_type(), &DataType::Binary);
+    let expected = fixture();
+    assert_eq!(batch.schema().as_ref(), expected.schema().as_ref());
     assert_eq!(batch.num_rows(), 3);
+    let ids = batch
+        .column(0)
+        .as_any()
+        .downcast_ref::<Int64Array>()
+        .unwrap();
+    assert_eq!([ids.value(0), ids.value(1), ids.value(2)], [1, 2, 3]);
     let labels = batch
         .column(1)
         .as_any()
@@ -66,6 +71,14 @@ fn check_batch(batch: &RecordBatch) {
     assert_eq!(labels.value(0), "alpha");
     assert!(labels.is_null(1));
     assert_eq!(labels.value(2), "e\u{301}");
+    let payloads = batch
+        .column(2)
+        .as_any()
+        .downcast_ref::<BinaryArray>()
+        .unwrap();
+    assert_eq!(payloads.value(0), b"\x00\xff");
+    assert_eq!(payloads.value(1), b"");
+    assert!(payloads.is_null(2));
 }
 
 fn command_self() {

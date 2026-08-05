@@ -17,7 +17,9 @@ strict precompile, `Pkg.test`, and project/manifest status in fresh isolated
 depots. Each depot contains a fixed empty local registry sentinel so Pkg does
 not bootstrap the mutable General registry for a package with stdlib-only
 dependencies. The sentinel contains no packages and its source is generated
-by `run_probes.py`; the resulting manifests are retained under `manifests/`.
+by `run_probes.py`. Each fresh generated manifest must match the exact retained
+bytes in `locks/Manifest-1.12.6.toml` or `locks/Manifest-1.10.11.toml`; ordinary
+verification cannot refresh those locks and fails closed on drift.
 
 Three earlier fresh-depot attempts (`122700Z`, `123100Z`, and `123700Z`) failed
 because Pkg tried to clone General despite offline variables. They remain in
@@ -25,16 +27,20 @@ because Pkg tried to clone General despite offline variables. They remain in
 General or external package downloads. A mutated project requiring Julia 1.13
 was rejected by Julia 1.12.6 as expected.
 
-Reproduce only after placing the two official archives/runtimes at the exact
-paths declared in `run_probes.py`:
+The exact official archive locators are
+`https://julialang-s3.julialang.org/bin/linux/x64/1.12/julia-1.12.6-linux-x86_64.tar.gz`
+and
+`https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.11-linux-x86_64.tar.gz`.
+After downloading and checking the digests above, run:
 
 ```sh
-python3 docs/research/toolchain-prototypes/julia/run_probes.py \
-  --run-id run-YYYYMMDDTHHMMSSZ
+/usr/bin/bash docs/research/toolchain-prototypes/julia/verify-probe.sh development
+/usr/bin/bash docs/research/toolchain-prototypes/julia/verify-probe.sh floor
 ```
 
 Preparation is networked and checksum-gated. The actual Pkg probe is offline,
 single-threaded, uses `C.UTF-8`, disables startup/history and automatic
-precompile, and writes all depots/workspaces under `/tmp`. Direct evidence is
+precompile, and writes all depots/workspaces under a fresh `/tmp` directory
+that is removed on exit. Direct evidence is
 Linux x86-64 only. macOS, Windows, ARM, registry publication, and packages with
 non-stdlib dependencies require later validation; no support is inferred.

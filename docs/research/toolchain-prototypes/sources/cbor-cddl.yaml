@@ -2,8 +2,8 @@
   "audit_id": "SA-SQ0002-CBOR-CDDL",
   "subject": "CBOR deterministic encoding and CDDL schema/tool candidates",
   "source": {
-    "work": "RFC 8949, RFC 8610, RFC 9682, and candidate implementation documentation",
-    "version": "STD 94 / RFC 8949; RFC 8610 updated by RFC 9682; library observations retrieved 2026-08-03",
+    "work": "RFC 8949, RFC 8610, RFC 9682, and candidate implementation documentation including cbor2 6.1.4",
+    "version": "STD 94 / RFC 8949; RFC 8610 updated by RFC 9682; original library observations retrieved 2026-08-03 and cbor2 currentness refreshed 2026-08-05",
     "locator": "https://www.rfc-editor.org/rfc/rfc8949.html#section-4.2; https://www.rfc-editor.org/rfc/rfc8610.html; https://www.rfc-editor.org/rfc/rfc9682.html",
     "persistent_id": "RFC 8949; RFC 8610; RFC 9682"
   },
@@ -17,6 +17,7 @@
     {"name": "ciborium_matches_core_deterministic", "class": "strengthening_unjustified", "source_anchor": "https://docs.rs/ciborium/latest/src/ciborium/value/canonical.rs.html", "notes": "CanonicalValue explicitly implements RFC 8949 §4.2.3 length-first ordering, not §4.2.1 core deterministic ordering."},
     {"name": "cbor2_canonical_variant", "class": "formalization_obligation", "source_anchor": "https://cbor2.readthedocs.io/en/stable/api.html#cbor2.dumps", "notes": "canonical=True promises sorted/canonical output but the API page does not identify §4.2.1 versus §4.2.3; verify with discriminating vectors."},
     {"name": "decoder_profile", "class": "formalization_obligation", "source_anchor": "https://cbor2.readthedocs.io/en/latest/versionhistory.html#version-history", "notes": "cbor2 6.1 allows duplicate keys by default and supports indefinite items; project profile must set duplicate, indefinite-length, and depth rules explicitly."},
+    {"name": "cbor2_6_1_4_security_regressions", "class": "source_explicit", "source_anchor": "https://cbor2.readthedocs.io/en/latest/versionhistory.html#version-history", "notes": "The 6.1.4 release history names fixes for frozendict hash pairing, bytearray string-reference registration, incomplete indefinite maps, and non-byte bignum payloads. Source history does not establish that the local prototype passed; that result belongs to matrix evidence."},
     {"name": "serde_cbor_maintenance", "class": "source_explicit", "source_anchor": "https://github.com/pyfisch/cbor#readme", "notes": "Repository archived 2021-08-15; README says it is unmaintained and recommends ciborium or minicbor."}
   ],
   "variants": [
@@ -39,6 +40,7 @@
     {"work": "minicbor 2.3.0", "locator": "https://docs.rs/crate/minicbor/2.3.0", "role": "BlueOak-1.0.0 Rust candidate"},
     {"work": "cddl 0.10.6", "locator": "https://docs.rs/crate/cddl/0.10.6", "role": "MIT CDDL parser/validator candidate; MSRV 1.88"},
     {"work": "cbor2 6.1.3", "locator": "https://pypi.org/project/cbor2/6.1.3/", "role": "MIT Python candidate; Python >=3.10; sdist SHA256 8d70680acb55c04ea5b5ad86da094f9612b53d5a8a65d0f5b3aafc3ce917ecbb"},
+    {"work": "cbor2 6.1.4", "locator": "https://pypi.org/pypi/cbor2/6.1.4/json", "role": "current MIT Python candidate at 2026-08-05 refresh; CPython 3.14 manylinux x86-64 wheel SHA256 c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c"},
     {"work": "cbor2 security caveat", "locator": "https://cbor2.readthedocs.io/en/latest/", "role": "documentation states malicious-input testing has not been performed"}
   ],
   "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}

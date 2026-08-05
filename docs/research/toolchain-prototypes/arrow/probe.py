@@ -81,6 +81,19 @@ def command_write(path: Path) -> None:
     print("python_wrote_file=true")
 
 
+def command_write_altered(path: Path) -> None:
+    table = fixture()
+    table = table.set_column(
+        0, table.schema.field(0), pa.array([1, 2002, 3], type=pa.int64())
+    ).set_column(
+        2,
+        table.schema.field(2),
+        pa.array([b"\x00\xff", b"altered", None], type=pa.binary()),
+    )
+    path.write_bytes(file_bytes(table))
+    print("python_wrote_altered_file=true")
+
+
 def command_read(path: Path) -> None:
     check_table(ipc.open_file(path).read_all())
     print("python_read_foreign_file=true")
@@ -99,7 +112,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("self")
-    for name in ("write-file", "read-file", "reject-file"):
+    for name in ("write-file", "write-altered-file", "read-file", "reject-file"):
         child = sub.add_parser(name)
         child.add_argument("path", type=Path)
     args = parser.parse_args()
@@ -107,6 +120,8 @@ def main() -> None:
         command_self()
     elif args.command == "write-file":
         command_write(args.path)
+    elif args.command == "write-altered-file":
+        command_write_altered(args.path)
     elif args.command == "read-file":
         command_read(args.path)
     else:

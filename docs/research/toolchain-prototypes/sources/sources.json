@@ -7,7 +7,7 @@
     "authority": "Lean project official GitHub release",
     "license": "Apache-2.0 (Lean source repository)",
     "maintenance_security": "Latest standalone stable observed; approximately monthly release cadence, with no strong backwards-compatibility guarantee.",
-    "notes": "Released 2026-07-28; full tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. No matching stable Mathlib v4.32.2 release was listed at cutoff."
+    "notes": "Released 2026-07-28; full tag commit f3b06c705e6c85f5314019d5d3baab0fec5b580c. The original August 3 response did not expose a matching Mathlib v4.32.2 release; the August 5 exact-release refresh did."
   },
   {
     "id": "lean-release-v4.32.1-matched",
@@ -16,8 +16,8 @@
     "retrieved_at": "2026-08-03T13:52:14+02:00",
     "authority": "Lean project official GitHub release",
     "license": "Apache-2.0",
-    "maintenance_security": "Latest Lean release with a matching stable Mathlib tag observed.",
-    "notes": "Released 2026-07-22; full tag commit f054605aea4b840552cca2e725580bffd1e1b704."
+    "maintenance_security": "Superseded matched release observation retained for chronology.",
+    "notes": "Released 2026-07-22; full tag commit f054605aea4b840552cca2e725580bffd1e1b704. Superseded as latest matching pair by Mathlib/Lean v4.32.2 at the August 5 currentness refresh."
   },
   {
     "id": "mathlib-release-v4.32.1",
@@ -26,8 +26,8 @@
     "retrieved_at": "2026-08-03T13:52:14+02:00",
     "authority": "Mathlib official GitHub release",
     "license": "Apache-2.0",
-    "maintenance_security": "Latest stable Mathlib release observed.",
-    "notes": "Released 2026-07-23; full tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6. Tagged lean-toolchain is leanprover/lean4:v4.32.1."
+    "maintenance_security": "Superseded stable Mathlib release retained for chronology.",
+    "notes": "Released 2026-07-23; full tag commit 520045ab14e26149ee970e2e617ca04b09bde5d6. Tagged lean-toolchain is leanprover/lean4:v4.32.1. Superseded as latest by v4.32.2 at the August 5 refresh."
   },
   {
     "id": "mathlib-v4.32.1-toolchain",
@@ -37,7 +37,27 @@
     "authority": "Mathlib immutable tagged source file",
     "license": "Apache-2.0 repository",
     "maintenance_security": "Immutable content at the stable Mathlib tag.",
-    "notes": "Exact content: leanprover/lean4:v4.32.1. This is the decisive matching-pair locator."
+    "notes": "Exact content: leanprover/lean4:v4.32.1. Retained as the decisive locator for the superseded August 3 matching-pair observation."
+  },
+  {
+    "id": "mathlib-release-v4.32.2",
+    "title": "Mathlib v4.32.2 release",
+    "url": "https://github.com/leanprover-community/mathlib4/releases/tag/v4.32.2",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Mathlib official GitHub release",
+    "license": "Apache-2.0",
+    "maintenance_security": "Latest stable Mathlib release exposed by the exact official release page at the refresh.",
+    "notes": "Full immutable release revision 905b95818eb32af7874a58b427f50c1711a5e96c; release page describes the toolchain bump to v4.32.2."
+  },
+  {
+    "id": "mathlib-v4.32.2-toolchain",
+    "title": "Mathlib v4.32.2 lean-toolchain",
+    "url": "https://raw.githubusercontent.com/leanprover-community/mathlib4/v4.32.2/lean-toolchain",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Mathlib immutable tagged source file",
+    "license": "Apache-2.0 repository",
+    "maintenance_security": "Immutable content at the stable Mathlib tag.",
+    "notes": "Exact content: leanprover/lean4:v4.32.2. This is the decisive current matching-pair locator."
   },
   {
     "id": "lean-release-policy",
@@ -68,6 +88,16 @@
     "license": "Documentation; Lean source is Apache-2.0",
     "maintenance_security": "Latest documentation is mutable.",
     "notes": "Recommends a specific toolchain version in a version-controlled lean-toolchain file."
+  },
+  {
+    "id": "elan-release-v4.2.3-license",
+    "title": "Elan v4.2.3 release and immutable package manifest",
+    "url": "https://raw.githubusercontent.com/leanprover/elan/v4.2.3/Cargo.toml",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Official Elan immutable tagged source manifest",
+    "license": "MIT OR Apache-2.0",
+    "maintenance_security": "Official v4.2.3 release is dated 2026-06-08; bootstrap tool remains outside proof authority.",
+    "notes": "Manifest declares name elan, version 4.2.3, publish=false, and license MIT OR Apache-2.0; immutable LICENSE-APACHE and LICENSE-MIT files are present at the same tag. Exact bootstrap evidence reports b6cec7e10 and archive SHA-256 df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2."
   },
   {
     "id": "rust-release-1.97.1",
@@ -110,14 +140,114 @@
     "notes": "Crate ecosystem evidence; not the release authority for rustc or Cargo."
   },
   {
+    "id": "rust-release-1.85.1",
+    "title": "Rust 1.85.1 support-floor release",
+    "url": "https://github.com/rust-lang/rust/releases/tag/1.85.1",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Rust project official GitHub release",
+    "license": "Rust source is MIT OR Apache-2.0 with component-specific notices",
+    "maintenance_security": "Historical release used only as a compatibility-floor candidate; Rust upstream supplies fixes only to latest stable.",
+    "notes": "Exact rustc commit 4eb161250e340c8f48f66e2b929ef4a5bed7c181; exact bundled Cargo commit reported by the tested toolchain is d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7. Cargo 1.85.1 is within the affected ranges of CVE-2026-5222 and CVE-2026-5223."
+  },
+  {
+    "id": "cargo-cve-2026-5222",
+    "title": "Security Advisory for Cargo (CVE-2026-5222)",
+    "url": "https://blog.rust-lang.org/2026/05/25/cve-2026-5222/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Rust Security Response Team official advisory",
+    "license": "Rust project website terms; Rust source is MIT OR Apache-2.0",
+    "maintenance_security": "Low-severity sparse third-party-registry credential issue fixed in Rust/Cargo 1.96; no mitigation is stated for older Cargo.",
+    "notes": "Official affected range is Cargo shipped with Rust 1.68 through versions before 1.96. crates.io users are stated to be unaffected."
+  },
+  {
+    "id": "cargo-cve-2026-5223",
+    "title": "Security Advisory for Cargo (CVE-2026-5223)",
+    "url": "https://blog.rust-lang.org/2026/05/25/cve-2026-5223/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Rust Security Response Team official advisory",
+    "license": "Rust project website terms; Rust source is MIT OR Apache-2.0",
+    "maintenance_security": "Medium-severity malicious third-party-registry crate-tarball symlink extraction fixed in Rust/Cargo 1.96.0.",
+    "notes": "All Cargo versions shipped before Rust 1.96.0 are affected. crates.io forbids symlink uploads; users unable to upgrade are told to audit/reject symlinks in their registry."
+  },
+  {
+    "id": "rust-release-1.96.1-libssh2-security",
+    "title": "Rust 1.96.1 bundled libssh2 security fixes",
+    "url": "https://blog.rust-lang.org/2026/06/30/Rust-1.96.1/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Rust Release Team official point-release announcement",
+    "license": "Rust source is MIT OR Apache-2.0 with component-specific notices",
+    "maintenance_security": "Point release applies three patches to libssh2 compiled into Cargo.",
+    "notes": "Official post names CVE-2025-15661, CVE-2026-55199, and CVE-2026-55200. It also records a Cargo HTTP retry/timeout fix and a rustc MIR miscompilation fix."
+  },
+  {
+    "id": "rustup-release-1.29.0-license",
+    "title": "rustup 1.29.0 release and immutable package manifest",
+    "url": "https://raw.githubusercontent.com/rust-lang/rustup/1.29.0/Cargo.toml",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Official rustup immutable tagged source manifest",
+    "license": "MIT OR Apache-2.0",
+    "maintenance_security": "Signed official tag dated 2026-03-12; bootstrap tool and downloaded toolchains have separate provenance/security obligations.",
+    "notes": "Manifest declares rustup 1.29.0, Edition 2024, and license MIT OR Apache-2.0; immutable LICENSE-APACHE and LICENSE-MIT files are present at the same tag. Official release page exposes short commit 28d1352."
+  },
+  {
     "id": "python-release-v3.14.6",
     "title": "CPython v3.14.6 release",
     "url": "https://github.com/python/cpython/releases/tag/v3.14.6",
     "retrieved_at": "2026-08-03T13:52:14+02:00",
     "authority": "CPython official GitHub release",
     "license": "PSF License v2",
-    "maintenance_security": "Current stable observed; 3.14.7 was only scheduled for 2026-08-04 at cutoff.",
-    "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45."
+    "maintenance_security": "Current stable at the August 3 cutoff; officially superseded by 3.14.7 on August 5.",
+    "notes": "Tag commit c63aec69bd59c55314c06c23f4c22c03de76fe45. Retained as the exact tested development pin, not as a post-August-5 currentness claim."
+  },
+  {
+    "id": "python-release-v3.14.7",
+    "title": "Python 3.14.7 current release",
+    "url": "https://www.python.org/downloads/release/python-3147/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Python Software Foundation official release page",
+    "license": "PSF License v2",
+    "maintenance_security": "Current 3.14 maintenance release at the August 5 refresh; prototype status is recorded separately.",
+    "notes": "Released 2026-08-05. Official XZ source tarball SHA-256 is 3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81. A source release record does not establish any prototype result."
+  },
+  {
+    "id": "python-release-v3.13.15",
+    "title": "Python 3.13.15 planned CI intermediate release",
+    "url": "https://www.python.org/downloads/release/python-31315/",
+    "retrieved_at": "2026-08-05T20:55:00+02:00",
+    "authority": "Python Software Foundation official release page",
+    "license": "PSF License v2",
+    "maintenance_security": "Current 3.13 maintenance release at the August 5 refresh; not directly tested by SQ-0002.",
+    "notes": "Released 2026-08-05. Official XZ source tarball SHA-256 is 1e66a7945a48390ee4c2a4268a0e4185884059a13c4aab6d148aa208deea4a76. This exact planned CI patch has no direct prototype evidence."
+  },
+  {
+    "id": "python-release-v3.12.13",
+    "title": "Python 3.12.13 planned CI intermediate release",
+    "url": "https://www.python.org/downloads/release/python-31213/",
+    "retrieved_at": "2026-08-05T20:55:00+02:00",
+    "authority": "Python Software Foundation official release page",
+    "license": "PSF License v2",
+    "maintenance_security": "Current 3.12 source-only security release at the August 5 refresh; not directly tested by SQ-0002.",
+    "notes": "Released 2026-03-03. Official XZ source tarball SHA-256 is c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684. This exact planned CI patch has no direct prototype evidence or regular platform installer claim."
+  },
+  {
+    "id": "python-build-standalone-20260805",
+    "title": "python-build-standalone 20260805 CPython 3.14.7 x86-64 GNU/Linux runtime",
+    "url": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20260805",
+    "retrieved_at": "2026-08-05T20:14:38+02:00",
+    "authority": "Astral official GitHub release API, immutable tagged license, and release asset",
+    "license": "MPL-2.0 for python-build-standalone; the produced archive contains CPython and bundled components with their own notices",
+    "maintenance_security": "Active dated release; binary provenance and bundled-component security require separate periodic review.",
+    "notes": "Tag 20260805 targets commit 76b41240bc8dfe753a54b2e32c8941e536568be8. Exact asset cpython-3.14.7+20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz has GitHub-recorded digest sha256:a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9, size 35,931,360 bytes, and immutable locator https://github.com/astral-sh/python-build-standalone/releases/download/20260805/cpython-3.14.7%2B20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz. Tagged project license: https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/LICENSE. Tagged bundled-application notices: https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/python-licenses.rst."
+  },
+  {
+    "id": "python-release-v3.11.15",
+    "title": "Python 3.11.15 support-floor release",
+    "url": "https://www.python.org/downloads/release/python-31115/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Python Software Foundation official release page and signed CPython tag",
+    "license": "PSF License v2",
+    "maintenance_security": "Source-only security release in the 3.11 security-fixes-only series; irregular source releases continue until October 2027.",
+    "notes": "Released 2026-03-03; signed Git tag commit 2340a037f7450e70fccfe411e6531afb4d57a312. Official XZ source SHA-256 is 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625. No regular platform installers are provided."
   },
   {
     "id": "python-supported-versions",
@@ -168,6 +298,36 @@
     "license": "R distribution is GPL-2 | GPL-3",
     "maintenance_security": "R 4.6.1 released 2026-06-24; annual x.y.0 cadence and as-needed patches; no fixed multi-version horizon stated.",
     "notes": "Currentness is date-scoped."
+  },
+  {
+    "id": "r-release-4.4.3",
+    "title": "R 4.4.3 source release",
+    "url": "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "R Core official CRAN source archive",
+    "license": "GPL-2 | GPL-3",
+    "maintenance_security": "Historical wrap-up release of the 4.4.x series; archive availability is not a current R Core security-support promise.",
+    "notes": "R 4.4.3 Trophy Case was released 2025-02-28. The official archive returned HTTP 200 with content length 40234425 at the refresh. StatQED's 4.4 floor is downstream policy and uses separate executed-binary provenance."
+  },
+  {
+    "id": "cran-testthat-3.3.2",
+    "title": "testthat 3.3.2 CRAN release",
+    "url": "https://cran.r-project.org/src/contrib/testthat_3.3.2.tar.gz",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "CRAN official current package source archive and DESCRIPTION",
+    "license": "MIT + file LICENSE",
+    "maintenance_security": "Current CRAN release published 2026-01-11; CRAN publication is not a security audit.",
+    "notes": "DESCRIPTION declares Depends: R (>= 4.1.0). Exact source SHA-256 retained by the prototype is 5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808."
+  },
+  {
+    "id": "cran-testthat-3.2.3",
+    "title": "testthat 3.2.3 archived CRAN release",
+    "url": "https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "CRAN official archived package source",
+    "license": "MIT + file LICENSE",
+    "maintenance_security": "Archived historical package release published 2025-01-13; archive availability is not a maintenance guarantee.",
+    "notes": "DESCRIPTION declares Depends: R (>= 3.6.0). Streamed source SHA-256 at refresh: 180b794a5bbc016acec5d882e600e0c5ff4c455513dd451960b217e0e53dc1af. The executed floor uses a separately locked conda build."
   },
   {
     "id": "r-writing-extensions-4.6.1",
@@ -288,6 +448,26 @@
     "license": "Apache-2.0 with component-specific third-party notices",
     "maintenance_security": "Current release observed, dated 2026-07-10.",
     "notes": "Immutable GitHub release tag apache-arrow-25.0.0 has short commit 59bea6e."
+  },
+  {
+    "id": "pyarrow-25.0.0",
+    "title": "PyArrow 25.0.0",
+    "url": "https://pypi.org/project/pyarrow/25.0.0/",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "PyPI exact release metadata owned by the verified Apache Arrow project account",
+    "license": "Apache-2.0",
+    "maintenance_security": "Released 2026-07-10 with wheels for explicitly enumerated interpreter/platform tags; registry publication is not a security audit.",
+    "notes": "Python API over Arrow C++; Requires-Python >=3.10. The executed CPython 3.14 manylinux x86_64 wheel is separately locked by SHA-256 447df764beb07c544f0178a5f6b70ef44b9ecf382b3cdfad4c2d7867353c3887."
+  },
+  {
+    "id": "arrow-rs-readme-policy",
+    "title": "arrow-rs arrow crate 59.1.0",
+    "url": "https://crates.io/crates/arrow/59.1.0",
+    "retrieved_at": "2026-08-05T20:01:03+02:00",
+    "authority": "Official crates.io exact-version registry metadata linked to apache/arrow-rs",
+    "license": "Apache-2.0",
+    "maintenance_security": "Released 2026-07-07; active Apache Arrow Rust implementation. Registry metadata is not a security audit.",
+    "notes": "Declares Edition 2024 and rust-version 1.85. Immutable crate checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b; official source tag https://github.com/apache/arrow-rs/tree/59.1.0."
   },
   {
     "id": "arrow-format-versioning",
@@ -430,6 +610,16 @@
     "notes": "sdist SHA256 8d70680acb55c04ea5b5ad86da094f9612b53d5a8a65d0f5b3aafc3ce917ecbb; Trusted Publishing."
   },
   {
+    "id": "python-cbor2-6.1.4",
+    "title": "cbor2 6.1.4",
+    "url": "https://pypi.org/pypi/cbor2/6.1.4/json",
+    "retrieved_at": "2026-08-05T20:05:00+02:00",
+    "authority": "PyPI official release API and publisher-attested project metadata",
+    "license": "MIT",
+    "maintenance_security": "Released 2026-08-01; Python >=3.10; release history fixes four malformed-input or algorithmic-complexity defects and still warns that malicious input has not been tested.",
+    "notes": "CPython 3.14 manylinux_2_28 x86-64 wheel SHA256 c0f5f2d6d3b58e44146860c049f3c082207a4005588b8926d51bf937ab66773c; sdist SHA256 01ecc79a28f33d17331943ce508fc1e21f4b06553c73f874f4c77120d72b2ef9; Trusted Publishing."
+  },
+  {
     "id": "python-cbor2-api-6.1.3",
     "title": "cbor2 API documentation",
     "url": "https://cbor2.readthedocs.io/en/stable/api.html",
@@ -458,5 +648,15 @@
     "license": "MIT",
     "maintenance_security": "Typically weekly image updates; latest-label migrations take one to two months; main latest visible commit 931efbf dated 2026-07-30.",
     "notes": "Observed latest mapping: Ubuntu 24.04 x64, Windows Server 2025 x64, macOS 26 arm64. Capture actual image version from each job's Set up job log."
+  },
+  {
+    "id": "osv-querybatch-api",
+    "title": "OSV.dev querybatch API",
+    "url": "https://google.github.io/osv.dev/post-v1-querybatch/",
+    "retrieved_at": "2026-08-05T20:17:00+02:00",
+    "authority": "Official OSV.dev API documentation",
+    "license": "Apache-2.0 project documentation/source repository",
+    "maintenance_security": "Live vulnerability service; results and coverage are temporally unstable and must be dated.",
+    "notes": "The API guarantees response ordering matches request ordering and documents pagination. A zero-result response is point-in-time evidence, not a security guarantee."
   }
 ]

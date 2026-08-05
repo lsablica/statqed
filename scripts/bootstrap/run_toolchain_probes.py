@@ -32,10 +32,17 @@ SUMMARY_END = "<!-- SQ0002_REPORT_SUMMARY_END -->"
 CLASSIFICATIONS = {"success", "failure", "unknown"}
 DISPOSITIONS = {"recommended", "rejected", "unresolved"}
 RERUN_ALLOWLIST = {
-    "rust-dev-prototype": (["bash", "run-probes.sh", "development"], "docs/research/toolchain-prototypes/rust"),
-    "rust-msrv-prototype": (["bash", "run-probes.sh", "msrv"], "docs/research/toolchain-prototypes/rust"),
-    "r-development-4.6.1-package-native": (["bash", "run-probes.sh", "development"], "docs/research/toolchain-prototypes/r"),
-    "r-floor-4.4.3-package-native": (["bash", "run-probes.sh", "floor"], "docs/research/toolchain-prototypes/r"),
+    "lean-recommended-cache-success": (["/usr/bin/bash", "verify-probe.sh", "recommended"], "docs/research/toolchain-prototypes/lean-mathlib"),
+    "lean-no-cache-success": (["/usr/bin/bash", "verify-probe.sh", "no-binary-cache"], "docs/research/toolchain-prototypes/lean-mathlib"),
+    "rust-dev-prototype": (["/usr/bin/bash", "verify-probe.sh", "development"], "docs/research/toolchain-prototypes/rust"),
+    "rust-msrv-prototype": (["/usr/bin/bash", "verify-probe.sh", "msrv"], "docs/research/toolchain-prototypes/rust"),
+    "python-development-3-14-7": (["/usr/bin/bash", "verify-probe.sh", "development"], "docs/research/toolchain-prototypes/python"),
+    "python-floor-3-11-15-owned": (["/usr/bin/bash", "verify-probe.sh", "floor"], "docs/research/toolchain-prototypes/python"),
+    "r-development-4.6.1-package-native": (["/usr/bin/bash", "verify-probe.sh", "development"], "docs/research/toolchain-prototypes/r"),
+    "r-floor-4.4.3-package-native": (["/usr/bin/bash", "verify-probe.sh", "floor"], "docs/research/toolchain-prototypes/r"),
+    "development-julia-1-12-6-linux-x86-64-20260803t124500z": (["/usr/bin/bash", "verify-probe.sh", "development"], "docs/research/toolchain-prototypes/julia"),
+    "floor-lts-julia-1-10-11-linux-x86-64-20260803t124500z": (["/usr/bin/bash", "verify-probe.sh", "floor"], "docs/research/toolchain-prototypes/julia"),
+    "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened": (["/usr/bin/bash", "verify-probe.sh"], "docs/research/toolchain-prototypes/arrow"),
 }
 IMMUTABLE_LOCK_MARKERS = ("sha256", "commit", "manifest", "lock", "toolchain", "archive", "release", "rust_version", "version")
 MUTABLE_PIN_PATTERN = re.compile(r"(?:^|\W)(?:latest|any|main|master|head|nightly|stable)(?:$|\W)", re.IGNORECASE)
@@ -190,7 +197,7 @@ def validate_matrix(matrix_path: Path = MATRIX_PATH, report_path: Path = REPORT_
     require(matrix.get("schema_version") == 1, "matrix.schema_version must be 1")
     require(matrix.get("task_id") == "SQ-0002", "matrix.task_id must be SQ-0002")
     parse_timestamp(matrix.get("generated_at"), "matrix.generated_at")
-    require(matrix.get("retrieval_date") == "2026-08-03", "matrix.retrieval_date must be 2026-08-03")
+    require(matrix.get("retrieval_date") == "2026-08-05", "matrix.retrieval_date must be 2026-08-05")
     host = matrix.get("host")
     require(isinstance(host, dict), "matrix.host must be an object")
     for field in ("os", "version", "kernel", "architecture"):
@@ -291,6 +298,36 @@ def validate_matrix(matrix_path: Path = MATRIX_PATH, report_path: Path = REPORT_
     return matrix
 
 
+def build_safe_environment(safe_root: Path) -> dict[str, str]:
+    """Construct the complete, non-inherited environment for a dispatcher."""
+
+    tool_dirs = {"/usr/bin", "/bin"}
+    for tool in ("conda", "rustup", "cargo", "rustc"):
+        resolved = shutil.which(tool)
+        if resolved:
+            tool_dirs.add(str(Path(resolved).resolve().parent))
+            tool_dirs.add(str(Path(resolved).parent))
+    return {
+        "PATH": ":".join(sorted(tool_dirs)),
+        "HOME": str(safe_root / "home"),
+        "XDG_CACHE_HOME": str(safe_root / "xdg-cache"),
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC",
+        "PYTHONHASHSEED": "0",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_CONFIG_SYSTEM": "/dev/null",
+        "R_ENVIRON_USER": "/dev/null",
+        "R_PROFILE_USER": "/dev/null",
+    }
+
+
+def unavailable_is_failure(probe: dict[str, Any]) -> bool:
+    """Recommendations must fail closed when their owned runner is absent."""
+
+    return probe["disposition"] == "recommended"
+
+
 def run_available(matrix: dict[str, Any], selected: set[str]) -> int:
     failures: list[str] = []
     for probe in matrix["probes"]:
@@ -301,17 +338,21 @@ def run_available(matrix: dict[str, Any], selected: set[str]) -> int:
             print(f"SKIP {probe['id']}: {rerun.get('unavailable_reason', 'not locally runnable')}")
             continue
         command = rerun["command"]
-        if shutil.which(command[0]) is None:
+        executable = Path(command[0])
+        if not executable.is_absolute() or not executable.is_file():
             message = f"UNAVAILABLE {probe['id']}: executable {command[0]!r} not found"
             print(message)
-            if probe["disposition"] == "recommended":
+            if unavailable_is_failure(probe):
                 failures.append(message)
             continue
-        environment = os.environ.copy()
-        environment.update(probe["environment_variables"])
         cwd = ROOT / rerun["cwd"]
-        print(f"RUN {probe['id']}: {command!r} (cwd={cwd.relative_to(ROOT)})")
-        completed = subprocess.run(command, cwd=cwd, env=environment, check=False)
+        with tempfile.TemporaryDirectory(prefix="statqed-sq0002-dispatch-") as directory:
+            safe_root = Path(directory)
+            environment = build_safe_environment(safe_root)
+            (safe_root / "home").mkdir()
+            (safe_root / "xdg-cache").mkdir()
+            print(f"RUN {probe['id']}: {command!r} (cwd={cwd.relative_to(ROOT)})")
+            completed = subprocess.run(command, cwd=cwd, env=environment, check=False)
         expected = probe["exit_status"]
         if completed.returncode != expected:
             message = f"MISMATCH {probe['id']}: exit {completed.returncode}, recorded {expected}"
@@ -327,37 +368,55 @@ def run_corruption_regressions(matrix: dict[str, Any]) -> None:
     """Prove the verifier rejects the minimized adversarial mutations."""
 
     fixture = load_json(PROTOTYPE_ROOT / "failures/verifier-corruption-cases.json")
-    require(isinstance(fixture, dict) and len(fixture.get("cases", [])) == 5, "corruption fixture must contain five cases")
-    mutations: list[tuple[str, Any]] = []
+    require(isinstance(fixture, dict) and len(fixture.get("cases", [])) == 8, "corruption fixture must contain eight cases")
+    expected_cases = {case["id"] for case in fixture["cases"]}
+    mutations: list[tuple[str, Any, str]] = []
 
     mutable = copy.deepcopy(matrix)
     mutable["recommendations"][0]["development_pin"] = "latest"
-    mutations.append(("mutable-recommendation", mutable))
+    mutations.append(("mutable-recommendation", mutable, "contains a mutable alias"))
 
     cross_platform = copy.deepcopy(matrix)
     direct = next(entry for entry in cross_platform["ci_matrix"] if entry["status"] == "direct_success")
     direct["os"] = "Windows 999"
     direct["architecture"] = "arm64"
-    mutations.append(("cross-platform-evidence", cross_platform))
+    mutations.append(("cross-platform-evidence", cross_platform, "OS is not bound"))
 
     unsafe = copy.deepcopy(matrix)
     runnable = next(probe for probe in unsafe["probes"] if probe["rerun"]["runnable"])
     runnable["rerun"] = {"runnable": True, "command": ["/usr/bin/touch", "/tmp/statqed-unsafe"], "cwd": "docs/research/toolchain-prototypes"}
-    mutations.append(("unsafe-rerun-command", unsafe))
+    mutations.append(("unsafe-rerun-command", unsafe, "rerun differs from the owned dispatcher"))
 
     normalized_failure = copy.deepcopy(matrix)
     failed = next(probe for probe in normalized_failure["probes"] if probe["classification"] == "failure")
     failed["exit_status"] = 0
-    mutations.append(("failure-exit-zero", normalized_failure))
+    mutations.append(("failure-exit-zero", normalized_failure, "failure requires nonzero exit_status"))
 
     fabricated_lock = copy.deepcopy(matrix)
     recommended = next(probe for probe in fabricated_lock["probes"] if probe["disposition"] == "recommended")
     recommended["dependency_locks"] = []
-    mutations.append(("recommended-empty-lock", fabricated_lock))
+    mutations.append(("recommended-empty-lock", fabricated_lock, "recommended evidence must contain dependency locks"))
+
+    advisory = copy.deepcopy(matrix)
+    advisory_subject = next(
+        (
+            subject
+            for subject in advisory["prototype_subjects"]
+            if subject["path"].endswith("logs/security/run-20260805/pypi-osv.response.json")
+        ),
+        None,
+    )
+    require(advisory_subject is not None, "current PyPI advisory response is not a prototype subject")
+    advisory_subject["sha256"] = "0" * 64
+    mutations.append(("advisory-response-corruption", advisory, "sha256 does not bind"))
+
+    mutation_ids = {case_id for case_id, _, _ in mutations}
+    helper_ids = {"environment-sanitized", "unavailable-recommended-fails-closed"}
+    require(mutation_ids | helper_ids == expected_cases, "corruption fixture and executable cases disagree")
 
     with tempfile.TemporaryDirectory(prefix="statqed-sq0002-verifier-") as directory:
         root = Path(directory)
-        for case_id, candidate in mutations:
+        for case_id, candidate, expected_error in mutations:
             candidate["report_summary"] = {"recommendations": candidate["recommendations"], "ci_matrix": candidate["ci_matrix"]}
             matrix_path = root / f"{case_id}.json"
             matrix_path.write_text(json.dumps(candidate, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -369,9 +428,26 @@ def run_corruption_regressions(matrix: dict[str, Any]) -> None:
             )
             try:
                 validate_matrix(matrix_path, report_path)
-            except ValidationError:
+            except ValidationError as exc:
+                require(expected_error in str(exc), f"{case_id} failed for the wrong reason: {exc}")
                 continue
             raise ValidationError(f"corruption regression was accepted: {case_id}")
+
+        sentinel_name = "SQ0002_DO_NOT_INHERIT_SENTINEL"
+        os.environ[sentinel_name] = "tainted"
+        try:
+            safe_root = root / "safe-environment"
+            environment = build_safe_environment(safe_root)
+        finally:
+            os.environ.pop(sentinel_name, None)
+        require(sentinel_name not in environment, "safe dispatcher environment inherited an ambient variable")
+        require(environment["HOME"] == str(safe_root / "home"), "safe dispatcher HOME is not isolated")
+        require(environment["GIT_CONFIG_GLOBAL"] == "/dev/null", "safe dispatcher Git configuration is not isolated")
+
+        require(
+            unavailable_is_failure({"disposition": "recommended"}),
+            "an unavailable recommended dispatcher did not fail closed",
+        )
 
 
 def main() -> int:

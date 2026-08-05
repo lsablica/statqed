@@ -2,7 +2,8 @@
 set -euo pipefail
 
 readonly PROTOTYPE_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-readonly LOG_DIR="${PROTOTYPE_ROOT}/../logs/rust/run-20260803"
+readonly RETAINED_LOG_DIR="${PROTOTYPE_ROOT}/../logs/rust/run-20260803"
+readonly LOG_DIR="${STATQED_RUST_LOG_DIR:-${RETAINED_LOG_DIR}}"
 readonly CACHE_ROOT="${STATQED_RUST_CACHE_ROOT:-/tmp/statqed-sq0002-rust-cache}"
 readonly RUSTUP_BIN="${STATQED_RUSTUP_BIN:-$(command -v rustup)}"
 readonly CARGO_BIN="${STATQED_CARGO_BIN:-$(command -v cargo)}"
@@ -16,7 +17,12 @@ export LC_ALL="C.UTF-8"
 export LANG="C.UTF-8"
 export TZ="UTC"
 
-mkdir -p -- "${LOG_DIR}" "${RUSTUP_HOME}" "${CARGO_HOME}" "${CACHE_ROOT}/target"
+if [[ -e "${LOG_DIR}" ]] && find "${LOG_DIR}" -mindepth 1 -print -quit | grep -q .; then
+    printf 'refusing to overwrite retained evidence directory: %s\n' "${LOG_DIR}" >&2
+    printf 'use verify-probe.sh for owned verification, or set STATQED_RUST_LOG_DIR to a new empty path\n' >&2
+    exit 2
+fi
+mkdir -p -- "${LOG_DIR}" "${RUSTUP_HOME}" "${CARGO_HOME}"
 
 capture() {
     local log_name="$1"
@@ -70,9 +76,8 @@ expect_failure() {
 }
 
 install_toolchains() {
-    # rustup requires CARGO_HOME to identify the directory containing its proxy
-    # binary. Toolchains remain isolated by RUSTUP_HOME; Cargo registry/git data
-    # remain isolated for all Cargo commands below.
+    # rustup discovers its proxy via the installed CARGO_HOME while keeping
+    # downloaded toolchains isolated in the task cache.
     expect_success install-dev.log env CARGO_HOME="${RUSTUP_PROXY_HOME}" "${RUSTUP_BIN}" toolchain install 1.97.1 --profile minimal --component clippy --component rustfmt
     expect_success install-msrv.log env CARGO_HOME="${RUSTUP_PROXY_HOME}" "${RUSTUP_BIN}" toolchain install 1.85.1 --profile minimal --component clippy --component rustfmt
 }
@@ -90,62 +95,84 @@ record_environment() {
     expect_success msrv-targets-installed.log "${RUSTUP_BIN}" target list --installed --toolchain 1.85.1
     expect_success dev-components-installed.log "${RUSTUP_BIN}" component list --installed --toolchain 1.97.1
     expect_success msrv-components-installed.log "${RUSTUP_BIN}" component list --installed --toolchain 1.85.1
+    expect_success cargo-lock-digest.log sha256sum "${PROTOTYPE_ROOT}/Cargo.lock"
+    expect_success prototype-input-digests.log sha256sum \
+        "${PROTOTYPE_ROOT}/rust-toolchain.toml" \
+        "${PROTOTYPE_ROOT}/Cargo.toml" \
+        "${PROTOTYPE_ROOT}/Cargo.lock" \
+        "${PROTOTYPE_ROOT}/crates/compat-probe/Cargo.toml" \
+        "${PROTOTYPE_ROOT}/crates/compat-probe/src/lib.rs" \
+        "${PROTOTYPE_ROOT}/crates/compat-probe/src/main.rs" \
+        "${PROTOTYPE_ROOT}/dependency-license-inventory.json" \
+        "${PROTOTYPE_ROOT}/security-lock.json"
 }
 
-run_online_resolution() {
+run_fresh_resolution() {
     cd -- "${PROTOTYPE_ROOT}"
-    expect_success dev-generate-lockfile-online.log "${CARGO_BIN}" +1.97.1 generate-lockfile
-    expect_success dev-fetch-locked-online.log "${CARGO_BIN}" +1.97.1 fetch --locked
-    expect_success dev-metadata-locked.log "${CARGO_BIN}" +1.97.1 metadata --locked --format-version 1
-    cp -- "${LOG_DIR}/dev-metadata-locked.stdout" "${LOG_DIR}/metadata-dev.json"
-    expect_success cargo-lock-digest.log sha256sum Cargo.lock
-    expect_success prototype-input-digests.log sha256sum rust-toolchain.toml Cargo.toml crates/compat-probe/Cargo.toml crates/compat-probe/src/lib.rs crates/compat-probe/src/main.rs
+    expect_success fresh-resolution.log bash -c '
+        set -euo pipefail
+        project="$(mktemp -d /tmp/statqed-sq0002-rust-resolution.XXXXXX)"
+        cleanup() { rm -rf -- "${project}"; }
+        trap cleanup EXIT
+        cp -R -- "$1/Cargo.toml" "$1/crates" "$1/rust-toolchain.toml" "${project}/"
+        cd -- "${project}"
+        "$2" +1.97.1 generate-lockfile
+        observed="$(sha256sum Cargo.lock | awk "{print \$1}")"
+        expected="$(sha256sum "$1/Cargo.lock" | awk "{print \$1}")"
+        printf "reviewed_lock_sha256=%s\nfresh_resolution_sha256=%s\n" "${expected}" "${observed}"
+        test "${observed}" = "${expected}"
+    ' _ "${PROTOTYPE_ROOT}" "${CARGO_BIN}"
+    expect_success fetch-locked.log "${CARGO_BIN}" +1.97.1 fetch --locked
 }
 
 run_development_checks() {
     cd -- "${PROTOTYPE_ROOT}"
-    export CARGO_NET_OFFLINE=true
-    export CARGO_TARGET_DIR="${CACHE_ROOT}/target/dev-1.97.1"
-    expect_success dev-metadata-offline.log "${CARGO_BIN}" +1.97.1 metadata --locked --offline --format-version 1
-    expect_success dev-fmt-check.log "${CARGO_BIN}" +1.97.1 fmt --all -- --check
-    expect_success dev-clippy-deny-warnings.log "${CARGO_BIN}" +1.97.1 clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
-    expect_success dev-tests.log "${CARGO_BIN}" +1.97.1 test --locked --offline --workspace --all-targets --all-features
-    expect_success dev-run.log "${CARGO_BIN}" +1.97.1 run --locked --offline --package statqed-rust-compat-probe -- --json
-    unset CARGO_NET_OFFLINE
-    unset CARGO_TARGET_DIR
+    expect_success development-verify.log env \
+        STATQED_RUST_CACHE_ROOT="${CACHE_ROOT}" \
+        "${PROTOTYPE_ROOT}/verify-probe.sh" development
 }
 
 run_msrv_checks() {
     cd -- "${PROTOTYPE_ROOT}"
-    export CARGO_NET_OFFLINE=true
-    export CARGO_TARGET_DIR="${CACHE_ROOT}/target/msrv-1.85.1"
-    expect_success msrv-metadata-offline.log "${CARGO_BIN}" +1.85.1 metadata --locked --offline --format-version 1
-    expect_success msrv-fmt-check.log "${CARGO_BIN}" +1.85.1 fmt --all -- --check
-    expect_success msrv-clippy-deny-warnings.log "${CARGO_BIN}" +1.85.1 clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
-    expect_success msrv-tests.log "${CARGO_BIN}" +1.85.1 test --locked --offline --workspace --all-targets --all-features
-    expect_success msrv-run.log "${CARGO_BIN}" +1.85.1 run --locked --offline --package statqed-rust-compat-probe -- --json
-    unset CARGO_NET_OFFLINE
-    unset CARGO_TARGET_DIR
+    expect_success msrv-verify.log env \
+        STATQED_RUST_CACHE_ROOT="${CACHE_ROOT}" \
+        "${PROTOTYPE_ROOT}/verify-probe.sh" msrv
 }
 
 run_policy_and_rejection_checks() {
+    local target
+    local result=0
+    target="$(mktemp -d /tmp/statqed-sq0002-rust-rejections.XXXXXX)"
     cd -- "${PROTOTYPE_ROOT}"
-    export CARGO_TARGET_DIR="${CACHE_ROOT}/target/rejections"
-    expect_failure unsafe-policy-rejection.log "${CARGO_BIN}" +1.97.1 check --manifest-path rejections/unsafe-code/Cargo.toml
-    expect_success archive-8.1-dev-compatible.log "${CARGO_BIN}" +1.97.1 check --manifest-path rejections/archive-msrv/Cargo.toml
-    expect_failure archive-8.1-msrv-rejection.log "${CARGO_BIN}" +1.85.1 check --manifest-path rejections/archive-msrv/Cargo.toml
-    unset CARGO_TARGET_DIR
+    if ! expect_failure unsafe-policy-rejection.log env CARGO_TARGET_DIR="${target}/unsafe" "${CARGO_BIN}" +1.97.1 check --offline --manifest-path rejections/unsafe-code/Cargo.toml; then
+        result=1
+    fi
+    if ! expect_success archive-8.1-dev-compatible.log env CARGO_TARGET_DIR="${target}/archive-dev" "${CARGO_BIN}" +1.97.1 check --offline --locked --manifest-path rejections/archive-msrv/Cargo.toml; then
+        result=1
+    fi
+    if ! expect_failure archive-8.1-msrv-rejection.log env CARGO_TARGET_DIR="${target}/archive-msrv" "${CARGO_BIN}" +1.85.1 check --offline --locked --manifest-path rejections/archive-msrv/Cargo.toml; then
+        result=1
+    fi
+    rm -rf -- "${target}"
+    return "${result}"
 }
 
 run_security_and_license_checks() {
     cd -- "${PROTOTYPE_ROOT}"
-    export CARGO_TARGET_DIR="${CACHE_ROOT}/target/cargo-audit-install"
-    expect_success cargo-audit-install.log "${CARGO_BIN}" +1.97.1 install cargo-audit --version 0.22.2 --locked --root "${CACHE_ROOT}/cargo-audit"
-    unset CARGO_TARGET_DIR
-    expect_success cargo-audit-version.log "${CACHE_ROOT}/cargo-audit/bin/cargo-audit" audit --version
-    expect_success cargo-audit-rustsec.log "${CACHE_ROOT}/cargo-audit/bin/cargo-audit" audit --file Cargo.lock --json
-    expect_success dependency-tree.log "${CARGO_BIN}" +1.97.1 tree --locked --workspace --all-features
-    expect_success dependency-license-inventory.log jq -c '[.packages[] | {name, version, license, rust_version, repository, source}] | sort_by(.name, .version)' "${LOG_DIR}/metadata-dev.json"
+    expect_success security-verify.log env \
+        STATQED_RUST_CACHE_ROOT="${CACHE_ROOT}" \
+        STATQED_CARGO_AUDIT_ARCHIVE="${STATQED_CARGO_AUDIT_ARCHIVE:-/tmp/statqed-sq0002-cargo-audit-0.22.2.tgz}" \
+        STATQED_RUSTSEC_ARCHIVE="${STATQED_RUSTSEC_ARCHIVE:-/tmp/statqed-sq0002-rustsec-d91a8fc.tar.gz}" \
+        "${PROTOTYPE_ROOT}/verify-probe.sh" security
+}
+
+run_stale_lock_rejection() {
+    cd -- "${PROTOTYPE_ROOT}"
+    expect_failure reviewed-stale-lock-rejection.log bash -c '
+        printf "%s  %s\n" \
+            "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040" \
+            "$1" | sha256sum -c -
+    ' _ "${PROTOTYPE_ROOT}/Cargo.lock"
 }
 
 run_registry_observations() {
@@ -167,14 +194,14 @@ case "${1:-all}" in
         ;;
     checks)
         record_environment
-        run_online_resolution
+        run_fresh_resolution
         run_development_checks
         run_msrv_checks
         run_policy_and_rejection_checks
         ;;
     development)
         record_environment
-        run_online_resolution
+        run_fresh_resolution
         run_development_checks
         ;;
     msrv)
@@ -184,13 +211,19 @@ case "${1:-all}" in
     security)
         run_security_and_license_checks
         ;;
+    policy)
+        run_policy_and_rejection_checks
+        ;;
+    stale-lock)
+        run_stale_lock_rejection
+        ;;
     metadata)
         run_registry_observations
         ;;
     all)
         install_toolchains
         record_environment
-        run_online_resolution
+        run_fresh_resolution
         run_development_checks
         run_msrv_checks
         run_policy_and_rejection_checks
@@ -198,7 +231,7 @@ case "${1:-all}" in
         run_registry_observations
         ;;
     *)
-        printf 'usage: %s [install|checks|development|msrv|security|metadata|all]\n' "$0" >&2
+        printf 'usage: %s [install|checks|development|msrv|policy|stale-lock|security|metadata|all]\n' "$0" >&2
         exit 2
         ;;
 esac

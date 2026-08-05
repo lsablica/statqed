@@ -2,31 +2,42 @@
   "audit_id": "SA-SQ0002-R",
   "subject": "R package and support baseline",
   "source": {
-    "work": "R 4.6.1 release information, Writing R Extensions, and CRAN Repository Policy",
-    "version": "R 4.6.1 (2026-06-24); CRAN policy revision 6875; retrieved 2026-08-03",
-    "locator": "https://developer.r-project.org/; https://cran.r-project.org/doc/manuals/r-release/R-exts.html; https://cran.r-project.org/web/packages/policies.html",
-    "persistent_id": "R 4.6.1 Happy Hop"
+    "work": "R 4.6.1 development release, R 4.4.3 support-floor release artifact, testthat 3.3.2/3.2.3 package artifacts, Writing R Extensions, and CRAN Repository Policy",
+    "version": "R 4.6.1 (2026-06-24); R 4.4.3 (2025-02-28); testthat 3.3.2 and 3.2.3; refreshed 2026-08-05",
+    "locator": "https://developer.r-project.org/; https://www.r-project.org/; https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz; https://cran.r-project.org/web/packages/testthat/DESCRIPTION; https://cran.r-project.org/src/contrib/testthat_3.3.2.tar.gz; https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz; https://cran.r-project.org/doc/manuals/r-release/R-exts.html; https://cran.r-project.org/web/packages/policies.html",
+    "persistent_id": "R 4.6.1 Happy Hop; R 4.4.3 Trophy Case source archive; testthat_3.3.2.tar.gz sha256 5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808; testthat_3.2.3.tar.gz sha256 180b794a5bbc016acec5d882e600e0c5ff4c455513dd451960b217e0e53dc1af"
   },
-  "controlled_statement": "R 4.6.1 was the current release observed on 2026-08-03. R package support must be expressed in DESCRIPTION and tested with R CMD check on explicit hosts; annual release cadence and CRAN acceptance policy do not define a multi-version support guarantee.",
+  "controlled_statement": "R 4.6.1 was the current development/reference release observed on 2026-08-03. R 4.4.3 is an exact archived R Core release used to exercise the project-proposed 4.4 support floor; selecting that floor is StatQED policy rather than an R Core support promise. testthat 3.3.2 is the exact MIT-licensed CRAN source used with the development probe, while archived testthat 3.2.3 is the exact package version used with the floor candidate through a separately hash-locked conda artifact. R package support must be expressed in DESCRIPTION and tested with R CMD check on explicit hosts; release cadence and CRAN acceptance policy do not define a multi-version support guarantee.",
   "hypotheses": [
     {"name": "r_current_release", "class": "source_explicit", "source_anchor": "https://developer.r-project.org/", "notes": "R 4.6.1 Happy Hop was released 2026-06-24."},
+    {"name": "r_floor_release", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz", "notes": "The official R Core archive serves R-4.4.3.tar.gz; the R Project records R 4.4.3 Trophy Case as released 2025-02-28 and the wrap-up of the 4.4.x series."},
+    {"name": "r_4_4_is_project_support_floor", "class": "formalization_obligation", "source_anchor": "", "notes": "The support-floor selection is downstream compatibility policy. It requires direct package checks and ongoing dependency/security review; it is not implied by R Core's release archive."},
+    {"name": "testthat_development_release", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/web/packages/testthat/DESCRIPTION", "notes": "CRAN DESCRIPTION identifies testthat 3.3.2, Depends: R (>= 4.1.0), and MIT + file LICENSE. The exact source tarball is hash-locked separately at SHA-256 5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808."},
+    {"name": "testthat_floor_release", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz", "notes": "The archived tarball DESCRIPTION identifies testthat 3.2.3, Depends: R (>= 3.6.0), and MIT + file LICENSE. Streamed SHA-256 at the 2026-08-05 refresh was 180b794a5bbc016acec5d882e600e0c5ff4c455513dd451960b217e0e53dc1af; the executed floor used a separately locked conda build."},
     {"name": "r_package_check", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Checking-packages", "notes": "R CMD check tests source packages; final checks are strongly recommended on the R CMD build tarball."},
     {"name": "cross_platform_expectation", "class": "source_explicit", "source_anchor": "https://cran.r-project.org/web/packages/policies.html#Source-packages", "notes": "CRAN normally expects packages on at least two major R platforms; this policy is not evidence that a particular package passes them."},
     {"name": "release_cadence_implies_support_horizon", "class": "strengthening_unjustified", "source_anchor": "https://developer.r-project.org/", "notes": "The official page describes annual x.y.0 releases and as-needed patches, but does not promise support for a fixed count of earlier series."},
     {"name": "package_platform_compatibility", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by R CMD check results for named R versions and OS runners."}
   ],
   "variants": [
-    {"name": "release_branch_state", "source_variant": "R 4.6.1 release tarball", "controlled_variant": "R-patched contains later fixes", "reason": "The R-devel news feed records post-release patched-branch fixes; do not silently treat patched as the release artifact."}
+    {"name": "release_branch_state", "source_variant": "R 4.6.1 release tarball", "controlled_variant": "R-patched contains later fixes", "reason": "The R-devel news feed records post-release patched-branch fixes; do not silently treat patched as the release artifact."},
+    {"name": "floor_runtime_artifact", "source_variant": "official R 4.4.3 source archive", "controlled_variant": "hash-locked conda-forge R 4.4.3 build executed by the probe", "reason": "Source lineage and executed binary provenance are separate evidence."},
+    {"name": "testthat_candidate", "source_variant": "current CRAN testthat 3.3.2 source closure for R 4.6.1", "controlled_variant": "archived testthat 3.2.3 / conda build for R 4.4.3", "reason": "The development and floor probes must preserve their distinct dependency locks and must not imply cross-version equivalence."}
   ],
   "concept_mapping": [
-    {"source_concept": "Depends: R (>= x.y)", "project_concept": "declared minimum R", "caveat": "Requires CI evidence and does not express an upper bound."}
+    {"source_concept": "Depends: R (>= x.y)", "project_concept": "declared minimum R", "caveat": "Requires CI evidence and does not express an upper bound."},
+    {"source_concept": "CRAN source package", "project_concept": "development test dependency", "caveat": "A published package and its metadata do not establish compatibility with the exact StatQED prototype or platform."}
   ],
   "quantifiers": [],
-  "randomness_scopes": ["Package tests using random numbers must set a seed for reproducible reference output, per Writing R Extensions §1.1.5."],
-  "nonvacuity_witnesses": ["Writing R Extensions identifies itself as the manual for R 4.6.1 dated 2026-06-24."],
+  "randomness_scopes": ["Package tests using random numbers must set a seed for reproducible reference output, per Writing R Extensions section 1.1.5."],
+  "nonvacuity_witnesses": ["The official R archive served R-4.4.3.tar.gz with HTTP 200 at the 2026-08-05 refresh.", "The official CRAN current and archive endpoints served testthat 3.3.2 and 3.2.3 respectively, and both DESCRIPTION files declare MIT + file LICENSE."],
   "strengthenings": [],
-  "weakenings": ["State exactly which R/OS combinations pass instead of saying the package is cross-platform."],
+  "weakenings": ["State exactly which R/OS combinations pass instead of saying the package is cross-platform.", "Treat R 4.4 as a project-tested compatibility floor, not an upstream-maintained-security guarantee."],
   "attribution": [
+    {"work": "R Project release history", "locator": "https://www.r-project.org/", "role": "R 4.4.3 release date, codename, and wrap-up status"},
+    {"work": "R 4.4.3 source archive", "locator": "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz", "role": "exact official support-floor release artifact"},
+    {"work": "testthat 3.3.2 CRAN DESCRIPTION", "locator": "https://cran.r-project.org/web/packages/testthat/DESCRIPTION", "role": "exact development test dependency metadata and license"},
+    {"work": "testthat 3.2.3 CRAN archive", "locator": "https://cran.r-project.org/src/contrib/Archive/testthat/testthat_3.2.3.tar.gz", "role": "exact archived floor test dependency metadata and license"},
     {"work": "R-devel daily news", "locator": "https://developer.r-project.org/blosxom.cgi/R-devel", "role": "post-release maintenance caveat"},
     {"work": "R for macOS", "locator": "https://mac.r-project.org/", "role": "specific official macOS build availability, not universal platform support"},
     {"work": "R Software Development Life Cycle", "locator": "https://www.r-project.org/doc/R-SDLC.pdf", "role": "R distribution scope and GPL statement"}
