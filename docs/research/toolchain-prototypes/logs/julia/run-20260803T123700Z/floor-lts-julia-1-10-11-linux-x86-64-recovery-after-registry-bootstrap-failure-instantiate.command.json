@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+    "--startup-file=no",
+    "--history-file=no",
+    "--project=/tmp/statqed-julia-1.10.11-nr8gq5gs/project",
+    "-e",
+    "using Pkg; Pkg.instantiate(; verbose=true, update_registry=false)"
+  ],
+  "cwd": "/tmp/statqed-preflight-9bf9922",
+  "end": "2026-08-03T12:34:18.105275+00:00",
+  "environment_variables": {
+    "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.10.11-nr8gq5gs/depot",
+    "JULIA_LOAD_PATH": "@:@stdlib",
+    "JULIA_NUM_THREADS": "1",
+    "JULIA_PKG_OFFLINE": "true",
+    "JULIA_PKG_PRECOMPILE_AUTO": "0",
+    "JULIA_PKG_SERVER": "",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8"
+  },
+  "exit_status": 1,
+  "id": "instantiate",
+  "start": "2026-08-03T12:34:16.420742+00:00",
+  "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T123700Z/floor-lts-julia-1-10-11-linux-x86-64-recovery-after-registry-bootstrap-failure-instantiate.stderr",
+  "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T123700Z/floor-lts-julia-1-10-11-linux-x86-64-recovery-after-registry-bootstrap-failure-instantiate.stdout"
+}

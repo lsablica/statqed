@@ -1,0 +1,4 @@
+ecosystem=CRAN
+packages=29
+vulnerabilities=0
+endpoint=https://api.osv.dev/v1/querybatch

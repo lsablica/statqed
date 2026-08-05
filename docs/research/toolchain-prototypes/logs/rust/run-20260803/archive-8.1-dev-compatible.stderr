@@ -1,0 +1,15 @@
+    Updating crates.io index
+     Locking 8 packages to latest Rust 1.85.1 compatible versions
+      Adding zip v8.1.0 (requires Rust 1.88)
+ Downloading crates ...
+  Downloaded zip v8.1.0
+   Compiling crc32fast v1.5.0
+    Checking hashbrown v0.17.1
+    Checking equivalent v1.0.2
+    Checking cfg-if v1.0.4
+    Checking typed-path v0.12.3
+    Checking memchr v2.8.3
+    Checking indexmap v2.14.0
+    Checking zip v8.1.0
+    Checking rejected-archive-msrv v0.0.0 (/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/rejections/archive-msrv)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.52s

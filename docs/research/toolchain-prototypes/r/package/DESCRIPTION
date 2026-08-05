@@ -1,0 +1,15 @@
+Package: statqedRToolchainProbe
+Type: Package
+Title: StatQED R Toolchain Compatibility Probe
+Version: 0.0.0.9000
+Authors@R: person("StatQED", "Contributors", role = c("aut", "cre"),
+    email = "statqed@example.invalid")
+Description: A disposable package-native probe for checking R package build,
+    installation, and test behavior. It is research evidence only and does not
+    define a StatQED frontend or semantic interface.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.4.0)
+Suggests:
+    testthat (>= 3.2.3)
+Config/testthat/edition: 3

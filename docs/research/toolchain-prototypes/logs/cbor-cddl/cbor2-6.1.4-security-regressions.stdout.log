@@ -1,0 +1,7 @@
+cbor2_version=6.1.4
+indefinite_map_missing_value=reject:CBORDecodeError:error decoding map: missing value for key in indefinite-length map
+bignum_non_bytes_payload=reject:CBORDecodeError:error decoding positive bignum: bignum value must be a byte string, not <class 'tuple'>
+frozendict_pair_hashes_distinct=True
+bytearray_string_reference_hex=d901008251737461747165642d7265666572656e6365d81900
+bytearray_string_reference_round_trip=true
+verified cbor2 6.1.4 security-regression probe

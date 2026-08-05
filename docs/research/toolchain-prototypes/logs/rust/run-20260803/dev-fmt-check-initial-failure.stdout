@@ -1,0 +1,22 @@
+Diff in /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/crates/compat-probe/src/lib.rs:32:
+ ///
+ /// The byte counts and digests are compatibility observations, not normative
+ /// encodings or artifact identifiers.
+-pub fn observe_candidate_apis(
+-) -> Result<CandidateObservations, Box<dyn std::error::Error + Send + Sync>> {
++pub fn observe_candidate_apis()
++-> Result<CandidateObservations, Box<dyn std::error::Error + Send + Sync>> {
+     let candidate = CandidateRecord {
+         ids: vec![1, 2, 3],
+         labels: vec!["alpha".into(), "beta".into(), "gamma".into()],
+Diff in /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/crates/compat-probe/src/lib.rs:67:
+     let archive_bytes = archive.get_ref().len();
+     let mut reader = zip::ZipArchive::new(archive)?;
+     let mut recovered = Vec::new();
+-    reader.by_name("candidate.json")?.read_to_end(&mut recovered)?;
++    reader
++        .by_name("candidate.json")?
++        .read_to_end(&mut recovered)?;
+     assert_eq!(recovered, json);
+ 
+     let blake3_hex = blake3::hash(&json).to_hex().to_string();

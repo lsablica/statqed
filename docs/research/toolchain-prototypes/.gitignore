@@ -1,0 +1,18 @@
+# SQ-0002 retains source, locks, and concise evidence, not downloaded runtimes
+# or build/package caches. Probe commands place reusable caches under /tmp.
+**/.lake/
+**/target/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/*.pyc
+**/build/
+**/dist/
+**/*.egg-info/
+**/wheelhouse/
+**/*.Rcheck/
+**/.Rproj.user/
+**/.julia/
+**/compiled/
+**/artifacts/
+**/scratchspaces/

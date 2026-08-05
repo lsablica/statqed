@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+    "--startup-file=no",
+    "--history-file=no",
+    "--project=/tmp/statqed-julia-1.12.6-6vorwxia/project",
+    "-e",
+    "using Pkg; Pkg.test(; coverage=false)"
+  ],
+  "cwd": "/tmp/statqed-preflight-9bf9922",
+  "end": "2026-08-03T12:34:11.915832+00:00",
+  "environment_variables": {
+    "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.12.6-6vorwxia/depot",
+    "JULIA_LOAD_PATH": "@:@stdlib",
+    "JULIA_NUM_THREADS": "1",
+    "JULIA_PKG_OFFLINE": "true",
+    "JULIA_PKG_PRECOMPILE_AUTO": "0",
+    "JULIA_PKG_SERVER": "",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8"
+  },
+  "exit_status": 1,
+  "id": "test",
+  "start": "2026-08-03T12:34:08.974250+00:00",
+  "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T123700Z/development-julia-1-12-6-linux-x86-64-recovery-after-registry-bootstrap-failure-test.stderr",
+  "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T123700Z/development-julia-1-12-6-linux-x86-64-recovery-after-registry-bootstrap-failure-test.stdout"
+}

@@ -1,0 +1,36 @@
+Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+Collecting build==1.5.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 3))
+  Downloading build-1.5.0-py3-none-any.whl (26 kB)
+Collecting hatchling==1.31.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 13))
+  Downloading hatchling-1.31.0-py3-none-any.whl (77 kB)
+Collecting iniconfig==2.3.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 17))
+  Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Collecting packaging==26.2 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 21))
+  Using cached packaging-26.2-py3-none-any.whl (100 kB)
+Collecting pathspec==1.1.1 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 29))
+  Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Collecting pip==26.2 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 33))
+  Downloading pip-26.2-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 23.6 MB/s  0:00:00
+Collecting pluggy==1.6.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 37))
+  Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Collecting pygments==2.20.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 43))
+  Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Collecting pyproject-hooks==1.2.0 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 47))
+  Using cached pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+Collecting pytest==9.1.1 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 51))
+  Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+Collecting trove-classifiers==2026.6.1.19 (from -r /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock (line 55))
+  Using cached trove_classifiers-2026.6.1.19-py3-none-any.whl (14 kB)
+Saved /tmp/statqed-sq0002-python-wheelhouse/build-1.5.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/hatchling-1.31.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/iniconfig-2.3.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/packaging-26.2-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pathspec-1.1.1-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pip-26.2-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pluggy-1.6.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pygments-2.20.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pyproject_hooks-1.2.0-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/pytest-9.1.1-py3-none-any.whl
+Saved /tmp/statqed-sq0002-python-wheelhouse/trove_classifiers-2026.6.1.19-py3-none-any.whl
+Successfully downloaded build hatchling iniconfig packaging pathspec pip pluggy pygments pyproject-hooks pytest trove-classifiers

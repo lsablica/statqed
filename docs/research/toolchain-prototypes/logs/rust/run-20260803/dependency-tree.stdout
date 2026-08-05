@@ -1,0 +1,195 @@
+statqed-rust-compat-probe v0.0.0 (/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/crates/compat-probe)
+├── arrow v59.1.0
+│   ├── arrow-arith v59.1.0
+│   │   ├── arrow-array v59.1.0
+│   │   │   ├── ahash v0.8.12
+│   │   │   │   ├── cfg-if v1.0.4
+│   │   │   │   ├── getrandom v0.3.4
+│   │   │   │   │   ├── cfg-if v1.0.4
+│   │   │   │   │   └── libc v0.2.189
+│   │   │   │   ├── once_cell v1.21.4
+│   │   │   │   └── zerocopy v0.8.55
+│   │   │   │       └── zerocopy-derive v0.8.55 (proc-macro)
+│   │   │   │           ├── proc-macro2 v1.0.107
+│   │   │   │           │   └── unicode-ident v1.0.24
+│   │   │   │           ├── quote v1.0.47
+│   │   │   │           │   └── proc-macro2 v1.0.107 (*)
+│   │   │   │           └── syn v2.0.119
+│   │   │   │               ├── proc-macro2 v1.0.107 (*)
+│   │   │   │               ├── quote v1.0.47 (*)
+│   │   │   │               └── unicode-ident v1.0.24
+│   │   │   │   [build-dependencies]
+│   │   │   │   └── version_check v0.9.5
+│   │   │   ├── arrow-buffer v59.1.0
+│   │   │   │   ├── bytes v1.12.1
+│   │   │   │   ├── half v2.7.1
+│   │   │   │   │   ├── cfg-if v1.0.4
+│   │   │   │   │   ├── num-traits v0.2.19
+│   │   │   │   │   │   └── libm v0.2.16
+│   │   │   │   │   │   [build-dependencies]
+│   │   │   │   │   │   └── autocfg v1.5.1
+│   │   │   │   │   └── zerocopy v0.8.55 (*)
+│   │   │   │   ├── num-bigint v0.4.8
+│   │   │   │   │   ├── num-integer v0.1.46
+│   │   │   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   ├── arrow-data v59.1.0
+│   │   │   │   ├── arrow-buffer v59.1.0 (*)
+│   │   │   │   ├── arrow-schema v59.1.0
+│   │   │   │   ├── half v2.7.1 (*)
+│   │   │   │   ├── num-integer v0.1.46 (*)
+│   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   ├── arrow-schema v59.1.0
+│   │   │   ├── chrono v0.4.45
+│   │   │   │   ├── iana-time-zone v0.1.65
+│   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   ├── half v2.7.1 (*)
+│   │   │   ├── hashbrown v0.17.1
+│   │   │   ├── num-complex v0.4.6
+│   │   │   │   └── num-traits v0.2.19 (*)
+│   │   │   ├── num-integer v0.1.46 (*)
+│   │   │   └── num-traits v0.2.19 (*)
+│   │   ├── arrow-buffer v59.1.0 (*)
+│   │   ├── arrow-data v59.1.0 (*)
+│   │   ├── arrow-schema v59.1.0
+│   │   ├── chrono v0.4.45 (*)
+│   │   └── num-traits v0.2.19 (*)
+│   ├── arrow-array v59.1.0 (*)
+│   ├── arrow-buffer v59.1.0 (*)
+│   ├── arrow-cast v59.1.0
+│   │   ├── arrow-array v59.1.0 (*)
+│   │   ├── arrow-buffer v59.1.0 (*)
+│   │   ├── arrow-data v59.1.0 (*)
+│   │   ├── arrow-ord v59.1.0
+│   │   │   ├── arrow-array v59.1.0 (*)
+│   │   │   ├── arrow-buffer v59.1.0 (*)
+│   │   │   ├── arrow-data v59.1.0 (*)
+│   │   │   ├── arrow-schema v59.1.0
+│   │   │   └── arrow-select v59.1.0
+│   │   │       ├── ahash v0.8.12 (*)
+│   │   │       ├── arrow-array v59.1.0 (*)
+│   │   │       ├── arrow-buffer v59.1.0 (*)
+│   │   │       ├── arrow-data v59.1.0 (*)
+│   │   │       ├── arrow-schema v59.1.0
+│   │   │       └── num-traits v0.2.19 (*)
+│   │   ├── arrow-schema v59.1.0
+│   │   ├── arrow-select v59.1.0 (*)
+│   │   ├── atoi v2.0.0
+│   │   │   └── num-traits v0.2.19 (*)
+│   │   ├── base64 v0.22.1
+│   │   ├── chrono v0.4.45 (*)
+│   │   ├── half v2.7.1 (*)
+│   │   ├── lexical-core v1.0.6
+│   │   │   ├── lexical-parse-float v1.0.6
+│   │   │   │   ├── lexical-parse-integer v1.0.6
+│   │   │   │   │   └── lexical-util v1.0.7
+│   │   │   │   └── lexical-util v1.0.7
+│   │   │   ├── lexical-parse-integer v1.0.6 (*)
+│   │   │   ├── lexical-util v1.0.7
+│   │   │   ├── lexical-write-float v1.0.6
+│   │   │   │   ├── lexical-util v1.0.7
+│   │   │   │   └── lexical-write-integer v1.0.6
+│   │   │   │       └── lexical-util v1.0.7
+│   │   │   └── lexical-write-integer v1.0.6 (*)
+│   │   ├── num-traits v0.2.19 (*)
+│   │   └── ryu v1.0.23
+│   ├── arrow-data v59.1.0 (*)
+│   ├── arrow-ipc v59.1.0
+│   │   ├── arrow-array v59.1.0 (*)
+│   │   ├── arrow-buffer v59.1.0 (*)
+│   │   ├── arrow-data v59.1.0 (*)
+│   │   ├── arrow-schema v59.1.0
+│   │   ├── arrow-select v59.1.0 (*)
+│   │   └── flatbuffers v25.12.19
+│   │       └── bitflags v2.13.1
+│   │       [build-dependencies]
+│   │       └── rustc_version v0.4.1
+│   │           └── semver v1.0.28
+│   ├── arrow-ord v59.1.0 (*)
+│   ├── arrow-row v59.1.0
+│   │   ├── arrow-array v59.1.0 (*)
+│   │   ├── arrow-buffer v59.1.0 (*)
+│   │   ├── arrow-data v59.1.0 (*)
+│   │   ├── arrow-schema v59.1.0
+│   │   └── half v2.7.1 (*)
+│   ├── arrow-schema v59.1.0
+│   ├── arrow-select v59.1.0 (*)
+│   └── arrow-string v59.1.0
+│       ├── arrow-array v59.1.0 (*)
+│       ├── arrow-buffer v59.1.0 (*)
+│       ├── arrow-data v59.1.0 (*)
+│       ├── arrow-schema v59.1.0
+│       ├── arrow-select v59.1.0 (*)
+│       ├── memchr v2.8.3
+│       ├── num-traits v0.2.19 (*)
+│       ├── regex v1.13.1
+│       │   ├── aho-corasick v1.1.5
+│       │   │   └── memchr v2.8.3
+│       │   ├── memchr v2.8.3
+│       │   ├── regex-automata v0.4.16
+│       │   │   ├── aho-corasick v1.1.5 (*)
+│       │   │   ├── memchr v2.8.3
+│       │   │   └── regex-syntax v0.8.11
+│       │   └── regex-syntax v0.8.11
+│       └── regex-syntax v0.8.11
+├── blake3 v1.8.5
+│   ├── arrayref v0.3.9
+│   ├── arrayvec v0.7.8
+│   ├── cfg-if v1.0.4
+│   ├── constant_time_eq v0.4.2
+│   └── cpufeatures v0.3.0
+│   [build-dependencies]
+│   └── cc v1.4.0
+│       ├── find-msvc-tools v0.1.9
+│       └── shlex v2.0.1
+├── clap v4.6.5
+│   ├── clap_builder v4.6.5
+│   │   ├── anstream v1.0.0
+│   │   │   ├── anstyle v1.0.14
+│   │   │   ├── anstyle-parse v1.0.0
+│   │   │   │   └── utf8parse v0.2.2
+│   │   │   ├── anstyle-query v1.1.5
+│   │   │   ├── colorchoice v1.0.5
+│   │   │   ├── is_terminal_polyfill v1.70.2
+│   │   │   └── utf8parse v0.2.2
+│   │   ├── anstyle v1.0.14
+│   │   ├── clap_lex v1.1.0
+│   │   └── strsim v0.11.1
+│   └── clap_derive v4.6.4 (proc-macro)
+│       ├── heck v0.5.0
+│       ├── proc-macro2 v1.0.107 (*)
+│       ├── quote v1.0.47 (*)
+│       └── syn v3.0.3
+│           ├── proc-macro2 v1.0.107 (*)
+│           ├── quote v1.0.47 (*)
+│           └── unicode-ident v1.0.24
+├── serde v1.0.229
+│   ├── serde_core v1.0.229
+│   └── serde_derive v1.0.229 (proc-macro)
+│       ├── proc-macro2 v1.0.107 (*)
+│       ├── quote v1.0.47 (*)
+│       └── syn v3.0.3 (*)
+├── serde_json v1.0.151
+│   ├── itoa v1.0.18
+│   ├── memchr v2.8.3
+│   ├── serde_core v1.0.229
+│   └── zmij v1.0.23
+├── sha2 v0.11.0
+│   ├── cfg-if v1.0.4
+│   ├── cpufeatures v0.3.0
+│   └── digest v0.11.3
+│       ├── block-buffer v0.12.1
+│       │   └── hybrid-array v0.4.14
+│       │       └── typenum v1.20.1
+│       ├── const-oid v0.10.2
+│       └── crypto-common v0.2.2
+│           └── hybrid-array v0.4.14 (*)
+└── zip v7.2.0
+    ├── crc32fast v1.5.0
+    │   └── cfg-if v1.0.4
+    ├── indexmap v2.14.0
+    │   ├── equivalent v1.0.2
+    │   └── hashbrown v0.17.1
+    ├── memchr v2.8.3
+    └── typed-path v0.12.3

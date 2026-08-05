@@ -1,0 +1,13 @@
+
+LibMambaUnsatisfiableError: Encountered problems while solving:
+  - package r-testthat-3.3.2-r44h3697838_0 requires r-base >=4.4,<4.5.0a0, but none of the providers can be installed
+
+Could not solve for environment specs
+The following packages are incompatible
+├─ r-base =4.6.1 * is requested and can be installed;
+└─ r-testthat =3.3.2 * is not installable because there are no viable options
+   ├─ r-testthat 3.3.2 would require
+   │  └─ r-base >=4.4,<4.5.0a0 *, which conflicts with any installable versions previously reported;
+   └─ r-testthat 3.3.2 would require
+      └─ r-base >=4.5,<4.6.0a0 *, which conflicts with any installable versions previously reported.
+

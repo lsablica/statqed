@@ -1,0 +1,13 @@
+Using CPython 3.14.6 interpreter at: /tmp/statqed-sq0002-python-runtimes/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14
+Creating virtual environment with seed packages at: /tmp/statqed-sq0002-python/supported-3-14-6/builder
+WARN Retry attempt #0. Sleeping 1.152992663s before the next attempt
+WARN Retry attempt #1. Sleeping 3.765524288s before the next attempt
+WARN Retry attempt #2. Sleeping 6.275385463s before the next attempt
+error: Failed to install seed packages into virtual environment
+  Caused by: No solution found when resolving: `pip`
+  Caused by: Request failed after 3 retries in 11.2s
+  Caused by: Failed to fetch: `https://pypi.org/simple/pip/`
+  Caused by: error sending request for url (https://pypi.org/simple/pip/)
+  Caused by: client error (Connect)
+  Caused by: dns error
+  Caused by: failed to lookup address information: Temporary failure in name resolution

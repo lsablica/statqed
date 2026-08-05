@@ -1,0 +1,38 @@
+Julia Version 1.10.11
+Commit a2b11907d7b (2026-03-09 14:59 UTC)
+Build Info:
+  Official https://julialang.org/ release
+Platform Info:
+  OS: Linux (x86_64-linux-gnu)
+      Ubuntu 24.04.4 LTS
+  uname: Linux 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul  1 15:50:57 UTC 2 x86_64 x86_64
+  CPU: Intel(R) Core(TM) i7-10875H CPU @ 2.30GHz: 
+                 speed         user         nice          sys         idle          irq
+       #1-16  4202 MHz     149372 s         10 s      27290 s    2034635 s          0 s
+  Memory: 15.451892852783203 GB (12573.75390625 MB free)
+  Uptime: 13940.86 sec
+  Load Avg:  4.16  3.94  6.54
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-15.0.7 (ORCJIT, skylake)
+Threads: 1 default, 0 interactive, 1 GC (on 16 virtual cores)
+Environment:
+  JULIA_DEPOT_PATH = /tmp/statqed-julia-1.10.11-2_2znva3/depot
+  JULIA_LOAD_PATH = @:@stdlib
+  JULIA_NUM_THREADS = 1
+  JULIA_PKG_OFFLINE = true
+  JULIA_PKG_PRECOMPILE_AUTO = 0
+  CODEX_ELECTRON_RESOURCES_PATH = /opt/codex-desktop/resources
+  XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
+  CODEX_BROWSER_USE_NODE_PATH = /opt/codex-desktop/resources/node-runtime/bin/node
+  HOME = /home/lukas
+  XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+  CODEX_HOME = /home/lukas/.codex
+  NODE_REPL_NODE_PATH = /opt/codex-desktop/resources/node-runtime/bin/node
+  TERM = dumb
+  CODEX_NODE_REPL_PATH = /opt/codex-desktop/resources/node_repl
+  CODEX_UPDATE_MANAGER_PATH = /usr/bin/codex-update-manager
+  CODEX_CLI_PATH = /home/lukas/.local/bin/codex
+  PATH = /home/lukas/.local/bin:/home/lukas/.local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/lukas/.codex/tmp/arg0/codex-arg0hLD9vL:/home/lukas/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin:/home/lukas/.local/bin:/home/lukas/miniconda3/condabin:/opt/codex-desktop/resources/node-runtime/bin:/home/lukas/.cargo/bin:/home/lukas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+Sys.MACHINE=x86_64-linux-gnu
+Sys.KERNEL=Linux

@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0003","title":"Bootstrap Lean and Mathlib project","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A clean checkout builds a pinned minimal Lean/Mathlib project and reports trusted axioms.",
+  "id":"SQ-0003","title":"Bootstrap Lean and Mathlib project","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A clean checkout builds a pinned minimal Lean/Mathlib project and reports trusted axioms.",
   "dependencies":["SQ-0002"],
   "allowed_paths":["lean/**","scripts/check_lean_trust.py",".github/workflows/lean.yml","docs/implementation/lean-core.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
   "forbidden_paths":["docs/design/**","schemas/**","backend/**","frontends/**"],

@@ -1,0 +1,11 @@
+timestamp_start=2026-08-05T18:13:54+00:00
+timestamp_end=2026-08-05T18:13:54+00:00
+cwd=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/rust
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=bash -c $'\n        printf "%s  %s\\n" \\\n            "8db0b054ed47a9eb63678ea96644fd5791acd1cab0a3441754c0d70229b55040" \\\n            "$1" | sha256sum -c -\n    ' _ /tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/rust/Cargo.lock 
+stdout_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-stale-lock/reviewed-stale-lock-rejection.stdout
+stderr_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-stale-lock/reviewed-stale-lock-rejection.stderr
+exit_code=1

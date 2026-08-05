@@ -1,0 +1,29 @@
+{
+  "audit_id": "SA-SQ0002-SECURITY-QUERIES",
+  "subject": "Point-in-time OSV dependency advisory queries",
+  "source": {
+    "work": "OSV.dev querybatch API documentation",
+    "version": "retrieved 2026-08-05",
+    "locator": "https://google.github.io/osv.dev/post-v1-querybatch/",
+    "persistent_id": "OSV API POST /v1/querybatch"
+  },
+  "controlled_statement": "The OSV batch API can query exact package ecosystem/name/version tuples and returns results in request order. A retained zero-result response is point-in-time evidence only and does not establish that a dependency or toolchain is secure.",
+  "hypotheses": [
+    {"name": "batch_result_order", "class": "source_explicit", "source_anchor": "https://google.github.io/osv.dev/post-v1-querybatch/", "notes": "The official API documentation guarantees response ordering matches input ordering."},
+    {"name": "zero_results_mean_no_vulnerabilities_exist", "class": "strengthening_unjustified", "source_anchor": "https://google.github.io/osv.dev/post-v1-querybatch/", "notes": "Coverage depends on OSV data sources and query time; absent results are not a universal security guarantee."},
+    {"name": "complete_pagination", "class": "formalization_obligation", "source_anchor": "https://google.github.io/osv.dev/post-v1-querybatch/#pagination", "notes": "A query returning next_page_token is incomplete until subsequent pages are retrieved. The SQ-0002 probe fails closed if pagination appears."}
+  ],
+  "variants": [],
+  "concept_mapping": [
+    {"source_concept": "package ecosystem/name/version query", "project_concept": "prototype dependency advisory observation", "caveat": "Does not cover language binaries, operating-system packages, or future production locks."}
+  ],
+  "quantifiers": ["Every exact third-party package/version pair parsed from the selected Python and R prototype locks is included once per ecosystem query."],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["The retained PyPI request contains 12 exact package versions and the retained CRAN request contains 29 exact package versions."],
+  "strengthenings": [],
+  "weakenings": ["Report zero results only as a dated OSV observation."],
+  "attribution": [
+    {"work": "OSV querybatch API", "locator": "https://google.github.io/osv.dev/post-v1-querybatch/", "role": "request schema, ordering, response, and pagination behavior"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

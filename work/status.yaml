@@ -1,16 +1,19 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0002"],
+  "ready": ["SQ-0003", "SQ-0004"],
   "in_progress": [],
-  "blocked_count": 58,
-  "done": ["SQ-0001"],
-  "last_integrated_commit": "8d2720e0fcdafd784b86641a05cab67e1dd9a76e",
-  "last_updated": "2026-08-03",
+  "blocked_count": 56,
+  "done": ["SQ-0001", "SQ-0002"],
+  "last_integrated_commit": "7a0b726189155d4131b30df63aee6c60f19671d9",
+  "last_updated": "2026-08-05",
   "notes": [
     "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8 and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
     "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
     "Post-merge review found no blocking constitutional defect; it corrected stale launch/handoff wording and expanded the SQ-0002 execution contract without changing task states or accepted semantics.",
-    "No statistical method, executable verifier, or production language toolchain is implemented; SQ-0002 is the sole dependency-ready task."
+    "No statistical method or production language project is implemented; SQ-0002 adds only isolated research probes, evidence, and its strict verifier.",
+    "SQ-0002 started from reviewed main commit 9bf99227240550a6c84f417eccd99c48f43be6ec on 2026-08-03 and completed independent integration review on 2026-08-05.",
+    "SQ-0002's initial recommendation surface entered review on 2026-08-03; current-source corrections and retained prototype outcomes were frozen for re-review on 2026-08-05. No production toolchain or later task was initialized.",
+    "SQ-0002 is DONE against review package c43b90e39eebe500d70f6d0957a61a549c90545e and atomic transition commit 7a0b726189155d4131b30df63aee6c60f19671d9; the shared readiness calculation exposes SQ-0003 and SQ-0004 as READY, but neither has begun."
   ]
 }

@@ -1,0 +1,16 @@
+Using CPython 3.11.15 interpreter at: /tmp/statqed-sq0002-python-runtimes/cpython-3.11.15-linux-x86_64-gnu/bin/python3.11
+Creating virtual environment with seed packages at: /tmp/statqed-sq0002-python/supported-3-11-15/builder
+WARN Retry attempt #0. Sleeping 1.220357239s before the next attempt
+WARN Retry attempt #0. Sleeping 1.411709993s before the next attempt
+WARN Retry attempt #1. Sleeping 2.455792879s before the next attempt
+WARN Retry attempt #1. Sleeping 2.121909125s before the next attempt
+WARN Retry attempt #2. Sleeping 4.003597249s before the next attempt
+WARN Retry attempt #2. Sleeping 1.465820591s before the next attempt
+error: Failed to install seed packages into virtual environment
+  Caused by: No solution found when resolving: `pip`, `setuptools`, `wheel`
+  Caused by: Request failed after 3 retries in 5.1s
+  Caused by: Failed to fetch: `https://pypi.org/simple/setuptools/`
+  Caused by: error sending request for url (https://pypi.org/simple/setuptools/)
+  Caused by: client error (Connect)
+  Caused by: dns error
+  Caused by: failed to lookup address information: Temporary failure in name resolution

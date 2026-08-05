@@ -1,0 +1,81 @@
+CC = x86_64-linux-gnu-gcc -std=gnu2x
+CFLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CPICFLAGS = -fpic
+CPPFLAGS =
+CC17 = x86_64-linux-gnu-gcc -std=gnu17
+C17FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CC23 = x86_64-linux-gnu-gcc -std=gnu2x
+C23FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CC90 = x86_64-linux-gnu-gcc -std=gnu90
+C90FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CC99 = x86_64-linux-gnu-gcc -std=gnu99
+C99FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CXX = x86_64-linux-gnu-g++ -std=gnu++20
+CXXFLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CXXPICFLAGS = -fpic
+CXX17 = x86_64-linux-gnu-g++
+CXX17STD = -std=gnu++17
+CXX17FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3 -O3 -march=native -pipe
+CXX17PICFLAGS = -fpic
+CXX20 = x86_64-linux-gnu-g++
+CXX20STD = -std=gnu++20
+CXX20FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3 -O3 -march=native -pipe
+CXX20PICFLAGS = -fpic
+CXX23 = x86_64-linux-gnu-g++
+CXX23STD = -std=gnu++23
+CXX23FLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -Wdate-time -D_FORTIFY_SOURCE=3
+CXX23PICFLAGS = -fpic
+CXX26 =
+CXX26STD =
+CXX26FLAGS =
+CXX26PICFLAGS =
+DYLIB_EXT = .so
+DYLIB_LD = x86_64-linux-gnu-gcc -std=gnu2x
+DYLIB_LDFLAGS = -shared -fopenmp
+FC = x86_64-linux-gnu-gfortran
+FFLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1
+FPICFLAGS = -fpic
+FLIBS = -lgfortran -lm -lquadmath
+FCFLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1
+SAFE_FFLAGS = -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=. -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/r-base-z8Gqxj/r-base-4.6.1=/usr/src/r-base-4.6.1-1.2404.1 -msse2 -mfpmath=sse
+OBJC = x86_64-linux-gnu-gcc
+OBJCFLAGS =
+JAVA = /usr/lib/jvm/default-java/bin/java
+JAVAC = /usr/lib/jvm/default-java/bin/javac
+JAVAH =
+JAR = /usr/lib/jvm/default-java/bin/jar
+JAVA_HOME = /usr/lib/jvm/default-java
+JAVA_LIBS = -L/usr/lib/jvm/default-java/lib/server -ljvm
+JAVA_CPPFLAGS = -I/usr/lib/jvm/default-java/include -I/usr/lib/jvm/default-java/include/linux
+LDFLAGS = -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro
+SHLIB_CFLAGS =
+SHLIB_CXXFLAGS =
+SHLIB_CXXLD = x86_64-linux-gnu-g++ -std=gnu++20
+SHLIB_CXXLDFLAGS = -shared
+SHLIB_CXX17LD = x86_64-linux-gnu-g++ -std=gnu++17
+SHLIB_CXX17LDFLAGS = -shared
+SHLIB_CXX20LD = x86_64-linux-gnu-g++ -std=gnu++20
+SHLIB_CXX20LDFLAGS = -shared
+SHLIB_CXX23LD = x86_64-linux-gnu-g++ -std=gnu++23
+SHLIB_CXX23LDFLAGS = -shared
+SHLIB_CXX26LD =
+SHLIB_CXX26LDFLAGS = -shared
+SHLIB_EXT = .so
+SHLIB_FFLAGS =
+SHLIB_LD = x86_64-linux-gnu-gcc -std=gnu2x
+SHLIB_LDFLAGS = -shared
+TCLTK_CPPFLAGS = -I/usr/include/tcl8.6 -I/usr/include/tcl8.6
+TCLTK_LIBS = -L/usr/lib/x86_64-linux-gnu -ltcl8.6 -L/usr/lib/x86_64-linux-gnu -ltk8.6 -lX11 -lXss -lXext
+BLAS_LIBS = -lblas
+LAPACK_LIBS = -llapack
+MAKE = make
+LIBnn = lib
+AR = ar
+NM = /usr/bin/x86_64-linux-gnu-nm -B
+RANLIB = x86_64-linux-gnu-ranlib
+LTO =
+LTO_FC =
+LTO_LD =
+
+## The following variables are defunct
+CPP CXXCPP CXX11 CXX11STD CXX11FLAGS CXX11PICFLAGS CXX14 CXX14STD CXX14FLAGS CXX14PICFLAGS SHLIB_CXX11LD SHLIB_CXX11LDFLAGS SHLIB_CXX14LD SHLIB_CXX14LDFLAGS

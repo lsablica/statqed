@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-03T12:28:06Z",
+  "recommendations": [
+    {
+      "id": "r-development-pin",
+      "component": "r",
+      "candidate": "R 4.6.1 release",
+      "value": "4.6.1",
+      "policy": "Use the exact patched current release for development and gating CI; do not substitute R-patched or a moving release alias.",
+      "source_refs": [
+        "r-release-4.6.1",
+        "r-writing-extensions-4.6.1",
+        "r-devel-news"
+      ]
+    },
+    {
+      "id": "r-support-floor",
+      "component": "r-support-floor",
+      "candidate": "DESCRIPTION Depends: R (>= 4.4.0), exercised with exact R 4.4.3",
+      "value": "4.4.0 declaration; 4.4.3 floor probe",
+      "policy": "Project-defined current-plus-two-feature-series compatibility window at the 2026-08-03 decision point. This is not an R Core support promise; review on every R feature release and whenever fixes cannot be supplied on the floor.",
+      "source_refs": [
+        "r-release-4.6.1",
+        "r-writing-extensions-4.6.1",
+        "r-sdlc-2026"
+      ]
+    },
+    {
+      "id": "r-test-tooling",
+      "component": "r-testthat",
+      "candidate": "testthat 3.3.2 on R 4.6.1 and testthat 3.2.3 on R 4.4.3",
+      "value": "3.3.2 development; 3.2.3 floor",
+      "policy": "Keep testthat in Suggests, capture exact recursive test-only package inventories, and update only after both exact runtime jobs pass. Declared licenses were inventoried; no vulnerability-free claim is made.",
+      "source_refs": [
+        "r-writing-extensions-4.6.1",
+        "r-sdlc-2026"
+      ]
+    },
+    {
+      "id": "r-ci-entries",
+      "component": "r-ci",
+      "candidate": "R 4.6.1 on Ubuntu/macOS/Windows plus R 4.4.3 on Ubuntu",
+      "value": "ubuntu-24.04@4.6.1; ubuntu-24.04@4.4.3; macos-15@4.6.1; windows-2025@4.6.1",
+      "policy": "Only Ubuntu 24.04 x86_64 is directly tested. macOS and Windows entries are required validation work, not current support evidence; runner/runtime availability must be rechecked when CI is implemented.",
+      "source_refs": [
+        "cran-policy-r6875",
+        "github-hosted-runners-reference",
+        "github-runner-images-observation"
+      ]
+    }
+  ],
+  "attempts": [
+    {
+      "id": "r-development-4.6.1-package-native",
+      "component": "r",
+      "candidate": "R 4.6.1 with testthat 3.3.2",
+      "platform": {
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS",
+        "architecture": "x86_64",
+        "environment": "direct host; Linux 7.0.0-28-generic; x86_64-pc-linux-gnu; exact 24-package URL+SHA-256-locked CRAN/Archive source closure installed into a fresh library; fresh build/check/install directories under /tmp"
+      },
+      "commands": [
+        ["R", "--version"],
+        ["R", "CMD", "build", "--no-build-vignettes", "docs/research/toolchain-prototypes/r/package"],
+        ["R", "CMD", "check", "--no-manual", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/development/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"],
+        ["R", "CMD", "INSTALL", "--library=/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/development/install-library", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/development/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"],
+        ["Rscript", "--vanilla", "-e", "library(testthat); testthat::test_local(commandArgs(TRUE)[1], reporter = 'summary', stop_on_failure = TRUE)", "docs/research/toolchain-prototypes/r/package"],
+        ["Rscript", "--vanilla", "-e", "library(statqedRToolchainProbe); stopifnot(identical(unclass(probe_identity(11L)), 11L))"]
+      ],
+      "environment_variables": {
+        "R_ENVIRON_USER": "/dev/null",
+        "R_PROFILE_USER": "/dev/null",
+        "R_LIBS_USER": "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/development/test-library",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC"
+      },
+      "dependency_locks": [
+        {"kind": "r-release", "value": "R 4.6.1 (2026-06-24), x86_64-pc-linux-gnu"},
+        {"kind": "testthat", "value": "3.3.2, Repository CRAN, MIT + file LICENSE, built for R 4.6.1"},
+        {"kind": "cran-recursive-source-lock-sha256", "value": "34578de2ad22a24e2ffb1f5584731618f9862a1a063623b6c5523a635a5f9721"},
+        {"kind": "fresh-source-install-transcript-sha256", "value": "eda964d84834f700fdb632e9a7e8c01a0aed8c0ce3651d8489e793ff5d774960"},
+        {"kind": "source-input-digests", "value": "docs/research/toolchain-prototypes/logs/r/run-20260803/development-source-digests.stdout"},
+        {"kind": "built-source-tarball-sha256", "value": "16df23e7292029208612473eae3550c7d6edc4607fa87c30795b07cfe5de4825"}
+      ],
+      "start": "2026-08-03T13:00:05Z",
+      "end": "2026-08-03T13:01:53Z",
+      "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/development-check-tarball.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/development-check-tarball.stderr",
+      "classification": "success",
+      "reason": "A fresh library installed the exact 24-package CRAN/Archive source closure from URL+SHA-256 lock without copying the host library; R CMD build/check (Status: OK), installation, five testthat expectations, and installed smoke passed.",
+      "source_refs": [
+        "r-release-4.6.1",
+        "r-writing-extensions-4.6.1",
+        "cran-policy-r6875"
+      ],
+      "disposition": "recommended",
+      "version_output": "R version 4.6.1 (2026-06-24) -- Happy Hop; platform x86_64-pc-linux-gnu; testthat 3.3.2",
+      "rerun": {
+        "runnable": true,
+        "command": ["docs/research/toolchain-prototypes/r/run-probes.sh", "development"],
+        "cwd": "."
+      }
+    },
+    {
+      "id": "r-floor-4.4.3-package-native",
+      "component": "r-support-floor",
+      "candidate": "R 4.4.3 conda-forge build h14df4e6_4 with testthat 3.2.3 build r44h3697838_2",
+      "platform": {
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS",
+        "architecture": "x86_64",
+        "environment": "isolated conda prefix /tmp/statqed-sq0002-r/envs/r-4.4.3; x86_64-conda-linux-gnu; fresh build/check/install directories under /tmp"
+      },
+      "commands": [
+        ["conda", "create", "--yes", "--solver", "libmamba", "--override-channels", "-c", "conda-forge", "--prefix", "/tmp/statqed-sq0002-r/envs/r-4.4.3", "r-base=4.4.3=h14df4e6_4", "r-testthat=3.2.3=r44h3697838_2"],
+        ["conda", "list", "--prefix", "/tmp/statqed-sq0002-r/envs/r-4.4.3", "--explicit"],
+        ["/tmp/statqed-sq0002-r/envs/r-4.4.3/bin/R", "--version"],
+        ["/tmp/statqed-sq0002-r/envs/r-4.4.3/bin/R", "CMD", "build", "--no-build-vignettes", "docs/research/toolchain-prototypes/r/package"],
+        ["/tmp/statqed-sq0002-r/envs/r-4.4.3/bin/R", "CMD", "check", "--no-manual", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122756-26758/floor/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"],
+        ["/tmp/statqed-sq0002-r/envs/r-4.4.3/bin/R", "CMD", "INSTALL", "--library=/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122756-26758/floor/install-library", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122756-26758/floor/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"],
+        ["/tmp/statqed-sq0002-r/envs/r-4.4.3/bin/Rscript", "--vanilla", "-e", "library(testthat); testthat::test_local(commandArgs(TRUE)[1], reporter = 'summary', stop_on_failure = TRUE)", "docs/research/toolchain-prototypes/r/package"]
+      ],
+      "environment_variables": {
+        "XDG_CACHE_HOME": "/tmp/statqed-sq0002-r/cache",
+        "CONDA_PKGS_DIRS": "/tmp/statqed-sq0002-r/pkgs",
+        "CONDA_ENVS_PATH": "/tmp/statqed-sq0002-r/envs",
+        "R_ENVIRON_USER": "/dev/null",
+        "R_PROFILE_USER": "/dev/null",
+        "R_LIBS_USER": "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122756-26758/floor/empty-user-library",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC"
+      },
+      "dependency_locks": [
+        {"kind": "conda-explicit-lock-all-artifact-sha256", "value": "24a1556b88ff314f0308a0ca9dbd8ea1ec22923c2fd0ebf7c64a595a28d1b8b7"},
+        {"kind": "offline-recreate-transcript-sha256", "value": "46a993026aacb04cf7a32a2159866fc56301bbc877192fb8ea0e13fcfefb37c6"},
+        {"kind": "r-base-conda-artifact-sha256", "value": "b252c6aa0b5c5309035d862a9207654a201f1e81d4e001d146b95dee40f7e124"},
+        {"kind": "r-testthat-conda-artifact-sha256", "value": "72b31f559fa4a0b722f41012a5b979abe1e44104b51d8dc56fa00748237cb8ce"},
+        {"kind": "recursive-package-inventory-sha256", "value": "f8af9e5155f8c6b5b017d5b67c60f798fe71722986d1e5da29502fcfcfe15222"},
+        {"kind": "built-source-tarball-sha256", "value": "d6faa0e0f6f7cc5bc02c4a44ec6f283e19087e491fbde5b71febebc4b8d35b16"}
+      ],
+      "start": "2026-08-03T13:02:59Z",
+      "end": "2026-08-03T13:03:12Z",
+      "exit_status": 0,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/floor-check-tarball.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/floor-check-tarball.stderr",
+      "classification": "success",
+      "reason": "A fresh prefix recreated offline from the full explicit URL+SHA-256 lock; R CMD build, built-tarball check (Status: OK), installation, five expectations, and smoke passed in that recreated prefix.",
+      "source_refs": [
+        "r-writing-extensions-4.6.1",
+        "r-sdlc-2026",
+        "cran-policy-r6875"
+      ],
+      "disposition": "recommended-support-floor",
+      "version_output": "R version 4.4.3 (2025-02-28) -- Trophy Case; platform x86_64-conda-linux-gnu; testthat 3.2.3",
+      "rerun": {
+        "runnable": true,
+        "command": ["docs/research/toolchain-prototypes/r/run-probes.sh", "floor"],
+        "cwd": "."
+      }
+    },
+    {
+      "id": "r-depends-incompatibility-rejection",
+      "component": "r-package-metadata",
+      "candidate": "R 4.6.1 with mutated Depends: R (>= 4.7.0)",
+      "platform": {
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS",
+        "architecture": "x86_64",
+        "environment": "direct host; mutation and all build/check/install outputs confined to a fresh directory under /tmp"
+      },
+      "commands": [
+        ["sed", "-i", "s/Depends: R (>= 4.4.0)/Depends: R (>= 4.7.0)/", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/rejection/statqedRToolchainProbe/DESCRIPTION"],
+        ["R", "CMD", "build", "--no-build-vignettes", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/rejection/statqedRToolchainProbe"],
+        ["R", "CMD", "check", "--no-manual", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/rejection/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"],
+        ["R", "CMD", "INSTALL", "--library=/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/rejection/install-library", "/tmp/statqed-sq0002-r/runs/run-20260803-20260803T122604-9261/rejection/build/statqedRToolchainProbe_0.0.0.9000.tar.gz"]
+      ],
+      "environment_variables": {
+        "R_ENVIRON_USER": "/dev/null",
+        "R_PROFILE_USER": "/dev/null",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC"
+      },
+      "dependency_locks": [
+        {"kind": "r-release", "value": "R 4.6.1 (2026-06-24), x86_64-pc-linux-gnu"},
+        {"kind": "mutated-description-sha256", "value": "c778b99d08355c5a9380a26ee68812f1b275367ff431897b75fec60ae7a07ca0"}
+      ],
+      "start": "2026-08-03T12:26:33Z",
+      "end": "2026-08-03T12:26:35Z",
+      "exit_status": 1,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/rejection-check-tarball.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/rejection-install-tarball.stderr",
+      "classification": "failure",
+      "reason": "Expected genuine incompatibility: both R CMD check installation and direct R CMD INSTALL reject the built tarball because R 4.6.1 does not satisfy Depends: R (>= 4.7.0).",
+      "source_refs": [
+        "r-writing-extensions-4.6.1"
+      ],
+      "disposition": "rejected",
+      "version_output": "R 4.6.1; ERROR: package requires R >= 4.7.0",
+      "rerun": {
+        "runnable": true,
+        "command": ["docs/research/toolchain-prototypes/r/run-probes.sh", "rejection"],
+        "cwd": "."
+      }
+    },
+    {
+      "id": "r-conda-development-build-gap",
+      "component": "r-package-distribution",
+      "candidate": "conda-forge R 4.6.1 plus testthat 3.3.2",
+      "platform": {
+        "os": "Ubuntu",
+        "version": "24.04.4 LTS",
+        "architecture": "x86_64",
+        "environment": "isolated conda 26.3.2 dry-run with libmamba and conda-forge only"
+      },
+      "commands": [["conda", "create", "--dry-run", "--yes", "--solver", "libmamba", "--override-channels", "-c", "conda-forge", "--prefix", "/tmp/statqed-sq0002-r/rejected-r-4.6.1-20260803T130930-13857", "r-base=4.6.1", "r-testthat=3.3.2"]],
+      "environment_variables": {},
+      "dependency_locks": [
+        {"kind": "requested_r_version", "value": "4.6.1"},
+        {"kind": "requested_testthat_version", "value": "3.3.2"}
+      ],
+      "start": "2026-08-03T13:09:30Z",
+      "end": "2026-08-03T13:09:32Z",
+      "exit_status": 1,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/development-conda-unsatisfied.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/development-conda-unsatisfied.stderr",
+      "classification": "failure",
+      "reason": "conda-forge had R 4.6.1 but its available testthat 3.3.2 builds required R 4.4 or 4.5, so the combined environment was unsatisfiable; development test dependencies were instead installed from the SHA-locked CRAN source closure.",
+      "source_refs": ["r-release-4.6.1", "r-writing-extensions-4.6.1"],
+      "disposition": "rejected",
+      "version_output": "LibMambaUnsatisfiableError: testthat 3.3.2 build constraints exclude R 4.6.1",
+      "rerun": {"runnable": false, "unavailable_reason": "Use the explicitly retained conda-development-rejection mode; networked registry state is mutable."}
+    },
+    {
+      "id": "r-4.6.1-macos-unavailable",
+      "component": "r-platform",
+      "candidate": "R 4.6.1 on macOS",
+      "platform": {
+        "os": "macOS",
+        "version": "unavailable",
+        "architecture": "unavailable",
+        "environment": "no macOS host or runner was available to this probe"
+      },
+      "commands": [["not-run", "macOS host unavailable"]],
+      "environment_variables": {},
+      "dependency_locks": [],
+      "start": "2026-08-03T12:28:06Z",
+      "end": "2026-08-03T12:28:06Z",
+      "exit_status": null,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/macos-unavailable.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/macos-unavailable.stderr",
+      "classification": "unknown",
+      "reason": "CRAN policy motivates multi-platform validation but does not establish this package's macOS behavior. Run the identical built-tarball check on an exact official macOS R 4.6.1 runtime before claiming support.",
+      "source_refs": [
+        "cran-policy-r6875",
+        "github-hosted-runners-reference"
+      ],
+      "disposition": "unresolved",
+      "version_output": "not run",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "Requires a macOS host/runner with exact R 4.6.1."
+      }
+    },
+    {
+      "id": "r-4.6.1-windows-unavailable",
+      "component": "r-platform",
+      "candidate": "R 4.6.1 on Windows",
+      "platform": {
+        "os": "Windows",
+        "version": "unavailable",
+        "architecture": "unavailable",
+        "environment": "no Windows host or runner was available to this probe"
+      },
+      "commands": [["not-run", "Windows host unavailable"]],
+      "environment_variables": {},
+      "dependency_locks": [],
+      "start": "2026-08-03T12:28:06Z",
+      "end": "2026-08-03T12:28:06Z",
+      "exit_status": null,
+      "stdout_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/windows-unavailable.stdout",
+      "stderr_path": "docs/research/toolchain-prototypes/logs/r/run-20260803/windows-unavailable.stderr",
+      "classification": "unknown",
+      "reason": "CRAN policy motivates multi-platform validation but does not establish this package's Windows behavior. Run R CMD build/check/install and testthat with exact R 4.6.1 on Windows before claiming support.",
+      "source_refs": [
+        "cran-policy-r6875",
+        "github-hosted-runners-reference"
+      ],
+      "disposition": "unresolved",
+      "version_output": "not run",
+      "rerun": {
+        "runnable": false,
+        "unavailable_reason": "Requires a Windows host/runner with exact R 4.6.1."
+      }
+    }
+  ]
+}

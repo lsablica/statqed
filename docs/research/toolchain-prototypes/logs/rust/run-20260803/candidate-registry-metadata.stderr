@@ -1,0 +1,12 @@
+note: to see how you depend on serde, run `cargo tree --invert serde@1.0.229`
+note: to see how you depend on serde_json, run `cargo tree --invert serde_json@1.0.151`
+note: to see how you depend on arrow, run `cargo tree --invert arrow@59.1.0`
+note: to see how you depend on zip, run `cargo tree --invert zip@7.2.0`
+    Updating crates.io index
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded zip v9.0.0-pre2
+note: to see how you depend on blake3, run `cargo tree --invert blake3@1.8.5`
+note: to see how you depend on sha2, run `cargo tree --invert sha2@0.11.0`
+note: to see how you depend on clap, run `cargo tree --invert clap@4.6.5`
+    Updating crates.io index

@@ -1,0 +1,100 @@
+SQ-0002 Lean/Mathlib/Lake failure transcript
+Evidence date: 2026-08-03 (Europe/Vienna, UTC+02:00)
+
+All failures were retained. Long concurrent success progress was condensed; failing diagnostics are verbatim apart from absolute-path elision and ASCII spelling of Greek metavariables.
+
+== Sandbox tag lookup failure (2026-08-03T13:46:16+02:00) ==
+fatal: unable to access 'https://github.com/leanprover-community/mathlib4.git/': Could not resolve host: github.com
+fatal: unable to access 'https://github.com/leanprover/lean4.git/': Could not resolve host: github.com
+Disposition: expected sandbox-network failure; the identical read-only commands succeeded with approved network access.
+
+== Stale elan candidate discovered by live check ==
+The search index identified v4.2.1, but an isolated v4.2.1 run reported:
+info: Version 4.2.3 of elan is available! Use `elan self update` to update.
+The official GitHub latest-release API was re-queried; v4.2.1 was rejected and v4.2.3 was downloaded and digest-checked.
+
+== Sandbox Lean toolchain install failure ==
+error: error during download
+info: caused by: [6] Could not resolve hostname (Could not resolve host: github.com)
+Disposition: expected sandbox-network failure; the identical install succeeded with approved network access.
+
+== Recommended dependency resolution, first sandbox attempt ==
+info: statqed_lean_probe: no previous manifest, creating one from scratch
+error: external command 'curl' exited with code 6
+error: leanprover-community/mathlib: Reservoir lookup failed
+error: leanprover-community/mathlib: could not materialize package: this may be a transient error or a bug in Lake or Reservoir
+Disposition: expected sandbox-network failure.
+
+== Recommended dependency resolution, first approved clone attempt ==
+info: statqed_lean_probe: no previous manifest, creating one from scratch
+info: leanprover-community/mathlib: cloning https://github.com/leanprover-community/mathlib4
+Observed after command return: no lake-manifest.json; package `.git` had no resolvable HEAD.
+Exit status was not returned by the command harness. Classification: unknown/incomplete, not success.
+
+== Retry after incomplete clone: cache executable stale-link failure ==
+info: mathlib: running post-update hooks
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_getGitCommitHash
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_getAzureDateHeader
+ld.lld: error: undefined symbol: initialize_mathlib_Cache_Requests
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_getRemoteRepo
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_scopeOverride
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_cacheFromOverride
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_resolveRepo
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_getFiles
+ld.lld: error: undefined symbol: lp_mathlib_Cache_Requests_putFiles
+clang: error: linker command failed with exit code 1
+error: build failed
+Disposition: failure preserved. `lake clean mathlib` followed by the same update rebuilt `Cache.Requests:c.o`, linked `cache:exe`, and recovered.
+
+== Prototype proof attempt 1 ==
+error: StatQEDLeanProbe.lean:6:68: unsolved goals
+p : PMF Bool
+|- p true + p false = 1
+'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+error: build failed
+Disposition: rejected proof body; `sorryAx` was caused by elaboration failure and is absent from the successful axiom result.
+
+== Prototype proof attempt 2 ==
+error: Invalid field `isProbabilityMeasure`: The environment does not contain `MeasureTheory.Measure.isProbabilityMeasure`
+'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+error: build failed
+Disposition: rejected proof body.
+
+== Prototype proof attempt 3 ==
+error: Unknown identifier `measure_univ`
+'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+error: build failed
+Disposition: rejected proof body. Namespace qualification fixed the final source.
+
+== Fresh no-binary-cache first clone attempt ==
+info: statqed_lean_no_binary_cache_probe: no previous manifest, creating one from scratch
+info: leanprover-community/mathlib: cloning https://github.com/leanprover-community/mathlib4
+Observed after command return: no manifest and no resolvable checkout HEAD. Exit status was not returned. Classification: unknown/incomplete.
+A retry with the same variables resolved the immutable revision and wrote the manifest; the source build then succeeded.
+
+== Deliberate mismatch: Lean v4.31.0 with Mathlib v4.32.1 commit ==
+Lean candidate: 4.31.0, commit 68218e876d2a38b1985b8590fff244a83c321783
+Mathlib candidate: 520045ab14e26149ee970e2e617ca04b09bde5d6
+Mathlib's own lean-toolchain at that commit: leanprover/lean4:v4.32.1
+
+The no-cache build failed in Mathlib/Init.lean under Lean v4.31.0:
+error: Mathlib/Init.lean:135:41: Invalid field `localEntries`: The environment does not contain `Std.TreeMap.localEntries`
+error: Mathlib/Init.lean:136:29: Invalid field notation: Type of `ls` is not known; cannot resolve field `find?`
+error: Mathlib/Init.lean:142:2: failed to synthesize instance for 'for_in%' notation
+error: Lean exited with code 1
+Some required targets logged failures:
+- Mathlib.Init
+error: build failed
+Exit status: 1
+Disposition: rejected exact mismatch; a Lean-version range/support floor is not valid for this immutable Mathlib revision.
+
+== Adjacent current-pair mismatch exploration (2026-08-05) ==
+Lean candidate: v4.32.1, commit f054605aea4b840552cca2e725580bffd1e1b704
+Mathlib candidate: 905b95818eb32af7874a58b427f50c1711a5e96c
+Mathlib's own lean-toolchain: leanprover/lean4:v4.32.2
+
+Dependency resolution completed under `lake update --keep-toolchain`. An exploratory source compile under the adjacent root toolchain reached 571 of 1710 jobs without yet exposing a compiler diagnostic and was manually interrupted with status 130 to avoid treating partial compilation as compatibility evidence. Classification: unknown partial experiment; no compatibility success is claimed.
+
+The permanent control is therefore not an inferred compiler incompatibility. `verify-probe.sh mismatch` regenerates and compares the exact manifest, reads both toolchain files, and rejects the root v4.32.1 selection because it differs from Mathlib's immutable v4.32.2 requirement. That negative control completed with status 0 only because the expected mismatch was detected.
+
+The altered-manifest control changed the reviewed Mathlib revision to the superseded v4.32.1 commit in a disposable copy. Byte comparison rejected it as expected. No mutated manifest or generated dependency tree was retained.

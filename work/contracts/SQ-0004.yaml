@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0004","title":"Bootstrap Rust reference workspace","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A pinned safe Rust workspace and thin CLI compile, lint, and test from a clean checkout.",
+  "id":"SQ-0004","title":"Bootstrap Rust reference workspace","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A pinned safe Rust workspace and thin CLI compile, lint, and test from a clean checkout.",
   "dependencies":["SQ-0002"],
   "allowed_paths":["backend/**",".github/workflows/rust.yml","docs/implementation/rust-backend.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
   "forbidden_paths":["schemas/**","lean/**","frontends/**"],

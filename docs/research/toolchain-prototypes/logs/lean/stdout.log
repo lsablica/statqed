@@ -1,0 +1,124 @@
+SQ-0002 Lean/Mathlib/Lake probe stdout and informational transcript
+Evidence date: 2026-08-03 (Europe/Vienna, UTC+02:00)
+Worktree: /tmp/statqed-preflight-9bf9922
+Branch: agent/SQ-0002-toolchain-research
+
+== Host and initial availability (2026-08-03T13:46:16+02:00) ==
+Linux lukas-Lenovo-Legion-7-15IMHg05 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul 1 15:50:57 UTC 2 x86_64 GNU/Linux
+Ubuntu 24.04.4 LTS (noble), x86_64
+LANG=C.UTF-8; LC_ALL=C.UTF-8
+elan: not found
+lean: not found
+lake: not found
+
+== Official tag resolution ==
+git ls-remote https://github.com/leanprover-community/mathlib4.git refs/tags/v4.32.1 refs/tags/v4.32.0 refs/tags/v4.31.0
+fabf563a7c95a166b8d7b6efca11c8b4dc9d911f refs/tags/v4.31.0
+81a5d257c8e410db227a6665ed08f64fea08e997 refs/tags/v4.32.0
+520045ab14e26149ee970e2e617ca04b09bde5d6 refs/tags/v4.32.1
+
+git ls-remote https://github.com/leanprover/lean4.git refs/tags/v4.32.0 refs/tags/v4.32.1 refs/tags/v4.31.0
+68218e876d2a38b1985b8590fff244a83c321783 refs/tags/v4.31.0
+8c9756b28d64dab099da31a4c09229a9e6a2ef35 refs/tags/v4.32.0
+f054605aea4b840552cca2e725580bffd1e1b704 refs/tags/v4.32.1
+
+== Isolated installer/toolchain ==
+Official elan v4.2.3 x86_64 Linux archive SHA-256:
+df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+elan-init 4.2.3 (b6cec7e10 2026-06-08)
+elan 4.2.3 (b6cec7e10 2026-06-08)
+
+Lean v4.32.1 install:
+leanprover/lean4:v4.32.1 installed - Lean (version 4.32.1, x86_64-unknown-linux-gnu, commit f054605aea4b840552cca2e725580bffd1e1b704, Release)
+Lean (version 4.32.1, x86_64-unknown-linux-gnu, commit f054605aea4b840552cca2e725580bffd1e1b704, Release)
+Lake version 5.0.0-src+f054605 (Lean version 4.32.1)
+
+Lean v4.31.0 mismatch-candidate install:
+leanprover/lean4:v4.31.0 installed - Lean (version 4.31.0, x86_64-unknown-linux-gnu, commit 68218e876d2a38b1985b8590fff244a83c321783, Release)
+
+== Recommended dependency lock ==
+Mathlib checkout HEAD: 520045ab14e26149ee970e2e617ca04b09bde5d6
+Mathlib lean-toolchain: leanprover/lean4:v4.32.1
+Root lake-manifest.json SHA-256: 4cb47b0ffe066119d123624f018f3e4b736abffddca830f5578aae5a92933502
+Root lean-toolchain SHA-256: 8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af
+
+The recovered `lake update --keep-toolchain` ran Mathlib's post-update hook:
+info: mathlib: running post-update hooks
+Built cache:exe
+Current branch: HEAD
+Using cache from origin: (some leanprover-community/mathlib4)
+Attempting to download 8639 file(s) from leanprover-community/mathlib4 cache at https://lakecache.blob.core.windows.net/mathlib4-master
+
+== Recommended cache-assisted build success (completed 2026-08-03T13:53:22+02:00) ==
+Command: lake build
+Built StatQEDLeanProbe
+PMF.toMeasure.isProbabilityMeasure.{u_1} {alpha : Type u_1} [MeasurableSpace alpha] (p : PMF alpha) :
+  MeasureTheory.IsProbabilityMeasure p.toMeasure
+'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (1710 jobs).
+
+Command: lake env lean StatQEDLeanProbe.lean
+PMF.toMeasure.isProbabilityMeasure.{u_1} {alpha : Type u_1} [MeasurableSpace alpha] (p : PMF alpha) :
+  MeasureTheory.IsProbabilityMeasure p.toMeasure
+'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+== Fresh no-binary-cache result ==
+Environment: MATHLIB_NO_CACHE_ON_UPDATE=1; LAKE_NO_CACHE=1
+Mathlib checkout HEAD: 520045ab14e26149ee970e2e617ca04b09bde5d6
+Root lake-manifest.json written: 2026-08-03T13:56:04.128836659+02:00
+Root lake-manifest.json SHA-256: 9a8dffda84bde64eb08cbb8e3b948ffb85e678016c558a78aee8661810d86a72
+Command: lake build
+Built Mathlib.Probability.ProbabilityMassFunction.Basic
+Built StatQEDLeanNoBinaryCacheProbe
+'StatQEDLeanNoBinaryCacheProbe.pmf_total_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (1710 jobs).
+Final olean written: 2026-08-03T14:06:14.439836352+02:00
+
+== Scope cleanup ==
+Before cleanup:
+- recommended/.lake: 7.4G, 122468 files
+- no-binary-cache/.lake: 2.5G, 33745 files
+- rejected mismatch/.lake: 1.5G, 14197 files
+All three exact generated `.lake` trees were removed after their commands exited.
+Final owned lean-mathlib tree at cleanup checkpoint: 64K, 12 files, no `.lake` directory.
+
+== Currentness correction: exact v4.32.2 pair (2026-08-05) ==
+The earlier v4.32.1 successful pair remains preserved but is superseded as the development recommendation.
+Lean: leanprover/lean4:v4.32.2
+Lean version output: Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+Lake version output: Lake version 5.0.0-src+f3b06c7 (Lean version 4.32.2)
+Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c
+Elan archive SHA-256: df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+
+Regenerated manifest comparison:
+- recommended: ff2ecf31ced1cb1cff770a54d281c92a9c6bd9fa3826b243eac4dac2d5dca93f
+- no-binary-cache: 0dc9be6725815434799a9ed732f335924ac4daf6f9ff38c59bae4ed2cd8be73c
+- adjacent mismatch control: 0a30181171c157d4034b6e286b30dc79420c39d2010f4ff25940bb1369393637
+The recommended manifest was independently regenerated in a new directory and compared byte-for-byte.
+
+Fresh no-binary-cache source build:
+- manifest written: 2026-08-05T20:01:59+02:00
+- final root olean written: 2026-08-05T20:12:29+02:00
+- imported: Mathlib.Probability.ProbabilityMassFunction.Basic
+- result: Build completed successfully (1710 jobs).
+- axiom output: 'StatQEDLeanProbe.pmf_total_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+- no `sorryAx` appeared in the successful output.
+The committed no-binary-cache fixture was then built against the same freshly source-built immutable graph and emitted:
+'StatQEDLeanNoBinaryCacheProbe.pmf_total_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+Separate binary-cache path:
+- cache executable built successfully;
+- first endpoint https://lakecache.blob.core.windows.net/mathlib4-master: 0 of 8639 files found;
+- automatic fallback https://lakecache.blob.core.windows.net/mathlib4: 8639 of 8639 files downloaded and decompressed;
+- cached build and direct `lake env lean StatQEDLeanProbe.lean` both succeeded with the exact axiom output above.
+
+Permanent negative controls:
+- altered Mathlib revision in a disposable manifest was rejected by byte comparison;
+- root lean-toolchain v4.32.1 was rejected against Mathlib's immutable required lean-toolchain v4.32.2;
+- the owned verifier regenerated the mismatch manifest in a disposable directory and compared it byte-for-byte before rejecting the pair;
+- an absent prepared Elan home returns status 77, not a successful-test result.
+
+Currentness rerun cleanup:
+- the 7.7G cache-assisted/source build tree was removed before the mismatch control;
+- each owned verifier attempt used and removed /tmp/statqed-sq0002-lean-probe.*;
+- the remaining mismatch exploration and isolated Elan preparation were removed after evidence capture.

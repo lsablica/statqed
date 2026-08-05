@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+    "--startup-file=no",
+    "--history-file=no",
+    "--project=/tmp/statqed-julia-1.10.11-5iv2181g/project",
+    "-e",
+    "using Pkg; Pkg.resolve()"
+  ],
+  "cwd": "/tmp/statqed-preflight-9bf9922",
+  "end": "2026-08-03T12:38:25.352954+00:00",
+  "environment_variables": {
+    "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.10.11-5iv2181g/depot",
+    "JULIA_LOAD_PATH": "@:@stdlib",
+    "JULIA_NUM_THREADS": "1",
+    "JULIA_PKG_OFFLINE": "true",
+    "JULIA_PKG_PRECOMPILE_AUTO": "0",
+    "JULIA_PKG_SERVER": "",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8"
+  },
+  "exit_status": 0,
+  "id": "resolve",
+  "start": "2026-08-03T12:38:24.281997+00:00",
+  "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T124500Z/floor-lts-julia-1-10-11-linux-x86-64-resolve.stderr",
+  "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T124500Z/floor-lts-julia-1-10-11-linux-x86-64-resolve.stdout"
+}

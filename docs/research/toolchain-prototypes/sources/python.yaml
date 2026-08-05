@@ -1,0 +1,49 @@
+{
+  "audit_id": "SA-SQ0002-PYTHON",
+  "subject": "Python packaging and support baseline",
+  "source": {
+    "work": "CPython 3.14.6 tested-pin release, CPython 3.14.7 current release, python-build-standalone 20260805 runtime artifact, CPython 3.11.15 support-floor release, developer branch-status table, and Python Packaging User Guide",
+    "version": "tested pin CPython v3.14.6; current release v3.14.7 at 2026-08-05 refresh; python-build-standalone 20260805; floor candidate CPython v3.11.15",
+    "locator": "https://www.python.org/downloads/release/python-3146/; https://www.python.org/downloads/release/python-3147/; https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20260805; https://github.com/astral-sh/python-build-standalone/releases/download/20260805/cpython-3.14.7%2B20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz; https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/LICENSE; https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/python-licenses.rst; https://www.python.org/downloads/release/python-31115/; https://github.com/python/cpython/releases/tag/v3.11.15; https://devguide.python.org/versions/; https://packaging.python.org/en/latest/guides/writing-pyproject-toml/",
+    "persistent_id": "cpython:v3.14.6@c63aec69bd59c55314c06c23f4c22c03de76fe45; cpython:v3.11.15@2340a037f7450e70fccfe411e6531afb4d57a312; Python-3.14.7.tar.xz sha256 3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81; python-build-standalone:20260805@76b41240bc8dfe753a54b2e32c8941e536568be8; cpython-3.14.7+20260805-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz sha256 a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9"
+  },
+  "controlled_statement": "CPython 3.14.6 was the exact development runtime tested at the original 2026-08-03 cutoff. The official Python release page now marks 3.14.6 superseded by 3.14.7, released 2026-08-05. The Astral 20260805 release supplies an exact x86-64 GNU/Linux CPython 3.14.7 runtime asset, but its source identity and digest do not establish a successful StatQED probe; execution evidence is recorded separately. CPython 3.11.15 is the exact source-only security release used to exercise the proposed Python 3.11 package-support floor. pyproject.toml and requires-python declare build and interpreter constraints, while actual supported combinations require tests.",
+  "hypotheses": [
+    {"name": "python_original_tested_pin", "class": "source_explicit", "source_anchor": "https://www.python.org/downloads/release/python-3146/", "notes": "Python 3.14.6 was released 2026-06-10. Its official page now explicitly says it has been superseded by Python 3.14.7; the immutable tested tag is c63aec69bd59c55314c06c23f4c22c03de76fe45."},
+    {"name": "python_current_stable_refresh", "class": "source_explicit", "source_anchor": "https://www.python.org/downloads/release/python-3147/", "notes": "Python 3.14.7 was released 2026-08-05. The official source page publishes SHA-256 3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81 for the XZ source tarball."},
+    {"name": "python_build_standalone_20260805_runtime", "class": "source_explicit", "source_anchor": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20260805", "notes": "The official release API identifies tag 20260805 at target commit 76b41240bc8dfe753a54b2e32c8941e536568be8 and the exact x86_64-unknown-linux-gnu CPython 3.14.7 install-only stripped asset with SHA-256 a3a4e4b81b138960c7c546694df8a77578c0b6aa46d47e96f49b9e10e8f860c9 and size 35,931,360 bytes. The tagged project license is MPL-2.0; redistribution of the produced runtime must also preserve CPython and bundled-component notices."},
+    {"name": "managed_runtime_executes_statqed_probe", "class": "formalization_obligation", "source_anchor": "", "notes": "A release record and asset digest establish provenance, not runtime compatibility. The matrix and retained probe logs must state the actual command, platform, result, and digest verification."},
+    {"name": "scheduled_release_is_available_at_original_cutoff", "class": "strengthening_unjustified", "source_anchor": "https://peps.python.org/pep-0745/#schedule", "notes": "At the August 3 cutoff, PEP 745 was a schedule rather than a release artifact. The August 5 release resolves currentness prospectively but does not rewrite the original probe chronology."},
+    {"name": "python_floor_release", "class": "source_explicit", "source_anchor": "https://www.python.org/downloads/release/python-31115/", "notes": "CPython 3.11.15 was released 2026-03-03 as a source-only security release. The signed Git tag resolves to 2340a037f7450e70fccfe411e6531afb4d57a312; the official XZ source SHA-256 is 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625."},
+    {"name": "python_3_11_is_project_support_floor", "class": "formalization_obligation", "source_anchor": "", "notes": "Choosing 3.11 as StatQED's minimum is downstream policy, not a CPython promise. It requires package build/install/test evidence and periodic security review."},
+    {"name": "python_support_phases", "class": "source_explicit", "source_anchor": "https://devguide.python.org/versions/#supported-versions", "notes": "3.11 is in security-fixes-only status. The 3.11.15 release page states releases are irregular and source-only until October 2027; regular binary installers are no longer provided."},
+    {"name": "requires_python_is_minimum_constraint", "class": "source_explicit", "source_anchor": "https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#requires-python", "notes": "The field states supported Python versions; it does not itself execute a compatibility test."},
+    {"name": "declared_python_range_works", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by package build/install/test evidence over the declared CI matrix."}
+  ],
+  "variants": [
+    {"name": "release_state", "source_variant": "3.14.7 scheduled but unavailable at the August 3 cutoff", "controlled_variant": "3.14.7 officially released on August 5 with a separately sourced and separately probed managed runtime", "reason": "A dated source audit must preserve both the original execution state and the later currentness correction without importing a prototype result into source evidence."},
+    {"name": "runtime_distribution", "source_variant": "python.org publishes the upstream CPython source release", "controlled_variant": "Astral publishes platform-specific managed runtime archives", "reason": "The upstream release establishes CPython lineage; the locked third-party archive establishes the executed binary provenance; the probe establishes compatibility."},
+    {"name": "floor_distribution", "source_variant": "3.11.15 official source-only security release", "controlled_variant": "separately locked platform-specific managed runtime used by the floor prototype", "reason": "The official release artifact does not establish the provenance or compatibility of a third-party binary distribution."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "requires-python", "project_concept": "declared interpreter support range", "caveat": "Metadata constraint, not compatibility evidence."},
+    {"source_concept": "security-fixes-only branch", "project_concept": "candidate support floor", "caveat": "Upstream source maintenance does not guarantee binary availability or package compatibility on any platform."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["The signed v3.11.15 Git tag resolves to 2340a037f7450e70fccfe411e6531afb4d57a312, and the official release page publishes source checksums."],
+  "strengthenings": [],
+  "weakenings": ["Describe security-phase Python branches as source-only unless a specific platform binary is evidenced.", "Keep 3.14.6 as the exact historical tested pin and 3.14.7 as the current source release; make any 3.14.7 recommendation depend on its own separately recorded probe rather than inheriting the 3.14.6 result."],
+  "attribution": [
+    {"work": "Python 3.11.15 release", "locator": "https://www.python.org/downloads/release/python-31115/", "role": "support-floor source release, security status, and immutable source checksums"},
+    {"work": "Python 3.14.7 release", "locator": "https://www.python.org/downloads/release/python-3147/", "role": "August 5 currentness correction"},
+    {"work": "python-build-standalone 20260805 release", "locator": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20260805", "role": "exact managed-runtime asset, digest, size, target commit, and publication timestamp"},
+    {"work": "python-build-standalone 20260805 license", "locator": "https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/LICENSE", "role": "immutable MPL-2.0 project license; bundled runtime notices remain separate obligations"},
+    {"work": "python-build-standalone bundled application licenses", "locator": "https://raw.githubusercontent.com/astral-sh/python-build-standalone/20260805/python-licenses.rst", "role": "immutable license notices for software distributed with the bundled application"},
+    {"work": "Python Packaging flow", "locator": "https://packaging.python.org/en/latest/flow/", "role": "sdist/wheel and pyproject workflow"},
+    {"work": "PEP 517", "locator": "https://peps.python.org/pep-0517/", "role": "build-system interface"},
+    {"work": "Python security policy", "locator": "https://devguide.python.org/security/policy/", "role": "supported security-report branches"},
+    {"work": "Python license", "locator": "https://docs.python.org/3/license.html", "role": "PSF License v2 and documentation-code licensing"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

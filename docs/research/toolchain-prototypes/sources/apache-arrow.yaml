@@ -1,0 +1,46 @@
+{
+  "audit_id": "SA-SQ0002-ARROW",
+  "subject": "Apache Arrow format and implementation baseline",
+  "source": {
+    "work": "Apache Arrow 25.0.0 release and format documentation, PyArrow 25.0.0 registry metadata, and arrow-rs 59.1.0 registry/source metadata",
+    "version": "Apache Arrow/PyArrow 25.0.0; arrow-rs arrow crate 59.1.0; records retrieved 2026-08-03 and 2026-08-05 as itemized in sources.json",
+    "locator": "https://arrow.apache.org/release/25.0.0.html; https://arrow.apache.org/docs/format/Versioning.html; https://arrow.apache.org/docs/status.html; https://pypi.org/project/pyarrow/25.0.0/; https://crates.io/crates/arrow/59.1.0; https://github.com/apache/arrow-rs/tree/59.1.0",
+    "persistent_id": "apache-arrow-25.0.0@59bea6e; PyPI pyarrow==25.0.0; crates.io arrow@59.1.0 checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b"
+  },
+  "controlled_statement": "Apache Arrow 25.0.0 and its PyArrow 25.0.0 distribution were current release candidates observed at the original cutoff. PyPI identifies PyArrow 25.0.0 as Apache-2.0, requiring Python >=3.10, and as the Python API over Arrow C++. crates.io identifies the separately versioned native Rust arrow crate 59.1.0 as Apache-2.0, Edition 2024, rust-version 1.85, and checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b. Arrow format versioning is independent from library versions, and implementation coverage differs by language. A prototype can establish only behavior for the exact locked libraries, features, fixtures, and host; it cannot establish StatQED logical-data identity, canonical digests, scientific semantics, or a fully independent oracle.",
+  "hypotheses": [
+    {"name": "arrow_current_release", "class": "source_explicit", "source_anchor": "https://github.com/apache/arrow/releases/tag/apache-arrow-25.0.0", "notes": "Immutable release dated 2026-07-10, short tag commit 59bea6e."},
+    {"name": "pyarrow_exact_candidate", "class": "source_explicit", "source_anchor": "https://pypi.org/project/pyarrow/25.0.0/", "notes": "PyPI records release 25.0.0 dated 2026-07-10, Apache-2.0, Requires-Python >=3.10, and wheels for explicitly listed interpreter/platform combinations. The executed wheel hash is separate prototype evidence."},
+    {"name": "arrow_rs_exact_candidate", "class": "source_explicit", "source_anchor": "https://crates.io/crates/arrow/59.1.0", "notes": "Official crates.io metadata records arrow 59.1.0, Apache-2.0, rust-version 1.85, Edition 2024, repository apache/arrow-rs, publication 2026-07-07, and immutable crate checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b."},
+    {"name": "format_library_versions_are_separate", "class": "source_explicit", "source_anchor": "https://arrow.apache.org/docs/format/Versioning.html#format-and-library-versioning", "notes": "Libraries use semantic versions; Arrow format has its own version identifiers and compatibility rules."},
+    {"name": "all_bindings_have_same_features", "class": "strengthening_unjustified", "source_anchor": "https://arrow.apache.org/docs/status.html", "notes": "The official status table has materially different Rust and Julia coverage, including Julia gaps for multiple types, C interfaces, and Parquet."},
+    {"name": "pyarrow_and_arrow_rs_are_independent_authorities", "class": "strengthening_unjustified", "source_anchor": "https://github.com/apache/arrow-rs/tree/59.1.0", "notes": "They are separately implemented C++/Python and Rust code lineages, useful for differential testing, but both are Apache Arrow projects. That is not organizationally independent oracle provenance."},
+    {"name": "untrusted_arrow_is_safe_without_validation", "class": "strengthening_unjustified", "source_anchor": "https://arrow.apache.org/docs/format/Security.html", "notes": "Arrow warns invalid data may crash or leak data and explicitly recommends validation; the C Data Interface must not be consumed from an untrusted producer."},
+    {"name": "arrow_defines_statqed_logical_identity", "class": "not_applicable", "source_anchor": "", "notes": "Arrow is a candidate transport. StatQED's logical-data identity and digest domain are separate project semantics."},
+    {"name": "binding_round_trip_preserves_project_values", "class": "formalization_obligation", "source_anchor": "", "notes": "Requires typed cross-language fixtures and byte/log evidence for the exact chosen subset."},
+    {"name": "repeat_equal_bytes_are_canonical", "class": "strengthening_unjustified", "source_anchor": "", "notes": "Repeatability in one process/build is only an observable prototype result. Neither registry metadata nor the format source promotes it to canonical StatQED bytes."}
+  ],
+  "variants": [
+    {"name": "implementation_coverage", "source_variant": "Rust supports C Data/Stream and Parquet in the v25 status table", "controlled_variant": "Julia cells are blank for those interfaces/features", "reason": "Record the official per-binding status rather than collapsing it to an Arrow-wide claim."},
+    {"name": "implementation_lineage", "source_variant": "PyArrow 25.0.0 over Arrow C++", "controlled_variant": "native arrow-rs arrow 59.1.0", "reason": "Different implementation and version lineages can provide differential evidence, but shared Apache governance must remain explicit."},
+    {"name": "version_sequence", "source_variant": "Apache Arrow/PyArrow 25.0.0", "controlled_variant": "arrow-rs 59.1.0 and Arrow IPC metadata versions", "reason": "Library and format version numbers are not interchangeable."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Arrow IPC file/stream", "project_concept": "candidate tabular transport", "caveat": "Transport versioning and structural validation do not define application-level data identity."},
+    {"source_concept": "PyArrow Table.validate(full=True) or arrow-rs checked RecordBatch construction", "project_concept": "candidate structural checks", "caveat": "These APIs do not establish resource bounds, parser safety, or StatQED semantic validity."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["PyPI publishes PyArrow 25.0.0 artifacts for CPython 3.10 through 3.14 on listed hosts.", "crates.io publishes arrow 59.1.0 with rust-version 1.85 and immutable crate checksum b952ca5a8046ad741b60f142d6eca4aeebcad615694202bc64c5341f23e32c5b."],
+  "strengthenings": [],
+  "weakenings": ["Limit any recommendation to an explicitly tested common type/IPC subset.", "Describe PyArrow/arrow-rs as distinct implementation lineages, not an independently governed normative oracle."],
+  "attribution": [
+    {"work": "PyArrow 25.0.0", "locator": "https://pypi.org/project/pyarrow/25.0.0/", "role": "exact Python binding version, API lineage, license, Python floor, publication date, and artifact inventory"},
+    {"work": "arrow-rs arrow 59.1.0", "locator": "https://crates.io/crates/arrow/59.1.0", "role": "exact Rust implementation version, license, Rust floor, feature metadata, publication date, and crate checksum"},
+    {"work": "arrow-rs 59.1.0 source", "locator": "https://github.com/apache/arrow-rs/tree/59.1.0", "role": "official immutable source tag and separate Rust implementation lineage"},
+    {"work": "Arrow security", "locator": "https://arrow.apache.org/docs/format/Security.html", "role": "validation and trust-boundary limitations"},
+    {"work": "Apache Arrow security reporting", "locator": "https://arrow.apache.org/security/", "role": "official vulnerability reporting/advisory route"},
+    {"work": "Apache Arrow 25.0.0 license", "locator": "https://raw.githubusercontent.com/apache/arrow/apache-arrow-25.0.0/LICENSE.txt", "role": "Apache-2.0 project license plus bundled third-party notices"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

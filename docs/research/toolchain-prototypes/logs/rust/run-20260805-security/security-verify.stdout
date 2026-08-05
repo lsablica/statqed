@@ -1,0 +1,3 @@
+verified dependency-license inventory: 128 packages (127 registry + 1 local)
+Rust crate-graph security probe passed: cargo-audit 0.22.2, immutable RustSec snapshot, 128 locked packages
+Scope: this result covers the locked crate graph only; it does not assess rustc, Cargo, rustup, the operating system, or unmodeled native libraries.

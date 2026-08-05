@@ -1,0 +1,299 @@
+[
+  {
+    "candidate": "1.12.6",
+    "classification": "candidate_failure",
+    "commands": [
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--version"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+        "-e",
+        "using InteractiveUtils; versioninfo(verbose=true); println(\"Sys.MACHINE=\", Sys.MACHINE); println(\"Sys.KERNEL=\", Sys.KERNEL)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+        "-e",
+        "using Pkg; Pkg.instantiate(; verbose=true)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+        "-e",
+        "using Pkg; Pkg.precompile(; strict=true)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+        "-e",
+        "using Pkg; Pkg.test(; coverage=false)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+        "-e",
+        "using Pkg; Pkg.status(; mode=Pkg.PKGMODE_PROJECT); Pkg.status(; mode=Pkg.PKGMODE_MANIFEST)"
+      ]
+    ],
+    "component": "Julia/Pkg",
+    "dependency_locks": {
+      "manifest_toml": null,
+      "manifest_toml_sha256": null,
+      "project_toml": "docs/research/toolchain-prototypes/julia/Project.toml",
+      "project_toml_sha256": "1334c37d0bfb10aa46f45a40f6536ed1d05ce6addbf7e1206fc6696531995047",
+      "registry_packages": [],
+      "runtime_archive": "/tmp/julia-1.12.6-linux-x86_64.tar.gz",
+      "runtime_archive_sha256": "bbabf3bef19421a9dbd24a767d807606ab85e444323b5a1c73ffe293fa3d079a",
+      "stdlib_dependencies": [
+        "SHA",
+        "Test"
+      ]
+    },
+    "disposition": "rejected",
+    "end": "2026-08-03T12:28:25.869587+00:00",
+    "environment_variables": {
+      "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.12.6-bcq97lt3/depot",
+      "JULIA_LOAD_PATH": "@:@stdlib",
+      "JULIA_NUM_THREADS": "1",
+      "JULIA_PKG_OFFLINE": "true",
+      "JULIA_PKG_PRECOMPILE_AUTO": "0",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "exit_status": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    "id": "development-julia-1-12-6-linux-x86-64",
+    "platform": {
+      "architecture": "x86_64",
+      "directly_tested": true,
+      "kernel": "Linux 7.0.0-28-generic",
+      "libc": "glibc 2.39",
+      "locale": "C.UTF-8",
+      "os": "Ubuntu 24.04.4 LTS"
+    },
+    "reason": "At least one package-native command failed; inspect command logs.",
+    "rerun": {
+      "cache": "empty per-candidate depot; later commands reuse only caches created by earlier commands in this same attempt",
+      "command": [
+        "python3",
+        "docs/research/toolchain-prototypes/julia/run_probes.py",
+        "--run-id",
+        "<new-run-id>"
+      ],
+      "fresh_working_directory": "/tmp/statqed-julia-1.12.6-bcq97lt3/project",
+      "isolated_empty_depot_at_start": "/tmp/statqed-julia-1.12.6-bcq97lt3/depot",
+      "locally_runnable": true,
+      "network": "disabled by JULIA_PKG_OFFLINE=true and sandbox isolation"
+    },
+    "source_refs": [
+      "julia-support-policy",
+      "julia-release-v1.12.6",
+      "julia-release-v1.10.11",
+      "julia-pkg-toml",
+      "julia-pkg-registries"
+    ],
+    "start": "2026-08-03T12:26:25.665209+00:00",
+    "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/development-julia-1-12-6-linux-x86-64.stderr",
+    "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/development-julia-1-12-6-linux-x86-64.stdout",
+    "version_output": "julia version 1.12.6"
+  },
+  {
+    "candidate": "1.10.11",
+    "classification": "candidate_failure",
+    "commands": [
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--version"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project",
+        "-e",
+        "using InteractiveUtils; versioninfo(verbose=true); println(\"Sys.MACHINE=\", Sys.MACHINE); println(\"Sys.KERNEL=\", Sys.KERNEL)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project",
+        "-e",
+        "using Pkg; Pkg.instantiate(; verbose=true)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project",
+        "-e",
+        "using Pkg; Pkg.precompile(; strict=true)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project",
+        "-e",
+        "using Pkg; Pkg.test(; coverage=false)"
+      ],
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.10.11/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-julia-1.10.11-2_2znva3/project",
+        "-e",
+        "using Pkg; Pkg.status(; mode=Pkg.PKGMODE_PROJECT); Pkg.status(; mode=Pkg.PKGMODE_MANIFEST)"
+      ]
+    ],
+    "component": "Julia/Pkg",
+    "dependency_locks": {
+      "manifest_toml": null,
+      "manifest_toml_sha256": null,
+      "project_toml": "docs/research/toolchain-prototypes/julia/Project.toml",
+      "project_toml_sha256": "1334c37d0bfb10aa46f45a40f6536ed1d05ce6addbf7e1206fc6696531995047",
+      "registry_packages": [],
+      "runtime_archive": "/tmp/julia-1.10.11-linux-x86_64.tar.gz",
+      "runtime_archive_sha256": "fb49c6b174600cd2051e37ba3f7330f8acf06dd00bce609bab6611387fdb37bf",
+      "stdlib_dependencies": [
+        "SHA",
+        "Test"
+      ]
+    },
+    "disposition": "rejected",
+    "end": "2026-08-03T12:28:59.409899+00:00",
+    "environment_variables": {
+      "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.10.11-2_2znva3/depot",
+      "JULIA_LOAD_PATH": "@:@stdlib",
+      "JULIA_NUM_THREADS": "1",
+      "JULIA_PKG_OFFLINE": "true",
+      "JULIA_PKG_PRECOMPILE_AUTO": "0",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "exit_status": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    "id": "floor-lts-julia-1-10-11-linux-x86-64",
+    "platform": {
+      "architecture": "x86_64",
+      "directly_tested": true,
+      "kernel": "Linux 7.0.0-28-generic",
+      "libc": "glibc 2.39",
+      "locale": "C.UTF-8",
+      "os": "Ubuntu 24.04.4 LTS"
+    },
+    "reason": "At least one package-native command failed; inspect command logs.",
+    "rerun": {
+      "cache": "empty per-candidate depot; later commands reuse only caches created by earlier commands in this same attempt",
+      "command": [
+        "python3",
+        "docs/research/toolchain-prototypes/julia/run_probes.py",
+        "--run-id",
+        "<new-run-id>"
+      ],
+      "fresh_working_directory": "/tmp/statqed-julia-1.10.11-2_2znva3/project",
+      "isolated_empty_depot_at_start": "/tmp/statqed-julia-1.10.11-2_2znva3/depot",
+      "locally_runnable": true,
+      "network": "disabled by JULIA_PKG_OFFLINE=true and sandbox isolation"
+    },
+    "source_refs": [
+      "julia-support-policy",
+      "julia-release-v1.12.6",
+      "julia-release-v1.10.11",
+      "julia-pkg-toml",
+      "julia-pkg-registries"
+    ],
+    "start": "2026-08-03T12:28:26.234510+00:00",
+    "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/floor-lts-julia-1-10-11-linux-x86-64.stderr",
+    "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/floor-lts-julia-1-10-11-linux-x86-64.stdout",
+    "version_output": "julia version 1.10.11"
+  },
+  {
+    "candidate": "Julia 1.12.6 against [compat] julia = \"1.13\"",
+    "classification": "expected_rejection",
+    "commands": [
+      [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/julia/rejected-compat",
+        "-e",
+        "using Pkg; Pkg.resolve()"
+      ]
+    ],
+    "component": "Julia/Pkg",
+    "dependency_locks": {
+      "manifest_toml": null,
+      "project_toml": "docs/research/toolchain-prototypes/julia/rejected-compat/Project.toml",
+      "project_toml_sha256": "8b56ed5855487536581830d59a8d55ef33b7ad5a36a73ccde012dab467a8d95b",
+      "runtime_archive_sha256": "bbabf3bef19421a9dbd24a767d807606ab85e444323b5a1c73ffe293fa3d079a"
+    },
+    "disposition": "rejected",
+    "end": "2026-08-03T12:29:01.627835+00:00",
+    "environment_variables": {
+      "JULIA_DEPOT_PATH": "/tmp/statqed-julia-1.12.6-bcq97lt3/depot",
+      "JULIA_LOAD_PATH": "@:@stdlib",
+      "JULIA_NUM_THREADS": "1",
+      "JULIA_PKG_OFFLINE": "true",
+      "JULIA_PKG_PRECOMPILE_AUTO": "0",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8"
+    },
+    "exit_status": 1,
+    "id": "rejected-julia-1-12-6-requires-1-13",
+    "platform": {
+      "architecture": "x86_64",
+      "directly_tested": true,
+      "kernel": "Linux 7.0.0-28-generic",
+      "libc": "glibc 2.39",
+      "locale": "C.UTF-8",
+      "os": "Ubuntu 24.04.4 LTS"
+    },
+    "reason": "Pkg.resolve rejected the active project because its Julia compat range excludes the running Julia version.",
+    "rerun": {
+      "command": [
+        "/tmp/statqed-julia-runtimes/julia-1.12.6/bin/julia",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project=/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/julia/rejected-compat",
+        "-e",
+        "using Pkg; Pkg.resolve()"
+      ],
+      "expected_diagnostic": "compat entry \"julia = 1.13\" does not include Julia version 1.12.6",
+      "expected_exit_status": "nonzero",
+      "locally_runnable": true
+    },
+    "source_refs": [
+      "julia-pkg-toml"
+    ],
+    "start": "2026-08-03T12:28:59.411176+00:00",
+    "stderr_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/rejected-julia-1-12-6-requires-1-13.stderr",
+    "stdout_path": "docs/research/toolchain-prototypes/logs/julia/run-20260803T122700Z/rejected-julia-1-12-6-requires-1-13.stdout",
+    "version_output": "julia version 1.12.6"
+  }
+]

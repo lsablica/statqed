@@ -1,0 +1,6 @@
+WARNING conda.core.path_actions:verify(1136): Unable to create environments file. Path not writable.
+  environment location: /home/lukas/.conda/environments.txt
+
+WARNING conda.core.envs_manager:register_env(86): Unable to register environment. Path not writable or missing.
+  environment location: /tmp/statqed-sq0002-r/recreated-r-4.4.3-20260803T130259-12942
+  registry file: /home/lukas/.conda/environments.txt

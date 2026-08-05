@@ -1,0 +1,17 @@
+{
+  "id": "arrow-pyarrow25-arrow-rs59-cross-lineage-hardened",
+  "command": [
+    "/usr/bin/bash",
+    "/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/arrow/verify-probe.sh"
+  ],
+  "cwd": "docs/research/toolchain-prototypes/arrow",
+  "environment": {
+    "CARGO_NET_OFFLINE": "true",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PYTHONHASHSEED": "0"
+  },
+  "started_at": "2026-08-05T18:37:42+00:00",
+  "ended_at": "2026-08-05T18:38:32+00:00",
+  "exit_status": 0
+}

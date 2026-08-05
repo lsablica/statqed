@@ -1,0 +1,93 @@
+  Installing known registries into `/tmp/statqed-julia-1.12.6-6vorwxia/depot`
+     Cloning registry from "https://github.com/JuliaRegistries/General.git"
+ERROR: failed to clone from https://github.com/JuliaRegistries/General.git, error: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] pkgerror(msg::String)
+    @ Pkg.Types /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Types.jl:68
+  [2] clone(io::IOContext{IO}, url::String, source_path::String; header::String, credentials::Nothing, isbare::Bool, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/GitTools.jl:139
+  [3] (::Base.var"#46#47"{Base.var"#48#49"{Vector{Float64}, Pkg.Registry.var"#download_registries##6#download_registries##7", typeof(Pkg.GitTools.clone)}})(::IOContext{IO}, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:309
+  [4] #46
+    @ ./error.jl:304 [inlined]
+  [5] (::Pkg.Registry.var"#download_registries##4#download_registries##5"{RegistrySpec, Nothing, IOContext{IO}, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:262
+  [6] mktempdir(fn::Pkg.Registry.var"#download_registries##4#download_registries##5"{RegistrySpec, Nothing, IOContext{IO}, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:936
+  [7] mktempdir (repeats 2 times)
+    @ ./file.jl:932 [inlined]
+  [8] (::Pkg.Registry.var"#download_registries##0#download_registries##1"{IOContext{IO}, Vector{RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:224
+  [9] mkpidlock(f::Pkg.Registry.var"#download_registries##0#download_registries##1"{IOContext{IO}, Vector{RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:96
+ [10] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:93 [inlined]
+ [11] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:91 [inlined]
+ [12] download_registries(io::IOContext{IO}, regs::Vector{RegistrySpec}, depots::Vector{String})
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:188
+ [13] download_default_registries(io::IOContext{IO}; only_if_empty::Bool, depots::Vector{String})
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:128
+ [14] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:112 [inlined]
+ [15] test(pkgs::Vector{PackageSpec}; io::IOContext{IO}, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/API.jl:159
+ [16] test(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::PackageMode, subdir::Nothing, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/API.jl:186
+ [17] top-level scope
+    @ none:1
+ [18] eval(m::Module, e::Any)
+    @ Core ./boot.jl:489
+ [19] exec_options(opts::Base.JLOptions)
+    @ Base ./client.jl:283
+ [20] _start()
+    @ Base ./client.jl:550
+
+caused by: GitError(Code:ERROR, Class:Net, failed to resolve address for github.com: Temporary failure in name resolution)
+Stacktrace:
+  [1] macro expansion
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/LibGit2/src/error.jl:124 [inlined]
+  [2] clone(repo_url::SubString{String}, repo_path::String, clone_opts::LibGit2.CloneOptions)
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/LibGit2/src/repository.jl:470
+  [3] clone(repo_url::SubString{String}, repo_path::String; branch::String, isbare::Bool, remote_cb::Ptr{Nothing}, credentials::LibGit2.CachedCredentials, callbacks::Dict{Symbol, Tuple{Ptr{Nothing}, Any}})
+    @ LibGit2 /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/LibGit2/src/LibGit2.jl:584
+  [4] clone
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/LibGit2/src/LibGit2.jl:557 [inlined]
+  [5] clone(io::IOContext{IO}, url::String, source_path::String; header::String, credentials::Nothing, isbare::Bool, kwargs::@Kwargs{})
+    @ Pkg.GitTools /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/GitTools.jl:128
+  [6] (::Base.var"#46#47"{Base.var"#48#49"{Vector{Float64}, Pkg.Registry.var"#download_registries##6#download_registries##7", typeof(Pkg.GitTools.clone)}})(::IOContext{IO}, ::Vararg{Any}; kwargs::@Kwargs{header::String})
+    @ Base ./error.jl:309
+  [7] #46
+    @ ./error.jl:304 [inlined]
+  [8] (::Pkg.Registry.var"#download_registries##4#download_registries##5"{RegistrySpec, Nothing, IOContext{IO}, String})(tmp::String)
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:262
+  [9] mktempdir(fn::Pkg.Registry.var"#download_registries##4#download_registries##5"{RegistrySpec, Nothing, IOContext{IO}, String}, parent::String; prefix::String)
+    @ Base.Filesystem ./file.jl:936
+ [10] mktempdir (repeats 2 times)
+    @ ./file.jl:932 [inlined]
+ [11] (::Pkg.Registry.var"#download_registries##0#download_registries##1"{IOContext{IO}, Vector{RegistrySpec}, String})()
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:224
+ [12] mkpidlock(f::Pkg.Registry.var"#download_registries##0#download_registries##1"{IOContext{IO}, Vector{RegistrySpec}, String}, at::String, pid::Int32; kwopts::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:96
+ [13] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:93 [inlined]
+ [14] mkpidlock
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/FileWatching/src/pidfile.jl:91 [inlined]
+ [15] download_registries(io::IOContext{IO}, regs::Vector{RegistrySpec}, depots::Vector{String})
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:188
+ [16] download_default_registries(io::IOContext{IO}; only_if_empty::Bool, depots::Vector{String})
+    @ Pkg.Registry /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:128
+ [17] download_default_registries
+    @ /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/Registry/Registry.jl:112 [inlined]
+ [18] test(pkgs::Vector{PackageSpec}; io::IOContext{IO}, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/API.jl:159
+ [19] test(; name::Nothing, uuid::Nothing, version::Nothing, url::Nothing, rev::Nothing, path::Nothing, mode::PackageMode, subdir::Nothing, kwargs::@Kwargs{coverage::Bool})
+    @ Pkg.API /tmp/statqed-julia-runtimes/julia-1.12.6/share/julia/stdlib/v1.12/Pkg/src/API.jl:186
+ [20] top-level scope
+    @ none:1
+ [21] eval(m::Module, e::Any)
+    @ Core ./boot.jl:489
+ [22] exec_options(opts::Base.JLOptions)
+    @ Base ./client.jl:283
+ [23] _start()
+    @ Base ./client.jl:550

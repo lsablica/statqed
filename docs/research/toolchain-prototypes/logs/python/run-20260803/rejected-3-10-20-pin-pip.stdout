@@ -1,0 +1,8 @@
+Looking in links: /tmp/statqed-sq0002-python-wheelhouse
+Processing /tmp/statqed-sq0002-python-wheelhouse/pip-26.2-py3-none-any.whl
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.0.1
+    Uninstalling pip-23.0.1:
+      Successfully uninstalled pip-23.0.1
+Successfully installed pip-26.2

@@ -1,0 +1,11 @@
+[package]
+name = "statqed-arrow-probe"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+arrow = { version = "=59.1.0", default-features = false, features = ["ipc"] }
+
+[profile.dev]
+debug = 0

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"id": "mutable-recommendation", "mutation": "replace an exact development pin with latest", "expected": "reject"},
+    {"id": "cross-platform-evidence", "mutation": "claim Windows/arm64 CI success from Linux/x86_64 evidence", "expected": "reject"},
+    {"id": "unsafe-rerun-command", "mutation": "replace an owned dispatcher with /usr/bin/touch", "expected": "reject"},
+    {"id": "failure-exit-zero", "mutation": "label an exit-zero attempt as a failure so a builder might normalize it", "expected": "reject"},
+    {"id": "recommended-empty-lock", "mutation": "remove immutable locks from recommended evidence", "expected": "reject"},
+    {"id": "advisory-response-corruption", "mutation": "change the retained OSV response bytes without refreshing its subject digest", "expected": "reject"},
+    {"id": "environment-sanitized", "mutation": "inject an ambient variable and user configuration into dispatcher preparation", "expected": "reject inheritance"},
+    {"id": "unavailable-recommended-fails-closed", "mutation": "remove an executable required by recommended evidence", "expected": "nonzero"}
+  ]
+}

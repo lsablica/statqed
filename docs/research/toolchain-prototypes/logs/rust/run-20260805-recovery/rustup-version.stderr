@@ -1,0 +1,39 @@
+info: This is the version for the rustup toolchain manager, not the rustc compiler.
+
+thread 'main' (26) panicked at /cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wait-timeout-0.2.1/src/unix.rs:233:17:
+bad error on write fd: Operation not permitted (os error 1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (26) panicked at library/core/src/panicking.rs:225:5:
+panic in a function that cannot unwind
+stack backtrace:
+   0:     0x6289b5ccc332 - <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt::h1851ca2a850bd9a9
+   1:     0x6289b58e7e57 - core::fmt::write::h22467d3ad5dd5554
+   2:     0x6289b5ccba45 - std::io::Write::write_fmt::h5e3b6a876f7a20bf
+   3:     0x6289b5ccb878 - std::panicking::panic_with_hook::h9b5f1f19954f65a8
+   4:     0x6289b5cefe38 - std::panicking::panic_handler::{{closure}}::hf431df8c849ee0d6
+   5:     0x6289b5cefdb9 - std::sys::backtrace::__rust_end_short_backtrace::hf97362b31a346cc0
+   6:     0x6289b5cefdac - __rustc[9e6a08e89e4b9111]::rust_begin_unwind
+   7:     0x6289b57617fc - core::panicking::panic_nounwind_fmt::hf349702e3facb1fd
+   8:     0x6289b57617c7 - core::panicking::panic_nounwind::h9a55331e46709e5f
+   9:     0x6289b5761813 - core::panicking::panic_cannot_unwind::h9d41c6c1d0e0d4e5
+  10:     0x6289b5d68146 - wait_timeout::imp::sigchld_handler::h4bcfd312b7581b2b
+  11:     0x7cebb8645330 - <unknown>
+  12:     0x7cebb871b5fd - __GI___poll
+                               at ./io/../sysdeps/unix/sysv/linux/poll.c:29:10
+  13:     0x6289b5c22dfc - rustup::toolchain::Toolchain::rustc_version::h2e0b36ebe12b4a24
+  14:     0x6289b57fcdb4 - rustup::cli::rustup_mode::main::{{closure}}::{{closure}}::h69e383c7d71ed9a8
+  15:     0x6289b57a6f12 - rustup_init::run_rustup_inner::{{closure}}::{{closure}}::he25d18e18b9af0cb
+  16:     0x6289b57a5a5a - rustup_init::run_rustup::{{closure}}::{{closure}}::h7316262eaf93f06b
+  17:     0x6289b57aa8c7 - rustup_init::main::{{closure}}::ha4444ffd4fbde65a
+  18:     0x6289b57db6cc - tokio::runtime::runtime::Runtime::block_on::h64cc312a04b7b0c4
+  19:     0x6289b57a90ef - rustup_init::main::h860db8e5b870a36a
+  20:     0x6289b57b8d43 - std::sys::backtrace::__rust_begin_short_backtrace::hfc1e2e9626c866df
+  21:     0x6289b584e60e - main
+  22:     0x7cebb862a1ca - __libc_start_call_main
+                               at ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+  23:     0x7cebb862a28b - __libc_start_main_impl
+                               at ./csu/../csu/libc-start.c:360:3
+  24:     0x6289b57a3ad3 - <unknown>
+  25:                0x0 - <unknown>
+thread caused non-unwinding panic. aborting.

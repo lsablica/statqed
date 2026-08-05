@@ -1,0 +1,40 @@
+cbor2_version=6.1.3
+rfc8949_4_2_1_hex=a21818006000
+rfc8949_4_2_3_hex=a26000181800
+cbor2_canonical_hex=a26000181800
+cbor2_matches_length_first=true
+cbor2_duplicate_default=last_value_wins
+cbor2_accepts_indefinite=true
+cbor2_indefinite_reencode_hex=820102
+cbor2_depth_254=accept
+cbor2_depth_255=accept
+cbor2_depth_256=accept
+cbor2_depth_257=accept
+cbor2_truncated_argument=reject:CBORDecodeEOF:premature end of stream (expected to read at least 1 bytes, got 0 instead)
+cbor2_break_outside_indefinite=accept:<object object at 0x74e080b78ab0>
+ciborium_version=0.2.2
+minicbor_version=2.3.0
+rfc8949_4_2_1_hex=a21818006000
+rfc8949_4_2_3_hex=a26000181800
+ciborium_canonicalvalue_hex=a26000181800
+ciborium_matches_length_first=true
+minicbor_exposes_both_insertion_orders=true
+ciborium_duplicate_pair_count=2
+minicbor_duplicate_pair_count=2
+ciborium_accepts_indefinite=true
+minicbor_accepts_indefinite=true
+ciborium_indefinite_reencode_hex=820102
+ciborium_depth_127_ok=true
+ciborium_depth_128_ok=true
+ciborium_rejects_truncated=true error=Io(Error { kind: UnexpectedEof, message: "failed to fill whole buffer" })
+minicbor_rejects_truncated=true error=end of input bytes
+cddl 0.10.6
+[INFO] /tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/cbor-cddl/schema.cddl is conformant
+[INFO] Root type for validation: probe
+[INFO] Validation of "/tmp/statqed-sq0002-cbor-cddl.rBvRm4/vectors/valid.cbor" is successful
+[INFO] Root type for validation: probe
+invalid shape rejected as expected
+[INFO] Root type for validation: probe
+[INFO] Validation of "/tmp/statqed-sq0002-cbor-cddl.rBvRm4/vectors/core-4.2.1.cbor" is successful
+[INFO] Root type for validation: probe
+[INFO] Validation of "/tmp/statqed-sq0002-cbor-cddl.rBvRm4/vectors/length-first-4.2.3.cbor" is successful

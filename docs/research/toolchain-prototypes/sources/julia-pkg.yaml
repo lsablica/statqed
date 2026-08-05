@@ -1,0 +1,39 @@
+{
+  "audit_id": "SA-SQ0002-JULIA",
+  "subject": "Julia and Pkg development baseline",
+  "source": {
+    "work": "Julia support policy, v1.12.6/v1.10.11 releases, and Pkg documentation",
+    "version": "Julia stable v1.12.6; LTS v1.10.11; retrieved 2026-08-03",
+    "locator": "https://julialang.org/downloads/support/; https://github.com/JuliaLang/julia/releases/tag/v1.12.6; https://github.com/JuliaLang/julia/releases/tag/v1.10.11; https://pkgdocs.julialang.org/v1/toml-files/",
+    "persistent_id": "julia:v1.12.6@1534690; julia:v1.10.11@a2b1190"
+  },
+  "controlled_statement": "Julia 1.12.6 stable and 1.10.11 LTS were maintained releases observed on 2026-08-03. Pkg Project.toml compatibility and Manifest.toml locks are distinct; host support tiers describe Julia itself and do not prove package compatibility.",
+  "hypotheses": [
+    {"name": "julia_stable_and_lts", "class": "source_explicit", "source_anchor": "https://julialang.org/downloads/support/", "notes": "Official support page lists stable 1.12.6 and LTS 1.10.11 and states only Stable and LTS are maintained."},
+    {"name": "lts_is_default_for_every_project", "class": "strengthening_unjustified", "source_anchor": "https://julialang.org/downloads/manual-downloads/", "notes": "Official downloads page recommends LTS chiefly when upgrade certification is costly or new features are unnecessary; it does not make LTS universally preferable."},
+    {"name": "manifest_locks_dependencies", "class": "source_explicit", "source_anchor": "https://pkgdocs.julialang.org/v1/toml-files/#Manifest.toml", "notes": "Manifest records exact dependency versions and may be committed for reproducibility."},
+    {"name": "julia_compat_is_support_floor", "class": "source_explicit", "source_anchor": "https://pkgdocs.julialang.org/v1/toml-files/#The-%5Bcompat%5D-section", "notes": "Project [compat] can constrain Julia and package versions; it is not an execution record."},
+    {"name": "tier_support_implies_project_support", "class": "strengthening_unjustified", "source_anchor": "https://julialang.org/downloads/support/#supported-platforms", "notes": "Tier definitions concern Julia builds/tests; package dependencies may add constraints."},
+    {"name": "declared_julia_range_works", "class": "formalization_obligation", "source_anchor": "", "notes": "Must be established by package tests on the explicit CI matrix."}
+  ],
+  "variants": [
+    {"name": "license_scope", "source_variant": "Julia source is MIT", "controlled_variant": "official binary/distribution usually includes GPL components", "reason": "Julia distribution documentation warns that bundled dependencies such as SuiteSparse generally make a produced distribution GPL."},
+    {"name": "registry_flavor", "source_variant": "General conservative", "controlled_variant": "General eager", "reason": "Eager can expose packages whose artifacts are not yet mirrored and may require external downloads; conservative is recommended."}
+  ],
+  "concept_mapping": [
+    {"source_concept": "Pkg Manifest", "project_concept": "development dependency lock", "caveat": "Old-Julia-generated manifests can omit extension metadata; generated state must be tested with supported Julia versions."}
+  ],
+  "quantifiers": [],
+  "randomness_scopes": [],
+  "nonvacuity_witnesses": ["GitHub marks v1.12.6 and v1.10.11 as immutable signed releases."],
+  "strengthenings": [],
+  "weakenings": ["State package results by Julia version and host rather than inheriting Julia's platform tier as a package guarantee."],
+  "attribution": [
+    {"work": "Julia downloads", "locator": "https://julialang.org/downloads/manual-downloads/", "role": "release dates and official binaries"},
+    {"work": "Pkg package creation", "locator": "https://pkgdocs.julialang.org/v1/creating-packages/", "role": "tests, compat, and workspace guidance"},
+    {"work": "Pkg registries", "locator": "https://pkgdocs.julialang.org/v1/registries/", "role": "registry flavor semantics"},
+    {"work": "Distributing Julia", "locator": "https://docs.julialang.org/en/v1/devdocs/build/distributing/", "role": "source versus aggregate distribution license"},
+    {"work": "Julia Security Working Group launch", "locator": "https://julialang.org/blog/2025/11/launching-security-wg/", "role": "emerging advisory/SBOM governance; not a mature formal security policy"}
+  ],
+  "review": {"status": "DRAFT", "reviewers": [], "statement_hash": ""}
+}

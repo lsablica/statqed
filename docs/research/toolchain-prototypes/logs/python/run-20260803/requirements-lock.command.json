@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/tmp/statqed-sq0002-python-tools/uv",
+    "--color",
+    "never",
+    "--no-progress",
+    "pip",
+    "compile",
+    "--python",
+    "/tmp/statqed-sq0002-python-runtimes/cpython-3.11.15-linux-x86_64-gnu/bin/python3.11",
+    "--universal",
+    "--generate-hashes",
+    "--no-emit-index-url",
+    "--output-file",
+    "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.lock",
+    "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/python/probe-requirements.in"
+  ],
+  "cwd": "docs/research/toolchain-prototypes/python",
+  "ended_at": "2026-08-03T14:17:23+02:00",
+  "environment_variables": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PIP_CACHE_DIR": "/tmp/statqed-sq0002-python-pip-cache",
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+    "PIP_NO_INPUT": "1",
+    "PYTHONHASHSEED": "0",
+    "UV_CACHE_DIR": "/tmp/statqed-sq0002-python-cache",
+    "UV_PYTHON_DOWNLOADS": "manual",
+    "UV_PYTHON_INSTALL_DIR": "/tmp/statqed-sq0002-python-runtimes"
+  },
+  "exit_status": 0,
+  "expected_exit_statuses": [
+    0
+  ],
+  "name": "requirements-lock",
+  "started_at": "2026-08-03T14:17:23+02:00"
+}

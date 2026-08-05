@@ -1,0 +1,11 @@
+timestamp_start=2026-08-05T18:12:47+00:00
+timestamp_end=2026-08-05T18:12:47+00:00
+cwd=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/rust
+RUSTUP_HOME=/tmp/statqed-sq0002-rust-cache/rustup
+CARGO_HOME=/tmp/statqed-sq0002-rust-cache/cargo
+LC_ALL=C.UTF-8
+TZ=UTC
+command=env CARGO_TARGET_DIR=/tmp/statqed-sq0002-rust-rejections.Zt5AvE/unsafe /home/lukas/.cargo/bin/cargo +1.97.1 check --offline --manifest-path rejections/unsafe-code/Cargo.toml 
+stdout_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/unsafe-policy-rejection.stdout
+stderr_path=/tmp/statqed-sq0002-resume/docs/research/toolchain-prototypes/logs/rust/run-20260805-policy/unsafe-policy-rejection.stderr
+exit_code=101

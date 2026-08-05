@@ -1,0 +1,8 @@
+Using CPython 3.14.7 interpreter at: /tmp/statqed-sq0002-cbor2-verify-5cd4Y1/runtime/python/bin/python3.14
+Creating virtual environment at: /tmp/statqed-sq0002-cbor2-verify-5cd4Y1/venv
+Activate with: source /tmp/statqed-sq0002-cbor2-verify-5cd4Y1/venv/bin/activate
+Using Python 3.14.7 environment at: /tmp/statqed-sq0002-cbor2-verify-5cd4Y1/venv
+Resolved 1 package in 0.88ms
+Prepared 1 package in 6ms
+Installed 1 package in 2ms
+ + cbor2==6.1.4

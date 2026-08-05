@@ -1,0 +1,25 @@
+pyarrow_version=25.0.0
+arrow_cpp_version=25.0.0
+compiler=GNU-14.2.1
+ipc_metadata_default=V5
+stream_repeat_equal=true
+file_repeat_equal=true
+stream_file_bytes_equal=false
+round_trip_equal=true
+stream_len=608
+file_len=898
+physical_file_sha256=a8f5d41157a3622f198733d583c57a4daca6bea2ecb681d0cfe1ef047a1a6748
+arrow_rs_version=59.1.0
+ipc_metadata_default=V5
+stream_repeat_equal=true
+file_repeat_equal=true
+stream_file_bytes_equal=false
+round_trip_equal=true
+stream_len=1096
+file_len=1442
+python_wrote_file=true
+rust_read_foreign_file=true
+rust_wrote_file=true
+python_read_foreign_file=true
+python_rejected_malformed=true error=ArrowInvalid:File is too small: 6
+rust_rejected_malformed=true error=Io error: Invalid argument (os error 22)

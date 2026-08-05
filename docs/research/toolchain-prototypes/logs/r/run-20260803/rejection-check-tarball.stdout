@@ -1,0 +1,27 @@
+* using log directory ‘/tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/check/statqedRToolchainProbe.Rcheck’
+* using R version 4.6.1 (2026-06-24)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+    GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+* running under: Ubuntu 24.04.4 LTS
+* using session charset: UTF-8
+* current time: 2026-08-03 13:05:12 UTC
+* using option ‘--no-manual’
+* checking for file ‘statqedRToolchainProbe/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘statqedRToolchainProbe’ version ‘0.0.0.9000’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘statqedRToolchainProbe’ can be installed ... ERROR
+Installation failed.
+See ‘/tmp/statqed-sq0002-r/runs/run-20260803-20260803T130334-20739/rejection/check/statqedRToolchainProbe.Rcheck/00install.out’ for details.
+* DONE
+Status: 1 ERROR

@@ -1,0 +1,140 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling libm v0.2.16
+   Compiling autocfg v1.5.1
+    Checking cfg-if v1.0.4
+   Compiling zerocopy v0.8.55
+   Compiling libc v0.2.189
+   Compiling version_check v0.9.5
+   Compiling getrandom v0.3.4
+    Checking bytes v1.12.1
+    Checking hashbrown v0.17.1
+    Checking arrow-schema v59.1.0
+    Checking iana-time-zone v0.1.65
+    Checking once_cell v1.21.4
+    Checking memchr v2.8.3
+    Checking lexical-util v1.0.7
+   Compiling semver v1.0.28
+    Checking typenum v1.20.1
+   Compiling serde_core v1.0.229
+   Compiling find-msvc-tools v0.1.9
+   Compiling ahash v0.8.12
+    Checking utf8parse v0.2.2
+   Compiling rustc_version v0.4.1
+   Compiling shlex v2.0.1
+    Checking regex-syntax v0.8.11
+    Checking anstyle-parse v1.0.0
+   Compiling num-traits v0.2.19
+   Compiling crc32fast v1.5.0
+    Checking bitflags v2.13.1
+    Checking aho-corasick v1.1.5
+    Checking is_terminal_polyfill v1.70.2
+   Compiling cc v1.4.0
+    Checking anstyle v1.0.14
+    Checking colorchoice v1.0.5
+   Compiling zmij v1.0.23
+    Checking anstyle-query v1.1.5
+   Compiling serde_json v1.0.151
+   Compiling flatbuffers v25.12.19
+    Checking strsim v0.11.1
+    Checking anstream v1.0.0
+   Compiling serde v1.0.229
+    Checking lexical-write-integer v1.0.6
+    Checking lexical-parse-integer v1.0.6
+    Checking base64 v0.22.1
+    Checking cpufeatures v0.3.0
+   Compiling heck v0.5.0
+    Checking ryu v1.0.23
+    Checking const-oid v0.10.2
+    Checking clap_lex v1.1.0
+    Checking equivalent v1.0.2
+    Checking indexmap v2.14.0
+    Checking clap_builder v4.6.5
+    Checking lexical-parse-float v1.0.6
+    Checking lexical-write-float v1.0.6
+   Compiling syn v2.0.119
+   Compiling syn v3.0.3
+    Checking typed-path v0.12.3
+    Checking constant_time_eq v0.4.2
+    Checking lexical-core v1.0.6
+    Checking itoa v1.0.18
+    Checking arrayref v0.3.9
+    Checking arrayvec v0.7.8
+    Checking hybrid-array v0.4.14
+    Checking zip v7.2.0
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking regex-automata v0.4.16
+   Compiling blake3 v1.8.5
+    Checking num-integer v0.1.46
+    Checking chrono v0.4.45
+    Checking num-complex v0.4.6
+    Checking atoi v2.0.0
+    Checking digest v0.11.3
+    Checking num-bigint v0.4.8
+    Checking sha2 v0.11.0
+   Compiling zerocopy-derive v0.8.55
+   Compiling clap_derive v4.6.4
+   Compiling serde_derive v1.0.229
+    Checking regex v1.13.1
+    Checking clap v4.6.5
+    Checking half v2.7.1
+    Checking arrow-buffer v59.1.0
+    Checking arrow-data v59.1.0
+    Checking arrow-array v59.1.0
+    Checking arrow-select v59.1.0
+    Checking arrow-row v59.1.0
+    Checking arrow-arith v59.1.0
+    Checking arrow-ord v59.1.0
+    Checking arrow-ipc v59.1.0
+    Checking arrow-string v59.1.0
+    Checking arrow-cast v59.1.0
+    Checking arrow v59.1.0
+    Checking statqed-rust-compat-probe v0.0.0 (/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/rust/crates/compat-probe)
+error[E0277]: the trait bound `Array<u8, UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>>: LowerHex` is not satisfied
+  --> crates/compat-probe/src/lib.rs:76:38
+   |
+76 |     let sha256_hex = format!("{:x}", Sha256::digest(&json));
+   |                               ----   ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::LowerHex` is not implemented for `Array<u8, UInt<UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>, ...>>`
+   |                               |
+   |                               required by this formatting parameter
+   |
+   = help: the following other types implement trait `std::fmt::LowerHex`:
+             &T
+             &mut T
+             bytes::bytes::Bytes
+             bytes::bytes_mut::BytesMut
+             compiler_builtins::math::libm_math::support::big::i256
+             compiler_builtins::math::libm_math::support::big::u256
+             compiler_builtins::math::libm_math::support::hex_float::hex_fmt::Hex<T>
+             half::bfloat::bf16
+           and 29 others
+   = note: the full name for the type has been written to '/tmp/statqed-sq0002-rust-cache/target/dev-1.97.1/debug/deps/statqed_rust_compat_probe-75bdf5d3c78be39b.long-type-8280021130624605142.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `Array<u8, UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>>: LowerHex` is not satisfied
+  --> crates/compat-probe/src/lib.rs:76:38
+   |
+76 |     let sha256_hex = format!("{:x}", Sha256::digest(&json));
+   |                               ----   ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::LowerHex` is not implemented for `Array<u8, UInt<UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>, ...>>`
+   |                               |
+   |                               required by this formatting parameter
+   |
+   = help: the following other types implement trait `std::fmt::LowerHex`:
+             &T
+             &mut T
+             bytes::bytes::Bytes
+             bytes::bytes_mut::BytesMut
+             compiler_builtins::math::libm_math::support::big::i256
+             compiler_builtins::math::libm_math::support::big::u256
+             compiler_builtins::math::libm_math::support::hex_float::hex_fmt::Hex<T>
+             half::bfloat::bf16
+           and 29 others
+   = note: the full name for the type has been written to '/tmp/statqed-sq0002-rust-cache/target/dev-1.97.1/debug/deps/statqed_rust_compat_probe-e88b85ca7dee85b6.long-type-13150409186791624907.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `statqed-rust-compat-probe` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `statqed-rust-compat-probe` (lib) due to 1 previous error

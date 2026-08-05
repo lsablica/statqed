@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/cbor-cddl/probe.py", line 84, in <module>
+    main()
+  File "/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/cbor-cddl/probe.py", line 60, in main
+    raise AssertionError(f"{name} unexpectedly accepted")
+AssertionError: break_outside_indefinite unexpectedly accepted
+

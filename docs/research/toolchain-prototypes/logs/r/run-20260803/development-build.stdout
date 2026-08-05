@@ -1,0 +1,6 @@
+* checking for file ‘/tmp/statqed-preflight-9bf9922/docs/research/toolchain-prototypes/r/package/DESCRIPTION’ ... OK
+* preparing ‘statqedRToolchainProbe’:
+* checking DESCRIPTION meta-information ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* building ‘statqedRToolchainProbe_0.0.0.9000.tar.gz’
