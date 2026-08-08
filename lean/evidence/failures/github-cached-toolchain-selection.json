@@ -1,0 +1,12 @@
+{
+  "candidate_commit": "ec047e858f63c663e480952325dab7f3896e64c4",
+  "conclusion": "failure",
+  "diagnosis": "The exact Lean channel was installed, but the root-level identity step invoked lean without a local lean-toolchain or configured Elan default.",
+  "failed_step": "Validate installed tool identities",
+  "job_id": 93156845631,
+  "observed_output": "elan 4.2.3; error: no default toolchain configured",
+  "resolution": "Invoke Lean and Lake explicitly through `elan run leanprover/lean4:v4.32.2` in both hosted jobs; later project commands continue to select lean/lean-toolchain from the lean working directory.",
+  "run_id": 31278883335,
+  "run_url": "https://github.com/lsablica/statqed/actions/runs/31278883335",
+  "schema_version": 1
+}

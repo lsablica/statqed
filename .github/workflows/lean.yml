@@ -130,8 +130,8 @@ jobs:
         run: |
           set -euo pipefail
           elan --version
-          lean_version="$(lean --version)"
-          lake_version="$(lake --version)"
+          lean_version="$(elan run "$EXPECTED_LEAN_TOOLCHAIN" lean --version)"
+          lake_version="$(elan run "$EXPECTED_LEAN_TOOLCHAIN" lake --version)"
           echo "$lean_version"
           echo "$lake_version"
           [[ "$lean_version" == *"Lean (version 4.32.2,"* ]]
@@ -339,8 +339,8 @@ jobs:
         run: |
           set -euo pipefail
           elan --version
-          lean_version="$(lean --version)"
-          lake_version="$(lake --version)"
+          lean_version="$(elan run "$EXPECTED_LEAN_TOOLCHAIN" lean --version)"
+          lake_version="$(elan run "$EXPECTED_LEAN_TOOLCHAIN" lake --version)"
           echo "$lean_version"
           echo "$lake_version"
           [[ "$lean_version" == *"Lean (version 4.32.2,"* ]]
