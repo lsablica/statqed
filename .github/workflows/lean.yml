@@ -138,6 +138,14 @@ jobs:
           [[ "$lean_version" == *"commit $EXPECTED_LEAN_COMMIT"* ]]
           [[ "$lake_version" == *"$EXPECTED_LAKE_VERSION"* ]]
 
+      - name: Restore exact-lock Lean dependency cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: lean/.lake/packages
+          # No prefix fallback: cache reuse is permitted only for this exact
+          # toolchain/manifest pair on the observed runner OS and architecture.
+          key: statqed-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean/lean-toolchain', 'lean/lake-manifest.json') }}
+
       - name: Regenerate and compare dependency manifest
         shell: bash
         run: |
@@ -248,6 +256,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$XDG_CACHE_HOME"
           echo "runner.os=$RUNNER_OS"
           echo "runner.arch=$RUNNER_ARCH"
           echo "runner.name=$RUNNER_NAME"
@@ -255,6 +264,7 @@ jobs:
           echo "image.version=${ImageVersion:-unreported}"
           echo "MATHLIB_NO_CACHE_ON_UPDATE=$MATHLIB_NO_CACHE_ON_UPDATE"
           echo "LAKE_NO_CACHE=$LAKE_NO_CACHE"
+          echo "XDG_CACHE_HOME=$XDG_CACHE_HOME"
           cat /etc/os-release
           uname -a
           python3 --version
