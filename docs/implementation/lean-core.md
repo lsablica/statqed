@@ -23,8 +23,9 @@ Primary sources were retrieved on 2026-08-08: the official [Lean v4.32.2
 release](https://github.com/leanprover/lean4/releases/tag/v4.32.2), [Lean source
 commit](https://github.com/leanprover/lean4/commit/f3b06c705e6c85f5314019d5d3baab0fec5b580c),
 [Mathlib commit](https://github.com/leanprover-community/mathlib4/commit/905b95818eb32af7874a58b427f50c1711a5e96c),
-[Lean axiom reference](https://lean-lang.org/doc/reference/latest/Axioms/), and
-[Lake reference](https://lean-lang.org/doc/reference/latest/build-tools-and-distribution/lake/).
+[Lean axiom reference](https://lean-lang.org/doc/reference/latest/Axioms/),
+[proof-validation guidance](https://lean-lang.org/doc/reference/latest/ValidatingProofs/),
+and [Lake reference](https://lean-lang.org/doc/reference/latest/build-tools-and-distribution/lake/).
 The immutable repository objects, committed lock, and retained command evidence
 are authoritative for this task; a release name alone is not compatibility
 evidence.
@@ -71,13 +72,15 @@ lake --version
 lake update --keep-toolchain
 lake build
 lake env lean --trust=0 Examples/Smoke.lean
+lake env leanchecker --fresh StatQED.Internal.Smoke
 ```
 
 The ordinary path may download and reuse Mathlib binary build outputs. These
-are performance and supply-chain inputs, not proof authority. The manifest and
-kernel-checked declarations remain the relevant logical bindings. Exact local
-commands, cache state, elapsed time, source hashes, and failures are retained
-under `lean/evidence/`.
+are performance and supply-chain inputs. The manifest, checked-out revisions,
+fresh compiled-module replay, and kernel-checked declarations provide distinct
+bindings; none establishes scientific meaning. Exact local commands, cache
+state, elapsed time, source hashes, and failures are retained under
+`lean/evidence/`.
 
 Generate the manifest only with the exact Lake tool. A fresh regeneration must
 be byte-identical:
@@ -95,6 +98,30 @@ resolved dependency revision is immutable. Mathlib's own inherited input labels
 are provenance recorded beside full resolved commits; they are not accepted as
 mutable StatQED root pins.
 
+## Fresh replay of compiled declarations
+
+After `lake build`, run:
+
+```bash
+cd lean
+lake env leanchecker --fresh StatQED.Internal.Smoke
+```
+
+The built-in `leanchecker` replays declarations stored in the selected `.olean`
+module and its imports into a fresh kernel environment. This guards against a
+small class of environment manipulation that can survive an ordinary build or
+import path. It complements rather than replaces:
+
+- exact source and manifest locks;
+- the `--trust=0` source/example check;
+- the live axiom report;
+- project-source and mutation checks; and
+- the independently isolated no-binary-cache build.
+
+`leanchecker` uses the same Lean kernel and trusts the structural decoding of
+the `.olean` files. It is not an independent external verifier, theorem-source
+review, artifact byte-to-term bridge, or scientific-validity check.
+
 ## Isolated no-binary-cache build
 
 The source path must run in a fresh checkout with no `lean/.lake`. Prepare the
@@ -111,9 +138,11 @@ The helper refuses existing Lake state and reused isolation subdirectories. It
 runs through `env -i`, so the host home and ambient environment are absent, and
 sets task-specific XDG, curl, GnuPG, temporary, Git, and Elan locations. Both
 `MATHLIB_NO_CACHE_ON_UPDATE=1` and `LAKE_NO_CACHE=1` remain set for resolution,
-source build, smoke execution, and report verification. The exact retained
-result is `lean/evidence/no-cache-source-build.json`; cache-assisted success
-cannot substitute for it.
+source build, smoke execution, fresh kernel replay, and report verification.
+The exact retained SQ-0003 result is
+`lean/evidence/no-cache-source-build.json`; cache-assisted success cannot
+substitute for it. Post-merge maintenance added replay to the helper; the
+successful maintenance workflow is the evidence for that additional command.
 
 ## Trust scan
 
@@ -163,8 +192,8 @@ python3 tools/axiom_report.py --check Reports/axioms.json
 ```
 
 `Tests/AxiomReport.lean` enumerates declarations owned by imported `StatQED`
-modules from `Lean.Environment`, inspects declaration kinds, unsafe flags, and module
-ownership, and calls `Lean.collectAxioms`. The selected imported control
+modules from `Lean.Environment`, inspects declaration kinds, unsafe flags, and
+module ownership, and calls `Lean.collectAxioms`. The selected imported control
 `Set.ext` observes `Quot.sound` and `propext`; the internal smoke theorem
 observes no transitive axioms. Imported logical axioms are reported separately
 from prohibited project-defined axioms. Unsafe project declarations and
@@ -185,7 +214,8 @@ credentials, full action commit pins, explicit timeouts and concurrency, and
 the exact reviewed environment. Pull requests and pushes run repository
 guardrails, exact pin checks, a dependency cache keyed without fallback by
 runner OS/architecture plus the toolchain and manifest, manifest drift checks,
-build, smoke, trust/report, and mutation gates.
+build, trust-zero smoke, fresh compiled-module replay, trust/report, and
+mutation gates.
 
 The no-binary-cache job runs on manual dispatch, weekly schedule, and changes
 to the three lock inputs. Its evidence may be at most 14 days old; delayed,
@@ -202,7 +232,8 @@ For an update:
 3. change `lean-toolchain`, the full Mathlib revision in `lakefile.toml`, and
    the Lake-generated manifest together;
 4. regenerate the actual axiom report;
-5. run normal, fresh source, manifest, trust, mutation, and CI gates; and
+5. run normal, fresh source, fresh replay, manifest, trust, mutation, and CI
+   gates; and
 6. obtain independent formal, adversarial, reproducibility, and integration
    review before merging.
 
@@ -217,16 +248,17 @@ are never committed.
 For these observations, the pinned Lean kernel checks declarations. Logical
 axioms named in the report remain explicit assumptions of that environment.
 Elan, Lake, Git, operating-system services, networks, caches, the Lean
-elaborator/compiler, Mathlib build tooling, Python report orchestration, GitHub
-Actions, reviewers, and agents are operational or evidence-producing inputs;
-they are not silently promoted to scientific or artifact-verification
-authority.
+elaborator/compiler, Mathlib build tooling, `.olean` structural decoding,
+Python report orchestration, GitHub Actions, reviewers, and agents are
+operational or evidence-producing inputs; they are not silently promoted to
+scientific or artifact-verification authority.
 
 SQ-0003 establishes only:
 
 - a reproducible minimal Lean project;
 - a specific locked Lean/Mathlib environment;
-- project-source trust checks with retained positive and negative controls; and
+- project-source trust checks with retained positive and negative controls;
+- fresh kernel replay of the selected compiled module and imports; and
 - actual axiom observations for explicitly named declarations.
 
 It does not establish source-theorem fidelity, statistical identification or
