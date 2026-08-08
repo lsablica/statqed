@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0008","title":"Define minimal Lean claim and evidence types","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0002 and an accepted narrow RFC-0004 boundary, reviewed minimal Lean interfaces distinguish propositions/claims, evidence objects, assurance inputs, external assumptions, probability context, and verification modes.",
+  "id":"SQ-0008","title":"Define minimal Lean claim and evidence types","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0002 and an accepted narrow RFC-0004 boundary, reviewed minimal Lean interfaces distinguish propositions/claims, evidence objects, assurance inputs, external assumptions, probability context, and verification modes.",
   "dependencies":["SQ-0001","SQ-0003"],
   "allowed_paths":["lean/StatQED/Assurance/**","lean/StatQED/Guarantee/**","source-audits/core/**","docs/design/core-beliefs.md","docs/design/randomness-scopes.md","docs/glossary.md","theorem-registry/core/**","rfcs/0002-evidence-taxonomy.md","rfcs/0004-core-statistical-ontology.md","docs/adr/0005-typed-assurance-graph.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["lean/StatQED/Methods/**","backend/**","frontends/**"],

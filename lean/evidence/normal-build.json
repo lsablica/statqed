@@ -1,0 +1,25 @@
+{
+  "build": {
+    "cache_controls": "MATHLIB_NO_CACHE_ON_UPDATE and LAKE_NO_CACHE unset",
+    "clean_command": ["lake", "clean"],
+    "clean_exit": 0,
+    "command": ["lake", "build"],
+    "elapsed_real_seconds": 21.21,
+    "exit": 0,
+    "material_output": "Build completed successfully (91 jobs).",
+    "state": "Project build outputs cleaned; locked dependency checkout retained."
+  },
+  "environment": {
+    "elan_home": "/tmp/statqed-sq0003-elan",
+    "lc_all": "C.UTF-8",
+    "path": "/tmp/statqed-sq0003-elan/bin:/usr/bin:/bin"
+  },
+  "example": {
+    "command": ["lake", "env", "lean", "--trust=0", "Examples/Smoke.lean"],
+    "elapsed_real_seconds": 0.84,
+    "exit": 0,
+    "stdout": "Set.ext.{u} {α : Type u} {a b : Set α} (h : ∀ (x : α), x ∈ a ↔ x ∈ b) : a = b"
+  },
+  "observed_at": "2026-08-08T22:35:13+02:00",
+  "schema_version": 1
+}

@@ -1,0 +1,9 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+axiom injectedPremise : False
+
+theorem testOnlySmoke : True := True.intro
+
+end StatQED.Internal

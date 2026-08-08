@@ -1,0 +1,13 @@
+{
+  "architecture": "x86_64",
+  "elan_version": "elan 4.2.3 (b6cec7e10 2026-06-08)",
+  "evidence_date": "2026-08-08",
+  "glibc": "glibc 2.39",
+  "lake_version": "Lake version 5.0.0-src+f3b06c7 (Lean version 4.32.2)",
+  "lean_version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "locale": "C.UTF-8",
+  "os": "Ubuntu 24.04.4 LTS",
+  "platform_scope": "Direct observation only; no macOS, Windows, ARM, or hosted-runner claim.",
+  "schema_version": 1,
+  "uname": "Linux 7.0.0-28-generic x86_64 GNU/Linux"
+}

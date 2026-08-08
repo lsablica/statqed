@@ -1,0 +1,8 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+theorem testOnlySmoke : True := by
+  decide +native
+
+end StatQED.Internal

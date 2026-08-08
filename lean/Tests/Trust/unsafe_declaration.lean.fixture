@@ -1,0 +1,9 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+unsafe def injectedUnsafe : Nat := 0
+
+theorem testOnlySmoke : True := True.intro
+
+end StatQED.Internal

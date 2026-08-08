@@ -1,0 +1,12 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+theorem reduceNatShortcut (h : Lean.reduceNat 1 = 1) : 1 = 1 :=
+  Lean.ofReduceNat 1 1 h
+
+theorem testOnlySmoke : True := True.intro
+
+#print axioms StatQED.Internal.reduceNatShortcut
+
+end StatQED.Internal

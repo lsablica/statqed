@@ -1,0 +1,23 @@
+{
+  "byte_comparison": {
+    "command": ["cmp", "-s", "lake-manifest.json", "/tmp/statqed-sq0003-manifest-repro/lake-manifest.json"],
+    "exit": 0
+  },
+  "cache_controls": {
+    "LAKE_NO_CACHE": "1",
+    "MATHLIB_NO_CACHE_ON_UPDATE": "1"
+  },
+  "command": ["lake", "update", "--keep-toolchain"],
+  "elapsed_real_seconds": 36.84,
+  "exit": 0,
+  "generated_manifest_sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b",
+  "mathlib_checkout_head": "905b95818eb32af7874a58b427f50c1711a5e96c",
+  "observed_at": "2026-08-08T22:35:13+02:00",
+  "production_manifest_sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b",
+  "schema_version": 1,
+  "temporary_checkout": {
+    "path": "/tmp/statqed-sq0003-manifest-repro",
+    "removed_after_validation": true,
+    "size_before_removal": "656M"
+  }
+}

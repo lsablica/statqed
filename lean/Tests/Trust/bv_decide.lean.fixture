@@ -1,0 +1,13 @@
+import Mathlib.Data.Set.Defs
+import Std.Tactic.BVDecide
+
+namespace StatQED.Internal
+
+theorem bitVecNativeShortcut : ∀ x : BitVec 1, x + x ≠ 1 := by
+  bv_decide
+
+theorem testOnlySmoke : True := True.intro
+
+#print axioms StatQED.Internal.bitVecNativeShortcut
+
+end StatQED.Internal

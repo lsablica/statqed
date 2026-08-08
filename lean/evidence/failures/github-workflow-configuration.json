@@ -1,0 +1,16 @@
+{
+  "candidate_commit": "dae3e90fe839372a481467fea69a3a86dce06543",
+  "conclusion": "failure",
+  "diagnosis": [
+    "The source-gate job identifier contained a hyphen and was dereferenced with dot syntax.",
+    "Job-level environment expressions used runner.temp, where the runner context is unavailable."
+  ],
+  "event": "push",
+  "jobs_created": 0,
+  "local_reproduction": "actionlint v1.7.12 reported the unavailable runner context; the corrected workflow passes actionlint with no findings.",
+  "observed_at": "2026-08-08T23:05:36+02:00",
+  "resolution": "Renamed the job identifier to source_gate, used github.workspace for task-scoped job paths, and validated the entire workflow with the official actionlint v1.7.12 binary whose release archive checksum passed.",
+  "run_id": 31278483754,
+  "run_url": "https://github.com/lsablica/statqed/actions/runs/31278483754",
+  "schema_version": 1
+}

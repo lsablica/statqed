@@ -1,0 +1,13 @@
+{
+  "declarations": [
+    {
+      "axioms": [],
+      "declaration": "StatQED.Internal.testOnlySmoke",
+      "kind": "theorem",
+      "module": "StatQED.Internal.Smoke",
+      "origin": "project",
+      "type": "True"
+    }
+  ],
+  "schema_version": 1
+}

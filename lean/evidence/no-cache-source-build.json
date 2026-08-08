@@ -1,0 +1,31 @@
+{
+  "cache_controls": {
+    "LAKE_NO_CACHE": "1",
+    "MATHLIB_NO_CACHE_ON_UPDATE": "1",
+    "existing_project_lake_state": false,
+    "host_environment": "removed by env -i",
+    "host_home": "not inherited",
+    "isolated_state": ["CURL_HOME", "ELAN_HOME", "GNUPGHOME", "TMPDIR", "XDG_CACHE_HOME", "XDG_CONFIG_HOME", "XDG_DATA_HOME"]
+  },
+  "command": ["STATQED_LEAN_ISOLATION_ROOT=/tmp/statqed-sq0003-source-isolation", "STATQED_LEAN_ELAN_HOME=/tmp/statqed-sq0003-source-isolation/elan", "./tools/no_cache_build.sh"],
+  "elapsed_seconds": 60.16,
+  "environment_record": "evidence/environment.json",
+  "finished_at": "2026-08-08T23:14:31+02:00",
+  "manifest_sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b",
+  "mathlib_checkout_head": "905b95818eb32af7874a58b427f50c1711a5e96c",
+  "max_rss_kb": 966016,
+  "network": "Direct immutable GitHub source checkout was required; the successful retry ran outside the network-restricted workspace sandbox.",
+  "observations": {
+    "axiom_report_check_exit": 0,
+    "build_exit": 0,
+    "build_output": "Build completed successfully (88 jobs).",
+    "dependency_resolution_exit": 0,
+    "smoke_exit": 0
+  },
+  "report_sha256": "96a2b221dcc7f0a08607fbc935f31c5c4846486b0d4edcb585bddfad2298346b",
+  "schema_version": 1,
+  "source_commit": "efc31dd522d00db2443d006a2f2df6a22ee7c19d",
+  "started_at": "2026-08-08T23:13:31+02:00",
+  "status": "success",
+  "tested_platform": "Ubuntu 24.04.4 LTS x86_64 direct local observation"
+}

@@ -1,0 +1,9 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+theorem testOnlySmoke : True := Lean.trustCompiler
+
+#print axioms StatQED.Internal.testOnlySmoke
+
+end StatQED.Internal

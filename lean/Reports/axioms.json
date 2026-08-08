@@ -1,0 +1,62 @@
+{
+  "command": [
+    "lake",
+    "env",
+    "lean",
+    "--trust=0",
+    "Tests/AxiomReport.lean"
+  ],
+  "declarations": [
+    {
+      "axioms": [
+        "Quot.sound",
+        "propext"
+      ],
+      "declaration": "Set.ext",
+      "kind": "theorem",
+      "module": "Mathlib.Data.Set.Defs",
+      "origin": "imported_mathlib",
+      "type": "Lean.Expr.forallE\n  `α\n  (Lean.Expr.sort (Lean.Level.succ (Lean.Level.param `u)))\n  (Lean.Expr.forallE\n    `a\n    (Lean.Expr.app (Lean.Expr.const `Set [Lean.Level.param `u]) (Lean.Expr.bvar 0))\n    (Lean.Expr.forallE\n      `b\n      (Lean.Expr.app (Lean.Expr.const `Set [Lean.Level.param `u]) (Lean.Expr.bvar 1))\n      (Lean.Expr.forallE\n        `h\n        (Lean.Expr.forallE\n          `x\n          (Lean.Expr.bvar 2)\n          (Lean.Expr.app\n            (Lean.Expr.app\n              (Lean.Expr.const `Iff [])\n              (Lean.Expr.app\n                (Lean.Expr.app\n                  (Lean.Expr.app\n                    (Lean.Expr.app\n                      (Lean.Expr.app\n                        (Lean.Expr.const `Membership.mem [Lean.Level.param `u, Lean.Level.param `u])\n                        (Lean.Expr.bvar 3))\n                      (Lean.Expr.app (Lean.Expr.const `Set [Lean.Level.param `u]) (Lean.Expr.bvar 3)))\n                    (Lean.Expr.app (Lean.Expr.const `Set.instMembership [Lean.Level.param `u]) (Lean.Expr.bvar 3)))\n                  (Lean.Expr.bvar 2))\n                (Lean.Expr.bvar 0)))\n            (Lean.Expr.app\n              (Lean.Expr.app\n                (Lean.Expr.app\n                  (Lean.Expr.app\n                    (Lean.Expr.app\n                      (Lean.Expr.const `Membership.mem [Lean.Level.param `u, Lean.Level.param `u])\n                      (Lean.Expr.bvar 3))\n                    (Lean.Expr.app (Lean.Expr.const `Set [Lean.Level.param `u]) (Lean.Expr.bvar 3)))\n                  (Lean.Expr.app (Lean.Expr.const `Set.instMembership [Lean.Level.param `u]) (Lean.Expr.bvar 3)))\n                (Lean.Expr.bvar 1))\n              (Lean.Expr.bvar 0)))\n          (Lean.BinderInfo.default))\n        (Lean.Expr.app\n          (Lean.Expr.app\n            (Lean.Expr.app\n              (Lean.Expr.const `Eq [Lean.Level.succ (Lean.Level.param `u)])\n              (Lean.Expr.app (Lean.Expr.const `Set [Lean.Level.param `u]) (Lean.Expr.bvar 3)))\n            (Lean.Expr.bvar 2))\n          (Lean.Expr.bvar 1))\n        (Lean.BinderInfo.default))\n      (Lean.BinderInfo.implicit))\n    (Lean.BinderInfo.implicit))\n  (Lean.BinderInfo.implicit)",
+      "unsafe": false
+    },
+    {
+      "axioms": [],
+      "declaration": "StatQED.Internal.testOnlySmoke",
+      "kind": "theorem",
+      "module": "StatQED.Internal.Smoke",
+      "origin": "project",
+      "type": "Lean.Expr.const `True []",
+      "unsafe": false
+    }
+  ],
+  "environment": {
+    "lake_version": "Lake version 5.0.0-src+f3b06c7 (Lean version 4.32.2)",
+    "lean_toolchain": "leanprover/lean4:v4.32.2",
+    "lean_version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "manifest_sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b",
+    "mathlib_checkout_head": "905b95818eb32af7874a58b427f50c1711a5e96c",
+    "mathlib_input_revision": "905b95818eb32af7874a58b427f50c1711a5e96c",
+    "mathlib_resolved_revision": "905b95818eb32af7874a58b427f50c1711a5e96c"
+  },
+  "nonclaims": [
+    "This report is reproducibility and logical-dependency evidence, not a normative theorem lock.",
+    "It does not establish source fidelity, statistical validity, external premises, provenance truth, or artifact-byte binding.",
+    "The test-only True declaration is not a public theorem or a non-vacuity witness."
+  ],
+  "project_modules": [
+    "StatQED",
+    "StatQED.Internal.Smoke"
+  ],
+  "provenance": {
+    "classification": "Non-normative locked-environment reproducibility evidence.",
+    "generator": "tools/axiom_report.py",
+    "probe": "Tests/AxiomReport.lean",
+    "source": "Live Lean.Environment and Lean.collectAxioms observation."
+  },
+  "schema_version": 1,
+  "type_representation": {
+    "format": "Lean.Expr Repr output",
+    "normative": false,
+    "purpose": "Locked-environment diagnostic; not a canonical theorem identity."
+  }
+}

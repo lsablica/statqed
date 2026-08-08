@@ -1,0 +1,348 @@
+{
+  "findings": [],
+  "mutations": [
+    {
+      "expected_code": "forbidden_sorry",
+      "expected_exit": 1,
+      "id": "sorry",
+      "observed_codes": [
+        "forbidden_sorry"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "forbidden_admit",
+      "expected_exit": 1,
+      "id": "admit",
+      "observed_codes": [
+        "forbidden_admit"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "forbidden_sorryAx",
+      "expected_exit": 1,
+      "id": "explicit_sorryAx",
+      "observed_codes": [
+        "forbidden_sorryAx"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "forbidden_sorryAx",
+      "expected_exit": 1,
+      "id": "quoted_sorryAx_identifier",
+      "observed_codes": [
+        "forbidden_sorryAx"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "id": "project_axiom",
+      "observed_codes": [
+        "project_axiom"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "id": "bodyless_constant",
+      "observed_codes": [
+        "project_axiom"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "id": "quoted_bodyless_axiomDecl",
+      "observed_codes": [
+        "project_axiom"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "id": "annotated_project_axiom_same_line",
+      "observed_codes": [
+        "project_axiom"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "toolchain_mismatch",
+      "expected_exit": 1,
+      "id": "changed_toolchain",
+      "observed_codes": [
+        "toolchain_mismatch"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "mathlib_config_revision_mismatch",
+      "expected_exit": 1,
+      "id": "changed_mathlib_config_revision",
+      "observed_codes": [
+        "mathlib_config_revision_mismatch"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "manifest_revision_mismatch",
+      "expected_exit": 1,
+      "id": "changed_stale_manifest",
+      "observed_codes": [
+        "axiom_report_mismatch",
+        "manifest_revision_mismatch"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "mutable_mathlib_revision",
+      "expected_exit": 1,
+      "id": "mutable_mathlib_branch",
+      "observed_codes": [
+        "mutable_dependency_revision",
+        "mutable_mathlib_revision"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "mutable_mathlib_revision",
+      "expected_exit": 1,
+      "id": "mutable_mathlib_tag",
+      "observed_codes": [
+        "mutable_dependency_revision",
+        "mutable_mathlib_revision"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "native_decide",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "decide_native_equivalent",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "unsafe_project_declaration",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "trustCompiler_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "bv_decide_generated_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "ofReduceBool_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "ofReduceNat_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "reduceBool_indirect_trustCompiler_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "reduceNat_indirect_trustCompiler_axiom",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "missing_axiom_report",
+      "expected_exit": 1,
+      "id": "missing_axiom_report",
+      "observed_codes": [
+        "missing_axiom_report"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "axiom_report_mismatch",
+      "expected_exit": 1,
+      "id": "fabricated_axiom_report",
+      "observed_codes": [
+        "axiom_report_mismatch"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "fabricated_native_axiom_closure",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "adjacent_toolchain_mathlib_mismatch",
+      "expected_exit": 1,
+      "id": "adjacent_lean_mathlib_mismatch",
+      "observed_codes": [
+        "adjacent_toolchain_mathlib_mismatch"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "id": "comments_and_strings",
+      "observed_codes": [],
+      "observed_exit": 0,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "id": "inert_name_quotation",
+      "observed_codes": [],
+      "observed_exit": 0,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "sorry_live_axiom_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "bodyless_axiom_live_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "unsafe_declaration_live_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "indirect_native_axiom_live_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "(kernel) invalid projection",
+      "expected_exit": 1,
+      "id": "lean_issue_14576_wrong_structure_projection",
+      "observed_codes": [
+        "exit_1",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "observed_stream": "stdout",
+      "status": "pass"
+    }
+  ],
+  "schema_version": 1,
+  "status": "pass"
+}

@@ -1,0 +1,14 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+/-
+Positive scanner control only: sorry, admit, sorryAx, axiom, constant,
+native_decide, decide +native, implemented_by, and extern are inert here.
+-/
+theorem testOnlySmoke : True := by
+  let keywordText := "sorry admit sorryAx axiom constant native_decide decide +native implemented_by extern"
+  have : keywordText.length = keywordText.length := rfl
+  exact True.intro
+
+end StatQED.Internal

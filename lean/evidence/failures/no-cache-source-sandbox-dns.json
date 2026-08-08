@@ -1,0 +1,14 @@
+{
+  "cache_controls": {
+    "LAKE_NO_CACHE": "1",
+    "MATHLIB_NO_CACHE_ON_UPDATE": "1"
+  },
+  "command": ["STATQED_LEAN_ISOLATION_ROOT=/tmp/statqed-sq0003-source-isolation", "STATQED_LEAN_ELAN_HOME=/tmp/statqed-sq0003-source-isolation/elan", "./tools/no_cache_build.sh"],
+  "elapsed_seconds": 7.05,
+  "environment_boundary": "default workspace sandbox",
+  "observed_at": "2026-08-08T23:01:59+02:00",
+  "observed_exit": 1,
+  "observed_primary_output": "curl exited with code 6; Reservoir lookup failed; Mathlib could not be materialized",
+  "resolution": "Retained, isolation state removed, then retried once outside the network-restricted sandbox with the same committed candidate and cache controls; the retry succeeded in 59.69 seconds.",
+  "schema_version": 1
+}
