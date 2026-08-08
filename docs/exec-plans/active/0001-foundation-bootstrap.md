@@ -282,6 +282,7 @@ git diff --check
 - The first SQ-0002 merge referenced four ignored `.pytest_cache` files. The correction removed only those non-durable subjects and independently reverified 115 tracked hashes.
 - A successful repository-guardrails run on the final SQ-0002 merge checked the ledger but did not run the strict evidence verifier because `make check` did not include it. The 2026-08-08 post-merge maintenance made the verifier a permanent guardrail.
 - SQ-0003/SQ-0004 were technically READY but their original short contracts did not authorize complete task transitions/reviews or encode the reviewed negative tests. Their contracts are now executable without semantic improvisation.
+- During SQ-0003, official Lean issue #14576 initially appeared to postdate the fixed Lean 4.32.2 pin and potentially affect kernel soundness. Exact ancestry showed release commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c` immediately follows backport `8be817b3f6310f62f220861b0c92dbabb951115d` of the #14577 fix; the official minimized exploit is rejected under `lean --trust=0` with `(kernel) invalid projection` on the pinned binary.
 
 ## Decision Log
 
@@ -301,6 +302,7 @@ git diff --check
 - 2026-08-05: Packaging correction removed four ignored test-runner cache files, preserved all substantive evidence, and was merged as `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e` after independent re-review.
 - 2026-08-08: Post-merge review approved SQ-0002 with planning maintenance, made its strict verifier part of `make check`, corrected current-task/status/count metadata, and expanded SQ-0003/SQ-0004 contracts without changing recommendations or task states.
 - 2026-08-08: Recommended SQ-0003 as the next isolated task because it establishes the proof-backend build and axiom/trust surface; SQ-0004 remains independently READY.
+- 2026-08-08: Retained the exact reviewed Lean/Mathlib pair after verifying that Lean 4.32.2 includes the #14577 kernel-fix backport and independently rejects the official #14576 exploit. This regression becomes additional SQ-0003 trust evidence rather than a reason to substitute a toolchain.
 
 ## Outcomes & Retrospective
 
