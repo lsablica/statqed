@@ -25,3 +25,6 @@ The native-evaluation controls cover `Lean.trustCompiler`, `bv_decide`,
 retain native trust axioms, so both the source scan and the live axiom-closure
 gate must reject them before they can enter the accepted source tree. The live
 report mutation ensures this policy is not tested only through source tokens.
+Separate live-report cases also build and reject `sorryAx`, checked
+`.axiomDecl`, and an unsafe project declaration, so those environment gates
+cannot be removed while the source-only mutations continue to pass.

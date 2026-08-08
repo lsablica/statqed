@@ -163,11 +163,13 @@ python3 tools/axiom_report.py --check Reports/axioms.json
 ```
 
 `Tests/AxiomReport.lean` enumerates declarations owned by imported `StatQED`
-modules from `Lean.Environment`, inspects declaration kinds and module
+modules from `Lean.Environment`, inspects declaration kinds, unsafe flags, and module
 ownership, and calls `Lean.collectAxioms`. The selected imported control
 `Set.ext` observes `Quot.sound` and `propext`; the internal smoke theorem
 observes no transitive axioms. Imported logical axioms are reported separately
-from prohibited project-defined axioms.
+from prohibited project-defined axioms. Unsafe project declarations and
+project closures containing `sorryAx`, project-owned axioms, or reviewed
+native-trust axioms fail report generation.
 
 `tools/axiom_report.py` binds the observation to exact Lean/Lake output,
 Mathlib checkout `HEAD`, Mathlib input and resolved revisions, manifest digest,

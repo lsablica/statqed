@@ -3,7 +3,7 @@ import Lean
 
 namespace StatQED.Internal
 
-private def inspectedName : Name := `Lean.trustCompiler
+private def inspectedName : Lean.Name := `Lean.trustCompiler
 
 theorem testOnlySmoke : True := by
   have : inspectedName = inspectedName := rfl

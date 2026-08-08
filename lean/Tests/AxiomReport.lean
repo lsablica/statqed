@@ -61,6 +61,8 @@ private def renderDeclaration
   let kind := ConstantKind.ofConstantInfo info
   if origin == "project" && kind == .axiom then
     throwError "project declaration '{declName}' is an axiom declaration"
+  if origin == "project" && info.isUnsafe then
+    throwError "project declaration '{declName}' is unsafe"
   let axioms ← collectAxioms declName
   let axioms := axioms.qsort nameStringLt
   if origin == "project" && axioms.contains ``sorryAx then
@@ -75,7 +77,8 @@ private def renderDeclaration
     ("kind", .str <| kindString kind),
     ("module", .str moduleName.toString),
     ("origin", .str origin),
-    ("type", .str <| toString (repr info.type))
+    ("type", .str <| toString (repr info.type)),
+    ("unsafe", .bool info.isUnsafe)
   ]
 
 elab "#statqed_axiom_report" : command => do

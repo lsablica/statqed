@@ -144,11 +144,14 @@ def parse_probe(stdout: str) -> dict[str, Any]:
         raise ReportError("Lean axiom probe imported-declaration set is incomplete or altered")
     if any(entry.get("kind") == "axiom" for entry in project_entries):
         raise ReportError("Lean axiom probe found a project axiom declaration")
+    if any(entry.get("unsafe") is True for entry in project_entries):
+        raise ReportError("Lean axiom probe found an unsafe project declaration")
     if not all(
         isinstance(entry.get("axioms"), list)
         and isinstance(entry.get("kind"), str)
         and isinstance(entry.get("module"), str)
         and isinstance(entry.get("type"), str)
+        and isinstance(entry.get("unsafe"), bool)
         for entry in declarations
     ):
         raise ReportError("Lean axiom probe contains an incomplete declaration record")

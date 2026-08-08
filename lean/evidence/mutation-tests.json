@@ -157,6 +157,16 @@
     {
       "expected_code": "unreviewed_native_trust",
       "expected_exit": 1,
+      "id": "unsafe_project_declaration",
+      "observed_codes": [
+        "unreviewed_native_trust"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
       "id": "trustCompiler_axiom",
       "observed_codes": [
         "unreviewed_native_trust"
@@ -255,6 +265,7 @@
       "status": "pass"
     },
     {
+      "build_exit": 0,
       "expected_code": "ok",
       "expected_exit": 0,
       "id": "comments_and_strings",
@@ -263,11 +274,48 @@
       "status": "pass"
     },
     {
+      "build_exit": 0,
       "expected_code": "ok",
       "expected_exit": 0,
       "id": "inert_name_quotation",
       "observed_codes": [],
       "observed_exit": 0,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "sorry_live_axiom_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "bodyless_axiom_live_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
+      "status": "pass"
+    },
+    {
+      "build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "id": "unsafe_declaration_live_report",
+      "observed_codes": [
+        "build_succeeded",
+        "expected_diagnostic"
+      ],
+      "observed_exit": 1,
       "status": "pass"
     },
     {

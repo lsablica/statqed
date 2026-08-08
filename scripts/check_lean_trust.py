@@ -408,7 +408,7 @@ def check_axiom_report_static(lean_root: Path, root: Path, findings: list[Findin
         if not isinstance(entry, dict):
             add(findings, "axiom_report_mismatch", relative(path, root), "declaration entry is not an object")
             continue
-        if set(entry) != {"axioms", "declaration", "kind", "module", "origin", "type"}:
+        if set(entry) != {"axioms", "declaration", "kind", "module", "origin", "type", "unsafe"}:
             add(findings, "axiom_report_mismatch", relative(path, root), f"declaration {entry.get('declaration')!r} fields differ")
         axioms = entry.get("axioms")
         if not isinstance(axioms, list) or not all(isinstance(item, str) for item in axioms) or axioms != sorted(set(axioms)):
@@ -419,12 +419,16 @@ def check_axiom_report_static(lean_root: Path, root: Path, findings: list[Findin
             add(findings, "axiom_report_mismatch", relative(path, root), f"declaration {entry.get('declaration')!r} origin is invalid")
         if not isinstance(entry.get("type"), str) or not entry.get("type"):
             add(findings, "axiom_report_mismatch", relative(path, root), f"declaration {entry.get('declaration')!r} type is absent")
+        if not isinstance(entry.get("unsafe"), bool):
+            add(findings, "axiom_report_mismatch", relative(path, root), f"declaration {entry.get('declaration')!r} unsafe flag is absent")
         if origin == "project":
             if entry.get("kind") == "axiom":
                 project_axiom_names.add(str(entry.get("declaration")))
                 add(findings, "project_axiom", relative(path, root), f"report contains project axiom {entry.get('declaration')}")
             if "sorryAx" in axioms:
                 add(findings, "forbidden_sorryAx", relative(path, root), f"project declaration {entry.get('declaration')} depends on sorryAx")
+            if entry.get("unsafe") is True:
+                add(findings, "unreviewed_native_trust", relative(path, root), f"project declaration {entry.get('declaration')} is unsafe")
             native_axioms = PROHIBITED_IMPORTED_NATIVE_AXIOMS.intersection(axioms)
             if native_axioms:
                 add(
@@ -576,6 +580,23 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
             try:
                 mutate(case, lean_root, temp_lean, fixture_root)
                 observed = audit(temp_root, live=False)
+                positive_build_exit: int | None = None
+                if case["expected_code"] == "ok" and not observed:
+                    temp_lake = temp_lean / ".lake"
+                    temp_lake.mkdir()
+                    temp_lake.joinpath("packages").symlink_to(
+                        lean_root / ".lake" / "packages", target_is_directory=True
+                    )
+                    positive_build = run_checked(["lake", "build"], temp_lean)
+                    positive_build_exit = positive_build.returncode
+                    if positive_build.returncode != 0:
+                        observed.append(
+                            Finding(
+                                "positive_control_build_failure",
+                                f"lean/Tests/Trust/expectations.json#{case['id']}",
+                                "static positive control did not compile in the locked environment",
+                            )
+                        )
                 codes = sorted({finding.code for finding in observed})
                 expected_code = case["expected_code"]
                 expected_exit = case["expected_exit"]
@@ -584,6 +605,11 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                     (expected_code == "ok" and not observed) or expected_code in codes
                 )
                 results.append({
+                    **(
+                        {"build_exit": positive_build_exit}
+                        if positive_build_exit is not None
+                        else {}
+                    ),
                     "expected_code": expected_code,
                     "expected_exit": expected_exit,
                     "id": case["id"],

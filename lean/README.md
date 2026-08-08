@@ -53,11 +53,12 @@ the same locked sources.
 ## Actual axiom report
 
 `Tests/AxiomReport.lean` obtains declaration names, defining modules,
-declaration kinds, elaborated type representations, and transitive axiom sets
+declaration kinds, unsafe flags, elaborated type representations, and transitive axiom sets
 from the live `Lean.Environment` and `Lean.collectAxioms`. It enumerates every
 declaration owned by imported `StatQED` modules, rejects project axiom
-declarations and project declarations whose closure contains `sorryAx` or a
-project axiom, and also reports the selected imported declaration `Set.ext`.
+or unsafe declarations and project declarations whose closure contains
+`sorryAx`, a project axiom, or a prohibited native-trust axiom, and also
+reports the selected imported declaration `Set.ext`.
 
 `tools/axiom_report.py` binds that live probe to:
 

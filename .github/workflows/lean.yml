@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
-      ELAN_HOME: ${{ runner.temp }}/statqed-lean-cached/elan
+      ELAN_HOME: ${{ github.workspace }}/../statqed-lean-cached/elan
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -177,7 +177,7 @@ jobs:
       - name: Run trusted-path mutations
         run: python3 scripts/check_lean_trust.py --run-mutations
 
-  source-gate:
+  source_gate:
     name: Select no-binary-cache revalidation
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -232,13 +232,13 @@ jobs:
 
   no-binary-cache:
     name: Isolated source build and trust gates
-    needs: source-gate
-    if: needs.source-gate.outputs.run == 'true'
+    needs: source_gate
+    if: needs.source_gate.outputs.run == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
-      ELAN_HOME: ${{ runner.temp }}/statqed-lean-source/elan
-      XDG_CACHE_HOME: ${{ runner.temp }}/statqed-lean-source/xdg-cache
+      ELAN_HOME: ${{ github.workspace }}/../statqed-lean-source/elan
+      XDG_CACHE_HOME: ${{ github.workspace }}/../statqed-lean-source/xdg-cache
       MATHLIB_NO_CACHE_ON_UPDATE: "1"
       LAKE_NO_CACHE: "1"
     steps:
