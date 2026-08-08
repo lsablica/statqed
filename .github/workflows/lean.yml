@@ -194,7 +194,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Select scheduled, manual, or lock-changing run
+      - name: Select scheduled, manual, lock-changing, or source-helper run
         id: select
         shell: bash
         env:
@@ -228,7 +228,11 @@ jobs:
           elif ! git cat-file -e "${from}^{commit}" || ! git cat-file -e "${to}^{commit}"; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           elif git diff --quiet "$from" "$to" -- \
-            lean/lean-toolchain lean/lakefile.toml lean/lake-manifest.json; then
+            lean/lean-toolchain \
+            lean/lakefile.toml \
+            lean/lake-manifest.json \
+            lean/tools/no_cache_build.sh \
+            .github/workflows/lean.yml; then
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
             echo "run=true" >> "$GITHUB_OUTPUT"
