@@ -3,9 +3,9 @@
 Status: **Experimental**.
 
 This directory is the minimal SQ-0003 Lean project. It establishes a pinned
-build, test, and axiom-reporting surface only. It contains no statistical
-ontology, inference theorem, certificate checker, registry semantics, artifact
-semantics, or public StatQED theorem.
+build, test, axiom-reporting, and compiled-module replay surface only. It
+contains no statistical ontology, inference theorem, certificate checker,
+registry semantics, artifact semantics, or public StatQED theorem.
 
 ## Exact environment
 
@@ -38,6 +38,7 @@ From this directory:
 lake update --keep-toolchain
 lake build
 lake env lean --trust=0 Examples/Smoke.lean
+lake env leanchecker --fresh StatQED.Internal.Smoke
 python3 tools/axiom_report.py --check Reports/axioms.json
 ```
 
@@ -48,7 +49,13 @@ semantic non-vacuity witness, scientific result, or artifact claim.
 
 The normal update may use Mathlib's binary cache. A cache is a performance and
 supply-chain input, not a semantic authority. A cache miss must fall back to
-the same locked sources.
+the same locked sources. After the project is built, `leanchecker --fresh`
+replays the declarations stored in the smoke module and its imports through a
+fresh Lean kernel environment. This additional check is intended to detect a
+small class of environment-manipulation or compiled-environment attacks that an
+ordinary import can otherwise inherit. It is still a Lean-kernel check rather
+than an independent external verifier, and it does not establish that theorem
+statements have the intended scientific meaning.
 
 ## Actual axiom report
 
@@ -104,7 +111,8 @@ result.
 
 Run the helper only inside a fresh checkout where `lean/.lake` does not exist.
 It refuses pre-existing Lake state and keeps both cache-disable variables set
-for dependency resolution, build, example, and report verification:
+for dependency resolution, build, example, fresh kernel replay, and report
+verification:
 
 ```bash
 cd /fresh/checkout/lean
@@ -138,13 +146,14 @@ absence of other kernel defects.
 
 For an update, re-audit official releases, change the Lean channel, full
 Mathlib revision, and generated manifest atomically, then rerun normal and
-no-cache builds, manifest byte reproduction, the live axiom report, trust
-mutations, and independent review. Rollback restores all three lock files and
-the matching reviewed report together.
+no-cache builds, fresh compiled-module replay, manifest byte reproduction, the
+live axiom report, trust mutations, and independent review. Rollback restores
+all three lock files and the matching reviewed report together.
 
-A successful build and axiom report establish only that named declarations
-elaborate and have the reported dependencies in the locked environment. They
-do not establish source fidelity, statistical identification or inference,
-external premises, data/provenance truth, interpretation, or `.statqed`
-artifact-byte binding. Direct SQ-0003 execution evidence is Linux x86-64 only;
-other platforms require separate observed evidence.
+A successful build, replay, and axiom report establish only that the stored
+named declarations are accepted under the pinned Lean kernel and have the
+reported dependencies in the locked environment. They do not establish source
+fidelity, statistical identification or inference, external premises,
+data/provenance truth, interpretation, or `.statqed` artifact-byte binding.
+Direct SQ-0003 execution evidence is Linux x86-64 only; other platforms require
+separate observed evidence.

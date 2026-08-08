@@ -5,18 +5,15 @@
   "in_progress": [],
   "blocked_count": 55,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003"],
-  "last_integrated_commit": "92e3b331b1ae795a21d6e030a21e8ce8d7da03dd",
-  "last_updated": "2026-08-08",
+  "last_integrated_commit": "b7f98a99cdc4babccd920c52f5a2e55f8051228c",
+  "last_updated": "2026-08-09",
   "notes": [
-    "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
+    "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
     "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
-    "SQ-0002 is DONE after specialist review, atomic task transition, durable-evidence correction, packaging re-review, and final merge 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
-    "The final SQ-0002 evidence surface contains 75 probes, six recommendations, 90 dated sources, and 115 tracked content-addressed prototype subjects. It initializes no production language project and accepts no Draft RFC semantics.",
-    "A post-merge review on 2026-08-08 found no blocking SQ-0002 research defect. It made the strict SQ-0002 evidence verifier part of make check, corrected stale planning metadata, and expanded the SQ-0003/SQ-0004 execution contracts without changing accepted recommendations or task states.",
-    "SQ-0003 began in isolated worktree /tmp/statqed-sq0003 on branch agent/SQ-0003-lean-bootstrap at 2026-08-08T22:13:02+02:00 from d32c50adaec62543e1a7fbc52f62e33ce8f373bb.",
-    "SQ-0003 is DONE after distinct source, build, formal, adversarial, CI/reproducibility, and integration review of package 34e4d856e3ee5c85aab91a0427f9b4176aa7aac7; exact-package Lean run 31279603416 and guardrails run 31279603408 passed.",
-    "The atomic SQ-0003 DONE transition is 3194f12b1b14f48813e98db60cac9c42f5c7280c.",
-    "The final reviewed SQ-0003 head 94a6381e25c18fbd317e119e8f6b80d91239ce61 merged to main as 92e3b331b1ae795a21d6e030a21e8ce8d7da03dd; main guardrails run 31280203088 and Lean run 31280203112 passed.",
-    "The dependency calculation makes SQ-0004 and RFC-owner task SQ-0008 READY. Neither successor has begun; RFC-0001 through RFC-0009 remain Draft."
+    "SQ-0002 is DONE after specialist review and durable evidence packaging; its final evidence merge is 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
+    "SQ-0003 is DONE with an Experimental Lean proof foundation after distinct source, build, formal, adversarial, CI/reproducibility, and integration review. The task merged as 92e3b331b1ae795a21d6e030a21e8ce8d7da03dd and its final reviewed merge-evidence record merged as b7f98a99cdc4babccd920c52f5a2e55f8051228c.",
+    "SQ-0003 directly establishes only the exact Lean/Mathlib build environment, test-only smoke declaration, actual axiom observations, trust mutations, normal/source builds, and Lean CI; it introduces no statistical theorem, artifact binding, registry authority, or Draft RFC decision.",
+    "A post-merge review on 2026-08-09 found no blocking SQ-0003 defect. It added fresh leanchecker replay of the compiled smoke module and imports, corrected stale launch/status metadata, and made the SQ-0004 final transition capable of updating SQ-0005 readiness without changing task states or Draft RFCs.",
+    "SQ-0004 and RFC-owner task SQ-0008 are READY and unstarted. SQ-0004 is the recommended next isolated execution; SQ-0008 remains independently READY."
   ]
 }
