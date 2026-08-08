@@ -5,15 +5,14 @@
   "in_progress": [],
   "blocked_count": 56,
   "done": ["SQ-0001", "SQ-0002"],
-  "last_integrated_commit": "7a0b726189155d4131b30df63aee6c60f19671d9",
-  "last_updated": "2026-08-05",
+  "last_integrated_commit": "01c5b6e1bfacf332dbb01259aa19258a3edd0f9e",
+  "last_updated": "2026-08-08",
   "notes": [
-    "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review against immutable candidate commit 31fbd22876b5613d3d32c94ce07c4368811630d8 and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
+    "SQ-0001 completed independent source, statistical, formal, interoperability, security, adversarial, and integration review and was merged to main in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
     "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
-    "Post-merge review found no blocking constitutional defect; it corrected stale launch/handoff wording and expanded the SQ-0002 execution contract without changing task states or accepted semantics.",
-    "No statistical method or production language project is implemented; SQ-0002 adds only isolated research probes, evidence, and its strict verifier.",
-    "SQ-0002 started from reviewed main commit 9bf99227240550a6c84f417eccd99c48f43be6ec on 2026-08-03 and completed independent integration review on 2026-08-05.",
-    "SQ-0002's initial recommendation surface entered review on 2026-08-03; current-source corrections and retained prototype outcomes were frozen for re-review on 2026-08-05. No production toolchain or later task was initialized.",
-    "SQ-0002 is DONE against review package c43b90e39eebe500d70f6d0957a61a549c90545e and atomic transition commit 7a0b726189155d4131b30df63aee6c60f19671d9; the shared readiness calculation exposes SQ-0003 and SQ-0004 as READY, but neither has begun."
+    "SQ-0002 is DONE after specialist review, atomic task transition, durable-evidence correction, packaging re-review, and final merge 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
+    "The final SQ-0002 evidence surface contains 75 probes, six recommendations, 90 dated sources, and 115 tracked content-addressed prototype subjects. It initializes no production language project and accepts no Draft RFC semantics.",
+    "A post-merge review on 2026-08-08 found no blocking SQ-0002 research defect. It made the strict SQ-0002 evidence verifier part of make check, corrected stale planning metadata, and expanded the SQ-0003/SQ-0004 execution contracts without changing accepted recommendations or task states.",
+    "SQ-0003 and SQ-0004 are READY and unstarted. The recommended next isolated execution is SQ-0003; SQ-0004 remains independently READY."
   ]
 }

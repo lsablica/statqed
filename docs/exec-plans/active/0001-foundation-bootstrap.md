@@ -9,224 +9,307 @@
 From a clean checkout:
 
 1. Lean and Rust workspaces build with pinned toolchains.
-2. Draft versioned CDDL files and reviewed canonical vectors are versioned under an Accepted RFC-0001 profile; draft module syntax is not silently treated as a standard.
+2. Versioned CDDL files and reviewed canonical vectors exist under an Accepted RFC-0001 profile; draft module syntax is never silently treated as a standard.
 3. R, Python, and Julia construct the same data-free `foundation_structural` semantic fixture defined by ADR-0011.
-4. The Rust backend produces byte-identical canonical bytes and domain-separated fixture digests. A logical-data digest is included only after RFC-0006 is Accepted; the data-free slice does not require one.
-5. Lean checks the exact toy proposition only through an Accepted RFC-0003 byte-to-term path and RFC-0005 theorem/environment/proof locks; lock resolution alone is structural evidence.
-6. CI runs repository, language, conformance, trusted-path, and clean-checkout checks.
-7. A trust report says exactly that only structural/toy obligations are checked.
+4. The Rust backend produces byte-identical accepted canonical bytes and domain-separated fixture digests. A logical-data digest appears only after RFC-0006 is Accepted; the data-free slice does not require one.
+5. Lean checks the exact toy proposition only through an Accepted RFC-0003 byte-to-term path and Accepted RFC-0005 theorem/environment/proof/authorization locks; lock resolution alone is structural evidence.
+6. CI runs repository, language, conformance, trusted-path, malformed-input, and clean-checkout checks.
+7. A machine and human trust report states exactly which structural/toy obligations were checked and exposes every unresolved or external dependency.
 
 No real statistical method is claimed complete at this milestone.
 
 ## Context
 
-StatQED’s main risk is semantic incoherence, not insufficient generated code. The foundation therefore freezes only small interfaces after prototypes and independent review. The first vertical slice must exercise the entire path before broad theorem formalization begins.
+StatQED's main foundation risk is semantic incoherence, not insufficient generated code. The project therefore freezes only small interfaces after prototypes, negative tests, and independent review. The first vertical slice must exercise the complete cross-language and proof path while remaining data-free, non-statistical, and test-only.
 
-## Dependency graph
+SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed toolchain recommendations but initialized no production project and accepted no Draft RFC semantics. SQ-0003 and SQ-0004 are the first production bootstrap tasks.
+
+## Dependency and decision graph
 
 ```text
-SQ-0001 constitutional baseline
-  ├─ SQ-0002 toolchain research
-  │    ├─ SQ-0003 Lean bootstrap
-  │    └─ SQ-0004 Rust bootstrap
-  ├─ SQ-0005 serialization prototype ─ SQ-0006 schema v0
-  │       ├─ SQ-0007 theorem registry
-  │       ├─ SQ-0010 artifact envelope
-  │       ├─ SQ-0011 canonical backend
-  │       └─ SQ-0012 Lean structural decoder (also depends on SQ-0007)
-  ├─ SQ-0008 core Lean types ─ SQ-0009 assurance graph ─ SQ-0017 trust report
-  └─ SQ-0013/14/15 frontend skeletons
+SQ-0001 constitutional baseline                       DONE
+  └─ SQ-0002 toolchain research                      DONE
+       ├─ SQ-0003 Lean bootstrap                     READY
+       └─ SQ-0004 Rust bootstrap                     READY
+            └─ SQ-0005 serialization prototype
+                 └─ RFC-0001 acceptance
+                      └─ SQ-0006 schema v0
+                           ├─ SQ-0007 theorem registry + RFC-0005
+                           ├─ SQ-0010 artifact envelope + RFC-0008
+                           ├─ SQ-0011 canonical backend
+                           └─ SQ-0012 Lean structural path + RFC-0003
 
-SQ-0016 conformance harness
-SQ-0018 expanded CI
-SQ-0019 trivial cross-language artifact
-SQ-0020 independent foundation review
+SQ-0003 ─ SQ-0008 core Lean types + RFC-0002/RFC-0004
+              └─ SQ-0009 assurance graph
+                   └─ SQ-0017 trust report
+
+SQ-0006 ─ SQ-0013/14/15 frontend skeletons
+              └─ SQ-0016 conformance harness
+
+SQ-0003 + SQ-0004 + frontends + conformance ─ SQ-0018 expanded CI
+SQ-0007 + SQ-0010 + SQ-0012 + SQ-0016 + SQ-0017 + SQ-0018 ─ SQ-0019
+SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 ```
+
+Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
+
+SQ-0003 and SQ-0004 are independent READY tasks. They must use separate branches/worktrees and separate state transitions. The recommended next isolated execution is SQ-0003 because it establishes the proof-backend build and trust-reporting surface. SQ-0004 remains READY and may be executed later or by a separately coordinated non-conflicting agent; the two implementations must not share one branch or one unreviewed integration transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
-### Work
+Status: **DONE**.
 
-- Review CHARTER, ARCHITECTURE, all proposed ADRs, glossary, trust model, maturity language, and naming.
-- Research current package-name evidence and official tool/package constraints before accepting source-tree conventions; record that point-in-time checks are not reservations, publication approval, or legal clearance.
-- Convert unresolved decisions into RFCs; do not bury them in code.
-- Mark accepted ADRs with date and reviewers.
-- Confirm the exact first artifact and nonclaims.
+### Completed result
 
-### Required review
+- Reviewed charter, architecture, glossary, trust model, maturity language, naming, package boundaries, evidence taxonomy, serialization direction, theorem identity, and the first slice.
+- Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011.
+- Kept ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 explicitly Draft/Proposed with machine-checked owners.
+- Established source, statistical, formal, interoperability, security, adversarial, and integration review records.
+- Selected the exact data-free `foundation_structural` fixture and exhaustive nonclaims.
+- Replaced hard-coded scheduling with dependency- and decision-aware readiness.
 
-Source curator, statistical architect, formal-methods reviewer, interoperability reviewer, adversarial reviewer, security reviewer where trust/encoding is affected, and integrator.
+### Evidence
 
-### Acceptance
-
-No known unresolved contradiction remains in the content-addressed review surface, all constitutional choices have an Accepted ADR/RFC or an explicit blocked research task, and `make check` passes.
+See `work/reviews/SQ-0001.md`, `work/handoffs/SQ-0001.md`, and `docs/research/SQ-0001-constitutional-source-audit.md`.
 
 ## Milestone B — Pin and bootstrap toolchains (SQ-0002–SQ-0004)
 
-### SQ-0002
+### SQ-0002 — toolchain research
 
-Create a compatibility report covering Lean 4, Mathlib commit/release, Lake, Rust stable/MSRV, Python, R, Julia, Arrow/CBOR libraries, and supported platforms. Validate tiny prototypes before pinning. Record exact installation commands and cache policy.
+Status: **DONE**.
 
-### SQ-0003
+The reviewed evidence surface contains:
 
-Initialize a minimal Lean project under `lean/` with one namespace, one executable test/example, pinned `lean-toolchain`, `lakefile.toml`, Mathlib lock, formatting/lint conventions, and an axiom-report script. Do not add statistical abstractions here.
+- 75 attempted combinations: 31 successes, 37 failures, seven unknowns;
+- six recommendation records;
+- 90 dated source records;
+- 115 tracked, content-addressed prototype subjects after the packaging correction;
+- a strict standard-library verifier with eight corruption regressions;
+- distinct source, Lean, Rust, frontend, interoperability, statistical/trust, security/adversarial, integration, and packaging-integrity reviews.
 
-### SQ-0004
+Final evidence-packaging merge: `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`.
 
-Initialize the Rust workspace under `backend/` with planned crates reduced to the smallest compiling skeleton. Add structured errors, deterministic CLI output, `unsafe_code = "forbid"`, formatting/lint/tests, and platform matrix. No schema semantics beyond a toy object.
+Reviewed recommendations:
 
-### Acceptance
+| Area | Development/reference recommendation | Floor or boundary |
+|---|---|---|
+| Lean/Mathlib/Lake | Lean 4.32.2 commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`; Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`; Lake `5.0.0-src+f3b06c7` | exact pair only |
+| Rust/Cargo | Rust 1.97.1 | compatibility-only Rust 1.85.1; offline compilation/API check, not networked acquisition |
+| Python | CPython 3.14.7 | project floor Python 3.11; exact tested patch 3.11.15 |
+| R | R 4.6.1/testthat 3.3.2 | project floor R 4.4; exact tested patch R 4.4.3/testthat 3.2.3 |
+| Julia | Julia 1.12.6 | maintained LTS policy; exact tested LTS 1.10.11 |
+| Arrow | PyArrow/Arrow C++ 25.0.0 and arrow-rs 59.1.0 | Experimental transport candidates only |
+| CBOR/CDDL | cbor2 6.1.4 narrow current probe; retained historical differentials; cddl 0.10.6 | Experimental only; cddl 0.10.6 fails the Rust 1.85.1 floor |
 
-Clean builds on CI-supported platforms and documented local reproduction.
+Direct execution evidence is Linux x86-64 only. macOS, Windows, ARM, hosted-runner, publication, and intermediate-version coverage remains planned or unknown.
+
+The permanent repository guardrail now runs `python3 scripts/bootstrap/run_toolchain_probes.py --verify` through `make check`, so later matrix, report, or retained-evidence drift fails CI.
+
+### SQ-0003 — Lean/Mathlib project bootstrap
+
+Status: **READY; recommended next execution**.
+
+Follow `work/contracts/SQ-0003.yaml`.
+
+Required result:
+
+- production `lean/` project pinned to the exact reviewed Lean/Mathlib pair;
+- reproducible `lake-manifest.json`;
+- minimal namespace, internal/test-only smoke declaration, and test/example;
+- normal and isolated no-binary-cache builds;
+- actual machine-readable transitive axiom reports for named declarations;
+- fail-closed mutations for `sorry`, `admit`, `sorryAx`, project axioms, toolchain/manifest changes, and unreviewed native trust;
+- least-privilege Lean CI with pinned actions and observed runner metadata;
+- exact documentation, source/formal/adversarial/CI/integration reviews, and handoff.
+
+No statistical ontology, inference theorem, artifact checker, theorem-registry semantics, or public theorem is permitted in SQ-0003.
+
+### SQ-0004 — Rust reference workspace bootstrap
+
+Status: **READY; unstarted**.
+
+Follow `work/contracts/SQ-0004.yaml` in a separate execution.
+
+Required result:
+
+- minimal `backend/` workspace pinned to Rust 1.97.1, Edition 2024, resolver 3, and `rust-version = "1.85.1"`;
+- one exact Cargo lock acquired with current Cargo and tested under Rust 1.85.1 offline;
+- workspace-level `unsafe_code = "forbid"` and strict lints;
+- deterministic version/error CLI only, without IR/schema/canonicalization/artifact semantics;
+- malformed-input/panic, unsafe, lock, registry/credential, output, license, and advisory tests;
+- least-privilege Rust CI and independent reviews.
+
+### Milestone-B acceptance
+
+- Both projects build from clean, pinned environments.
+- Each project records exact locks, normal and adverse paths, trust limitations, and successful CI.
+- Neither project imports Experimental Arrow/CBOR/CDDL behavior into normative code.
+- No task claims statistical verification.
 
 ## Milestone C — Settle an encoding prototype (SQ-0005–SQ-0007)
 
 ### SQ-0005
 
-Implement competing prototypes for deterministic CBOR behavior using at least two independently originated libraries/implementations or oracles. Test integer/rational tags, byte strings, map ordering, Unicode, duplicate keys, IEEE bits, intervals, missing values, unknown extensions, non-profile encodings, and resource behavior. Resolve RFC-0001 and the encoding-relevant portion of RFC-0006 without using Rust output as the semantic oracle.
+After SQ-0004, implement competing deterministic-CBOR prototypes using at least two independently originated implementations or oracles. Test integers/rationals, bytes, map ordering, Unicode, duplicate keys, IEEE bit patterns, intervals, missing values, extensions, non-profile encodings, and resource behavior. Resolve RFC-0001 and only the encoding-relevant boundary of RFC-0006. Rust output is not the semantic oracle.
 
 ### SQ-0006
 
-Create versioned CDDL files for numeric atoms, identifiers, extensions, and the exact data-free `foundation_structural` fixture. Avoid draft CDDL module/import syntax unless its revision is pinned and labeled Experimental. Add diagnostic JSON Schema projections, valid/invalid examples, reviewed canonical bytes/digests, and a schema-version policy. The artifact envelope remains SQ-0010 scope; the first normative logical-data schema/digest is explicitly deferred to RFC-0006/SQ-0027.
+After RFC-0001 is Accepted, create versioned CDDL files for numeric atoms, identifiers, extensions, and the exact data-free `foundation_structural` fixture. Avoid draft CDDL module/import syntax unless the revision is pinned and labeled Experimental. Add diagnostic JSON projections, valid and invalid examples, independently reviewed canonical bytes/digests, and migration/version policy. The artifact envelope remains SQ-0010. Real logical-data schema/digest remains RFC-0006/SQ-0027.
 
 ### SQ-0007
 
-After RFC-0005 is Accepted, implement the registry metadata/lock schema and test-only, definitionally trivial `True` conformance record. It is not a public theorem or non-vacuity witness. Bind canonical elaborated proposition bytes, normalization/environment version, canonical registry record, independently selected registry authorization root/policy and status, statement digest, proof/build lock, actual axiom report, and compatibility-proof path. Keep semantic identity separate from proof-body/build trust, and require the exact bytes-for-`False` mapped to `True` misbinding mutation without treating it as evidence of a general decoder or theorem capability.
+After RFC-0005 is Accepted, implement registry metadata/lock schema and a test-only definitionally trivial `True` conformance record. Bind canonical elaborated proposition bytes, normalization/environment version, canonical registry record, independently selected authorization root/policy/status, statement digest, proof/build lock, actual axiom report, and compatibility-proof path. Keep semantic identity, registry authorization, proof/build trust, and axiom evidence separate. Include a bytes-for-`False` mapped to `True` misbinding mutation. The toy record is not a public theorem or non-vacuity witness.
 
 ### Acceptance
 
-Two implementations agree on all accepted golden vectors. Every negative vector has a named rejection reason.
+- Independent implementations agree on every accepted golden vector.
+- Every negative vector has a named rejection class.
+- Draft RFC behavior is never implemented as accepted semantics.
 
-## Milestone D — Create formal semantic skeleton (SQ-0008–SQ-0009)
+## Milestone D — Create the minimal formal semantic skeleton (SQ-0008–SQ-0009)
 
 ### SQ-0008
 
-After RFC-0002 is Accepted and RFC-0004 supplies an accepted narrow boundary, define only the minimal Lean types/interfaces needed by the toy subset for claim class, assurance input/evidence category, verification mode, external assumption, and typed claim reference. Supply examples/nonexamples. Do not freeze a universal experiment or flat randomness-scope abstraction.
+After RFC-0002 and a narrow RFC-0004 boundary are Accepted, define only the minimal Lean interfaces required by the toy subset: claim class, assurance-input/evidence category, verification mode, external assumption, and typed claim reference. Supply source-grounded examples/nonexamples. Do not freeze a universal experiment or flat randomness abstraction.
 
 ### SQ-0009
 
-Define assurance node/edge kinds and DAG well-formedness for the toy subset. Prove that diagnostics, attestations, citations, provenance, unresolved obligations, and policy classifications cannot discharge deductive premises. Establish deterministic node identity rules.
+Define toy assurance node/edge kinds and DAG well-formedness. Prove or structurally ensure that diagnostics, attestations, citations, provenance, unresolved obligations, and policy classifications cannot discharge deductive premises. Establish deterministic node identity for the toy subset.
 
 ### Acceptance
 
-Public definitions have source/semantic reviews and frozen hashes; no `sorry` or project axiom.
+Public definitions have source/statistical/formal review and frozen hashes; no `sorry`, project axiom, or evidence promotion exists.
 
 ## Milestone E — Artifact and reference backend (SQ-0010–SQ-0012)
 
 ### SQ-0010
 
-Define the safe deterministic archive envelope, entry limits, required manifest fields, content hashes, critical feature behavior, and report separation. Add path traversal, duplicate entry, oversized, and unknown-critical fixtures.
+Resolve RFC-0008 and define the bounded deterministic artifact envelope, required manifest fields, content coverage, critical-feature behavior, offline resolution, report separation, privacy/redaction identity, and resource limits. Add path traversal, duplicate entry, oversized/decompression, truncation, lock-substitution, and unknown-critical fixtures.
 
 ### SQ-0011
 
-Implement Rust parsing, validation, canonical encoding, domain-separated content digests, and machine-readable inspect/validate commands for the data-free fixture. Theorem-registry/lock resolution belongs to SQ-0007. Do not implement a logical-data schema, lowering, or digest; RFC-0006/SQ-0027 owns that first real-data backend path. Parser behavior must be bounded and panic-free.
+Implement Rust parsing, validation, canonical encoding, domain-separated content digests, and inspect/validate commands for the data-free fixture only. Theorem registry/lock resolution belongs to SQ-0007. Do not implement logical-data schema, lowering, or digest before RFC-0006/SQ-0027. Hostile input must be bounded and panic-free as tested behavior.
 
 ### SQ-0012
 
-Implement the minimal Lean-side decoder/bridge for the toy structural object or generate checked Lean source from a validated representation, according to the accepted trust RFC. Document exactly which parser/bridge components enter each mode’s TCB.
+Resolve RFC-0003 and implement the minimal Lean byte-to-term/verified-structure path for the toy object. Bind exact bytes, schema/profile, theorem/environment/proof locks, and proposition. Report every parser, decoder, generator, compiler, runtime, and platform component that enters each verification mode's TCB.
 
 ### Acceptance
 
-Rust and Lean agree on the toy object; malformed artifacts fail consistently.
+Rust and Lean agree on the exact toy object and proposition. Malformed/misbinding inputs fail. Artifact-level kernel wording is prohibited until the accepted RFC-0003 path succeeds.
 
-## Milestone F — Frontend skeletons (SQ-0013–SQ-0016)
+## Milestone F — Frontend skeletons and conformance (SQ-0013–SQ-0016)
 
-Create package-native skeletons:
+Create package-native source skeletons after schema v0:
 
-- R package source `statqed`, with a live pre-publication name/policy recheck, constructors returning typed IR values, and `testthat` tests;
-- Python distribution/import source `statqed`, with a live pre-publication name/policy recheck, modern `pyproject.toml`, tests, and CLI bridge;
-- Julia package source `StatQED`, with a live name/policy recheck, a tested General-compatible publication/mirror/split strategy, tests, and shared fixtures.
+- R package source `statqed`, with live naming/policy recheck and `testthat`;
+- Python distribution/import source `statqed`, with live naming/policy recheck and typed modern packaging;
+- Julia package source `StatQED`, with live naming/policy recheck and tested General-compatible publication/mirror/split strategy.
 
-Generate or share structural definitions rather than hand-maintaining divergent models. Each frontend emits the same trivial semantic object; no model adapter is included yet.
+Each frontend constructs the same data-free semantic object and delegates normative canonicalization to the accepted reference path. No model adapter is included.
 
-SQ-0016 builds a conformance runner comparing semantic objects, normalized diagnostics, canonical bytes, digests, and failure codes across Rust and all frontends. Shared-Rust caller agreement is integration evidence; encoder acceptance also requires an implementation/oracle with independent lineage and a mutation proving the harness detects Rust divergence.
+SQ-0016 compares semantic objects, normalized diagnostics, canonical bytes, digests, and error classes. Shared-Rust caller agreement is integration evidence only; encoder acceptance also needs independent lineage and a mutation proving the harness detects Rust divergence.
 
-## Milestone G — Trust report, CI, and first artifact (SQ-0017–SQ-0020)
+## Milestone G — Trust report, CI, composed artifact, and review (SQ-0017–SQ-0020)
 
 ### SQ-0017
 
-Define and render the machine/human trust report for the toy artifact. Include mode, claims, external assumptions, TCB, untrusted components, locks, warnings, and nonclaims.
+Define machine and human trust reports for the toy artifact. Include exact verification result/mode, checked claims, external assumptions, unresolved leaves, TCB, untrusted producers, locks, warnings, and exhaustive nonclaims. Never collapse multiple results into an aggregate stronger status.
 
 ### SQ-0018
 
-Expand CI into separate jobs with pinned toolchains and caches. Add trusted-path scans, generated-file checks, dependency review, clean checkout, and artifact roundtrip.
+Expand CI into pinned, least-privilege language jobs. Add generated-file checks, dependency review, trusted-path scans, cross-language conformance, malformed-input tests, clean-checkout reproduction, and artifact roundtrip.
 
 ### SQ-0019
 
-Compose the ADR-0011 data-free fixture from R, Python, and Julia. Require byte-identical canonical IR under the Accepted profile, one Rust-produced bundle, structural validation, toy `True` theorem/environment/proof locks, the Accepted RFC-0003 path for any kernel claim, and a reproducible report containing every ADR-0011 nonclaim.
+Compose the ADR-0011 fixture from R, Python, and Julia. Require identical accepted semantic IR and canonical bytes, one Rust-produced bundle, structural validation, test-only `True` locks, the Accepted RFC-0003 path for any kernel result, and a report containing every ADR-0011 nonclaim.
 
 ### SQ-0020
 
-Run an independent foundation review. Attempt malformed inputs, alternate implementations, clean-machine reproduction, and claim-language review. Update the architecture and open follow-up tasks instead of hiding limitations.
+Run an independent foundation review. Reproduce on clean environments; attack malformed inputs, locks, authorization, byte binding, resource behavior, and report language; resolve RFC-0007 and RFC-0009 or perform an explicitly reviewed owner handoff; update architecture and follow-up tasks rather than hiding limitations.
 
 ## Validation commands
 
-Initially:
+Current repository-wide commands:
 
 ```bash
 make check
 make list-work
+git diff --check
 ```
 
-As tasks land, the plan must replace placeholders with exact commands for Lean, Rust, R, Python, Julia, schemas, conformance, and clean verification.
+`make check` includes repository/ledger guardrails and the immutable SQ-0002 evidence verifier. Each later task adds exact scoped commands to its contract and nearest `AGENTS.md`/implementation guide.
 
 ## Recovery and idempotence
 
-- Toolchain bootstrap scripts must be repeatable.
-- Generated files identify source and generator.
-- Golden vectors are content-addressed and never rewritten without review.
-- Failed prototypes remain documented under research notes.
-- Each task can be reverted without invalidating unrelated completed tasks.
+- Bootstrap scripts are repeatable and distinguish preparation from offline/clean execution.
+- Generated files name source, generator, version, and reproducible command.
+- Golden vectors and review subjects are content-addressed and never snapshot-updated without semantic review.
+- Failed prototypes and counterexamples remain retained.
+- Toolchain, dependency, schema, theorem, and artifact updates have atomic rollback instructions.
+- Each task can be reverted without silently invalidating unrelated completed tasks.
+- Task-state changes are atomic across contract, backlog, status, plan, review, and handoff.
 
 ## Progress
 
 - [x] Architecture and agent scaffold installed — bootstrap commit.
-- [x] SQ-0001 constitutional baseline ratified and integrated — DONE 2026-08-03; distinct source, statistical, formal, interoperability, security, adversarial, and integration reviews approved the content-addressed surface.
-- [x] SQ-0002 toolchain research — DONE 2026-08-05 on `agent/SQ-0002-toolchain-research`, starting from `9bf99227240550a6c84f417eccd99c48f43be6ec`; 75 attempted combinations, six recommendation records, 90 primary-source records, and 119 content-addressed prototype subjects passed distinct source, formal, Rust, frontend, interoperability, statistical/trust, adversarial, and integration review. Direct probes ran only on Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64.
-- [ ] SQ-0003 and SQ-0004 — READY after the reviewed SQ-0002 transition; neither task has begun.
+- [x] SQ-0001 constitutional baseline — DONE 2026-08-03.
+- [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
+- [ ] SQ-0003 Lean/Mathlib bootstrap — READY; recommended next isolated execution.
+- [ ] SQ-0004 Rust bootstrap — READY; independently unstarted.
 - [ ] SQ-0005 through SQ-0020.
 
 ## Surprises & Discoveries
 
-- The scaffold guardrail hardcoded SQ-0001 as permanently ready, which would reject the required post-integration transition to SQ-0002; SQ-0001 now makes that check ledger-driven.
-- RFC 8949 supplies multiple deterministic choices and CDDL does not define canonical bytes; CDDL module/import syntax remains an active draft as of 2026-08-03.
-- Exact registry 404s are point-in-time observations, not reservations or trademark clearance; crates.io returned a data-access 403 and remains inconclusive.
-- A surface statement digest cannot identify theorem meaning without canonical elaborated proposition bytes, a locked environment, a separate proof/build lock, and an actual axiom report.
-- A self-consistent theorem-registry record is not authorized merely by being content-addressed; verifier policy must select the accepted registry root and its historical or revocation rules.
-- A data-free first fixture avoids prematurely freezing logical-table/digest semantics while still exercising the IR, registry, graph, envelope, and trust-report path.
-- Task dependencies alone cannot enforce constitutional prerequisites, so the work ledger now records Draft-decision owners and machine-checked decision prerequisites.
-- A second work-list implementation that ignores decision prerequisites can contradict the repository guardrail; both commands now share one readiness calculation and distinguish eligible active work from unclaimed READY work.
-- Registered RFCs support only Draft and Accepted until a reviewed, non-cyclic successor relation exists; invalid or mistyped statuses cannot silently release downstream work. The lifecycle guard fails closed and has exhaustive supported-status/owner-state corruption fixtures.
-- A non-Accepted RFC cannot remain assigned to a completed task. RFC-0006 is therefore assigned to detailed task SQ-0027 before real data, while RFC-0007/RFC-0009 keep SQ-0020 blocked until acceptance.
-- Matching release names were insufficient Lean/Mathlib evidence: the recovered Mathlib v4.32.2 full revision selects Lean v4.32.2, while the adjacent Lean 4.32.1/Mathlib 4.32.2 mutation fails the immutable-toolchain control. A 1,710-job no-cache source build and a separate binary-cache run both passed; the earlier stale-cache failure remains retained.
-- Python packaging became reproducible only after binding the exact CPython standalone archives, uv archive, wheelhouse, and built artifacts by SHA-256. R development required a SHA-locked CRAN source closure because conda-forge's R 4.6.1/testthat 3.3.2 combination was unsatisfiable; the R floor was independently recreated offline from an explicit conda lock.
-- A fresh Julia depot still tried to bootstrap the mutable General registry. A fixed empty local registry made the dependency-free package probes deterministic. Arrow file and stream IPC forms differed physically, CBOR libraries exposed permissive and divergent edge behavior, and `cddl` 0.10.6 required Rust 1.88 despite the proposed Rust 1.85.1 floor.
-- Python 3.14.7 and python-build-standalone 20260805 appeared on the final review date, so the earlier 3.14.6 candidate was preserved as superseded evidence and the recommendation was rebound to exact new assets. Rust 1.85.1 remained useful only as an offline compiler/API floor because current advisories prohibit treating its Cargo as a general networked acquisition tool.
-- A restricted-sandbox all-probe run failed closed on Lean network resolution while all locally prepared probes passed; the two exact Lean probes then passed outside the sandbox. Environment unavailability was never normalized into success.
-- Readiness is duplicated in backlog and detailed-contract status fields; the reviewed SQ-0002 transition therefore had to update SQ-0003/SQ-0004 status-only records together. This is scheduling metadata, not initialization of either successor.
+- The original guardrail hard-coded SQ-0001 as permanently ready; readiness is now ledger- and decision-derived.
+- RFC 8949 permits multiple deterministic choices, CDDL does not define canonical bytes, and CDDL module/import syntax remains draft work; RFC-0001 must select the complete profile.
+- Registry 404s are point-in-time observations, not reservations or trademark clearance; publication names require live task-specific checks.
+- A surface theorem digest cannot identify meaning without canonical elaborated proposition bytes, a locked environment, separate registry authorization, proof/build lock, and actual axiom report.
+- A self-consistent artifact-supplied registry root has no governed authority merely because it is content-addressed.
+- A data-free first fixture avoids freezing unresolved logical-table/digest semantics while exercising IR, registry, graph, envelope, Lean, and reporting paths.
+- Task dependencies alone cannot enforce constitutional prerequisites; the ledger records Draft decision owners and Accepted-only prerequisites.
+- Registered RFCs support only Draft and Accepted until non-cyclic successor semantics are reviewed; invalid statuses and completed Draft owners fail closed.
+- RFC-0006 is owned by detailed task SQ-0027 so no real-data schema/digest/backend path lands prematurely.
+- Exact Lean/Mathlib compatibility required the full Mathlib revision and its toolchain body; adjacent release-label combinations failed the immutable controls.
+- SQ-0002's Lean evidence included both a binary-cache path and a 1,710-job no-cache source build; a restricted sandbox later failed closed on DNS rather than being normalized to success.
+- Reproducible Python packaging required exact CPython standalone archives, uv, a hash-locked wheelhouse, and built-artifact digests.
+- R development required a SHA-locked CRAN source closure after the proposed conda-forge combination proved unsatisfiable; the floor used an independent explicit conda lock.
+- A fresh Julia depot tried to bootstrap mutable General; a fixed empty local registry made the dependency-free probes deterministic.
+- Arrow file and stream IPC forms differed physically; CBOR libraries exposed permissive/divergent edge behavior; cddl 0.10.6 requires Rust 1.88 and cannot satisfy the Rust 1.85.1 floor.
+- Python and Rust recommendations changed during review as new releases/source evidence appeared; superseded evidence was retained instead of rewritten.
+- Rust 1.85.1 remains useful only as an offline compiler/API floor because the recorded Cargo advisories prohibit using it for general acquisition.
+- Readiness appears in backlog and detailed contracts; status transitions must update both atomically.
+- The first SQ-0002 merge referenced four ignored `.pytest_cache` files. The correction removed only those non-durable subjects and independently reverified 115 tracked hashes.
+- A successful repository-guardrails run on the final SQ-0002 merge checked the ledger but did not run the strict evidence verifier because `make check` did not include it. The 2026-08-08 post-merge maintenance made the verifier a permanent guardrail.
+- SQ-0003/SQ-0004 were technically READY but their original short contracts did not authorize complete task transitions/reviews or encode the reviewed negative tests. Their contracts are now executable without semantic improvisation.
 
 ## Decision Log
 
-- 2026-08-03: Initial ADRs remain Proposed until the corrected content-addressed surface receives independent re-review.
-- 2026-08-03: Opened RFC-0004 (core ontology), RFC-0005 (theorem identity/proof trust), RFC-0006 (logical data/digest), RFC-0007 (compatibility), RFC-0008 (artifact envelope/offline resolution), and RFC-0009 (community governance); RFC-0001 and RFC-0003 remain explicit downstream blockers.
-- 2026-08-03: Selected ADR-0011's data-free `foundation_structural` slice with a toy proposition `True`; no canonical bytes or statistical semantics are frozen by SQ-0001.
-- 2026-08-03: Selected source-tree package names as conventions only; public registry names and publication layouts require live task-specific rechecks.
-- 2026-08-03: Added a machine-checked constitutional decision register. Each Draft RFC has one contract with write authority, and downstream tasks name Accepted-decision prerequisites where dependency completion alone is insufficient.
-- 2026-08-03: Separated theorem-record integrity from registry authorization; an artifact-supplied root cannot confer governed theorem identity, maturity, review, revocation, or compatibility authority.
-- 2026-08-03: Assigned RFC-0006 to detailed task SQ-0027 and kept SQ-0006/SQ-0011 data-free. No normative real-data schema, digest, or backend path may land before RFC-0006 acceptance.
-- 2026-08-03: Required SQ-0020 to accept RFC-0007 and RFC-0009 rather than complete with an unresolved owner; the ledger rejects non-atomic owner handoff.
-- 2026-08-03: Fixed provenance-redaction identity: changing committed/normative provenance always creates new normative artifact/result identity; inert-report-only redaction preserves normative identity but changes physical bundle bytes/file commitment and records disclosure; unresolved leaves apply only to external/uncommitted references or newly identified objects/results.
-- 2026-08-03: Constrained registered RFCs to Draft/Accepted and decision prerequisites to Accepted until successor semantics are reviewed. Every completed/superseded owner must have an Accepted RFC; a pure exhaustive fixture covers all supported decision/owner states and a non-vacuous typo rejection.
-- 2026-08-03: Classified ADR-0011's definitionally trivial `True` as a test-only conformance record that cannot satisfy public-theorem non-vacuity.
-- 2026-08-03: Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 against the reviewed surface preserved in commit `31fbd22`. ADR-0004, ADR-0005, and ADR-0007 remain Proposed behind their named RFC/tasks.
-- 2026-08-03: Kept RFC-0001 through RFC-0009 Draft. RFC-0002 is review-eligible but remains owned by SQ-0008 so the evidence taxonomy, narrow statistical ontology, and concrete public types are resolved together without silent semantics.
-- 2026-08-03: Independent integration review approved the immutable candidate and the disposition-only delta, integrated in commit `ab5e937c0f36d605dd75fef86a84ada0868ab326`. SQ-0001 is DONE and SQ-0002 is the sole READY task; no language toolchain was initialized.
-- 2026-08-05: Superseded the initial SQ-0002 candidate after current-source and compatibility review. Final proposed development pins and support floors are Lean 4.32.2 commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c` with Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c` as an exact pair; Rust 1.97.1 with compatibility-only Rust 1.85.1 MSRV; Python 3.14.7 with Python 3.11.15 floor; R 4.6.1 with R 4.4.3 tested floor; and Julia 1.12.6 with Julia 1.10.11 LTS floor. Direct claims remain Linux x86-64 only; non-Linux entries are planned validation, and non-Linux Rust MSRV is not yet proposed.
-- 2026-08-03: Kept Arrow 25.0.0, the tested CBOR libraries, and `cddl` 0.10.6 as experimental compatibility candidates only. SQ-0002 does not define canonical bytes, logical-data identity, decoder acceptance, artifact envelopes, or accept RFC-0001/RFC-0006.
-- 2026-08-05: Independent integration review approved review package `c43b90e39eebe500d70f6d0957a61a549c90545e`, the exact report/matrix/prototype digests, seven distinct specialist dispositions, and the status-only successor transition committed as `7a0b726189155d4131b30df63aee6c60f19671d9`. SQ-0002 is DONE; the repository computes SQ-0003 and SQ-0004 as READY; neither successor was begun.
+- 2026-08-03: Opened RFC-0004 through RFC-0009 and retained RFC-0001 through RFC-0003 as explicit downstream decisions.
+- 2026-08-03: Selected ADR-0011's data-free `foundation_structural` slice with a test-only proposition `True`; SQ-0001 froze no canonical bytes.
+- 2026-08-03: Selected source-tree names only; registry names, publication topology, reservation, and legal clearance remain live checks.
+- 2026-08-03: Added a machine-checked decision register, Accepted-only prerequisites, and fail-closed owner lifecycle.
+- 2026-08-03: Separated theorem-record integrity, verifier-selected registry authorization, proposition/environment identity, proof/build trust, and actual axiom reporting.
+- 2026-08-03: Assigned RFC-0006 and the first normative logical-data path to SQ-0027; SQ-0006/SQ-0011 remain data-free.
+- 2026-08-03: Required SQ-0020 to resolve RFC-0007/RFC-0009 or perform a reviewed owner transition.
+- 2026-08-03: Defined provenance-redaction identity: normative provenance changes create a new normative identity; inert report-only redaction changes physical bundle identity and records disclosure.
+- 2026-08-03: Classified the toy `True` record as definitionally trivial, test-only, and ineligible for public-theorem non-vacuity.
+- 2026-08-03: Accepted ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011; retained ADR-0004, ADR-0005, ADR-0007 and all nine RFCs behind their owners.
+- 2026-08-05: Finalized SQ-0002 development pins and floors listed under Milestone B; direct support claims remain Linux x86-64 only.
+- 2026-08-05: Retained Arrow, CBOR, and CDDL findings as Experimental compatibility evidence only; no canonicalization/data semantics were accepted.
+- 2026-08-05: Independent integration review approved package `c43b90e39eebe500d70f6d0957a61a549c90545e` and atomic DONE transition `7a0b726189155d4131b30df63aee6c60f19671d9`.
+- 2026-08-05: Packaging correction removed four ignored test-runner cache files, preserved all substantive evidence, and was merged as `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e` after independent re-review.
+- 2026-08-08: Post-merge review approved SQ-0002 with planning maintenance, made its strict verifier part of `make check`, corrected current-task/status/count metadata, and expanded SQ-0003/SQ-0004 contracts without changing recommendations or task states.
+- 2026-08-08: Recommended SQ-0003 as the next isolated task because it establishes the proof-backend build and axiom/trust surface; SQ-0004 remains independently READY.
 
 ## Outcomes & Retrospective
 
-SQ-0001 outcome: eight high-level architectural ADRs are Accepted; three narrower ADRs and all nine RFCs remain explicitly Proposed/Draft with machine-checked owners and gates. The exact first slice is data-free, test-only, and non-statistical. Distinct source, statistical, formal, interoperability, security, adversarial, and integration reviewers approved the frozen surface preserved in commit `31fbd22` and its disposition-only integration delta. At SQ-0001 completion, SQ-0002 became the sole READY task and no language toolchain had been initialized. Full Plan 0001 retrospective remains SQ-0020 work.
+### SQ-0001
 
-SQ-0002 outcome: a strict verifier binds the report to 75 successful, failed, or unknown attempts, six recommendation records, 90 primary sources, logs, locks, and 119 prototype subjects; corruption fixtures test mutable recommendations, platform-evidence laundering, arbitrary reruns, failure normalization, empty locks, advisory-response corruption, environment sanitization, and unavailable recommended tooling. Distinct specialist and integration reviews approved the content-addressed surface. SQ-0002 is DONE and SQ-0003/SQ-0004 are READY but unstarted. No production toolchain, package, RFC, schema, or workflow was changed.
+Eight high-level architectural ADRs are Accepted. Three narrower ADRs and nine RFCs remain explicitly governed. The exact first slice is data-free, test-only, and non-statistical. The task established source-aligned review, explicit trust boundaries, and a decision-aware work ledger.
+
+### SQ-0002
+
+A strict verifier binds the compatibility report to 75 successful, failed, or unknown attempts, six recommendation records, 90 dated sources, retained logs/locks, and 115 durable tracked subjects. Corruption cases detect mutable recommendations, platform laundering, arbitrary reruns, failure normalization, empty locks, advisory corruption, environment inheritance, and unavailable recommended tooling. Distinct specialist and integration reviews approved the surface. No production toolchain, package, RFC, schema, or statistical semantics were introduced.
+
+Post-merge review found no blocking research defect. It converted the SQ-0002 verifier into a permanent repository guardrail and repaired stale successor planning. SQ-0003 and SQ-0004 are READY and unstarted. Full foundation retrospective remains SQ-0020 work.

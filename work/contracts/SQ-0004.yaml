@@ -1,12 +1,153 @@
 {
-  "id":"SQ-0004","title":"Bootstrap Rust reference workspace","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A pinned safe Rust workspace and thin CLI compile, lint, and test from a clean checkout.",
-  "dependencies":["SQ-0002"],
-  "allowed_paths":["backend/**",".github/workflows/rust.yml","docs/implementation/rust-backend.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
-  "forbidden_paths":["schemas/**","lean/**","frontends/**"],
-  "public_changes":[],
-  "steps":["Create minimal workspace/crates approved by ADR","Pin toolchain/MSRV","Forbid unsafe code","Add structured error and deterministic CLI skeleton","Add format/clippy/test/deny policies","Document platform/setup","Add CI"],
-  "tests":["cargo fmt --check","cargo clippy --all-targets --all-features -- -D warnings","cargo test --workspace","panic-free smoke on malformed CLI input"],
-  "reviewers":{"semantic_source":[],"formal_conformance":["rust engineer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["Clean reproducible build","No semantic schema invented","No unsafe code","Machine-readable stable error skeleton"],
-  "commands":["cd backend && cargo fmt --check","cd backend && cargo clippy --all-targets --all-features -- -D warnings","cd backend && cargo test --workspace","make check"],"handoff_outputs":["Workspace lock","test logs","security notes"]
+  "id": "SQ-0004",
+  "title": "Bootstrap Rust reference workspace",
+  "status": "READY",
+  "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
+  "milestone": "Milestone B — Pin and bootstrap toolchains",
+  "objective": "A clean checkout builds, lints, tests, and security-checks a minimal Rust reference-backend workspace using Rust 1.97.1 with a compatibility-only Rust 1.85.1 floor, deterministic machine-readable CLI errors, no unsafe project code, and no statistical or schema semantics.",
+  "dependencies": ["SQ-0002"],
+  "dependency_evidence": [
+    "SQ-0002 is DONE in work/backlog.yaml",
+    "SQ-0002 final evidence packaging is merged on main at 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e",
+    "work/status.yaml and the shared readiness calculation identify SQ-0003 and SQ-0004 as READY",
+    "work/reviews/SQ-0002.md and work/handoffs/SQ-0002.md approve Rust 1.97.1 as the development pin and Rust 1.85.1 as an offline compiler/API compatibility floor",
+    "The reviewed SQ-0002 evidence records that Cargo 1.85.1 is not an approved network acquisition or release tool"
+  ],
+  "allowed_paths": [
+    "work/contracts/SQ-0004.yaml",
+    "backend/**",
+    ".github/workflows/rust.yml",
+    "docs/implementation/rust-backend.md",
+    "docs/quality/dashboard.md",
+    "docs/exec-plans/active/0001-foundation-bootstrap.md",
+    "work/backlog.yaml",
+    "work/status.yaml",
+    "work/reviews/SQ-0004.md",
+    "work/handoffs/SQ-0004.md"
+  ],
+  "forbidden_paths": [
+    "lean/**",
+    "frontends/**",
+    "schemas/**",
+    "conformance/**",
+    "theorem-registry/**",
+    "methods/**",
+    "generated/**",
+    "rfcs/**",
+    "docs/adr/**",
+    "docs/design/**",
+    "docs/spec/**",
+    "scripts/bootstrap/run_toolchain_probes.py",
+    "docs/research/toolchain-prototypes/**",
+    ".github/workflows/lean.yml",
+    "Makefile"
+  ],
+  "public_changes": [
+    "Initial Experimental Rust workspace/crate layout, deterministic version/error CLI surface, MSRV policy, lint/security policy, and Rust-specific CI only",
+    "No statistical IR, schema, canonicalization profile, artifact format, theorem registry, certificate checker, frontend binding, or normative encoding is created by this task"
+  ],
+  "accepted_decisions": [
+    "ADR-0001 — foundation-phase monorepo",
+    "ADR-0003 — Rust reference operational backend rather than semantic authority",
+    "ADR-0008 — mode-specific minimal TCB and conditionally untrusted producers",
+    "ADR-0011 — data-free, test-only structural foundation slice",
+    "SQ-0002 reviewed recommendation — Rust 1.97.1 development pin and compatibility-only Rust 1.85.1 floor"
+  ],
+  "sources": [
+    "docs/implementation/toolchain-compatibility.md and the content-addressed SQ-0002 Rust prototype, Cargo.lock, license inventory, and RustSec evidence",
+    "Official Rust 1.97.1 and 1.85.1 release identities, Cargo workspace/resolver/MSRV/lint documentation, target support documentation, and rustup documentation",
+    "Official advisories governing Cargo 1.85.1 acquisition behavior and the exact RustSec database revision used for review",
+    "Official GitHub Actions documentation and exact action source commits used by the Rust workflow"
+  ],
+  "assumptions": [
+    "SQ-0004 initializes only a minimal operational-backend workspace and does not settle any Draft RFC",
+    "Rust 1.97.1 is the development/build/acquisition toolchain; Rust 1.85.1 is an offline compiler/API compatibility check and must not perform general networked dependency acquisition",
+    "The committed Cargo.lock is generated by the reviewed current toolchain and reused with --locked/--offline for the compatibility floor",
+    "A successful Rust build establishes only the named code/build behavior, not statistical meaning, canonical serialization, artifact validity, or proof soundness",
+    "Safe Rust reduces but does not remove compiler, dependency, runtime, operating-system, FFI, and resource-exhaustion trust",
+    "GitHub hosted-runner execution is operational evidence for the observed image, not immutable platform compatibility evidence"
+  ],
+  "steps": [
+    "Run git status, git rev-parse HEAD, make check, make list-work, and git diff --check; confirm SQ-0003 and SQ-0004 are READY and no task is active",
+    "Create agent/SQ-0004-rust-bootstrap and atomically mark only SQ-0004 IN_PROGRESS in its contract, backlog, status, and Plan 0001 Progress section; leave SQ-0003 unchanged",
+    "Inspect the SQ-0002 Rust recommendation, exact lock, development/MSRV commands, unsafe mutation, license inventory, advisory evidence, and current-Cargo acquisition policy before creating production files",
+    "Create backend/rust-toolchain.toml pinned to Rust 1.97.1 with required rustfmt and Clippy components",
+    "Create the smallest useful Cargo workspace with Edition 2024, resolver 3, rust-version 1.85.1, workspace-level lint policy, and unsafe_code = forbid for every project target",
+    "Keep the workspace minimal: one reusable core/error crate and one thin statqed CLI crate are sufficient unless a smaller reviewed structure meets the same separation; do not create speculative future crates",
+    "Implement only deterministic version/build metadata and a machine-readable CLI error envelope for unsupported or malformed command-line input; no IR, schema, canonicalizer, digest, archive, registry, or statistical object is permitted",
+    "Generate and commit one exact Cargo.lock with Rust/Cargo 1.97.1 using a fresh credential-free crates.io-only home; verify regeneration and dependency resolution are reproducible",
+    "Run formatting, Clippy with all targets/features and warnings denied, workspace tests, documentation tests where present, deterministic CLI snapshots/semantic assertions, and panic-free malformed-input/property smoke tests",
+    "Run the same committed lock under Rust 1.85.1 using --locked and --offline after acquisition by the current Cargo; demonstrate that the floor never performs general networked acquisition",
+    "Add negative mutations for unsafe project code, changed rust-version, changed lock/dependency graph, ambient Cargo credentials or alternate registry use, nondeterministic error fields, and panic-inducing malformed input",
+    "Produce a normalized dependency/license inventory and run a hash-bound advisory scan against the committed lock; report the database revision and point-in-time limitation",
+    "Add .github/workflows/rust.yml with least-privilege permissions, pinned action revisions, development and offline-MSRV jobs, repository guardrails, fmt/Clippy/tests/security checks, and runner metadata; do not claim untested non-Linux MSRV support",
+    "Update docs/implementation/rust-backend.md with exact acquisition, build, lint, test, MSRV-offline, license, advisory, update, rollback, and trust-boundary instructions",
+    "Obtain distinct Rust/source, API/error-conformance, security/adversarial, CI/reproducibility, and integration reviews of exact commits and the committed lock",
+    "Create work/reviews/SQ-0004.md and work/handoffs/SQ-0004.md, run all commands from a clean checkout, then atomically transition SQ-0004 to DONE while preserving any legitimate SQ-0003 state and recomputing the READY set"
+  ],
+  "tests": [
+    "make check and make list-work before, during, and after task transitions",
+    "git diff --check",
+    "cd backend && cargo +1.97.1 fmt --check",
+    "cd backend && cargo +1.97.1 clippy --workspace --all-targets --all-features --locked -- -D warnings",
+    "cd backend && cargo +1.97.1 test --workspace --all-features --locked",
+    "Clean regeneration/resolution check for Cargo.lock using isolated CARGO_HOME and crates.io-only configuration",
+    "Rust 1.85.1 compatibility build/test with the exact committed lock and --offline; no network or credential access is permitted",
+    "Machine-readable CLI version and error outputs are deterministic after removal of explicitly documented non-normative runtime fields",
+    "Malformed UTF-8/arguments, unknown commands, truncated values, oversized values, and repeated randomized argument sequences do not panic",
+    "Unsafe-source, changed-rust-version, altered-lock, alternate-registry/credential, nondeterministic-output, and panic mutations are rejected for the intended reason",
+    "Normalized dependency-license inventory and hash-bound advisory scan reproduce for the committed Cargo.lock",
+    "The Rust workflow completes successfully before final integration and records the actual runner/toolchain environment",
+    "No files outside allowed paths and no statistical/schema/canonicalization/artifact/registry/encoding semantics"
+  ],
+  "reviewers": {
+    "semantic_source": [
+      "Rust/source curator — exact release, Cargo/MSRV, advisory, license, target, and action-pin lineage"
+    ],
+    "formal_conformance": [
+      "Rust workspace engineer — crate boundaries, exact lock, development/MSRV reproducibility",
+      "independent API/error reviewer — deterministic CLI contract and absence of speculative semantics"
+    ],
+    "adversarial": [
+      "security reviewer — unsafe, panic, malformed-input, credential/registry, dependency, advisory, and resource-boundary tests",
+      "CI/release reviewer — action pinning, permissions, acquisition/offline split, clean checkout, and support-claim boundaries"
+    ],
+    "integrator": [
+      "independent integration reviewer — contract scope, exact lock/inventory, commands, workflow result, status transition, and successor readiness"
+    ]
+  },
+  "acceptance": [
+    "backend/ contains a minimal maintainable workspace pinned to Rust 1.97.1, Edition 2024, resolver 3, and rust-version 1.85.1",
+    "One committed Cargo.lock is generated under the development toolchain and reproduces under documented clean resolution",
+    "Development fmt, Clippy, tests, and deterministic CLI checks pass with --locked",
+    "The Rust 1.85.1 compatibility job compiles/tests the exact lock offline and is not used for acquisition or release operations",
+    "All project crates forbid unsafe code and the unsafe mutation is rejected",
+    "Malformed and adversarial CLI input does not panic and returns the documented deterministic machine-readable error class",
+    "The workspace contains no statistical IR, schema, canonicalizer, artifact, theorem-registry, certificate, or frontend semantics",
+    "Dependency licenses and point-in-time advisory status are bound to the exact lock and their limitations are documented",
+    "The Rust workflow uses least privilege and pinned action revisions, runs repository and Rust gates, and succeeds on the integrated commit or reviewed PR head",
+    "Documentation gives exact acquisition/offline-floor/build/test/update/rollback commands, TCB limitations, and nonclaims",
+    "Independent source, Rust, API, security, CI, and integration reviews approve the exact subject",
+    "All required commands pass, SQ-0004 becomes DONE, and SQ-0003 retains its correct independently managed state while the repository computes the next READY set"
+  ],
+  "commands": [
+    "make check",
+    "make list-work",
+    "git diff --check",
+    "cd backend && cargo +1.97.1 fmt --check",
+    "cd backend && cargo +1.97.1 clippy --workspace --all-targets --all-features --locked -- -D warnings",
+    "cd backend && cargo +1.97.1 test --workspace --all-features --locked"
+  ],
+  "handoff_outputs": [
+    "Pinned backend/rust-toolchain.toml, workspace manifests, and reproducible Cargo.lock",
+    "Minimal core/error crate and thin statqed CLI crate",
+    "Deterministic machine-readable version/error contract and malformed-input evidence",
+    "Development and offline-MSRV clean transcripts",
+    "Unsafe/panic/lock/registry/credential/output mutation evidence",
+    "Dependency license inventory and hash-bound advisory report",
+    "Successful least-privilege Rust CI run and runner metadata",
+    "Updated docs/implementation/rust-backend.md",
+    "Independent source/Rust/API/security/CI/integration review record",
+    "Updated active plan, backlog, status, dashboard, and work/handoffs/SQ-0004.md"
+  ]
 }
