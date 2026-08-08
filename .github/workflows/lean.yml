@@ -165,6 +165,10 @@ jobs:
         working-directory: lean
         run: lake env lean --trust=0 Examples/Smoke.lean
 
+      - name: Replay compiled smoke module in a fresh kernel environment
+        working-directory: lean
+        run: lake env leanchecker --fresh StatQED.Internal.Smoke
+
       - name: Run human-readable trust scan
         run: python3 scripts/check_lean_trust.py
 
@@ -364,6 +368,10 @@ jobs:
       - name: Run smoke example at kernel trust level zero
         working-directory: lean
         run: lake env lean --trust=0 Examples/Smoke.lean
+
+      - name: Replay compiled smoke module in a fresh kernel environment
+        working-directory: lean
+        run: lake env leanchecker --fresh StatQED.Internal.Smoke
 
       - name: Run human-readable trust scan
         run: python3 scripts/check_lean_trust.py
