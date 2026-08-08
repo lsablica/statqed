@@ -17,7 +17,10 @@ platform guarantee, artifact verification record, or statistical claim.
   indirect native-evaluation controls.
 - `bodyless-assumption.json`: accepted checked `.axiomDecl` control which trust checks must reject.
 - `bodyless-constant-language.json`: pinned parser evidence that `constant` is not a Lean 4 command.
-- `no-cache-source-build.json`: separately coordinated source-build status.
+- `no-cache-source-build-initial.json`: the first successful isolated source
+  build, retained after its report schema was superseded by formal review.
+- `no-cache-source-build.json`: the repeated isolated source build against the
+  corrected immutable candidate and current axiom report.
 - `failures/`: preserved failed attempts and their resolutions, including the
   sandbox DNS boundary and initial hosted workflow-configuration rejection.
 

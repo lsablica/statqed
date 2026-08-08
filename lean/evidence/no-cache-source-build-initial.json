@@ -1,0 +1,28 @@
+{
+  "cache_controls": {
+    "LAKE_NO_CACHE": "1",
+    "MATHLIB_NO_CACHE_ON_UPDATE": "1",
+    "existing_project_lake_state": false,
+    "host_environment": "removed by env -i",
+    "host_home": "not inherited"
+  },
+  "command": ["STATQED_LEAN_ISOLATION_ROOT=/tmp/statqed-sq0003-source-isolation", "STATQED_LEAN_ELAN_HOME=/tmp/statqed-sq0003-source-isolation/elan", "./tools/no_cache_build.sh"],
+  "elapsed_seconds": 59.69,
+  "finished_at": "2026-08-08T23:03:41+02:00",
+  "manifest_sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b",
+  "mathlib_checkout_head": "905b95818eb32af7874a58b427f50c1711a5e96c",
+  "max_rss_kb": 969820,
+  "observations": {
+    "axiom_report_check_exit": 0,
+    "build_exit": 0,
+    "build_output": "Build completed successfully (88 jobs).",
+    "dependency_resolution_exit": 0,
+    "smoke_exit": 0
+  },
+  "report_sha256": "bf159c3f43a58e28e161cd8de5e9f5877dfd4a8399ba2768e397aaea7d008a60",
+  "schema_version": 1,
+  "source_commit": "c0593919ca2eb9a35a48f6d71b7931f55f56ad56",
+  "started_at": "2026-08-08T23:02:41+02:00",
+  "status": "superseded_success",
+  "superseded_by": "no-cache-source-build.json after the reviewed axiom-report schema and trust-gate corrections"
+}
