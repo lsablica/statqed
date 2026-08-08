@@ -1,8 +1,8 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0003", "SQ-0004"],
-  "in_progress": [],
+  "ready": ["SQ-0004"],
+  "in_progress": ["SQ-0003"],
   "blocked_count": 56,
   "done": ["SQ-0001", "SQ-0002"],
   "last_integrated_commit": "01c5b6e1bfacf332dbb01259aa19258a3edd0f9e",
@@ -13,6 +13,6 @@
     "SQ-0002 is DONE after specialist review, atomic task transition, durable-evidence correction, packaging re-review, and final merge 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
     "The final SQ-0002 evidence surface contains 75 probes, six recommendations, 90 dated sources, and 115 tracked content-addressed prototype subjects. It initializes no production language project and accepts no Draft RFC semantics.",
     "A post-merge review on 2026-08-08 found no blocking SQ-0002 research defect. It made the strict SQ-0002 evidence verifier part of make check, corrected stale planning metadata, and expanded the SQ-0003/SQ-0004 execution contracts without changing accepted recommendations or task states.",
-    "SQ-0003 and SQ-0004 are READY and unstarted. The recommended next isolated execution is SQ-0003; SQ-0004 remains independently READY."
+    "SQ-0003 began in isolated worktree /tmp/statqed-sq0003 on branch agent/SQ-0003-lean-bootstrap at 2026-08-08T22:13:02+02:00 from d32c50adaec62543e1a7fbc52f62e33ce8f373bb; SQ-0004 remains READY and unstarted."
   ]
 }

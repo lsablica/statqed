@@ -29,7 +29,7 @@ SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed too
 ```text
 SQ-0001 constitutional baseline                       DONE
   └─ SQ-0002 toolchain research                      DONE
-       ├─ SQ-0003 Lean bootstrap                     READY
+       ├─ SQ-0003 Lean bootstrap                     IN_PROGRESS
        └─ SQ-0004 Rust bootstrap                     READY
             └─ SQ-0005 serialization prototype
                  └─ RFC-0001 acceptance
@@ -53,7 +53,7 @@ SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 
 Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
 
-SQ-0003 and SQ-0004 are independent READY tasks. They must use separate branches/worktrees and separate state transitions. The recommended next isolated execution is SQ-0003 because it establishes the proof-backend build and trust-reporting surface. SQ-0004 remains READY and may be executed later or by a separately coordinated non-conflicting agent; the two implementations must not share one branch or one unreviewed integration transition.
+SQ-0003 and SQ-0004 were independent READY tasks. SQ-0003 is now IN_PROGRESS in its isolated worktree because it establishes the proof-backend build and trust-reporting surface. SQ-0004 remains READY and may be executed later or by a separately coordinated non-conflicting agent; the two implementations must not share one branch or one unreviewed integration transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
@@ -107,7 +107,7 @@ The permanent repository guardrail now runs `python3 scripts/bootstrap/run_toolc
 
 ### SQ-0003 — Lean/Mathlib project bootstrap
 
-Status: **READY; recommended next execution**.
+Status: **IN_PROGRESS**.
 
 Follow `work/contracts/SQ-0003.yaml`.
 
@@ -255,7 +255,7 @@ git diff --check
 - [x] Architecture and agent scaffold installed — bootstrap commit.
 - [x] SQ-0001 constitutional baseline — DONE 2026-08-03.
 - [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
-- [ ] SQ-0003 Lean/Mathlib bootstrap — READY; recommended next isolated execution.
+- [ ] SQ-0003 Lean/Mathlib bootstrap — IN_PROGRESS since 2026-08-08T22:13:02+02:00 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap` in `/tmp/statqed-sq0003` (Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64). Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Assigned roles: Mathlib/source scout `/root/sq0003_mathlib_scout`; Lean build engineer `/root/sq0003_build_engineer`; formal trust/axiom reviewer `/root/sq0003_formal_trust`; adversarial mutation reviewer `/root/sq0003_adversarial`; CI/reproducibility reviewer `/root/sq0003_ci_repro`; independent integrator `/root/sq0003_integrator`.
 - [ ] SQ-0004 Rust bootstrap — READY; independently unstarted.
 - [ ] SQ-0005 through SQ-0020.
 

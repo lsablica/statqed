@@ -1,7 +1,7 @@
 {
   "id": "SQ-0003",
   "title": "Bootstrap Lean and Mathlib project",
-  "status": "READY",
+  "status": "IN_PROGRESS",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Milestone B — Pin and bootstrap toolchains",
   "objective": "A clean checkout builds and tests a minimal production Lean project using the exact reviewed Lean 4.32.2/Mathlib revision, emits an actual machine-readable axiom report for named declarations, rejects trusted-path mutations, and documents its limited proof-backend claim without introducing statistical semantics.",
