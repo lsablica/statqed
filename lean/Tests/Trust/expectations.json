@@ -1,0 +1,255 @@
+{
+  "cases": [
+    {
+      "expected_code": "forbidden_sorry",
+      "expected_exit": 1,
+      "fixture": "sorry.lean.fixture",
+      "id": "sorry",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "forbidden_admit",
+      "expected_exit": 1,
+      "fixture": "admit.lean.fixture",
+      "id": "admit",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "forbidden_sorryAx",
+      "expected_exit": 1,
+      "fixture": "sorryAx.lean.fixture",
+      "id": "explicit_sorryAx",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "forbidden_sorryAx",
+      "expected_exit": 1,
+      "fixture": "quoted_sorryAx.lean.fixture",
+      "id": "quoted_sorryAx_identifier",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "fixture": "project_axiom.lean.fixture",
+      "id": "project_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "fixture": "bodyless_constant.lean.fixture",
+      "id": "bodyless_constant",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "fixture": "quoted_axiomDecl.lean.fixture",
+      "id": "quoted_bodyless_axiomDecl",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "project_axiom",
+      "expected_exit": 1,
+      "fixture": "annotated_axiom.lean.fixture",
+      "id": "annotated_project_axiom_same_line",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "toolchain_mismatch",
+      "expected_exit": 1,
+      "fixture": "altered_toolchain.fixture",
+      "id": "changed_toolchain",
+      "mutation": "replace_file",
+      "target": "lean-toolchain"
+    },
+    {
+      "expected_code": "mathlib_config_revision_mismatch",
+      "expected_exit": 1,
+      "id": "changed_mathlib_config_revision",
+      "mutation": "replace_text",
+      "replacement": "0000000000000000000000000000000000000000",
+      "search": "905b95818eb32af7874a58b427f50c1711a5e96c",
+      "target": "lakefile.toml"
+    },
+    {
+      "expected_code": "manifest_revision_mismatch",
+      "expected_exit": 1,
+      "id": "changed_stale_manifest",
+      "json_pointer": "/packages/0/rev",
+      "mutation": "replace_json_value",
+      "replacement": "0000000000000000000000000000000000000000",
+      "target": "lake-manifest.json"
+    },
+    {
+      "expected_code": "mutable_mathlib_revision",
+      "expected_exit": 1,
+      "id": "mutable_mathlib_branch",
+      "mutation": "replace_text",
+      "replacement": "master",
+      "search": "905b95818eb32af7874a58b427f50c1711a5e96c",
+      "target": "lakefile.toml"
+    },
+    {
+      "expected_code": "mutable_mathlib_revision",
+      "expected_exit": 1,
+      "id": "mutable_mathlib_tag",
+      "mutation": "replace_text",
+      "replacement": "v4.32.2",
+      "search": "905b95818eb32af7874a58b427f50c1711a5e96c",
+      "target": "lakefile.toml"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "native_decide.lean.fixture",
+      "id": "native_decide",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "decide_native.lean.fixture",
+      "id": "decide_native_equivalent",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "trustCompiler.lean.fixture",
+      "id": "trustCompiler_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "bv_decide.lean.fixture",
+      "id": "bv_decide_generated_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "ofReduceBool.lean.fixture",
+      "id": "ofReduceBool_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "ofReduceNat.lean.fixture",
+      "id": "ofReduceNat_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "reduceBool.lean.fixture",
+      "id": "reduceBool_indirect_trustCompiler_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "fixture": "reduceNat.lean.fixture",
+      "id": "reduceNat_indirect_trustCompiler_axiom",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "missing_axiom_report",
+      "expected_exit": 1,
+      "id": "missing_axiom_report",
+      "mutation": "remove_file",
+      "target": "Reports/axioms.json"
+    },
+    {
+      "expected_code": "axiom_report_mismatch",
+      "expected_exit": 1,
+      "fixture": "fabricated_axiom_report.json.fixture",
+      "id": "fabricated_axiom_report",
+      "mutation": "replace_file",
+      "target": "Reports/axioms.json"
+    },
+    {
+      "expected_code": "unreviewed_native_trust",
+      "expected_exit": 1,
+      "id": "fabricated_native_axiom_closure",
+      "json_pointer": "/declarations/1/axioms",
+      "mutation": "replace_json_value",
+      "replacement": ["Lean.trustCompiler"],
+      "target": "Reports/axioms.json"
+    },
+    {
+      "expected_code": "adjacent_toolchain_mathlib_mismatch",
+      "expected_exit": 1,
+      "fixture": "adjacent_toolchain.fixture",
+      "id": "adjacent_lean_mathlib_mismatch",
+      "mutation": "replace_file",
+      "target": "lean-toolchain"
+    }
+  ],
+  "positive_controls": [
+    {
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "fixture": "keyword_false_positive.lean.fixture",
+      "id": "comments_and_strings",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    },
+    {
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "fixture": "name_quotation_false_positive.lean.fixture",
+      "id": "inert_name_quotation",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    }
+  ],
+  "live_report_cases": [
+    {
+      "expected_build_exit": 0,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "expected_output_substring": "depends on a prohibited native-trust axiom",
+      "fixture": "reduceBool.lean.fixture",
+      "id": "indirect_native_axiom_live_report",
+      "mutation": "replace_file",
+      "target": "StatQED/Internal/Smoke.lean"
+    }
+  ],
+  "schema_version": 1,
+  "security_regressions": [
+    {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--trust=0",
+        "Bug.lean"
+      ],
+      "expected_exit": 1,
+      "expected_stdout_substring": "(kernel) invalid projection",
+      "fixture": "kernel_projection_14576.lean.fixture",
+      "id": "lean_issue_14576_wrong_structure_projection",
+      "source": "https://github.com/leanprover/lean4/issues/14576"
+    }
+  ]
+}

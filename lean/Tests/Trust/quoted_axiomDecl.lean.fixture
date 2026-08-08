@@ -1,0 +1,22 @@
+import Mathlib.Data.Set.Defs
+import Lean
+
+open Lean Elab Command
+
+namespace StatQED.Internal
+
+elab "#inject_quoted_bodyless_constant" : command => do
+  liftCoreM <| addDecl <| .«axiomDecl» {
+    name := `StatQED.Internal.injectedPremise
+    levelParams := []
+    type := mkConst ``False
+    isUnsafe := false
+  }
+
+#inject_quoted_bodyless_constant
+
+#print axioms StatQED.Internal.injectedPremise
+
+theorem testOnlySmoke : True := True.intro
+
+end StatQED.Internal

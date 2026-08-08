@@ -1,0 +1,7 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+constant injectedPremise : False
+
+end StatQED.Internal

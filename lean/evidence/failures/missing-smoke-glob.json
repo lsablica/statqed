@@ -1,0 +1,7 @@
+{
+  "command": ["lake", "env", "lean", "Examples/Smoke.lean"],
+  "exit": 1,
+  "observed_output": "object file '.lake/build/lib/lean/StatQED/Internal/Smoke.olean' of module StatQED.Internal.Smoke does not exist",
+  "resolution": "The StatQED library globs were made explicit as StatQED and StatQED.+; a clean build then compiled the internal smoke module and the example exited 0.",
+  "schema_version": 1
+}

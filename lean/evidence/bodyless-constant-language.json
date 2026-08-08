@@ -1,0 +1,9 @@
+{
+  "command": ["lake", "env", "lean", "--trust=0", "ConstantSyntax.lean"],
+  "expected_exit": 1,
+  "fixture": "Tests/Trust/constant_syntax_impossible.lean.fixture",
+  "interpretation": "Lean 4.32.2 has no constant declaration command. This parser failure is language evidence, not the bodyless-assumption trust mutation.",
+  "observed_exit": 1,
+  "observed_primary_output": "ConstantSyntax.lean:5:0: error: unexpected identifier; expected command",
+  "schema_version": 1
+}

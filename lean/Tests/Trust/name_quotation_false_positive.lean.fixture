@@ -1,0 +1,12 @@
+import Mathlib.Data.Set.Defs
+import Lean
+
+namespace StatQED.Internal
+
+private def inspectedName : Name := `Lean.trustCompiler
+
+theorem testOnlySmoke : True := by
+  have : inspectedName = inspectedName := rfl
+  exact True.intro
+
+end StatQED.Internal

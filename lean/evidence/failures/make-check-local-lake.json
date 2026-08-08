@@ -1,0 +1,8 @@
+{
+  "command": ["make", "check"],
+  "exit": 2,
+  "observed_output": "ERROR: trusted placeholder found in lean/.lake/packages/importGraph/MainGraph.lean",
+  "reason": "The pre-existing repository guardrail recursively inspected ignored third-party Lake checkout sources after the normal build. The finding is not in a tracked StatQED source file.",
+  "resolution_status": "pending removal of disposable normal .lake state before the coordinated isolated source-build transition; no out-of-scope guardrail edit was made",
+  "schema_version": 1
+}

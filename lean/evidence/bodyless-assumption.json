@@ -1,0 +1,8 @@
+{
+  "command": ["lake", "env", "lean", "--trust=0", "Bodyless.lean"],
+  "fixture": "Tests/Trust/bodyless_constant.lean.fixture",
+  "interpretation": "The pinned parser/kernel accepts the ordinary checked addDecl .axiomDecl path. This is the non-vacuous bodyless-assumption mutation that the trust checks must reject before acceptance.",
+  "observed_exit": 0,
+  "observed_stdout": "'StatQED.Internal.injectedPremise' depends on axioms: [injectedPremise]",
+  "schema_version": 1
+}

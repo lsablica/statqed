@@ -1,0 +1,11 @@
+{
+  "command": ["lake", "env", "lean", "--trust=0", "Bug.lean"],
+  "expected_exit": 1,
+  "fixture": "Tests/Trust/kernel_projection_14576.lean.fixture",
+  "observed_exit": 1,
+  "observed_primary_output": "Bug.lean:57:0: error: (kernel) invalid projection",
+  "observed_stream": "stdout",
+  "result": "expected_rejection",
+  "schema_version": 1,
+  "source": "https://github.com/leanprover/lean4/issues/14576"
+}

@@ -1,0 +1,6 @@
+{
+  "command": ["STATQED_LEAN_ISOLATION_ROOT=/isolated/root", "STATQED_LEAN_ELAN_HOME=/isolated/root/elan", "./tools/no_cache_build.sh"],
+  "reason": "Deferred until the normal candidate is committed and reviewed; do not duplicate a large source build without manager coordination.",
+  "schema_version": 1,
+  "status": "not_run"
+}

@@ -1,0 +1,12 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+theorem importedNativeBoolDependency
+    (h : Lean.reduceBool true = true) : Lean.reduceBool true = true := h
+
+theorem testOnlySmoke : True := True.intro
+
+#print axioms StatQED.Internal.importedNativeBoolDependency
+
+end StatQED.Internal

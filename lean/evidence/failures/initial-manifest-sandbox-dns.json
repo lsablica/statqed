@@ -1,0 +1,11 @@
+{
+  "command": ["lake", "update", "--keep-toolchain"],
+  "exit": 1,
+  "observed_output": [
+    "error: external command 'curl' exited with code 6",
+    "error: leanprover-community/mathlib: Reservoir lookup failed",
+    "error: leanprover-community/mathlib: could not materialize package"
+  ],
+  "resolution": "The identical command was rerun with approved network access and succeeded; the failure was not normalized to success.",
+  "schema_version": 1
+}

@@ -1,0 +1,12 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Internal
+
+theorem reduceBoolShortcut (h : Lean.reduceBool true = true) : true = true :=
+  Lean.ofReduceBool true true h
+
+theorem testOnlySmoke : True := True.intro
+
+#print axioms StatQED.Internal.reduceBoolShortcut
+
+end StatQED.Internal

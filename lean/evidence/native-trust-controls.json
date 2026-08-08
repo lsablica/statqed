@@ -1,0 +1,51 @@
+{
+  "command_template": ["lake", "env", "lean", "--trust=0", "CONTROL.lean"],
+  "controls": [
+    {
+      "axioms": ["Lean.trustCompiler"],
+      "declaration": "StatQED.Internal.testOnlySmoke",
+      "fixture": "Tests/Trust/trustCompiler.lean.fixture",
+      "id": "trustCompiler_axiom",
+      "observed_exit": 0
+    },
+    {
+      "axioms": ["propext", "Classical.choice", "Quot.sound", "bitVecNativeShortcut._native.bv_decide.ax_1_5"],
+      "declaration": "StatQED.Internal.bitVecNativeShortcut",
+      "fixture": "Tests/Trust/bv_decide.lean.fixture",
+      "id": "bv_decide_generated_axiom",
+      "observed_exit": 0
+    },
+    {
+      "axioms": ["Lean.ofReduceBool", "Lean.trustCompiler"],
+      "declaration": "StatQED.Internal.reduceBoolShortcut",
+      "fixture": "Tests/Trust/ofReduceBool.lean.fixture",
+      "id": "ofReduceBool_axiom",
+      "observed_exit": 0
+    },
+    {
+      "axioms": ["Lean.ofReduceNat", "Lean.trustCompiler"],
+      "declaration": "StatQED.Internal.reduceNatShortcut",
+      "fixture": "Tests/Trust/ofReduceNat.lean.fixture",
+      "id": "ofReduceNat_axiom",
+      "observed_exit": 0
+    },
+    {
+      "axioms": ["Lean.trustCompiler"],
+      "declaration": "StatQED.Internal.importedNativeBoolDependency",
+      "fixture": "Tests/Trust/reduceBool.lean.fixture",
+      "id": "reduceBool_indirect_trustCompiler_axiom",
+      "observed_exit": 0
+    },
+    {
+      "axioms": ["Lean.trustCompiler"],
+      "declaration": "StatQED.Internal.importedNativeNatDependency",
+      "fixture": "Tests/Trust/reduceNat.lean.fixture",
+      "id": "reduceNat_indirect_trustCompiler_axiom",
+      "observed_exit": 0
+    }
+  ],
+  "environment_record": "evidence/environment.json",
+  "interpretation": "Each control is accepted by the pinned Lean kernel under trust level zero and retains the observed native-evaluation axiom closure. Accepted StatQED project declarations prohibit these paths.",
+  "observed_at": "2026-08-08T22:58:50+02:00",
+  "schema_version": 1
+}
