@@ -29,7 +29,7 @@ SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed too
 ```text
 SQ-0001 constitutional baseline                       DONE
   └─ SQ-0002 toolchain research                      DONE
-       ├─ SQ-0003 Lean bootstrap                     IN_PROGRESS
+       ├─ SQ-0003 Lean bootstrap                     DONE
        └─ SQ-0004 Rust bootstrap                     READY
             └─ SQ-0005 serialization prototype
                  └─ RFC-0001 acceptance
@@ -39,7 +39,7 @@ SQ-0001 constitutional baseline                       DONE
                            ├─ SQ-0011 canonical backend
                            └─ SQ-0012 Lean structural path + RFC-0003
 
-SQ-0003 ─ SQ-0008 core Lean types + RFC-0002/RFC-0004
+SQ-0003 ─ SQ-0008 core Lean types + RFC-0002/RFC-0004  READY
               └─ SQ-0009 assurance graph
                    └─ SQ-0017 trust report
 
@@ -53,7 +53,10 @@ SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 
 Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
 
-SQ-0003 and SQ-0004 were independent READY tasks. SQ-0003 is now IN_PROGRESS in its isolated worktree because it establishes the proof-backend build and trust-reporting surface. SQ-0004 remains READY and may be executed later or by a separately coordinated non-conflicting agent; the two implementations must not share one branch or one unreviewed integration transition.
+SQ-0003 and SQ-0004 were independent READY tasks. SQ-0003 is now DONE after
+establishing the proof-backend build and trust-reporting surface. The computed
+successor set is SQ-0004 and SQ-0008 READY. Neither successor has begun; each
+requires a separate isolated execution and review transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
@@ -107,7 +110,7 @@ The permanent repository guardrail now runs `python3 scripts/bootstrap/run_toolc
 
 ### SQ-0003 — Lean/Mathlib project bootstrap
 
-Status: **IN_PROGRESS**.
+Status: **DONE**.
 
 Follow `work/contracts/SQ-0003.yaml`.
 
@@ -255,8 +258,9 @@ git diff --check
 - [x] Architecture and agent scaffold installed — bootstrap commit.
 - [x] SQ-0001 constitutional baseline — DONE 2026-08-03.
 - [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
-- [ ] SQ-0003 Lean/Mathlib bootstrap — IN_PROGRESS since 2026-08-08T22:13:02+02:00 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap` in `/tmp/statqed-sq0003` (Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64). Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Assigned roles: Mathlib/source scout `/root/sq0003_mathlib_scout`; Lean build engineer `/root/sq0003_build_engineer`; formal trust/axiom reviewer `/root/sq0003_formal_trust`; adversarial mutation reviewer `/root/sq0003_adversarial`; CI/reproducibility reviewer `/root/sq0003_ci_repro`; independent integrator `/root/sq0003_integrator`.
+- [x] SQ-0003 Lean/Mathlib bootstrap — DONE 2026-08-08 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap`; review package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7`. Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Distinct Mathlib/source, build, formal trust, adversarial mutation, CI/reproducibility, and integration roles approved the package. Exact-package Lean run `31279603416` and guardrails run `31279603408` passed cached and isolated-source gates.
 - [ ] SQ-0004 Rust bootstrap — READY; independently unstarted.
+- [ ] SQ-0008 core Lean types/RFC ownership — READY by dependency calculation; independently unstarted, with RFC-0002/RFC-0004 still Draft for that task to resolve.
 - [ ] SQ-0005 through SQ-0020.
 
 ## Surprises & Discoveries
@@ -283,6 +287,10 @@ git diff --check
 - A successful repository-guardrails run on the final SQ-0002 merge checked the ledger but did not run the strict evidence verifier because `make check` did not include it. The 2026-08-08 post-merge maintenance made the verifier a permanent guardrail.
 - SQ-0003/SQ-0004 were technically READY but their original short contracts did not authorize complete task transitions/reviews or encode the reviewed negative tests. Their contracts are now executable without semantic improvisation.
 - During SQ-0003, official Lean issue #14576 initially appeared to postdate the fixed Lean 4.32.2 pin and potentially affect kernel soundness. Exact ancestry showed release commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c` immediately follows backport `8be817b3f6310f62f220861b0c92dbabb951115d` of the #14577 fix; the official minimized exploit is rejected under `lean --trust=0` with `(kernel) invalid projection` on the pinned binary.
+- Text scanning alone could not establish the trusted declaration surface. The accepted path obtains module ownership, declaration kind, `isUnsafe`, types, and transitive axioms from the live Lean environment, then uses a comment/string-aware source scanner as a supplementary gate.
+- A root-level hosted identity probe did not select the project-local Lean channel automatically. Explicit `elan run leanprover/lean4:v4.32.2` made tool identity independent of working-directory selection; the failed hosted attempt remains retained.
+- The narrow production import built 88 jobs from source in about one minute locally and on the hosted runner. Local dependency/build state can nevertheless grow to several gigabytes, so `.lake` remains ignored and disposable while the small exact evidence records remain committed.
+- Completing SQ-0003 makes SQ-0008 READY even while RFC-0002/RFC-0004 remain Draft because SQ-0008 owns and must resolve those RFCs. Contract/backlog/status parity required a readiness-only SQ-0008 contract update; this does not begin SQ-0008.
 
 ## Decision Log
 
@@ -303,6 +311,10 @@ git diff --check
 - 2026-08-08: Post-merge review approved SQ-0002 with planning maintenance, made its strict verifier part of `make check`, corrected current-task/status/count metadata, and expanded SQ-0003/SQ-0004 contracts without changing recommendations or task states.
 - 2026-08-08: Recommended SQ-0003 as the next isolated task because it establishes the proof-backend build and axiom/trust surface; SQ-0004 remains independently READY.
 - 2026-08-08: Retained the exact reviewed Lean/Mathlib pair after verifying that Lean 4.32.2 includes the #14577 kernel-fix backport and independently rejects the official #14576 exploit. This regression becomes additional SQ-0003 trust evidence rather than a reason to substitute a toolchain.
+- 2026-08-08: Kept the SQ-0003 library deliberately non-statistical: one internal/test-only `True` smoke declaration and narrow `Mathlib.Data.Set.Defs` import, with no registry, artifact, certificate, ontology, or public theorem surface.
+- 2026-08-08: Bound the Experimental proof environment to the exact Lean/Mathlib pair, Lake-generated full dependency lock, live axiom report, and 33 mutation cases; the report is observation rather than authorization or RFC-0005 resolution.
+- 2026-08-08: Required both normal and independently isolated no-binary-cache source paths. Hosted source revalidation runs weekly, manually, and on lock changes, with a 14-day fail-closed review age.
+- 2026-08-08: Independent integration review approved package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7` and corrected the successor calculation to SQ-0004/SQ-0008 READY with `blocked_count: 55`; neither successor begins in SQ-0003.
 
 ## Outcomes & Retrospective
 
@@ -314,4 +326,22 @@ Eight high-level architectural ADRs are Accepted. Three narrower ADRs and nine R
 
 A strict verifier binds the compatibility report to 75 successful, failed, or unknown attempts, six recommendation records, 90 dated sources, retained logs/locks, and 115 durable tracked subjects. Corruption cases detect mutable recommendations, platform laundering, arbitrary reruns, failure normalization, empty locks, advisory corruption, environment inheritance, and unavailable recommended tooling. Distinct specialist and integration reviews approved the surface. No production toolchain, package, RFC, schema, or statistical semantics were introduced.
 
-Post-merge review found no blocking research defect. It converted the SQ-0002 verifier into a permanent repository guardrail and repaired stale successor planning. SQ-0003 and SQ-0004 are READY and unstarted. Full foundation retrospective remains SQ-0020 work.
+Post-merge review found no blocking research defect. It converted the SQ-0002 verifier into a permanent repository guardrail and repaired stale successor planning. It made SQ-0003 and SQ-0004 READY; SQ-0003 subsequently completed while SQ-0004 remains unstarted. Full foundation retrospective remains SQ-0020 work.
+
+### SQ-0003
+
+The repository now contains a minimal Experimental Lean project pinned to Lean
+4.32.2 and exact Mathlib commit
+`905b95818eb32af7874a58b427f50c1711a5e96c`. Its Lake-generated manifest
+reproduced byte-for-byte, normal and isolated source builds passed, and a live
+environment report observed no axioms for the internal smoke theorem and
+`Quot.sound`/`propext` for imported `Set.ext`. Thirty-three positive,
+negative, lock, report, native-trust, and kernel-regression mutations pass.
+
+Distinct source, build, formal, adversarial, CI/reproducibility, and integration
+reviewers approved the exact package. The exact-package hosted run exercised
+both cached and isolated-source paths. This is build, trust-surface, and axiom
+observation evidence only: no statistical semantics, source-fidelity claim,
+artifact-byte binding, theorem authorization, checker soundness, or verified
+analysis was introduced. The computed next READY set is SQ-0004 and SQ-0008;
+both remain unstarted. Full foundation retrospective remains SQ-0020 work.
