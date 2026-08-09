@@ -44,7 +44,13 @@ Complete locked registry inventory:
 | `unicode-ident` | 1.0.24 | (MIT OR Apache-2.0) AND Unicode-3.0 |
 | `zmij` | 1.0.21 | MIT |
 
-The inventory is metadata observation, not legal advice or advisory clearance.
-No networked advisory scan was performed by this isolated implementation role.
-The lock and source must receive the task's separate license/advisory review
-before any production or trusted-computing-base decision.
+The machine-readable inventory in
+`evidence/dependency-license-inventory.json` binds every resolved package,
+checksum, selected feature, and dependency role to the exact lock. The
+hash-bound `cargo-audit` 0.22.2 observation in
+`evidence/advisory-report.json` used RustSec database commit
+`309ad29d8fe448bf986019e05d47b9e0e29a2218` and observed zero vulnerabilities
+and zero warnings. That is a dated database observation, not legal advice,
+advisory clearance, or a security guarantee. The lock and source still
+require independent license/security review before any production or
+trusted-computing-base decision.
