@@ -1,0 +1,34 @@
+{
+  "implementations": [
+    {
+      "calls": [],
+      "canonicalizer_lineage": "direct-python-from-profile-specification",
+      "consumes_outputs_from": [],
+      "dependency_lock": "schemas/prototypes/python-oracle/requirements.txt",
+      "id": "python-oracle",
+      "language": "Python",
+      "parser_lineage": "project-original ordered-entry parser in statqed_oracle/oracle.py",
+      "record_path": "schemas/prototypes/python-oracle/LINEAGE.md",
+      "source_root": "schemas/prototypes/python-oracle",
+      "toolchain_lock": "schemas/prototypes/python-oracle/.python-version"
+    },
+    {
+      "calls": [],
+      "canonicalizer_lineage": "project-rust-profile-with-minicbor-head-emission",
+      "consumes_outputs_from": [],
+      "dependency_lock": "schemas/prototypes/rust-cbor/Cargo.lock",
+      "id": "rust-prototype",
+      "language": "Rust",
+      "parser_lineage": "project-original ordered-entry parser in src/lib.rs",
+      "record_path": "schemas/prototypes/rust-cbor/LINEAGE.md",
+      "source_root": "schemas/prototypes/rust-cbor",
+      "toolchain_lock": "schemas/prototypes/rust-cbor/rust-toolchain.toml"
+    }
+  ],
+  "nonclaims": [
+    "Independence does not make either implementation normative.",
+    "Agreement does not prove correctness, provenance, logical-data identity, or statistical validity."
+  ],
+  "profile_id": "statqed.cbor-core.v1",
+  "schema_id": "statqed.serialization-lineage.v1"
+}
