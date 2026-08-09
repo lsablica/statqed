@@ -1,6 +1,6 @@
 # RFC-0001: Deterministic Normative Encoding
 
-- Status: Draft
+- Status: Accepted
 - Author: foundation serialization team
 - Reviewers: source, semantic, interoperability, formal, implementation, security, cryptographic, CI, and integration reviewers
 - Created: 2026-08-02

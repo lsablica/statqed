@@ -1,0 +1,1507 @@
+{
+  "accepted_fixture_ids": [
+    "DIGEST-FRAME-ATTAINABLE-MAX",
+    "DIGEST-FRAME-BASELINE",
+    "DIGEST-SCHEMA-BINDING-NOT-CONFORMANCE",
+    "INT-N-0000000000000001",
+    "INT-N-0000000000000024",
+    "INT-N-0000000000000025",
+    "INT-N-0000000000000256",
+    "INT-N-0000000000000257",
+    "INT-N-0000000000065536",
+    "INT-N-0000000000065537",
+    "INT-N-0000004294967296",
+    "INT-N-0000004294967297",
+    "INT-N-18446744073709551616",
+    "INT-U-0000000000000000",
+    "INT-U-0000000000000023",
+    "INT-U-0000000000000024",
+    "INT-U-0000000000000255",
+    "INT-U-0000000000000256",
+    "INT-U-0000000000065535",
+    "INT-U-0000000000065536",
+    "INT-U-0000004294967295",
+    "INT-U-0000004294967296",
+    "INT-U-18446744073709551615",
+    "LENGTH-ARRAY-0",
+    "LENGTH-ARRAY-23",
+    "LENGTH-ARRAY-24",
+    "LENGTH-ARRAY-255",
+    "LENGTH-ARRAY-256",
+    "LENGTH-BSTR-0",
+    "LENGTH-BSTR-23",
+    "LENGTH-BSTR-24",
+    "LENGTH-BSTR-255",
+    "LENGTH-BSTR-256",
+    "LENGTH-BSTR-65535",
+    "LENGTH-BSTR-65536",
+    "LENGTH-MAP-0",
+    "LENGTH-MAP-23",
+    "LENGTH-MAP-24",
+    "LENGTH-MAP-255",
+    "LENGTH-MAP-256",
+    "LENGTH-TSTR-0",
+    "LENGTH-TSTR-23",
+    "LENGTH-TSTR-24",
+    "LENGTH-TSTR-255",
+    "LENGTH-TSTR-256",
+    "LENGTH-TSTR-65535",
+    "LENGTH-TSTR-65536",
+    "MAP-CORE-24-EMPTY-TEXT",
+    "MAP-CORE-NEG1-100",
+    "MAP-INSERTION-REVERSED-SAME-BYTES",
+    "RESOURCE-ARRAY-ITEMS-1024",
+    "RESOURCE-BYTE-STRING-65536",
+    "RESOURCE-DEPTH-32",
+    "RESOURCE-EXTENSION-COUNT-0",
+    "RESOURCE-INPUT-BYTES-1048576",
+    "RESOURCE-MAP-ENTRIES-1024",
+    "RESOURCE-OUTPUT-BYTES-1048576",
+    "RESOURCE-TEXT-STRING-65536-BYTES",
+    "RESOURCE-TOTAL-ITEMS-4096",
+    "SIMPLE-FALSE",
+    "SIMPLE-NULL",
+    "SIMPLE-TRUE",
+    "UNICODE-COMBINING-MARK-ALONE",
+    "UNICODE-COMPOSED-E-ACUTE",
+    "UNICODE-CONTROL-NUL",
+    "UNICODE-DECOMPOSED-E-ACUTE",
+    "UNICODE-NONCHARACTER-FDD0",
+    "UNICODE-NORMALIZATION-COLLISION-MAP-DISTINCT",
+    "UNICODE-SUPPLEMENTARY-GRINNING-FACE"
+  ],
+  "baseline": {
+    "commit": "8875d8f6fa8e3b45e706ea567d45448927a02efa",
+    "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
+    "sq0008_contract_sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471"
+  },
+  "coverage_roots": [
+    {
+      "extensions": [],
+      "path": "conformance/prototypes"
+    },
+    {
+      "extensions": [],
+      "path": "docs/research/serialization"
+    },
+    {
+      "extensions": [],
+      "path": "schemas/prototypes"
+    },
+    {
+      "extensions": [],
+      "path": "scripts/serialization"
+    },
+    {
+      "extensions": [],
+      "path": "source-audits/encoding"
+    }
+  ],
+  "expected_state": {
+    "blocked_count": 53,
+    "done": [
+      "SQ-0001",
+      "SQ-0002",
+      "SQ-0003",
+      "SQ-0004",
+      "SQ-0005"
+    ],
+    "in_progress": [],
+    "ready": [
+      "SQ-0006",
+      "SQ-0008"
+    ],
+    "statuses": {
+      "adr0004": "Accepted",
+      "backlog_sq0005": "DONE",
+      "backlog_sq0006": "READY",
+      "backlog_sq0008": "READY",
+      "contract_sq0005": "DONE",
+      "contract_sq0006": "READY",
+      "contract_sq0008": "READY",
+      "rfc0001": "Accepted"
+    }
+  },
+  "independent_origins": [
+    {
+      "canonicalizer_lineage": "direct-python-from-profile-specification",
+      "id": "python-oracle",
+      "language": "Python"
+    },
+    {
+      "canonicalizer_lineage": "project-rust-profile-with-minicbor-head-emission",
+      "id": "rust-prototype",
+      "language": "Rust"
+    }
+  ],
+  "negative_fixture_ids": [
+    "DIGEST-ALGORITHM-EMPTY",
+    "DIGEST-ALGORITHM-SUBSTITUTE-NO-FALLBACK",
+    "DIGEST-COMPONENT-APPEND",
+    "DIGEST-COMPONENT-DECLARED-LONG",
+    "DIGEST-COMPONENT-DELETE",
+    "DIGEST-COMPONENT-DUPLICATE",
+    "DIGEST-COMPONENT-PREFIX-TRUNCATED",
+    "DIGEST-COMPONENT-REORDER",
+    "DIGEST-FRAME-ALLOCATION-CAP-PLUS1",
+    "DIGEST-FRAME-COMPLETE-TRAILING-BYTE",
+    "DIGEST-FRAME-PAYLOAD-ONE-OVER",
+    "DIGEST-FRAMING-EMPTY",
+    "DIGEST-FRAMING-SUBSTITUTE",
+    "DIGEST-MAGIC-BITFLIP",
+    "DIGEST-MISMATCH-32",
+    "DIGEST-PAYLOAD-CONCATENATED",
+    "DIGEST-PAYLOAD-EMPTY",
+    "DIGEST-PAYLOAD-INVALID",
+    "DIGEST-PAYLOAD-NONPROFILE",
+    "DIGEST-PAYLOAD-SPLIT",
+    "DIGEST-PROFILE-EMPTY",
+    "DIGEST-PROFILE-SUBSTITUTE",
+    "DIGEST-PURPOSE-BYTES-129",
+    "DIGEST-PURPOSE-EMPTY",
+    "DIGEST-PURPOSE-REPLAY",
+    "DIGEST-PURPOSE-SUBSTITUTE",
+    "DIGEST-RAW-PURPOSE-BYTES-129",
+    "DIGEST-RAW-SCHEMA-BYTES-129",
+    "DIGEST-SCHEMA-BYTES-129",
+    "DIGEST-SCHEMA-EMPTY",
+    "DIGEST-SCHEMA-SUBSTITUTE",
+    "DIGEST-SUPPLIED-LENGTH-31",
+    "DIGEST-SUPPLIED-LENGTH-33",
+    "EXPECTED-TRAILING-SECOND-ITEM",
+    "EXPECTED-WRONG-PROFILE-ID",
+    "EXPECTED-WRONG-SCHEMA-ID",
+    "EXPECTED-WRONG-SCHEMA-VERSION",
+    "EXPECTED-WRONG-TOP-LEVEL",
+    "EXTENSION-CRITICAL-UNKNOWN",
+    "EXTENSION-DUPLICATE-AFTER-UNIQUE-CRITICAL",
+    "EXTENSION-DUPLICATE-ID",
+    "EXTENSION-MIXED-CRITICAL-FIRST",
+    "EXTENSION-MIXED-CRITICAL-LAST",
+    "EXTENSION-NONCRITICAL-UNKNOWN",
+    "EXTENSION-ORDER-NONCRITICAL-AB",
+    "EXTENSION-ORDER-NONCRITICAL-BA",
+    "FLOAT16-FINITE-ONE",
+    "FLOAT16-NAN-PAYLOAD",
+    "FLOAT16-NEGATIVE-INFINITY",
+    "FLOAT16-NEGATIVE-ZERO",
+    "FLOAT16-POSITIVE-INFINITY",
+    "FLOAT16-POSITIVE-ZERO",
+    "FLOAT32-FINITE-ONE",
+    "FLOAT32-NAN-PAYLOAD",
+    "FLOAT32-NEGATIVE-ZERO",
+    "FLOAT32-POSITIVE-INFINITY",
+    "FLOAT32-POSITIVE-ZERO",
+    "FLOAT64-FINITE-ONE",
+    "FLOAT64-NAN-PAYLOAD",
+    "FLOAT64-NEGATIVE-ZERO",
+    "FLOAT64-POSITIVE-INFINITY",
+    "FLOAT64-POSITIVE-ZERO",
+    "HEAD-NONPREF-N-1-AS-U8",
+    "HEAD-NONPREF-N-25-AS-U16",
+    "HEAD-NONPREF-U-0-AS-U8",
+    "HEAD-NONPREF-U-23-AS-U8",
+    "HEAD-NONPREF-U-24-AS-U16",
+    "HEAD-NONPREF-U-255-AS-U16",
+    "HEAD-NONPREF-U-256-AS-U32",
+    "HEAD-NONPREF-U-65535-AS-U32",
+    "HEAD-NONPREF-U-65536-AS-U64",
+    "HEAD-NONPREF-U-U32MAX-AS-U64",
+    "INT-RANGE-NEGATIVE-OVER",
+    "INT-RANGE-POSITIVE-OVER",
+    "LENGTH-NONPREF-ARRAY-0-AS-U8",
+    "LENGTH-NONPREF-BSTR-0-AS-U8",
+    "LENGTH-NONPREF-BSTR-23-AS-U8",
+    "LENGTH-NONPREF-BSTR-24-AS-U16",
+    "LENGTH-NONPREF-BSTR-255-AS-U16",
+    "LENGTH-NONPREF-BSTR-256-AS-U32",
+    "LENGTH-NONPREF-BSTR-65535-AS-U32",
+    "LENGTH-NONPREF-BSTR-65536-AS-U64",
+    "LENGTH-NONPREF-MAP-0-AS-U8",
+    "LENGTH-NONPREF-TSTR-0-AS-U8",
+    "MALFORMED-INDEF-BSTR-WRONG-CHUNK",
+    "MALFORMED-INDEF-TSTR-WRONG-CHUNK",
+    "MALFORMED-MAP-PAIR-MISSING",
+    "MALFORMED-RESERVED-AI28-MAJOR0",
+    "MALFORMED-RESERVED-AI28-MAJOR7",
+    "MALFORMED-RESERVED-AI29-MAJOR2",
+    "MALFORMED-RESERVED-AI30-MAJOR5",
+    "MALFORMED-ROOT-BREAK",
+    "MALFORMED-TRUNC-ARRAY-ITEM",
+    "MALFORMED-TRUNC-BSTR-BODY",
+    "MALFORMED-TRUNC-TSTR-SEQUENCE",
+    "MALFORMED-TRUNC-U16-ARG",
+    "MALFORMED-TRUNC-U32-ARG",
+    "MALFORMED-TRUNC-U64-ARG",
+    "MALFORMED-TRUNC-U8-ARG",
+    "MAP-DUPLICATE-BEFORE-TRAILING",
+    "MAP-DUPLICATE-EQUIVALENT-INT0",
+    "MAP-DUPLICATE-EQUIVALENT-NEG1",
+    "MAP-DUPLICATE-EQUIVALENT-TEXT-A",
+    "MAP-DUPLICATE-EXACT-INT0",
+    "MAP-KEY-BOOLEAN-FORBIDDEN",
+    "MAP-KEY-BYTESTRING-FORBIDDEN",
+    "MAP-LENGTH-FIRST-24-EMPTY-TEXT",
+    "MAP-LENGTH-FIRST-NEG1-100",
+    "MAP-PRODUCER-DUPLICATE-TEXT",
+    "MUTANT-DECODER-ALLOCATES-DECLARED-STRING",
+    "MUTANT-DECODER-COERCES-FLOAT",
+    "MUTANT-DECODER-COLLAPSES-EQUIVALENT-RAW-DUPLICATE",
+    "MUTANT-DECODER-COLLAPSES-EXACT-DUPLICATE",
+    "MUTANT-DECODER-IGNORES-TRAILING",
+    "MUTANT-DECODER-REENCODE-UPGRADES-INPUT",
+    "MUTANT-DECODER-REPLACES-INVALID-UTF8",
+    "MUTANT-DECODER-STRIPS-TAG",
+    "MUTANT-DIGEST-FALLBACK",
+    "MUTANT-DIGEST-HASHES-UNFRAMED-PAYLOAD",
+    "MUTANT-DIGEST-PREFIX-COMPARE",
+    "MUTANT-ENCODER-LENGTH-FIRST-MAP",
+    "MUTANT-ENCODER-LENGTH-FIRST-MIXED-KEY",
+    "MUTANT-ENCODER-NFC-NORMALIZATION",
+    "MUTANT-ENCODER-OVERWIDE-ZERO",
+    "MUTANT-ENCODER-TRANSPARENT-TAG",
+    "MUTANT-PRODUCER-IGNORES-NONCRITICAL-EXTENSION",
+    "OPERATIONAL-CRASH",
+    "OPERATIONAL-EXCEPTION",
+    "OPERATIONAL-MEMORY-OVER",
+    "OPERATIONAL-TIMEOUT-OVER",
+    "PROFILE-INDEFINITE-ARRAY",
+    "PROFILE-INDEFINITE-BSTR",
+    "PROFILE-INDEFINITE-MAP",
+    "PROFILE-INDEFINITE-TSTR",
+    "RESOURCE-ARRAY-ITEMS-1025",
+    "RESOURCE-ATTEMPTED-TAG-DEPTH-32",
+    "RESOURCE-ATTEMPTED-TAG-DEPTH-33",
+    "RESOURCE-BYTE-STRING-65537",
+    "RESOURCE-DECLARED-BSTR-U32MAX",
+    "RESOURCE-DECLARED-BSTR-U32PLUS1",
+    "RESOURCE-DEPTH-33",
+    "RESOURCE-DIAGNOSTIC-BYTES-4097",
+    "RESOURCE-EXTENSION-COUNT-1",
+    "RESOURCE-INDEFINITE-BSTR-TOTAL-ITEMS-4096",
+    "RESOURCE-INDEFINITE-BSTR-TOTAL-ITEMS-4097",
+    "RESOURCE-INDEFINITE-TSTR-TOTAL-ITEMS-4096",
+    "RESOURCE-INDEFINITE-TSTR-TOTAL-ITEMS-4097",
+    "RESOURCE-INPUT-BYTES-1048577",
+    "RESOURCE-MAP-ENTRIES-1025",
+    "RESOURCE-OUTPUT-BYTES-1048577",
+    "RESOURCE-TEXT-STRING-65537-BYTES",
+    "RESOURCE-TOTAL-ITEMS-4097",
+    "RESOURCE-TYPED-JSON-DEPTH-2000",
+    "SEM-BIGNUM-NEGATIVE",
+    "SEM-BIGNUM-POSITIVE",
+    "SEM-DECIMAL-NORMAL",
+    "SEM-DECIMAL-REMOVABLE-ZEROS",
+    "SEM-DECIMAL-ZERO-NONZERO-EXPONENT",
+    "SEM-IEEE16-NEGATIVE-ZERO",
+    "SEM-IEEE32-NAN-PAYLOAD",
+    "SEM-IEEE64-POSITIVE-INFINITY",
+    "SEM-INTERVAL-CLOSURE-UNKNOWN",
+    "SEM-INTERVAL-DECIMAL-ENDPOINTS",
+    "SEM-INTERVAL-EMPTY-OPEN",
+    "SEM-INTERVAL-IEEE-NAN-ENDPOINTS",
+    "SEM-INTERVAL-LEFT-CLOSED-UNSUPPORTED",
+    "SEM-INTERVAL-MIXED-ENDPOINTS",
+    "SEM-INTERVAL-OPEN-UNSUPPORTED",
+    "SEM-INTERVAL-RATIONAL-ENDPOINTS",
+    "SEM-INTERVAL-REVERSED",
+    "SEM-INTERVAL-RIGHT-CLOSED-UNSUPPORTED",
+    "SEM-INTERVAL-SINGLETON-CLOSED",
+    "SEM-INTERVAL-VALID-UNSUPPORTED",
+    "SEM-RATIONAL-NEGATIVE-DENOMINATOR",
+    "SEM-RATIONAL-NONREDUCED",
+    "SEM-RATIONAL-NORMAL",
+    "SEM-RATIONAL-ZERO-DENOMINATOR",
+    "SEM-TYPED-JSON-INTERVAL-EXPONENT-1E9",
+    "SEM-TYPED-JSON-UNQUOTED-INTEGER-5000-DIGITS",
+    "SHAPE-CDDL-MISMATCH",
+    "SIMPLE-32-RAW",
+    "SIMPLE-UNDEFINED-RAW",
+    "TAG-NONPREF-0-AS-U8",
+    "TAG-NONPREF-24-AS-U16",
+    "TAG-WIDTH-23",
+    "TAG-WIDTH-24",
+    "TAG-WIDTH-255",
+    "TAG-WIDTH-256",
+    "TAG-WIDTH-65535",
+    "TAG-WIDTH-65536",
+    "TAG-WIDTH-U32MAX",
+    "TAG-WIDTH-U32PLUS1",
+    "TAG2-BIGNUM-LEADING-ZERO",
+    "TAG2-BIGNUM-POSITIVE",
+    "TAG2-CONTENT-MISMATCH",
+    "TAG3-BIGNUM-NEGATIVE",
+    "TAG30-RATIONAL",
+    "TAG4-DECIMAL",
+    "UTF8-INVALID-BEFORE-TRAILING",
+    "UTF8-INVALID-CONTINUATION",
+    "UTF8-OUT-OF-RANGE-110000",
+    "UTF8-OVERLONG-NUL",
+    "UTF8-SURROGATE-D800"
+  ],
+  "protected_files": [
+    {
+      "path": "backend/AGENTS.md",
+      "sha256": "64861abcac207d169383f627a25267b40939f01d2a48731bce2d18a40df53bb2"
+    },
+    {
+      "path": "backend/Cargo.lock",
+      "sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3"
+    },
+    {
+      "path": "backend/Cargo.toml",
+      "sha256": "dc49b4186d2f0e188993e1a1ccf43b9ce831de71e323431dd1e3028636de2c91"
+    },
+    {
+      "path": "backend/README.md",
+      "sha256": "5cdfb4e68ac144425b24164136af27d3169dfa2c982d92998e0508d52168179d"
+    },
+    {
+      "path": "backend/crates/statqed-cli/Cargo.toml",
+      "sha256": "f93f73f46cf3af273146ea1c25a90973cf9539fb12c893458cee9cc25e6268b4"
+    },
+    {
+      "path": "backend/crates/statqed-cli/src/main.rs",
+      "sha256": "7d0d85cbb4e4960bbd3262cc70b0e74604cc6e241db2959d3ef3716f42152f34"
+    },
+    {
+      "path": "backend/crates/statqed-cli/tests/cli.rs",
+      "sha256": "cb68b40533f28a032bb649cf12a399080a506b3ba0d2636bcb5d5b316189bd6b"
+    },
+    {
+      "path": "backend/crates/statqed-core/Cargo.toml",
+      "sha256": "631e617337bdb1c9ce49a14647cfc3cfe627cdca1d6425230c1d365b28c3b10c"
+    },
+    {
+      "path": "backend/crates/statqed-core/src/lib.rs",
+      "sha256": "336d7c2633f98d03f39332114a22aeba3dd8df50be6c823f353f6165d055300f"
+    },
+    {
+      "path": "backend/evidence/advisory-report.json",
+      "sha256": "521a22ceb0a147306af89022a4bf1537cff76b31e2fd80181aaa1854aa472942"
+    },
+    {
+      "path": "backend/evidence/bindings.json",
+      "sha256": "71e803fd77e095f22295bb91babb25ebd2d53e00bbfb18af667db5d3adb2a216"
+    },
+    {
+      "path": "backend/evidence/dependency-license-inventory.json",
+      "sha256": "e68c036a44ac100a615cc642ebaaa55850466ea10aba1eddf84f9873635215db"
+    },
+    {
+      "path": "backend/evidence/deterministic-output-fixtures.json",
+      "sha256": "41a8675a17c8e8fba799cb9811e2dc90170d30eb20d377c35c15d892b48a8927"
+    },
+    {
+      "path": "backend/evidence/isolated-execution.json",
+      "sha256": "5e7cad28b3b5c06a22fda58e44b41781d5b1a53eab3eb311aeda379593c79b58"
+    },
+    {
+      "path": "backend/evidence/mutation-results.json",
+      "sha256": "32257d526324f542f802c65301840d47aaf6e241552e90f4efc1af8df755deb3"
+    },
+    {
+      "path": "backend/evidence/security-lock.json",
+      "sha256": "7afc4b4c5abf7ee02a178e4a1dc26b53d0dd376f35ba2818759dae6c49477428"
+    },
+    {
+      "path": "backend/evidence/source-lock.json",
+      "sha256": "7f45f629ff17eb8843e36d703fe6911b6b54d4236cb88f02efe3c9fb99208275"
+    },
+    {
+      "path": "backend/rust-toolchain.toml",
+      "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
+    },
+    {
+      "path": "backend/tools/check_workspace.py",
+      "sha256": "eb6a29c5806053eec8e6b5ca1d013a1ccebf7b7fbe6c1eb48b059cacfd4697f2"
+    },
+    {
+      "path": "backend/tools/dependency_inventory.py",
+      "sha256": "8c32f8a98c648323f77f7ab6425d0cf304887e06bf49ba5cf575a90c1e0e4af4"
+    },
+    {
+      "path": "backend/tools/run_isolated_checks.py",
+      "sha256": "71d49b65f53cdbf0847e9eaab4d97bc583309b51fec846ac68a0280ed97bf805"
+    },
+    {
+      "path": "backend/tools/security_audit.py",
+      "sha256": "ef68782de1b61464fbfd4b8dc065b55629802c5df4bffc57b8fd81ea9633b6f4"
+    },
+    {
+      "path": "frontends/AGENTS.md",
+      "sha256": "f108efbe902cb400cffc5f8e713e4d4974235ad7bedbc2f234f98be6809e37cc"
+    },
+    {
+      "path": "frontends/README.md",
+      "sha256": "f5be10cd1ea03fd45ccaabb048c72c3adf2dd80a68a198aa4ecbe5d60bd57fb3"
+    },
+    {
+      "path": "frontends/julia/AGENTS.md",
+      "sha256": "4a7fed430b857676f1018eda99690c4c8e41c8f833e253aa18eff08e34be625d"
+    },
+    {
+      "path": "frontends/julia/README.md",
+      "sha256": "bfb1e532fc53150a93de5a97758878862405ff1290c113e3de0efa3b798ddf9d"
+    },
+    {
+      "path": "frontends/python/AGENTS.md",
+      "sha256": "0447a6c4e863d1e0875c9939b9b372b35200e6e44130a6f374f4f1e629ff057a"
+    },
+    {
+      "path": "frontends/python/README.md",
+      "sha256": "438d55e0fe3dcf367680cfdd90f65726dd8bb9f98b145867801b51d062e1236d"
+    },
+    {
+      "path": "frontends/r/AGENTS.md",
+      "sha256": "12459bbae6d5627104b75e56fce62aa54dbd9e77445700e79856ddbd972acad2"
+    },
+    {
+      "path": "frontends/r/README.md",
+      "sha256": "82cf2b679600925850a83ac4be4fd7d0aa9de69ae0e6e2ae27e5b1d5d58c7c92"
+    },
+    {
+      "path": "lean/AGENTS.md",
+      "sha256": "59b31658f9a602b58ad30de8ab8d3c292315ee910425ed101a1dafc8d71ebe49"
+    },
+    {
+      "path": "lean/Examples/Smoke.lean",
+      "sha256": "c6b8d8ef26c97f4e295d86cc501dae780addf60667f99e4a1d74ea3c7dedc6b0"
+    },
+    {
+      "path": "lean/README.md",
+      "sha256": "544707ce0df09347f488e409e7eacc252d9ffea80637fdfe3f806e548c15ae9a"
+    },
+    {
+      "path": "lean/Reports/axioms.json",
+      "sha256": "96a2b221dcc7f0a08607fbc935f31c5c4846486b0d4edcb585bddfad2298346b"
+    },
+    {
+      "path": "lean/StatQED.lean",
+      "sha256": "251dff81a48657d51f26968018479cb1b043a2978a7e59c687e881e8189ecd20"
+    },
+    {
+      "path": "lean/StatQED/Internal/Smoke.lean",
+      "sha256": "76bb1f4916d62c252a6ddcaac39e29b295afefd15d85ddd5d393fcd4935ce1e0"
+    },
+    {
+      "path": "lean/Tests/AxiomReport.lean",
+      "sha256": "bf1acd71f1b32f4b2e80b24114318a44903c9eb19a7fcd9ff57d90e4e667d23e"
+    },
+    {
+      "path": "lean/Tests/Trust/README.md",
+      "sha256": "6b058357651948ea994f29aae8a38bb2cf1dc7f536ecadf6f452ae6d8714e21a"
+    },
+    {
+      "path": "lean/Tests/Trust/adjacent_toolchain.fixture",
+      "sha256": "8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af"
+    },
+    {
+      "path": "lean/Tests/Trust/admit.lean.fixture",
+      "sha256": "91955758e352fc98382a06f22d79cc159cc2613b80cb85bd5c2ee16e3c885120"
+    },
+    {
+      "path": "lean/Tests/Trust/altered_toolchain.fixture",
+      "sha256": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
+    },
+    {
+      "path": "lean/Tests/Trust/annotated_axiom.lean.fixture",
+      "sha256": "66108728ec26785d6f95c2e0cb66ae4ed02f87d8736e5657efddc8d00e6ecb1d"
+    },
+    {
+      "path": "lean/Tests/Trust/bodyless_constant.lean.fixture",
+      "sha256": "29f362c8d86f6ba7236f8c15b5b17af982e81200328963c1aeae80228c27f366"
+    },
+    {
+      "path": "lean/Tests/Trust/bv_decide.lean.fixture",
+      "sha256": "7fc17e91db70f5b84e5270c9873a00097315a2230b33ee48398beb2a76759cbe"
+    },
+    {
+      "path": "lean/Tests/Trust/constant_syntax_impossible.lean.fixture",
+      "sha256": "53c619d4f8cdf2d2bea721777a4e6fed9eb9752526289516abae601d8d227a1f"
+    },
+    {
+      "path": "lean/Tests/Trust/decide_native.lean.fixture",
+      "sha256": "e13f7260636402791deaec04d06cd8419359cd054eabd07be675a23fb26cb9db"
+    },
+    {
+      "path": "lean/Tests/Trust/expectations.json",
+      "sha256": "ff06d57f58fd72c278d674777943900b85decd02a92d6e999f87545ce5a88bf0"
+    },
+    {
+      "path": "lean/Tests/Trust/fabricated_axiom_report.json.fixture",
+      "sha256": "240c065129729a4be9c6f89fd61ed74250b3f42e9a06f4d23fa38099d87e2088"
+    },
+    {
+      "path": "lean/Tests/Trust/kernel_projection_14576.lean.fixture",
+      "sha256": "f46b478f0838cd4b5a78a0e0beaa5947ef17851e24e5aa015e7e384bcdf7186a"
+    },
+    {
+      "path": "lean/Tests/Trust/keyword_false_positive.lean.fixture",
+      "sha256": "ce1aa3c28bb19038342b73b728acb15a6ec9529e3d8df1eb437e8a31807b7857"
+    },
+    {
+      "path": "lean/Tests/Trust/name_quotation_false_positive.lean.fixture",
+      "sha256": "f616fc1ac1e077f0fb28611260c980a3606ef259504db0647736234231a993c7"
+    },
+    {
+      "path": "lean/Tests/Trust/native_decide.lean.fixture",
+      "sha256": "bb11959f4b845f96002b9b82ffd0ce22f90706b11d6bd12367f0bce2180f5996"
+    },
+    {
+      "path": "lean/Tests/Trust/ofReduceBool.lean.fixture",
+      "sha256": "dd7ef01c6cbecb7486a735189f7c2834e5aeb0c67bd51b3a8db7e431b0850ef7"
+    },
+    {
+      "path": "lean/Tests/Trust/ofReduceNat.lean.fixture",
+      "sha256": "8628b92da79882098bc6cb9a655fa6b92b3f70cbdf0971ae4a1cf108469d88ad"
+    },
+    {
+      "path": "lean/Tests/Trust/project_axiom.lean.fixture",
+      "sha256": "62d7dd1e449751eff70ac3c1e8c4be240f076e4886b88eebe1d89327ff8aa94f"
+    },
+    {
+      "path": "lean/Tests/Trust/quoted_axiomDecl.lean.fixture",
+      "sha256": "3a6bd23aecceb8a8bfb02708e621ed3d8ac158e3e880bedfadd9162c336b4ab8"
+    },
+    {
+      "path": "lean/Tests/Trust/quoted_sorryAx.lean.fixture",
+      "sha256": "ab3eb77b1367764d2a150fe94a7b0f3a3e8a66117325a9a4e7686fc901e60f8e"
+    },
+    {
+      "path": "lean/Tests/Trust/reduceBool.lean.fixture",
+      "sha256": "40edecaee74f187b63120f3d180c08f4b6117b35df7c9f421eb2d220ab85495e"
+    },
+    {
+      "path": "lean/Tests/Trust/reduceNat.lean.fixture",
+      "sha256": "87edd82e4c3f833d811488b4d0b7e3ac85febb0557b67e6a2690a63f368f1bec"
+    },
+    {
+      "path": "lean/Tests/Trust/sorry.lean.fixture",
+      "sha256": "85923ddb3b28080de137e8e7cd6fb8e0dcd466b260fbe0ff1f38f797667060e5"
+    },
+    {
+      "path": "lean/Tests/Trust/sorryAx.lean.fixture",
+      "sha256": "d3af7a27e8d0eb1f015feb7e27893974c3216b386b40d6f01a03fde6486fc10b"
+    },
+    {
+      "path": "lean/Tests/Trust/trustCompiler.lean.fixture",
+      "sha256": "5d3e087904b18f64ee2ed2607eb843de24f1e22a04914ee9ec1c52b2b37b6081"
+    },
+    {
+      "path": "lean/Tests/Trust/unsafe_declaration.lean.fixture",
+      "sha256": "0fd6d93605d26f8ad8b3228fce5e157d6b3f9ec61219dbd4303e845a1ea610fb"
+    },
+    {
+      "path": "lean/evidence/README.md",
+      "sha256": "d2822094a9195bc84df3d0d871d0f2c2429200062fb1a12d51cf3c678e92b9c0"
+    },
+    {
+      "path": "lean/evidence/bodyless-assumption.json",
+      "sha256": "4ea774d96fc536a96b2053c3c63aecee240f5dc29f87f633d0e099de1c5721bc"
+    },
+    {
+      "path": "lean/evidence/bodyless-constant-language.json",
+      "sha256": "5c62d79541a152d0ddf32d56af5a47158c62b8a6b444165c403a5e17037a520d"
+    },
+    {
+      "path": "lean/evidence/environment.json",
+      "sha256": "f8230a6f77fbc757e8a36672ec86328e9f8f248bcbe19de92f12f0b880627608"
+    },
+    {
+      "path": "lean/evidence/failures/github-cached-toolchain-selection.json",
+      "sha256": "4c1f6a2e22fc245ca577c8b748af6aeaafe56d0b7fda4426696fefda556889db"
+    },
+    {
+      "path": "lean/evidence/failures/github-workflow-configuration.json",
+      "sha256": "edd4871f901e43026314ceef73d5549a74aec16594d039745bc3caf3aeb425c6"
+    },
+    {
+      "path": "lean/evidence/failures/initial-manifest-sandbox-dns.json",
+      "sha256": "73a01f98d1e87247bf55da69edc7c15f402795f829a91895ee65c98d3b4654cf"
+    },
+    {
+      "path": "lean/evidence/failures/make-check-local-lake.json",
+      "sha256": "78747636575557179ba1cc5655c6dec89d17071b894d1a3a59bfbda7dc8a2c86"
+    },
+    {
+      "path": "lean/evidence/failures/missing-smoke-glob.json",
+      "sha256": "40c48651b572d93359c443c01b5a13c7f030a9cc8b3b07e1bc5aaeab4af332df"
+    },
+    {
+      "path": "lean/evidence/failures/no-cache-source-sandbox-dns.json",
+      "sha256": "e7274ed57ad576598e60022708b47729baa5997e0fa2b5a81345b7f5c758d3d6"
+    },
+    {
+      "path": "lean/evidence/kernel-regression.json",
+      "sha256": "b7e934bbf2927c8bca1d1a7f3256ec37d795b778780f413e6e308144ed789da7"
+    },
+    {
+      "path": "lean/evidence/manifest-reproduction.json",
+      "sha256": "fd8bb7141e02059608d986795f8f9f58541b0f8545a4821972aaeca2401d846b"
+    },
+    {
+      "path": "lean/evidence/mutation-tests.json",
+      "sha256": "3040689cf244215b4426b9d9f0f3235c1bb4eab7690327517aba318debea89e7"
+    },
+    {
+      "path": "lean/evidence/native-trust-controls.json",
+      "sha256": "dd1337433e60faaf96a80e208f2ffaa72c6c4bbbfbd81c7cb18d4e55b5fdb5c1"
+    },
+    {
+      "path": "lean/evidence/no-cache-source-build-initial.json",
+      "sha256": "465947ee069ce87705f40a101b064e158e040ba5b5885bbb58402fe1fbe60fbd"
+    },
+    {
+      "path": "lean/evidence/no-cache-source-build.json",
+      "sha256": "41b12dc120e24c2671f633cc1947aa42c802c5833bdf8213d3260e81f9654075"
+    },
+    {
+      "path": "lean/evidence/normal-build.json",
+      "sha256": "3219802283c8565277bff8a00740521f61609b23fae33fb4941506d7f521ac51"
+    },
+    {
+      "path": "lean/lake-manifest.json",
+      "sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b"
+    },
+    {
+      "path": "lean/lakefile.toml",
+      "sha256": "8bfe03cf6b84652643f28c37e808ba0ffc7778bd060f58c595cedbef09535dd0"
+    },
+    {
+      "path": "lean/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "lean/tools/axiom_report.py",
+      "sha256": "487d89eb6d6703f428c1d4043af931bc80665e623dc717419c7aacaec986c498"
+    },
+    {
+      "path": "lean/tools/no_cache_build.sh",
+      "sha256": "17643bec6e073e066b57a670132b8b2b95677109dab8b70ee3d612671b16bab4"
+    }
+  ],
+  "protected_prefixes": [
+    "backend",
+    "frontends",
+    "lean"
+  ],
+  "retained_failures": [
+    "conformance/prototypes/results/failures/lock-reproduction-missing-targets.json",
+    "conformance/prototypes/results/failures/python-only-rust-unavailable-v1.json",
+    "conformance/prototypes/results/failures/rust-adversarial-reject-v1.json",
+    "conformance/prototypes/results/failures/rust-digest-payload-length-precedence-v1.json",
+    "conformance/prototypes/results/failures/rust-first-full-differential-v1.json",
+    "conformance/prototypes/results/failures/simple-24-malformed-fixture-v1.json"
+  ],
+  "review_record": "work/reviews/SQ-0005.md",
+  "review_subject_paths": [
+    ".github/workflows/serialization-prototypes.yml",
+    "conformance/prototypes/evidence/evidence-manifest.json",
+    "conformance/prototypes/fixtures/semantic-v1/catalog.json",
+    "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
+    "conformance/prototypes/generated-v1/manifest.json",
+    "conformance/prototypes/generated-v1/mutations.json",
+    "conformance/prototypes/generated-v1/results.json",
+    "conformance/prototypes/golden/serialization-v1/manifest.json",
+    "docs/adr/0004-deterministic-cbor-cddl.md",
+    "docs/research/serialization/profile-candidate.md",
+    "docs/research/serialization/semantic-value-model.md",
+    "rfcs/0001-deterministic-encoding.md",
+    "schemas/prototypes/cddl/profile-v1.cddl",
+    "schemas/prototypes/lineage.json",
+    "schemas/prototypes/python-oracle/.python-version",
+    "schemas/prototypes/python-oracle/LINEAGE.md",
+    "schemas/prototypes/rust-cbor/Cargo.lock",
+    "schemas/prototypes/rust-cbor/LINEAGE.md",
+    "schemas/prototypes/rust-cbor/evidence/advisory-report.json",
+    "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json",
+    "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json",
+    "scripts/serialization/check_evidence.py",
+    "scripts/serialization/run_conformance.py",
+    "source-audits/encoding/manifest.json"
+  ],
+  "schema": "statqed.sq0005-evidence.v1",
+  "subjects": [
+    {
+      "path": ".github/workflows/serialization-prototypes.yml",
+      "role": "least-privilege hosted reproduction",
+      "sha256": "ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117"
+    },
+    {
+      "path": "Makefile",
+      "role": "permanent repository verification entry point",
+      "sha256": "57e32f3e74ef9a550a728a6a176b08211311f1161f01f5056e9f5413c3a0132c"
+    },
+    {
+      "path": "conformance/prototypes/evidence/evidence-spec.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "26fccac7ca0ab94e9ae270e92016aacc3d7ade25a28ee548347d0322dfc394c6"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/atoms-and-widths.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "2ffec8250ace8283959db11a29d2d7c2b55500429065d484394732c59e52dcd9"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/catalog.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/differential-mutants.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "313a784148be66fa471c2684be27512fbf5e0f446f7681dd27e8317b36c882e6"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/malformed-and-strictness.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b6af575d7111def454a642fa3052bc626f2aea2a4fee76cf7719677739fcf2af"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/maps-and-unicode.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c1053fc27be0e8afb60ef655038daca71b43e93c98a2abe5c0dae56e29efb110"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/numeric-tags-extensions.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "5c50a8ed96b4e1a032f818b9ecec0ae2e6db9b4e2e746e1ed47bcd8cca739329"
+    },
+    {
+      "path": "conformance/prototypes/fixtures/semantic-v1/resources.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "984a142eb002a38d4f137a98d44c222fe2bf56dd2147808608372cb0f7ad0039"
+    },
+    {
+      "path": "conformance/prototypes/generated-v1/failures.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "dbda36bd8752d5662f77fb2be3feb6d519e8164c7fe41fad734c05376114970b"
+    },
+    {
+      "path": "conformance/prototypes/generated-v1/goldens.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "d5e572e44e7930e50f0d44fdf4ece04e7a01ab7d9a6817dda62cbec074183e1c"
+    },
+    {
+      "path": "conformance/prototypes/generated-v1/manifest.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e69e863053fad44faf2511cedbd53a13725e309cbdb0551621e217c2095dd6cd"
+    },
+    {
+      "path": "conformance/prototypes/generated-v1/mutations.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "1b6c448a29ce76b83c5e85673731382dc24bba8a1902a7686988626015d22da6"
+    },
+    {
+      "path": "conformance/prototypes/generated-v1/results.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-FRAME-ATTAINABLE-MAX.frame",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c0ef40eaa288a90d68ab665d482a544cd335d464d90480cbcdb6d2c5a93dab48"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-FRAME-BASELINE.frame",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "53c209c1a299f073ec8f66ef4fe28581b6c1ad282731b357def61f2f77ef4749"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-SCHEMA-BINDING-NOT-CONFORMANCE.frame",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "a041b193bc01ee5a13c88c0944f12b6373a11d843c6aaea4021e33fbd01ba8d9"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000001.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000024.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000025.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "dd7baa54409c052850ed2e03e586086bfed37a275ae4aee888711cd7c46bc91f"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c34bbb2a6569bad93a2784738eea7aa01db2d1714a1947cbc81117658167fe76"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000257.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "778fbefd4ff46506f151117b4b4bfa3a7134e2990d804d083f386cd1ff6eeead"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000065536.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "bb85b676802f80fc4fb93efe7c9e6bdb8c41b1be118adb53853ad0b00697e765"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000065537.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "33174ca8e8e022841e6977741a249663ef3683f3d587a24afdc85d9d6fb801ea"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000004294967296.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "80a46548fe92debff084e322d6caa952b772f7cd173e6f01858268b0b801ea37"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000004294967297.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "1e1576cf957799ec3a6009e785b96d0e5b1df789860c1226ecac8e4a22df0421"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-18446744073709551616.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "fe8908232e288502601792e108c3d65f2aa3b2b226090851b224aee4175f020c"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000000.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000023.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8f11b05da785e43e713d03774c6bd3405d99cd3024af334ffd68db663aa37034"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000024.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "7c6348f7ea8a4e831aafe688a2557d7a3ab0be8549cdb190a029956ade971b15"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000255.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "fcaae93768b1722dcefc0a06729388acfe35a4d08cbdfc996309a15fad7e62af"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "70aa0275e34b1dd6f23f2e97a23ffaffa642ad71a935484e5e878d33c89f1e21"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000065535.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "459fbd327a935784702aca36217445923f8794e11be0b8a2e9f9b3ea9b800e91"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000065536.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "2928012187f03446d1e9ec37dae5cc9586656c20bd6e28ff4953181b933cb3f0"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000004294967295.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "74925985507bbda0c27009d32686859a69ac1e7d2870986694ee73ece429bd68"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000004294967296.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "ff0a4ebee87c783ebeb2197fb436cfee11c1172a7363c7c133e085878c7d58ff"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-18446744073709551615.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "2d7cb0927d162df726656d7155780f0486760e4327b537b54d0187e57209517c"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-23.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "1434feb8502afe72feb4af80602118c5d1a12b3a0871040ed285e9e3f68d1d0a"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-24.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "2496068f2a4f18244959f7e49fd5dde6f668bf8febd4b5c802acf8876581f3be"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-255.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c574704f258fa72c12835d45d642ab27cfa6c452e3afa92aa53d2c4b3a2e3201"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "4f433f78fa0bed280c482297fbb28078da802ed6e2a4b1da04e105995b31d059"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c3641f8544d7c02f3580b07c0f9887f0c6a27ff5ab1d4a3e29caf197cfc299ae"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-23.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "9256e6bef3d196eecdae6dd948a002b776eb4ba1dc7d0be05f04fed4bc33439f"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-24.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c587fa96cc3427bd7a27828a460396dd3a58c70a956654465c5c236be4d08fc1"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-255.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "cfb9bbc77439b64c644aa49c731c5127b020f7188415ca6c58fd4cb5de187fd8"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "0f0f1d6cc0921ee8ac7b3352cf7e962f5f52dff08173c8e545cdfe2a972d81d8"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-65535.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "90ed39097d6c77b2bb86fc1aa2a09442e3f4cc05bf95d5aff624390904a724fc"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-65536.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b4abdb7d61f183a6ca5ab683f34e13abf2fb9dc934b99530aad9d3f6a026f19b"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c19a797fa1fd590cd2e5b42d1cf5f246e29b91684e2f87404b81dc345c7a56a0"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-23.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "7fba5302ff59dc605e18140980bec5327901f0f2270d5e6334621a2ccd21f139"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-24.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "40d59bbf3f0a52a61f7996fe7e57840a0c6d4b471fcad108048663aa41248348"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-255.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "aa575c1af3371920f026348abc2d29b3e321ffa462b5359b6aa73b63a3018b88"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "cae4d9194b9d333b890990b8e55a2997e2688086549a643b74cbf6f0baf6f6cc"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8d33f520a3c4cef80d2453aef81b612bfe1cb44c8b2025630ad38662763f13d3"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-23.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c5b1fe69d403b97a51d6062623a69c55ffe8b0d4cc5ad7156ee2239f1060b189"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-24.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "f0794f31dbdd00e6d3671a0489f264c4d8c7e6c4282a42075af2e34f56a0d11f"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-255.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "387ed65171029fc9a0ebf680927572aef94a35b4d854b79a205cd77f674be36d"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-256.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "ff52b61d7119986ee47df10f52d9dd52c3ed0aba3f98364301c17593dd9d5feb"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-65535.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8ea3089675e4436ef1e2f32b5081064540c61d746c91af2840340ee1db6a719d"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-65536.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8836d76bfab15ca6dc8b9626b2ce023c8e30461ba4933a4e4f50d2244a52c350"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-CORE-24-EMPTY-TEXT.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "fada56d761f2b1fde318ed907a712de738b23977612e06b8b59f4bd0533eb77c"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-CORE-NEG1-100.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e703c6fdadad038a1ad72bc9ba506263ca833c778f2d1a6ff33ed0a210cbf7e5"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-INSERTION-REVERSED-SAME-BYTES.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e703c6fdadad038a1ad72bc9ba506263ca833c778f2d1a6ff33ed0a210cbf7e5"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-ARRAY-ITEMS-1024.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "fb24b0276930e1de988fe82e3d4a34bbe034c92eb373a1ee96cc2a86960ffe40"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-BYTE-STRING-65536.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b4abdb7d61f183a6ca5ab683f34e13abf2fb9dc934b99530aad9d3f6a026f19b"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-DEPTH-32.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "02364caca9974b7f762159338cc93837127e417629a15abef71bbef26f7b039d"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-EXTENSION-COUNT-0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b0b2988b6bbe724bacda5e9e524736de0bc7dae41c46b4213c50e1d35d4e5f13"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-INPUT-BYTES-1048576.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8cbe68eab9fc42790947ad0fade6cc90c8473a2b180a8019534588159bd96358"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-MAP-ENTRIES-1024.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "cd14c920d784b820b935acbd0ed440250c31dda7e4ce2e51b3bd8d301d846429"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-OUTPUT-BYTES-1048576.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8cbe68eab9fc42790947ad0fade6cc90c8473a2b180a8019534588159bd96358"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-TEXT-STRING-65536-BYTES.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8836d76bfab15ca6dc8b9626b2ce023c8e30461ba4933a4e4f50d2244a52c350"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-TOTAL-ITEMS-4096.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "f25188130e1e475655ca0027898a4ed761e8c5dc55352733ed4e48fe4893c437"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-FALSE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "2017ff3461395672aa0aa4f64894fd2f95a4b120e2690e8951656d79adc2eed2"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-NULL.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b0b2988b6bbe724bacda5e9e524736de0bc7dae41c46b4213c50e1d35d4e5f13"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-TRUE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "27abdeddfe8503496adeb623466caa47da5f63abd2bc6fa19f6cfcb73ecfed70"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-COMBINING-MARK-ALONE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "aea5faaff3495de1d48bb3d1144f5bfa3420b6511f5be1c73ced308a3af649e7"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-COMPOSED-E-ACUTE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "701813d6d5ac9e087e4b469881bd4bf116fee5027a3b7ea436d513b0d8049737"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-CONTROL-NUL.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "ffe9aaeaa2a2d5048174df0b80599ef0197ec024c4b051bc9860cff58ef7f9f3"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-DECOMPOSED-E-ACUTE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "daf8719f463a8018c94c6e70fdef01d6358ca282c10e781a52be5923beaa8a8a"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-NONCHARACTER-FDD0.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "600b7c794290a9e82cfd3848c80b058e05f63cb2ae2bb71072db5f65651c3bbd"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-NORMALIZATION-COLLISION-MAP-DISTINCT.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e6075c7d2d9444c5e6807e5cf6379bcd6f437afa6ab2d46fc09a5eedaf77c8be"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-SUPPLEMENTARY-GRINNING-FACE.cbor",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e34a1fc83bfacd5f8ed9ec359705b76b1e2191071451202cddb73cbc0887ba54"
+    },
+    {
+      "path": "conformance/prototypes/golden/serialization-v1/manifest.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/lock-reproduction-missing-targets.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "76d84d663a1d3ef9c0fd79c91473b707c9afeabd98d38c67d3781fd082595b7f"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/python-only-rust-unavailable-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "e41b03f63c4edbee1f6eca8bbebfbf9e5826b5eaefc4ab58e2659538228d8d70"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/rust-adversarial-reject-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "0e016692b7e7e2816b0da52f08e3ce345ebed4170f61f0c233b30e3df1a2b594"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/rust-digest-payload-length-precedence-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "cb1fd18e44c6c64734ba5324703c29478941e4a92aee37944907a4789ca5c30e"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/rust-first-full-differential-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "b446359044108bf0fd25a4cfc20c2a7edd707d90f92049d3df636f7e0d8a00cd"
+    },
+    {
+      "path": "conformance/prototypes/results/failures/simple-24-malformed-fixture-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "9622a62de7b366296334a182c6190bb6235853fc62d5f26547487bec67f243e5"
+    },
+    {
+      "path": "docs/adr/0004-deterministic-cbor-cddl.md",
+      "role": "matching architecture decision",
+      "sha256": "db97698f5875b7a440e92665da8501301146032fad9c78ed0fe074ec175ecd67"
+    },
+    {
+      "path": "docs/quality/dashboard.md",
+      "role": "evidence-scoped maturity statement",
+      "sha256": "ba0a2ca33f89b9e3b4ebab53fba06f309937a42ddf988a9ea4f6a616fee27fdb"
+    },
+    {
+      "path": "docs/research/serialization/profile-candidate.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f"
+    },
+    {
+      "path": "docs/research/serialization/reviews/ci-release.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "291ffb68267b3a4f22275d5716e212592982923d3a661921490791b96ac18580"
+    },
+    {
+      "path": "docs/research/serialization/reviews/conformance.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "a7cae05a1ba8834e1ad3b15cab7037a06cfafa1889f6897fdec2728170066616"
+    },
+    {
+      "path": "docs/research/serialization/reviews/cryptographic-framing.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "96cd95881c493cb1284fd26e9c10966f129fd4ca961db67a3d042b4bcd8b0685"
+    },
+    {
+      "path": "docs/research/serialization/reviews/formal-trust-cddl.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "f50a19a8e5e68e2e5cf8403c1860008f1d151774e7b87b526f5606a6e6f98493"
+    },
+    {
+      "path": "docs/research/serialization/reviews/python-oracle-lineage.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "b9467e251edef55f5d92574aba6f840bbb2abfa0a5f66ff80bfde11576d9841a"
+    },
+    {
+      "path": "docs/research/serialization/reviews/rust-security.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "7745ce712dfb56d892cd31fe394e45b6a27433b85dda8410348b5568c134afc0"
+    },
+    {
+      "path": "docs/research/serialization/reviews/semantic-profile.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "f2034e22980200b4b36a629a66fe01eed4472ec1216dbbebfd61c1217ce38231"
+    },
+    {
+      "path": "docs/research/serialization/reviews/source-currentness.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "45e9fe82d035714cff10ae8e084efc87ebb578e03064d2a1e15a29ac75ab9f6b"
+    },
+    {
+      "path": "docs/research/serialization/semantic-value-model.md",
+      "role": "semantic model and reviewed profile candidate",
+      "sha256": "a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2"
+    },
+    {
+      "path": "docs/spec/canonicalization.md",
+      "role": "implementation-facing profile specification",
+      "sha256": "e0bc0628fd0ac05a43f06ac478c029e83a5daeb4fe88f2b00579d4f892cce61a"
+    },
+    {
+      "path": "rfcs/0001-deterministic-encoding.md",
+      "role": "normative decision",
+      "sha256": "8a45ea17e19ecb18fdc94256f3fbb02839aebbfe6189bd61f59272dd96c80d19"
+    },
+    {
+      "path": "schemas/prototypes/cddl/README.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "cae220ba606f6f9007a0b1a955465828f48442546a2a591d892f45dcd9ad6764"
+    },
+    {
+      "path": "schemas/prototypes/cddl/profile-v1.cddl",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0"
+    },
+    {
+      "path": "schemas/prototypes/lineage.json",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "7a7e48658e81e478c3858f265d24eb0c1402fa6169e7c03eb74363effb8208a4"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/.python-version",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "aa0d6581054e6e4ff3f91839deca7a854ad37221b8784d060b42d0f847ff1a3b"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/ENVIRONMENT.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "a284ec1c00b8ad0f1ae0bf96f59b7ab2456ca7f81e9a4ab935b9718c017d4d3d"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/LINEAGE.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "8dfe50d1a4010984881c77cd48fa3eca14e307e71d8cc0b5afed48d3e6babd92"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/PSF-LICENSE-2.0.txt",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "b683dca09ef30505ae793c3948beb1861d8a1af75d03010ee7cf7e20bab2b74f"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/README.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "be2e588dc7d78bc12ce9f45c879b359f912c8ec8eaf11ff491dd1bb14b2d742b"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/requirements.txt",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "fe1b58fd32e3f1cc2d11a6a70c8d179ae0b6e150ef651823a100f9343fc27bd0"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/statqed_oracle/__init__.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "2124b3275cec5d49a7b907e6b022f762293a15354cff51ff0f95c74f30dcfc05"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/statqed_oracle/cli.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "eed36baf0b98a2bb70f3eb0569ccc4a2f3e547768cc0e1a841376701f8dd0ec9"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/statqed_oracle/oracle.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "784bbbef227bdff5728622e35d9c46071ea776dd5c0bbbd2eb5ddcc2f1e04d00"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/tests/test_decoding.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "3f1c9a8be9c41c05e99b514f5b3e897bc6c3c67089c5fd4a6970d72948bc14af"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/tests/test_digest_and_cli.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "d826b8fbf8a4896fcb11a85ddaa789ea003fe551c308b3072128b294dbfb7ff4"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/tests/test_encoding.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "41dea8852d602275c665b8c6bcf8266302ce6685ec7fd12889b553c1d3bf2e6f"
+    },
+    {
+      "path": "schemas/prototypes/python-oracle/tests/test_resources.py",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "e1104fb200111b7ce69b834b1470ebd00e05dfb11bc903360c13448399553f36"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/.gitignore",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/Cargo.lock",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/Cargo.toml",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "37e51170459929bd4a674eca8a2a0168f976de7191eb886ee193c360b8fc6fad"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/DEPENDENCIES.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "90a4c6c9f01684e0659a6f590911a0f068e6c28697c1cab42d00db8765358ec0"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/LICENSE",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "e2135b5acb4ab6f5c9d9ac8b4be2d6bcdb0da6a6262fd990ef9117ca44383dd4"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/LINEAGE.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "6136314a0c7ac9b971f636e520e8d9dd0d94548f39a96a891d34a37ac9e1dd1a"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/README.md",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "a73f4319d96482f401acb9124fb7c036f195831a6bcc1825ac93a532eaec1680"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/evidence/advisory-report.json",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/evidence/security-lock.json",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "58940480cb4ca163ee5ec1e2bf5a9e3165371e96703018c3ebd147775c8ac0f5"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/rust-toolchain.toml",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "8e390d6a0838315f972690f46ef8bae8b7ecc9ee6c1ed70140ef852869c2482e"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/src/lib.rs",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "bf5cd89521f4151197beeb8a9e07d9a92503e615de9c9da2aec1d6f73834d70d"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/src/main.rs",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "a48b67f10d0a7a77d553b226c73d02dae48057d66be83cfd6c517c8ae925f211"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/tests/cli.rs",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "311f5f7faa50664e1f89dc4cb6f7a7a39abf65a1a05f8b809e9b23c1987d2ba9"
+    },
+    {
+      "path": "schemas/prototypes/rust-cbor/tests/profile.rs",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence",
+      "sha256": "f278b61f959f4f71b707c2a424b879fbb71922a85e5b79ecbf3258ee729d1ae3"
+    },
+    {
+      "path": "scripts/serialization/build_evidence_manifest.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "4f8720f67421dc8f54a8422ee20ac13cfc60526179e492a78d4c37f1b07b5105"
+    },
+    {
+      "path": "scripts/serialization/check_evidence.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "864568ef80e2c1f0517999cf45130f744c6599eab34040932f1fa0258e0c7d0e"
+    },
+    {
+      "path": "scripts/serialization/check_yanked.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "073079e06bdf7e3bb291de3c229530ae695a57a6bcf6e1de9489e36cd2381ca5"
+    },
+    {
+      "path": "scripts/serialization/dependency_inventory.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "b21d621e57943e6ddfbdbc4de8c01e8ecb99843b2746fbd953b3c4329e35c24d"
+    },
+    {
+      "path": "scripts/serialization/run_conformance.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c"
+    },
+    {
+      "path": "scripts/serialization/security_audit.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "d31f7baf094049d5d8437d6fd104af25874c0530e9f18f792ed629dfcf16ee39"
+    },
+    {
+      "path": "scripts/serialization/source_audit_manifest.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "5b0d14e39000c707a95205d1ded2389fa96c435b97f5c631225d77877f2c5d03"
+    },
+    {
+      "path": "scripts/serialization/tests/test_check_evidence.py",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers",
+      "sha256": "5d1d91f10860afa47d29f2a89508c4868e8f133fdd6e9235e2f81c6485b394bc"
+    },
+    {
+      "path": "source-audits/encoding/README.md",
+      "role": "dated primary-source audit",
+      "sha256": "80630d625bee1c21c901f81932c6077479846697a35b3b8ec9d4da9ddf2ba4cc"
+    },
+    {
+      "path": "source-audits/encoding/SA-SQ0005-CBOR.yaml",
+      "role": "dated primary-source audit",
+      "sha256": "f61098ab0a0a4bd8ff6b1c866772023a5ad2f283d0f7e78801cffaafc7196185"
+    },
+    {
+      "path": "source-audits/encoding/SA-SQ0005-CDDL.yaml",
+      "role": "dated primary-source audit",
+      "sha256": "714bb59f260517468487f7ead7fbf8cc2a5d5e32c14f4818fc738d0af0ac6da4"
+    },
+    {
+      "path": "source-audits/encoding/SA-SQ0005-CRYPTO.yaml",
+      "role": "dated primary-source audit",
+      "sha256": "d3feb17277b3fccafa2201f36290d2c89be5a98ab953fd75dfd749bb6da3ae36"
+    },
+    {
+      "path": "source-audits/encoding/SA-SQ0005-PROTOTYPES.yaml",
+      "role": "dated primary-source audit",
+      "sha256": "90ed358716e9d9f27de60d75d2eda4c5f1d8ae1c5fec38187dc3c2b962e9d506"
+    },
+    {
+      "path": "source-audits/encoding/SA-SQ0005-UNICODE.yaml",
+      "role": "dated primary-source audit",
+      "sha256": "9c722257cc62032e6ee2087f44ec9e55834e1ae00d1532e4e0982d57be4553b2"
+    },
+    {
+      "path": "source-audits/encoding/manifest.json",
+      "role": "dated primary-source audit",
+      "sha256": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40"
+    },
+    {
+      "path": "source-audits/encoding/osv-direct-prototype-observation.json",
+      "role": "dated primary-source audit",
+      "sha256": "419eac674c87f86b3adff12e57fe55d58b12f88fe8829dffc18576ad298a339a"
+    },
+    {
+      "path": "source-audits/encoding/osv-direct-prototype-request.json",
+      "role": "dated primary-source audit",
+      "sha256": "6efff00478c1722fa295792fd09465156e474ae16ac083ae14f8997c59c2bd56"
+    },
+    {
+      "path": "source-audits/encoding/osv-direct-prototype-response.json",
+      "role": "dated primary-source audit",
+      "sha256": "3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600"
+    }
+  ]
+}

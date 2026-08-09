@@ -1,6 +1,6 @@
 # ADR-0004: Deterministic CBOR with published-syntax CDDL
 
-- Status: Proposed
+- Status: Accepted
 - Blocking RFC/task: RFC-0001 / SQ-0005
 - Decision owner: SQ-0005
 - Profile candidate: `statqed.cbor-core.v1`
@@ -13,7 +13,7 @@ multiple deterministic map-order choices, and CDDL shape validation does not
 settle semantic values, duplicates, Unicode, normalization, canonical bytes,
 resource behavior, or digest framing.
 
-## Candidate decision
+## Decision
 
 <!-- SQ-0005-NORMATIVE-SCOPE-BEGIN -->
 StatQED normative structural objects use the versioned
