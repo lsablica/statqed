@@ -87,6 +87,15 @@ source_records:
       - Advisory report SHA-256 abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55
       - Database commit timestamp 2026-08-09T12:34:06Z
     disposition: Point-in-time no-record observation only; no claim about undisclosed issues, Rust/Cargo, operating system, CPython, or future database state
+  - work: Official crates.io exact-version API
+    version: 22 Cargo.lock registry packages queried 2026-08-09
+    locator: Per-package https://crates.io/api/v1/crates/{name}/{version} locators retained in schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json
+    persistent_id: Exact name, version, Cargo.lock checksum, locator, and observed yanked boolean
+    status: All 22 exact locked package versions reported yanked=false at retrieval
+    exact_anchors:
+      - Cargo.lock SHA-256 2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180
+      - Official API response checksum equality for every package
+    disposition: Point-in-time registry observation only; live CI and release review must repeat it and fail closed on yanked or checksum drift
 hypotheses:
   - name: cbor2_canonical_is_length_first
     class: source_explicit

@@ -50,7 +50,10 @@ checksum, selected feature, and dependency role to the exact lock. The
 hash-bound `cargo-audit` 0.22.2 observation in
 `evidence/advisory-report.json` used RustSec database commit
 `309ad29d8fe448bf986019e05d47b9e0e29a2218` and observed zero vulnerabilities
-and zero warnings. That is a dated database observation, not legal advice,
-advisory clearance, or a security guarantee. The lock and source still
+and zero warnings. The official crates.io version API observation in
+`evidence/crates-io-yanked.json` found all 22 exact checksummed packages not
+yanked on 2026-08-09; live CI repeats that fail-closed query. These are dated
+registry/database observations, not legal advice, advisory clearance,
+maintenance promises, or security guarantees. The lock and source still
 require independent license/security review before any production or
 trusted-computing-base decision.
