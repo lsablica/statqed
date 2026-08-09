@@ -28,6 +28,11 @@ missing primary source remains for the selected normative dependencies. The
 limitations below remain nonblocking and must not be widened into stronger
 claims.
 
+The changes after the preceding source review clarify project-defined digest
+failure precedence, expand the retained corpus, and refresh evidence hashes;
+they do not change an external-source statement, normative-scope block, or
+source-audit member.
+
 This reviewer is distinct from the source-audit author and did not edit the
 candidate, RFC, ADR, or `source-audits/encoding/` content. This approval does
 not accept RFC-0001, accept ADR-0004, approve the project-original digest
@@ -37,13 +42,13 @@ the trusted computing base.
 ## Exact subject
 
 The final committed subject was checked at HEAD
-`bc5a38deb4b886fcc2ac9afab4615b9dc837b8c9`. File and framed-tree hashes
+`410465d773fc011ee01e38e6e76a79a60efe8837`. File and framed-tree hashes
 define the reviewed bytes precisely.
 
 | Subject | SHA-256 or identity |
 |---|---|
-| `docs/research/serialization/profile-candidate.md` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
-| `rfcs/0001-deterministic-encoding.md` | `79aa54a53d914bb47689a4256daddd2e5832da10936ec8b551e0d93d26ad7f38` |
+| `docs/research/serialization/profile-candidate.md` | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
+| `rfcs/0001-deterministic-encoding.md` | `d4258501486affdaf99ec95322bae1e1212806c896e33360a17c137fd2f51106` |
 | `docs/adr/0004-deterministic-cbor-cddl.md` | `004b41b65dc8450de6f0bd8431f7de2e1f885e95dfd985f50981e1c1c5c9e49d` |
 | RFC/ADR marked normative-scope block | `737847efcdb917f8c3db8c05c314c85f62775fa8ca80638a56de69cadb0fc060` |
 | `rfcs/0006-canonical-logical-data-digest.md` | `e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429` |
