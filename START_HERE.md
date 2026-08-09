@@ -33,12 +33,13 @@ If the guardrail output, backlog, status ledger, contract, or plan disagree,
 stop. Repair the planning state through an independently reviewed planning
 change before implementation.
 
-At the reviewed post-SQ-0004 state, **SQ-0005 and SQ-0008 are both READY**.
-The recommended next isolated execution is **SQ-0005: Prototype deterministic
-serialization**. It owns RFC-0001 and is the dependency gate for schema v0,
-canonical backend work, theorem locks, artifacts, and the language frontends.
-SQ-0008 remains independently READY and unstarted; do not combine ontology and
-encoding work in one branch.
+At the reviewed post-SQ-0005 state, **SQ-0006 and SQ-0008 are both READY**.
+The recommended next isolated execution is **SQ-0006: Define schema v0 and
+golden vectors**. SQ-0008 remains independently READY and unstarted; do not
+combine schema and ontology work in one branch. RFC-0001 and ADR-0004 are
+Accepted for the bounded data-free encoding profile. RFC-0006 remains Draft
+under SQ-0027 ownership, and the SQ-0005 prototypes have no production
+canonicalizer authority.
 
 ## Copy-paste manager contract
 
@@ -73,8 +74,8 @@ Read, in order:
 18. the nearest nested AGENTS.md before changing any scoped file.
 
 Execute exactly one dependency-ready task in one isolated branch or worktree.
-At the current reviewed state, select SQ-0005 and follow
-work/contracts/SQ-0005.yaml. Leave SQ-0008 READY and unstarted.
+At the current reviewed state, select SQ-0006 and follow
+work/contracts/SQ-0006.yaml. Leave SQ-0008 READY and unstarted.
 
 Non-negotiable constraints:
 - Treat public statistical meanings, normative encodings, and theorem
@@ -117,122 +118,92 @@ For the selected task:
 11. Merge only after independent integration approval.
 12. Recompute the next READY set after merge.
 
-Do not attempt the full roadmap or combine SQ-0005 and SQ-0008 in one branch.
+Do not attempt the full roadmap or combine SQ-0006 and SQ-0008 in one branch.
 ```
 
-## Current manager action: SQ-0005
+## Current manager action: SQ-0006
 
-SQ-0002 established current serialization-library compatibility observations.
-SQ-0004 established only a minimal dependency-free Rust operational workspace.
-Neither task selected a normative encoding profile. SQ-0005 must decide the
-smallest defensible data-free encoding profile through source-grounded,
-independently reproduced evidence.
+SQ-0005 accepted the bounded data-free `statqed.cbor-core.v1` encoding profile
+and generic `statqed.digest-lp.v1` framing after independent differential and
+adversarial review. Its Rust and Python implementations remain Experimental
+prototypes without production canonicalizer authority. SQ-0006 must now define
+only the versioned data-free schema and reviewed golden vectors for ADR-0011's
+`foundation_structural` fixture.
 
 Read:
 
 ```text
-work/contracts/SQ-0005.yaml
-work/handoffs/SQ-0002.md
-work/reviews/SQ-0002.md
-work/handoffs/SQ-0004.md
-work/reviews/SQ-0004.md
+work/contracts/SQ-0006.yaml
+work/handoffs/SQ-0005.md
+work/reviews/SQ-0005.md
 rfcs/0001-deterministic-encoding.md
 rfcs/0006-canonical-logical-data-digest.md
 docs/adr/0004-deterministic-cbor-cddl.md
+docs/adr/0011-foundation-toy-slice.md
 docs/spec/canonicalization.md
-docs/research/toolchain-prototypes/arrow/README.md
-docs/research/toolchain-prototypes/cbor-cddl/README.md
 schemas/AGENTS.md
 conformance/AGENTS.md
 ```
 
 ### Decision ownership
 
-- SQ-0005 owns RFC-0001. It cannot transition to `DONE` while RFC-0001 remains
-  Draft. If the evidence is insufficient, leave SQ-0005 active or blocked and
-  record the exact missing decision rather than forcing acceptance.
-- RFC-0006 is owned by SQ-0027. It is read-only in SQ-0005. SQ-0005 may record
-  generic atom, framing, and cross-domain requirements needed by later logical
-  data work, but it must not define a logical table, physical-to-logical
-  lowering, or canonical logical-data digest.
-- ADR-0004 may become Accepted only after RFC-0001 is Accepted and the ADR text
-  precisely matches the selected profile and evidence.
+- RFC-0001 and ADR-0004 are Accepted and govern the bounded data-free encoding
+  profile used by SQ-0006. SQ-0006 may not silently amend that profile.
+- RFC-0006 is owned by SQ-0027 and remains Draft. SQ-0006 must not define a
+  logical table, physical-to-logical lowering, canonical logical-data digest,
+  or privacy property for data commitments.
+- Artifact-envelope semantics remain outside schema v0 and belong to the later
+  RFC-0008/SQ-0010 decision path.
 
-### Required research boundary
+### Required schema boundary
 
-The task must use current primary standards and registries, including RFC 8949,
-RFC 8610 and its published extensions/updates, applicable errata, the IANA CBOR
-tag registry, and the pinned Unicode normalization specification chosen by the
-profile. CDDL module/import syntax remains work in progress and may be used only
-as an explicitly pinned Experimental input, not silently as an RFC feature.
+The task must use published CDDL syntax for versioned numeric/common/toy files.
+Draft CDDL module/import syntax may be explored only at an exact pinned revision
+and labeled Experimental; it cannot become a normative dependency.
 
-The selected profile must explicitly settle or exclude:
+The schema and fixture review must explicitly cover:
 
-- core versus length-first deterministic map ordering;
-- preferred integer, length, tag, and floating-point serialization;
-- finite floats, infinities, signed zero, NaN payloads, and whether floats are
-  permitted at all in each initial atom class;
-- integer, bignum, decimal-fraction, rational, byte-string, text-string, array,
-  map, boolean, null, interval, and extension representations;
-- map-key type restrictions and duplicate-key equivalence before native-map
-  collapse;
-- invalid UTF-8 and Unicode normalization/preservation policy;
-- tag allowlist, unknown tag behavior, and critical/noncritical extensions;
-- strict rejection versus accepted normalization for non-profile but decodable
-  CBOR;
-- exact profile/schema identifiers and failure classes;
-- maximum nesting, items, map entries, string/byte lengths, total input/output,
-  and integer/resource bounds;
-- hash algorithm identifiers, framing, domain separation, downgrade/fallback,
-  truncation, and cross-domain replay rules for data-free normative object
-  classes; and
-- the distinction among CBOR well-formedness, CBOR validity, application
-  expectations, CDDL shape conformance, canonical bytes, and semantic validity.
+- exact ADR-0011 field names and their semantic prose;
+- data-free numeric, identifier, and extension shapes allowed by RFC-0001;
+- explicit feature and unknown-critical behavior;
+- minimal and maximal valid fixtures;
+- malformed, numeric, Unicode, and unknown-critical negative fixtures;
+- stable error classes and schema-version/migration policy; and
+- independent semantic review before canonical bytes or digests are accepted.
 
 ### Independent evidence
 
-At least two implementations with genuinely independent canonicalization
-lineage must agree. One should be a Rust/library-backed prototype and one a
-separately implemented reference oracle in another language that does not call
-the Rust implementation or share its canonicalizer. A third diagnostic library
-may be used to expose disagreements, but two wrappers over the same library do
-not satisfy independence.
-
-The conformance corpus must include exact bytes, semantic input, expected
-accept/reject result, stable failure class, and implementation-lineage metadata.
-The harness must prove it detects a deliberately divergent implementation.
-Duplicate-key tests must operate before a decoder can discard or overwrite map
-entries.
+Every accepted field and example needs semantic review independent of the
+encoder that emits its bytes. Golden output must agree across independently
+reviewed semantics and implementations; it must never be accepted merely by
+copying the SQ-0005 Rust prototype's output.
 
 ### Scope prohibitions
 
-SQ-0005 must not:
+SQ-0006 must not:
 
-- modify production `backend/` crates or the Rust bootstrap CLI;
-- modify the Lean project;
-- create schema v0 under `schemas/v0/`;
+- treat an SQ-0005 prototype as production authority;
 - implement a logical table or RFC-0006 data-lowering/digest decision;
 - implement an artifact envelope, theorem registry, certificate, frontend, or
   statistical type;
 - treat CDDL validation as canonical-byte or semantic proof;
 - treat a digest equality as collision-free identity proof;
-- begin SQ-0006 or SQ-0008 after a readiness-only transition.
+- modify the Lean or production Rust foundations; or
+- begin SQ-0008 or any successor after a readiness-only transition.
 
 ## Expected execution pattern
 
 ```text
 manager
-  ├─ CBOR/CDDL/Unicode/registry source curator
-  ├─ encoding-profile and numeric-model architect
-  ├─ Rust prototype engineer
-  ├─ independent reference-oracle engineer
-  ├─ differential/conformance engineer
-  ├─ parser/resource/security reviewer
-  ├─ formal/trust-boundary reviewer
+  ├─ schema/source curator
+  ├─ ontology and field-semantics reviewer
+  ├─ schema and fixture engineer
+  ├─ independent conformance/vector reviewer
+  ├─ adversarial malformed/extension reviewer
   └─ independent integration reviewer
 ```
 
-The profile author must not be the sole implementation, security, or
+The schema author must not be the sole semantic, conformance, security, or
 integration reviewer.
 
 ## Branch and worktree policy
@@ -240,12 +211,12 @@ integration reviewer.
 Use one task per isolated branch or worktree:
 
 ```text
-agent/SQ-0005-deterministic-serialization
+agent/SQ-0006-schema-v0
 agent/SQ-0008-core-ontology
 ```
 
-The default branch remains green. Prototypes remain isolated from production
-backends and are never promoted merely because they emit the expected bytes.
+The default branch remains green. SQ-0006 and SQ-0008 remain separate, and
+golden bytes do not gain authority without the reviewed schema semantics.
 
 ## What “foundation complete” means
 

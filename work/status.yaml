@@ -5,7 +5,7 @@
   "in_progress": [],
   "blocked_count": 53,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005"],
-  "last_integrated_commit": "18eb333712a1475067bc7730ae1cd8f81f8d25e5",
+  "last_integrated_commit": "62707add05fcebb7cabbb3d4cff3cd97b22dfa4c",
   "last_updated": "2026-08-09",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
@@ -25,6 +25,8 @@
     "Final integration audit found stale closing prose that contradicted the Accepted RFC-0001 and ADR-0004 headers. Correction 77c924a078c1481b9cead5979746109e51b85364 made only the post-decision status text consistent, preserved the byte-matched normative scope, regenerated all evidence bindings, and requires fresh exact-head and post-merge gates.",
     "Independently approved scope amendment 34337cbcf89d24b7b29a5fa0d20616343dd5a316 authorized only two stale current-state corrections in ARCHITECTURE.md. Accepted-state synchronization 18eb333712a1475067bc7730ae1cd8f81f8d25e5 updated those two sentences, the RFC/ADR/spec disposition prose, and a 158-subject evidence manifest without changing the marked normative scope.",
     "Synchronized content subject 6787022a4fb23bde589e62796fb13c3e8d4d78bf passed exact-head serialization run 31322606288 and PR serialization, guardrail, Rust, and Lean runs 31322603702, 31322603705, 31322603706, and 31322603742. Final metadata-only binding, independent merge review, and post-merge main evidence remain fail-closed gates.",
-    "The decision-aware calculation makes SQ-0006 and SQ-0008 READY with 53 blocked tasks and no active task. Both remain unstarted in this execution."
+    "The decision-aware calculation makes SQ-0006 and SQ-0008 READY with 53 blocked tasks and no active task. Both remain unstarted in this execution.",
+    "PR #11 merged reviewed head c6e90b118b691a819d617bb6d411c96382ea197c into main by normal merge commit 62707add05fcebb7cabbb3d4cff3cd97b22dfa4c. Main guardrails 31327728104, serialization prototypes 31327728110, Rust reference workspace 31327728156, and Lean proof backend 31327728117 passed at that exact merge commit.",
+    "The integrated state keeps RFC-0001 and matching ADR-0004 Accepted, keeps RFC-0006 byte-identical and Draft under SQ-0027, and records SQ-0006 and SQ-0008 READY with SQ-0008 unstarted, 53 blocked tasks, and no active task. The SQ-0005 prototypes remain Experimental and have no production canonicalizer authority."
   ]
 }
