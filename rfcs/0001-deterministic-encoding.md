@@ -40,10 +40,12 @@ digest. RFC-0006 remains Draft and owned by SQ-0027.
 
 The profile relies on RFC 8949 / STD 94 for CBOR well-formedness, validity,
 preferred serialization, and core deterministic ordering. Published CDDL
-syntax is RFC 8610 as updated by RFCs 9165, 9682, and 9741. UTF-8 validity is
-the RFC 3629 scalar-value subset. SHA-256 is the FIPS 180-4 algorithm used by
-the generic frame. Purpose separation follows the explicit-domain principle
-in RFC 9380 Section 10.7; RFC 9380's hash-to-curve construction is not adopted.
+syntax is RFC 8610 as formally updated by RFC 9682; RFCs 9165 and 9741 define
+optional published extensions that this minimum profile does not require.
+UTF-8 validity is the RFC 3629 scalar-value subset. SHA-256 is the FIPS 180-4
+algorithm used by the generic frame. Purpose separation follows the
+explicit-domain principle in RFC 9380 Section 10.7; RFC 9380's hash-to-curve
+construction is not adopted.
 
 The exact source versions, retrieval dates, errata disposition, IANA CBOR Tag
 registry snapshot, draft/stable distinctions, licenses, and unresolved source
