@@ -49,8 +49,8 @@ INLINE_ARTIFACT_LIMIT = 4096
 # Reviewed implementation snapshots used for the final differential run.  The
 # content hashes below remain authoritative if these commits are later
 # unavailable; the commit identifiers make the review lineage explicit.
-SEMANTIC_FIXTURE_FROZEN_COMMIT = "b2ec69de45a3406cdcf29aec3243f81e8a42432f"
-PYTHON_ORACLE_FROZEN_COMMIT = "14f1ffb0646b280fea805fbec6ba6bb8b3d1a282"
+SEMANTIC_FIXTURE_FROZEN_COMMIT = "b4d92a39e30fa5736c58bc71c57790ec215fbad7"
+PYTHON_ORACLE_FROZEN_COMMIT = "89af5a7dbb837ea7d1557d1a715b34a814afdf95"
 RUST_PROTOTYPE_COMMIT = "2f0d778fff38bedd512dadd8603fc59e38be75b4"
 RUST_DEPENDENCY_EVIDENCE_COMMIT = "31a1a773f149248703db8b26930d0a3b4025a099"
 RUST_ADVERSARIAL_FIX_COMMIT = "81aa7909591617589150bc9756ce904ac5fd5f20"

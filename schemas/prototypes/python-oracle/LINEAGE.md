@@ -2,17 +2,17 @@
 
 Status: **Experimental evidence record**.
 
-Implementation source: `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`,
-independent reference-oracle engineer.  The final candidate inputs are bound
-below; later profile-only result-taxonomy clarification did not add an
-implementation dependency.
+Implementation source: `89af5a7dbb837ea7d1557d1a715b34a814afdf95`,
+independent reference-oracle engineer. The final candidate inputs are bound
+below. The implementation commit incorporates the reviewed distinction between
+complete invalid digest identifiers and truncated length-prefixed components.
 
 The implementation was written directly from these reviewed candidate inputs:
 
 | Input | SHA-256 |
 |---|---|
 | `docs/research/serialization/semantic-value-model.md` | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
-| `docs/research/serialization/profile-candidate.md` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
+| `docs/research/serialization/profile-candidate.md` | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 
 The candidate documents cite RFC 8949 for CBOR well-formedness, validity,
 preferred serialization, and core deterministic ordering, and FIPS 180-4 for

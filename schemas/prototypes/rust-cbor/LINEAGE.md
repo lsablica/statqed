@@ -8,13 +8,14 @@ inputs used for its current behavior:
 | Input | Source commit | SHA-256 |
 |---|---|---|
 | `docs/research/serialization/semantic-value-model.md` | `42b35e139a04a8618b7779c60f1739b40ae42c1f` | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
-| `docs/research/serialization/profile-candidate.md` | `b2ec69de45a3406cdcf29aec3243f81e8a42432f` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
+| `docs/research/serialization/profile-candidate.md` | `cda86d8f1f373b6648134b71c88683fd699485e2` | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 
 The committed semantic-v1 corpus used for adversarial comparison is rooted at
-`b2ec69de45a3406cdcf29aec3243f81e8a42432f`. The final Rust source behavior is
-rooted at `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`. A content change to either
-candidate input invalidates this lineage record until the Rust prototype is
-reviewed and retested.
+`b4d92a39e30fa5736c58bc71c57790ec215fbad7`. The final Rust source behavior is
+rooted at `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`. The later profile
+clarification records the field-specific failure behavior that this Rust source
+already implemented. A content change to either candidate input invalidates
+this lineage record until the Rust prototype is reviewed and retested.
 
 ## Implementation ownership and library boundary
 

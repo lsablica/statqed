@@ -1,5 +1,5 @@
 {
-  "case_count": 271,
+  "case_count": 273,
   "cases": [
     {
       "cddl": {
@@ -13132,6 +13132,84 @@
       },
       "expected": {
         "accept": false,
+        "code": "digest.purpose",
+        "encoding": null,
+        "result_class": "digest_verification",
+        "typed_projection": null
+      },
+      "id": "DIGEST-RAW-PURPOSE-BYTES-129",
+      "observations": {
+        "python": {
+          "accepted": false,
+          "code": "digest.purpose",
+          "diagnostic_limited": false,
+          "outcome": "completed",
+          "result_class": "digest_verification",
+          "returncode": 1,
+          "stderr_present": false
+        },
+        "rust": {
+          "accepted": false,
+          "code": "digest.purpose",
+          "diagnostic_limited": false,
+          "outcome": "completed",
+          "result_class": "digest_verification",
+          "returncode": 2,
+          "stderr_present": false
+        }
+      }
+    },
+    {
+      "cddl": {
+        "phase": "cddl_shape",
+        "status": "not_reached_or_not_applicable"
+      },
+      "comparison_errors": {
+        "cross": [],
+        "python": [],
+        "rust": []
+      },
+      "expected": {
+        "accept": false,
+        "code": "digest.object_class_schema",
+        "encoding": null,
+        "result_class": "digest_verification",
+        "typed_projection": null
+      },
+      "id": "DIGEST-RAW-SCHEMA-BYTES-129",
+      "observations": {
+        "python": {
+          "accepted": false,
+          "code": "digest.object_class_schema",
+          "diagnostic_limited": false,
+          "outcome": "completed",
+          "result_class": "digest_verification",
+          "returncode": 1,
+          "stderr_present": false
+        },
+        "rust": {
+          "accepted": false,
+          "code": "digest.object_class_schema",
+          "diagnostic_limited": false,
+          "outcome": "completed",
+          "result_class": "digest_verification",
+          "returncode": 2,
+          "stderr_present": false
+        }
+      }
+    },
+    {
+      "cddl": {
+        "phase": "cddl_shape",
+        "status": "not_reached_or_not_applicable"
+      },
+      "comparison_errors": {
+        "cross": [],
+        "python": [],
+        "rust": []
+      },
+      "expected": {
+        "accept": false,
         "code": "digest.length",
         "encoding": null,
         "result_class": "digest_verification",
@@ -14717,7 +14795,7 @@
     "cddl_shape": 1,
     "deterministic_profile": 63,
     "differential_detection": 17,
-    "digest_verification": 31,
+    "digest_verification": 33,
     "expectedness": 6,
     "operational_failure": 4,
     "resource": 15,
