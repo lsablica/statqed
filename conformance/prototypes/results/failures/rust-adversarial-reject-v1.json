@@ -1,0 +1,88 @@
+{
+  "record_id": "statqed.sq0005.failure.rust-adversarial-reject.v1",
+  "status": "Experimental",
+  "date": "2026-08-09",
+  "command": "bounded targeted replay through scripts/serialization/run_conformance.py against the pre-fix Rust tree",
+  "environment": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "fixture_timeout_seconds": 5,
+    "process_memory_mib": 128,
+    "rust_build": "cargo build --locked --offline in an isolated temporary source and target directory"
+  },
+  "outcome": {
+    "status": "fail",
+    "python_expectation_mismatch_count": 0,
+    "rust_distinct_mismatch_count": 6,
+    "passing_adversarial_control_count": 3
+  },
+  "minimized_failures": [
+    {
+      "fixture_id": "UTF8-INVALID-BEFORE-TRAILING",
+      "raw_hex": "61ff00",
+      "expected_result_class": "validity",
+      "expected_code": "validity.invalid_utf8",
+      "rust_result_class": "expectedness",
+      "rust_code": "expected.trailing_bytes"
+    },
+    {
+      "fixture_id": "MAP-DUPLICATE-BEFORE-TRAILING",
+      "raw_hex": "a200f400f500",
+      "expected_result_class": "validity",
+      "expected_code": "validity.map_duplicate",
+      "rust_result_class": "expectedness",
+      "rust_code": "expected.trailing_bytes"
+    },
+    {
+      "fixture_id": "RESOURCE-INDEFINITE-BSTR-TOTAL-ITEMS-4097",
+      "raw_recipe": "5f || 40 repeated 4096 times || ff",
+      "derived_byte_length": 4098,
+      "derived_total_items": 4097,
+      "expected_result_class": "resource",
+      "expected_code": "resource.total_items",
+      "rust_result_class": "deterministic_profile",
+      "rust_code": "profile.indefinite"
+    },
+    {
+      "fixture_id": "RESOURCE-INDEFINITE-TSTR-TOTAL-ITEMS-4097",
+      "raw_recipe": "7f || 60 repeated 4096 times || ff",
+      "derived_byte_length": 4098,
+      "derived_total_items": 4097,
+      "expected_result_class": "resource",
+      "expected_code": "resource.total_items",
+      "rust_result_class": "deterministic_profile",
+      "rust_code": "profile.indefinite"
+    },
+    {
+      "fixture_id": "RESOURCE-TYPED-JSON-DEPTH-2000",
+      "typed_json_recipe": "2000 nested typed array objects around typed null",
+      "derived_byte_length": 54015,
+      "expected_result_class": "resource",
+      "expected_code": "resource.depth",
+      "rust_result_class": "expectedness",
+      "rust_code": "expected.top_level"
+    },
+    {
+      "fixture_id": "SEM-TYPED-JSON-UNQUOTED-INTEGER-5000-DIGITS",
+      "typed_json_recipe": "unquoted digit 9 repeated 5000 times as an integer value",
+      "derived_byte_length": 5027,
+      "expected_result_class": "semantic_validity",
+      "expected_code": "semantic.unsupported_value",
+      "rust_result_class": "expectedness",
+      "rust_code": "expected.top_level"
+    }
+  ],
+  "passing_adversarial_controls": [
+    "RESOURCE-INDEFINITE-BSTR-TOTAL-ITEMS-4096",
+    "RESOURCE-INDEFINITE-TSTR-TOTAL-ITEMS-4096",
+    "SEM-TYPED-JSON-INTERVAL-EXPONENT-1E9"
+  ],
+  "subjects": {
+    "semantic_fixture_tree_sha256": "b138712d8941e4b2e215533f7e00df09d24a18b673707499082ba33806a0b9e7",
+    "python_frozen_commit": "b5fb813c211317c4e3e48ea8b8c232fbd14cf82b",
+    "python_implementation_source_sha256": "d686d9f58ef1694a592d90095c1fa0b1b8d2dd7ec708133edf48a4ba398dcb7a",
+    "rust_pre_fix_commit": "15cd3f081a2e2579b7753726ca110ec9ba7870b8",
+    "rust_pre_fix_implementation_source_sha256": "1f69f3b005c33e747631420d81d0f769ed5ea266fb41e12bcce586e57664899e"
+  },
+  "nonclaim": "This record preserves rejected differential evidence from the exact pre-fix Rust implementation; it does not authorize changing semantic expectations or installing binary goldens."
+}

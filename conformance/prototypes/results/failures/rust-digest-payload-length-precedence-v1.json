@@ -1,0 +1,45 @@
+{
+  "record_id": "statqed.sq0005.failure.rust-digest-payload-length-precedence.v1",
+  "status": "Experimental",
+  "date": "2026-08-09",
+  "command": "python3 scripts/serialization/run_conformance.py --regenerate",
+  "environment": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "fixture_timeout_seconds": 5,
+    "process_memory_mib": 128
+  },
+  "outcome": {
+    "status": "fail",
+    "semantic_fixture_count": 253,
+    "python_expectation_mismatch_count": 0,
+    "rust_distinct_mismatch_count": 1,
+    "cross_comparison_record_count": 1,
+    "joint_golden_candidate_count": 69,
+    "mutation_count": 20,
+    "all_mutations_detected": true
+  },
+  "minimized_failure": {
+    "fixture_id": "DIGEST-FRAME-PAYLOAD-ONE-OVER",
+    "payload_byte_length": 1048577,
+    "expected_result_class": "digest_verification",
+    "expected_code": "digest.length",
+    "rust_result_class": "resource",
+    "rust_code": "resource.input_bytes",
+    "cause": "The Rust frame command decoded the payload before applying the digest-frame oversize-payload precedence."
+  },
+  "subjects": {
+    "discarded_full_results": {
+      "byte_length": 429748,
+      "sha256": "12ca2fdb986140efd46682790a58964ade52f482ceeaa049adbe8a5daf022e47"
+    },
+    "discarded_minimized_failures": {
+      "byte_length": 888,
+      "sha256": "18507307fad7eb4b01a969f1766433100261c1949efd9d6a4926ef58a3b48553"
+    },
+    "rust_main_sha256": "59bc2363489e8af6bb30fef39ac7da8232357e878cc27b2ad217c582c79f0e15",
+    "rust_lib_sha256": "2138d13bfb7864cae96ad9c6acdba91da83a65635b06e74a81c7ca70a223c4ae",
+    "semantic_catalog_sha256": "2c5269e37129a27922dbeecbbae63a2bd6a925e434a5da938315a03b423e5e70"
+  },
+  "nonclaim": "The otherwise agreeing candidate bytes were not installed as binary goldens until this remaining result-precedence defect was corrected and the full suite passed."
+}

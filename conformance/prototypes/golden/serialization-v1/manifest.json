@@ -1,0 +1,971 @@
+{
+  "authority": "joint_implementation_agreement_with_precommitted_semantic_expectation",
+  "fixture_catalog_sha256": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
+  "nonclaims": [
+    "Neither implementation is the semantic oracle.",
+    "CDDL shape, byte agreement, and digest agreement establish no statistical, provenance, inferential, or kernel claim."
+  ],
+  "profile_id": "statqed.cbor-core.v1",
+  "schema_id": "statqed.serialization-binary-golden-manifest.v1",
+  "vector_count": 69,
+  "vectors": [
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000000000",
+      "id": "INT-U-0000000000000000",
+      "inline_hex": "00",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000000.cbor",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000000023",
+      "id": "INT-U-0000000000000023",
+      "inline_hex": "17",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000023.cbor",
+      "sha256": "8f11b05da785e43e713d03774c6bd3405d99cd3024af334ffd68db663aa37034"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 2,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000000024",
+      "id": "INT-U-0000000000000024",
+      "inline_hex": "1818",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000024.cbor",
+      "sha256": "7c6348f7ea8a4e831aafe688a2557d7a3ab0be8549cdb190a029956ade971b15"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 2,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000000255",
+      "id": "INT-U-0000000000000255",
+      "inline_hex": "18ff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000255.cbor",
+      "sha256": "fcaae93768b1722dcefc0a06729388acfe35a4d08cbdfc996309a15fad7e62af"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000000256",
+      "id": "INT-U-0000000000000256",
+      "inline_hex": "190100",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000000256.cbor",
+      "sha256": "70aa0275e34b1dd6f23f2e97a23ffaffa642ad71a935484e5e878d33c89f1e21"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000065535",
+      "id": "INT-U-0000000000065535",
+      "inline_hex": "19ffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000065535.cbor",
+      "sha256": "459fbd327a935784702aca36217445923f8794e11be0b8a2e9f9b3ea9b800e91"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 5,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000000000065536",
+      "id": "INT-U-0000000000065536",
+      "inline_hex": "1a00010000",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000000000065536.cbor",
+      "sha256": "2928012187f03446d1e9ec37dae5cc9586656c20bd6e28ff4953181b933cb3f0"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 5,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000004294967295",
+      "id": "INT-U-0000004294967295",
+      "inline_hex": "1affffffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000004294967295.cbor",
+      "sha256": "74925985507bbda0c27009d32686859a69ac1e7d2870986694ee73ece429bd68"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 9,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-0000004294967296",
+      "id": "INT-U-0000004294967296",
+      "inline_hex": "1b0000000100000000",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-0000004294967296.cbor",
+      "sha256": "ff0a4ebee87c783ebeb2197fb436cfee11c1172a7363c7c133e085878c7d58ff"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 9,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-U-18446744073709551615",
+      "id": "INT-U-18446744073709551615",
+      "inline_hex": "1bffffffffffffffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-U-18446744073709551615.cbor",
+      "sha256": "2d7cb0927d162df726656d7155780f0486760e4327b537b54d0187e57209517c"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000000001",
+      "id": "INT-N-0000000000000001",
+      "inline_hex": "20",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000001.cbor",
+      "sha256": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000000024",
+      "id": "INT-N-0000000000000024",
+      "inline_hex": "37",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000024.cbor",
+      "sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 2,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000000025",
+      "id": "INT-N-0000000000000025",
+      "inline_hex": "3818",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000025.cbor",
+      "sha256": "dd7baa54409c052850ed2e03e586086bfed37a275ae4aee888711cd7c46bc91f"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 2,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000000256",
+      "id": "INT-N-0000000000000256",
+      "inline_hex": "38ff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000256.cbor",
+      "sha256": "c34bbb2a6569bad93a2784738eea7aa01db2d1714a1947cbc81117658167fe76"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000000257",
+      "id": "INT-N-0000000000000257",
+      "inline_hex": "390100",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000000257.cbor",
+      "sha256": "778fbefd4ff46506f151117b4b4bfa3a7134e2990d804d083f386cd1ff6eeead"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000065536",
+      "id": "INT-N-0000000000065536",
+      "inline_hex": "39ffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000065536.cbor",
+      "sha256": "bb85b676802f80fc4fb93efe7c9e6bdb8c41b1be118adb53853ad0b00697e765"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 5,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000000000065537",
+      "id": "INT-N-0000000000065537",
+      "inline_hex": "3a00010000",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000000000065537.cbor",
+      "sha256": "33174ca8e8e022841e6977741a249663ef3683f3d587a24afdc85d9d6fb801ea"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 5,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000004294967296",
+      "id": "INT-N-0000004294967296",
+      "inline_hex": "3affffffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000004294967296.cbor",
+      "sha256": "80a46548fe92debff084e322d6caa952b772f7cd173e6f01858268b0b801ea37"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 9,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-0000004294967297",
+      "id": "INT-N-0000004294967297",
+      "inline_hex": "3b0000000100000000",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-0000004294967297.cbor",
+      "sha256": "1e1576cf957799ec3a6009e785b96d0e5b1df789860c1226ecac8e4a22df0421"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 9,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "INT-N-18446744073709551616",
+      "id": "INT-N-18446744073709551616",
+      "inline_hex": "3bffffffffffffffff",
+      "path": "conformance/prototypes/golden/serialization-v1/INT-N-18446744073709551616.cbor",
+      "sha256": "fe8908232e288502601792e108c3d65f2aa3b2b226090851b224aee4175f020c"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "SIMPLE-FALSE",
+      "id": "SIMPLE-FALSE",
+      "inline_hex": "f4",
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-FALSE.cbor",
+      "sha256": "2017ff3461395672aa0aa4f64894fd2f95a4b120e2690e8951656d79adc2eed2"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "SIMPLE-TRUE",
+      "id": "SIMPLE-TRUE",
+      "inline_hex": "f5",
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-TRUE.cbor",
+      "sha256": "27abdeddfe8503496adeb623466caa47da5f63abd2bc6fa19f6cfcb73ecfed70"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "SIMPLE-NULL",
+      "id": "SIMPLE-NULL",
+      "inline_hex": "f6",
+      "path": "conformance/prototypes/golden/serialization-v1/SIMPLE-NULL.cbor",
+      "sha256": "b0b2988b6bbe724bacda5e9e524736de0bc7dae41c46b4213c50e1d35d4e5f13"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "LENGTH-BSTR-0",
+      "id": "LENGTH-BSTR-0",
+      "inline_hex": "40",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-0.cbor",
+      "sha256": "c3641f8544d7c02f3580b07c0f9887f0c6a27ff5ab1d4a3e29caf197cfc299ae"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 24,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-23",
+      "id": "LENGTH-BSTR-23",
+      "inline_hex": "570000000000000000000000000000000000000000000000",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-23.cbor",
+      "sha256": "9256e6bef3d196eecdae6dd948a002b776eb4ba1dc7d0be05f04fed4bc33439f"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 26,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-24",
+      "id": "LENGTH-BSTR-24",
+      "inline_hex": "5818000000000000000000000000000000000000000000000000",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-24.cbor",
+      "sha256": "c587fa96cc3427bd7a27828a460396dd3a58c70a956654465c5c236be4d08fc1"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 257,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-255",
+      "id": "LENGTH-BSTR-255",
+      "inline_hex": "58ff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-255.cbor",
+      "sha256": "cfb9bbc77439b64c644aa49c731c5127b020f7188415ca6c58fd4cb5de187fd8"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 259,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-256",
+      "id": "LENGTH-BSTR-256",
+      "inline_hex": "59010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-256.cbor",
+      "sha256": "0f0f1d6cc0921ee8ac7b3352cf7e962f5f52dff08173c8e545cdfe2a972d81d8"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65538,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-65535",
+      "id": "LENGTH-BSTR-65535",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-65535.cbor",
+      "sha256": "90ed39097d6c77b2bb86fc1aa2a09442e3f4cc05bf95d5aff624390904a724fc"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65541,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-BSTR-65536",
+      "id": "LENGTH-BSTR-65536",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-BSTR-65536.cbor",
+      "sha256": "b4abdb7d61f183a6ca5ab683f34e13abf2fb9dc934b99530aad9d3f6a026f19b"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "LENGTH-TSTR-0",
+      "id": "LENGTH-TSTR-0",
+      "inline_hex": "60",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-0.cbor",
+      "sha256": "8d33f520a3c4cef80d2453aef81b612bfe1cb44c8b2025630ad38662763f13d3"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 24,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-23",
+      "id": "LENGTH-TSTR-23",
+      "inline_hex": "776161616161616161616161616161616161616161616161",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-23.cbor",
+      "sha256": "c5b1fe69d403b97a51d6062623a69c55ffe8b0d4cc5ad7156ee2239f1060b189"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 26,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-24",
+      "id": "LENGTH-TSTR-24",
+      "inline_hex": "7818616161616161616161616161616161616161616161616161",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-24.cbor",
+      "sha256": "f0794f31dbdd00e6d3671a0489f264c4d8c7e6c4282a42075af2e34f56a0d11f"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 257,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-255",
+      "id": "LENGTH-TSTR-255",
+      "inline_hex": "78ff616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-255.cbor",
+      "sha256": "387ed65171029fc9a0ebf680927572aef94a35b4d854b79a205cd77f674be36d"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 259,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-256",
+      "id": "LENGTH-TSTR-256",
+      "inline_hex": "79010061616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-256.cbor",
+      "sha256": "ff52b61d7119986ee47df10f52d9dd52c3ed0aba3f98364301c17593dd9d5feb"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65538,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-65535",
+      "id": "LENGTH-TSTR-65535",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-65535.cbor",
+      "sha256": "8ea3089675e4436ef1e2f32b5081064540c61d746c91af2840340ee1db6a719d"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65541,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-TSTR-65536",
+      "id": "LENGTH-TSTR-65536",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-TSTR-65536.cbor",
+      "sha256": "8836d76bfab15ca6dc8b9626b2ce023c8e30461ba4933a4e4f50d2244a52c350"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "LENGTH-ARRAY-0",
+      "id": "LENGTH-ARRAY-0",
+      "inline_hex": "80",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-0.cbor",
+      "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 24,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-ARRAY-23",
+      "id": "LENGTH-ARRAY-23",
+      "inline_hex": "97f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-23.cbor",
+      "sha256": "1434feb8502afe72feb4af80602118c5d1a12b3a0871040ed285e9e3f68d1d0a"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 26,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-ARRAY-24",
+      "id": "LENGTH-ARRAY-24",
+      "inline_hex": "9818f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-24.cbor",
+      "sha256": "2496068f2a4f18244959f7e49fd5dde6f668bf8febd4b5c802acf8876581f3be"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 257,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-ARRAY-255",
+      "id": "LENGTH-ARRAY-255",
+      "inline_hex": "98fff6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-255.cbor",
+      "sha256": "c574704f258fa72c12835d45d642ab27cfa6c452e3afa92aa53d2c4b3a2e3201"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 259,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-ARRAY-256",
+      "id": "LENGTH-ARRAY-256",
+      "inline_hex": "990100f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-ARRAY-256.cbor",
+      "sha256": "4f433f78fa0bed280c482297fbb28078da802ed6e2a4b1da04e105995b31d059"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "LENGTH-MAP-0",
+      "id": "LENGTH-MAP-0",
+      "inline_hex": "a0",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-0.cbor",
+      "sha256": "c19a797fa1fd590cd2e5b42d1cf5f246e29b91684e2f87404b81dc345c7a56a0"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 47,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-MAP-23",
+      "id": "LENGTH-MAP-23",
+      "inline_hex": "b700f601f602f603f604f605f606f607f608f609f60af60bf60cf60df60ef60ff610f611f612f613f614f615f616f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-23.cbor",
+      "sha256": "7fba5302ff59dc605e18140980bec5327901f0f2270d5e6334621a2ccd21f139"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 50,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-MAP-24",
+      "id": "LENGTH-MAP-24",
+      "inline_hex": "b81800f601f602f603f604f605f606f607f608f609f60af60bf60cf60df60ef60ff610f611f612f613f614f615f616f617f6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-24.cbor",
+      "sha256": "40d59bbf3f0a52a61f7996fe7e57840a0c6d4b471fcad108048663aa41248348"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 743,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-MAP-255",
+      "id": "LENGTH-MAP-255",
+      "inline_hex": "b8ff00f601f602f603f604f605f606f607f608f609f60af60bf60cf60df60ef60ff610f611f612f613f614f615f616f617f61818f61819f6181af6181bf6181cf6181df6181ef6181ff61820f61821f61822f61823f61824f61825f61826f61827f61828f61829f6182af6182bf6182cf6182df6182ef6182ff61830f61831f61832f61833f61834f61835f61836f61837f61838f61839f6183af6183bf6183cf6183df6183ef6183ff61840f61841f61842f61843f61844f61845f61846f61847f61848f61849f6184af6184bf6184cf6184df6184ef6184ff61850f61851f61852f61853f61854f61855f61856f61857f61858f61859f6185af6185bf6185cf6185df6185ef6185ff61860f61861f61862f61863f61864f61865f61866f61867f61868f61869f6186af6186bf6186cf6186df6186ef6186ff61870f61871f61872f61873f61874f61875f61876f61877f61878f61879f6187af6187bf6187cf6187df6187ef6187ff61880f61881f61882f61883f61884f61885f61886f61887f61888f61889f6188af6188bf6188cf6188df6188ef6188ff61890f61891f61892f61893f61894f61895f61896f61897f61898f61899f6189af6189bf6189cf6189df6189ef6189ff618a0f618a1f618a2f618a3f618a4f618a5f618a6f618a7f618a8f618a9f618aaf618abf618acf618adf618aef618aff618b0f618b1f618b2f618b3f618b4f618b5f618b6f618b7f618b8f618b9f618baf618bbf618bcf618bdf618bef618bff618c0f618c1f618c2f618c3f618c4f618c5f618c6f618c7f618c8f618c9f618caf618cbf618ccf618cdf618cef618cff618d0f618d1f618d2f618d3f618d4f618d5f618d6f618d7f618d8f618d9f618daf618dbf618dcf618ddf618def618dff618e0f618e1f618e2f618e3f618e4f618e5f618e6f618e7f618e8f618e9f618eaf618ebf618ecf618edf618eef618eff618f0f618f1f618f2f618f3f618f4f618f5f618f6f618f7f618f8f618f9f618faf618fbf618fcf618fdf618fef6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-255.cbor",
+      "sha256": "aa575c1af3371920f026348abc2d29b3e321ffa462b5359b6aa73b63a3018b88"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 747,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "LENGTH-MAP-256",
+      "id": "LENGTH-MAP-256",
+      "inline_hex": "b9010000f601f602f603f604f605f606f607f608f609f60af60bf60cf60df60ef60ff610f611f612f613f614f615f616f617f61818f61819f6181af6181bf6181cf6181df6181ef6181ff61820f61821f61822f61823f61824f61825f61826f61827f61828f61829f6182af6182bf6182cf6182df6182ef6182ff61830f61831f61832f61833f61834f61835f61836f61837f61838f61839f6183af6183bf6183cf6183df6183ef6183ff61840f61841f61842f61843f61844f61845f61846f61847f61848f61849f6184af6184bf6184cf6184df6184ef6184ff61850f61851f61852f61853f61854f61855f61856f61857f61858f61859f6185af6185bf6185cf6185df6185ef6185ff61860f61861f61862f61863f61864f61865f61866f61867f61868f61869f6186af6186bf6186cf6186df6186ef6186ff61870f61871f61872f61873f61874f61875f61876f61877f61878f61879f6187af6187bf6187cf6187df6187ef6187ff61880f61881f61882f61883f61884f61885f61886f61887f61888f61889f6188af6188bf6188cf6188df6188ef6188ff61890f61891f61892f61893f61894f61895f61896f61897f61898f61899f6189af6189bf6189cf6189df6189ef6189ff618a0f618a1f618a2f618a3f618a4f618a5f618a6f618a7f618a8f618a9f618aaf618abf618acf618adf618aef618aff618b0f618b1f618b2f618b3f618b4f618b5f618b6f618b7f618b8f618b9f618baf618bbf618bcf618bdf618bef618bff618c0f618c1f618c2f618c3f618c4f618c5f618c6f618c7f618c8f618c9f618caf618cbf618ccf618cdf618cef618cff618d0f618d1f618d2f618d3f618d4f618d5f618d6f618d7f618d8f618d9f618daf618dbf618dcf618ddf618def618dff618e0f618e1f618e2f618e3f618e4f618e5f618e6f618e7f618e8f618e9f618eaf618ebf618ecf618edf618eef618eff618f0f618f1f618f2f618f3f618f4f618f5f618f6f618f7f618f8f618f9f618faf618fbf618fcf618fdf618fef618fff6",
+      "path": "conformance/prototypes/golden/serialization-v1/LENGTH-MAP-256.cbor",
+      "sha256": "cae4d9194b9d333b890990b8e55a2997e2688086549a643b74cbf6f0baf6f6cc"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 6,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "MAP-CORE-NEG1-100",
+      "id": "MAP-CORE-NEG1-100",
+      "inline_hex": "a21864f620f6",
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-CORE-NEG1-100.cbor",
+      "sha256": "e703c6fdadad038a1ad72bc9ba506263ca833c778f2d1a6ff33ed0a210cbf7e5"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 6,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "MAP-CORE-24-EMPTY-TEXT",
+      "id": "MAP-CORE-24-EMPTY-TEXT",
+      "inline_hex": "a21818f660f6",
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-CORE-24-EMPTY-TEXT.cbor",
+      "sha256": "fada56d761f2b1fde318ed907a712de738b23977612e06b8b59f4bd0533eb77c"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 6,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "MAP-INSERTION-REVERSED-SAME-BYTES",
+      "id": "MAP-INSERTION-REVERSED-SAME-BYTES",
+      "inline_hex": "a21864f620f6",
+      "path": "conformance/prototypes/golden/serialization-v1/MAP-INSERTION-REVERSED-SAME-BYTES.cbor",
+      "sha256": "e703c6fdadad038a1ad72bc9ba506263ca833c778f2d1a6ff33ed0a210cbf7e5"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-COMPOSED-E-ACUTE",
+      "id": "UNICODE-COMPOSED-E-ACUTE",
+      "inline_hex": "62c3a9",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-COMPOSED-E-ACUTE.cbor",
+      "sha256": "701813d6d5ac9e087e4b469881bd4bf116fee5027a3b7ea436d513b0d8049737"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 4,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-DECOMPOSED-E-ACUTE",
+      "id": "UNICODE-DECOMPOSED-E-ACUTE",
+      "inline_hex": "6365cc81",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-DECOMPOSED-E-ACUTE.cbor",
+      "sha256": "daf8719f463a8018c94c6e70fdef01d6358ca282c10e781a52be5923beaa8a8a"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 10,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-NORMALIZATION-COLLISION-MAP-DISTINCT",
+      "id": "UNICODE-NORMALIZATION-COLLISION-MAP-DISTINCT",
+      "inline_hex": "a262c3a9f46365cc81f5",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-NORMALIZATION-COLLISION-MAP-DISTINCT.cbor",
+      "sha256": "e6075c7d2d9444c5e6807e5cf6379bcd6f437afa6ab2d46fc09a5eedaf77c8be"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-COMBINING-MARK-ALONE",
+      "id": "UNICODE-COMBINING-MARK-ALONE",
+      "inline_hex": "62cc81",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-COMBINING-MARK-ALONE.cbor",
+      "sha256": "aea5faaff3495de1d48bb3d1144f5bfa3420b6511f5be1c73ced308a3af649e7"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 2,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-CONTROL-NUL",
+      "id": "UNICODE-CONTROL-NUL",
+      "inline_hex": "6100",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-CONTROL-NUL.cbor",
+      "sha256": "ffe9aaeaa2a2d5048174df0b80599ef0197ec024c4b051bc9860cff58ef7f9f3"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 4,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-NONCHARACTER-FDD0",
+      "id": "UNICODE-NONCHARACTER-FDD0",
+      "inline_hex": "63efb790",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-NONCHARACTER-FDD0.cbor",
+      "sha256": "600b7c794290a9e82cfd3848c80b058e05f63cb2ae2bb71072db5f65651c3bbd"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 5,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "UNICODE-SUPPLEMENTARY-GRINNING-FACE",
+      "id": "UNICODE-SUPPLEMENTARY-GRINNING-FACE",
+      "inline_hex": "64f09f9880",
+      "path": "conformance/prototypes/golden/serialization-v1/UNICODE-SUPPLEMENTARY-GRINNING-FACE.cbor",
+      "sha256": "e34a1fc83bfacd5f8ed9ec359705b76b1e2191071451202cddb73cbc0887ba54"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1048576,
+      "expectation_kind": "same_as_input_recipe",
+      "fixture_id": "RESOURCE-INPUT-BYTES-1048576",
+      "id": "RESOURCE-INPUT-BYTES-1048576",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-INPUT-BYTES-1048576.cbor",
+      "sha256": "8cbe68eab9fc42790947ad0fade6cc90c8473a2b180a8019534588159bd96358"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1048576,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-OUTPUT-BYTES-1048576",
+      "id": "RESOURCE-OUTPUT-BYTES-1048576",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-OUTPUT-BYTES-1048576.cbor",
+      "sha256": "8cbe68eab9fc42790947ad0fade6cc90c8473a2b180a8019534588159bd96358"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65541,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-BYTE-STRING-65536",
+      "id": "RESOURCE-BYTE-STRING-65536",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-BYTE-STRING-65536.cbor",
+      "sha256": "b4abdb7d61f183a6ca5ab683f34e13abf2fb9dc934b99530aad9d3f6a026f19b"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 65541,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-TEXT-STRING-65536-BYTES",
+      "id": "RESOURCE-TEXT-STRING-65536-BYTES",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-TEXT-STRING-65536-BYTES.cbor",
+      "sha256": "8836d76bfab15ca6dc8b9626b2ce023c8e30461ba4933a4e4f50d2244a52c350"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1027,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-ARRAY-ITEMS-1024",
+      "id": "RESOURCE-ARRAY-ITEMS-1024",
+      "inline_hex": "990400f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-ARRAY-ITEMS-1024.cbor",
+      "sha256": "fb24b0276930e1de988fe82e3d4a34bbe034c92eb373a1ee96cc2a86960ffe40"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 3819,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-MAP-ENTRIES-1024",
+      "id": "RESOURCE-MAP-ENTRIES-1024",
+      "inline_hex": "b9040000f601f602f603f604f605f606f607f608f609f60af60bf60cf60df60ef60ff610f611f612f613f614f615f616f617f61818f61819f6181af6181bf6181cf6181df6181ef6181ff61820f61821f61822f61823f61824f61825f61826f61827f61828f61829f6182af6182bf6182cf6182df6182ef6182ff61830f61831f61832f61833f61834f61835f61836f61837f61838f61839f6183af6183bf6183cf6183df6183ef6183ff61840f61841f61842f61843f61844f61845f61846f61847f61848f61849f6184af6184bf6184cf6184df6184ef6184ff61850f61851f61852f61853f61854f61855f61856f61857f61858f61859f6185af6185bf6185cf6185df6185ef6185ff61860f61861f61862f61863f61864f61865f61866f61867f61868f61869f6186af6186bf6186cf6186df6186ef6186ff61870f61871f61872f61873f61874f61875f61876f61877f61878f61879f6187af6187bf6187cf6187df6187ef6187ff61880f61881f61882f61883f61884f61885f61886f61887f61888f61889f6188af6188bf6188cf6188df6188ef6188ff61890f61891f61892f61893f61894f61895f61896f61897f61898f61899f6189af6189bf6189cf6189df6189ef6189ff618a0f618a1f618a2f618a3f618a4f618a5f618a6f618a7f618a8f618a9f618aaf618abf618acf618adf618aef618aff618b0f618b1f618b2f618b3f618b4f618b5f618b6f618b7f618b8f618b9f618baf618bbf618bcf618bdf618bef618bff618c0f618c1f618c2f618c3f618c4f618c5f618c6f618c7f618c8f618c9f618caf618cbf618ccf618cdf618cef618cff618d0f618d1f618d2f618d3f618d4f618d5f618d6f618d7f618d8f618d9f618daf618dbf618dcf618ddf618def618dff618e0f618e1f618e2f618e3f618e4f618e5f618e6f618e7f618e8f618e9f618eaf618ebf618ecf618edf618eef618eff618f0f618f1f618f2f618f3f618f4f618f5f618f6f618f7f618f8f618f9f618faf618fbf618fcf618fdf618fef618fff6190100f6190101f6190102f6190103f6190104f6190105f6190106f6190107f6190108f6190109f619010af619010bf619010cf619010df619010ef619010ff6190110f6190111f6190112f6190113f6190114f6190115f6190116f6190117f6190118f6190119f619011af619011bf619011cf619011df619011ef619011ff6190120f6190121f6190122f6190123f6190124f6190125f6190126f6190127f6190128f6190129f619012af619012bf619012cf619012df619012ef619012ff6190130f6190131f6190132f6190133f6190134f6190135f6190136f6190137f6190138f6190139f619013af619013bf619013cf619013df619013ef619013ff6190140f6190141f6190142f6190143f6190144f6190145f6190146f6190147f6190148f6190149f619014af619014bf619014cf619014df619014ef619014ff6190150f6190151f6190152f6190153f6190154f6190155f6190156f6190157f6190158f6190159f619015af619015bf619015cf619015df619015ef619015ff6190160f6190161f6190162f6190163f6190164f6190165f6190166f6190167f6190168f6190169f619016af619016bf619016cf619016df619016ef619016ff6190170f6190171f6190172f6190173f6190174f6190175f6190176f6190177f6190178f6190179f619017af619017bf619017cf619017df619017ef619017ff6190180f6190181f6190182f6190183f6190184f6190185f6190186f6190187f6190188f6190189f619018af619018bf619018cf619018df619018ef619018ff6190190f6190191f6190192f6190193f6190194f6190195f6190196f6190197f6190198f6190199f619019af619019bf619019cf619019df619019ef619019ff61901a0f61901a1f61901a2f61901a3f61901a4f61901a5f61901a6f61901a7f61901a8f61901a9f61901aaf61901abf61901acf61901adf61901aef61901aff61901b0f61901b1f61901b2f61901b3f61901b4f61901b5f61901b6f61901b7f61901b8f61901b9f61901baf61901bbf61901bcf61901bdf61901bef61901bff61901c0f61901c1f61901c2f61901c3f61901c4f61901c5f61901c6f61901c7f61901c8f61901c9f61901caf61901cbf61901ccf61901cdf61901cef61901cff61901d0f61901d1f61901d2f61901d3f61901d4f61901d5f61901d6f61901d7f61901d8f61901d9f61901daf61901dbf61901dcf61901ddf61901def61901dff61901e0f61901e1f61901e2f61901e3f61901e4f61901e5f61901e6f61901e7f61901e8f61901e9f61901eaf61901ebf61901ecf61901edf61901eef61901eff61901f0f61901f1f61901f2f61901f3f61901f4f61901f5f61901f6f61901f7f61901f8f61901f9f61901faf61901fbf61901fcf61901fdf61901fef61901fff6190200f6190201f6190202f6190203f6190204f6190205f6190206f6190207f6190208f6190209f619020af619020bf619020cf619020df619020ef619020ff6190210f6190211f6190212f6190213f6190214f6190215f6190216f6190217f6190218f6190219f619021af619021bf619021cf619021df619021ef619021ff6190220f6190221f6190222f6190223f6190224f6190225f6190226f6190227f6190228f6190229f619022af619022bf619022cf619022df619022ef619022ff6190230f6190231f6190232f6190233f6190234f6190235f6190236f6190237f6190238f6190239f619023af619023bf619023cf619023df619023ef619023ff6190240f6190241f6190242f6190243f6190244f6190245f6190246f6190247f6190248f6190249f619024af619024bf619024cf619024df619024ef619024ff6190250f6190251f6190252f6190253f6190254f6190255f6190256f6190257f6190258f6190259f619025af619025bf619025cf619025df619025ef619025ff6190260f6190261f6190262f6190263f6190264f6190265f6190266f6190267f6190268f6190269f619026af619026bf619026cf619026df619026ef619026ff6190270f6190271f6190272f6190273f6190274f6190275f6190276f6190277f6190278f6190279f619027af619027bf619027cf619027df619027ef619027ff6190280f6190281f6190282f6190283f6190284f6190285f6190286f6190287f6190288f6190289f619028af619028bf619028cf619028df619028ef619028ff6190290f6190291f6190292f6190293f6190294f6190295f6190296f6190297f6190298f6190299f619029af619029bf619029cf619029df619029ef619029ff61902a0f61902a1f61902a2f61902a3f61902a4f61902a5f61902a6f61902a7f61902a8f61902a9f61902aaf61902abf61902acf61902adf61902aef61902aff61902b0f61902b1f61902b2f61902b3f61902b4f61902b5f61902b6f61902b7f61902b8f61902b9f61902baf61902bbf61902bcf61902bdf61902bef61902bff61902c0f61902c1f61902c2f61902c3f61902c4f61902c5f61902c6f61902c7f61902c8f61902c9f61902caf61902cbf61902ccf61902cdf61902cef61902cff61902d0f61902d1f61902d2f61902d3f61902d4f61902d5f61902d6f61902d7f61902d8f61902d9f61902daf61902dbf61902dcf61902ddf61902def61902dff61902e0f61902e1f61902e2f61902e3f61902e4f61902e5f61902e6f61902e7f61902e8f61902e9f61902eaf61902ebf61902ecf61902edf61902eef61902eff61902f0f61902f1f61902f2f61902f3f61902f4f61902f5f61902f6f61902f7f61902f8f61902f9f61902faf61902fbf61902fcf61902fdf61902fef61902fff6190300f6190301f6190302f6190303f6190304f6190305f6190306f6190307f6190308f6190309f619030af619030bf619030cf619030df619030ef619030ff6190310f6190311f6190312f6190313f6190314f6190315f6190316f6190317f6190318f6190319f619031af619031bf619031cf619031df619031ef619031ff6190320f6190321f6190322f6190323f6190324f6190325f6190326f6190327f6190328f6190329f619032af619032bf619032cf619032df619032ef619032ff6190330f6190331f6190332f6190333f6190334f6190335f6190336f6190337f6190338f6190339f619033af619033bf619033cf619033df619033ef619033ff6190340f6190341f6190342f6190343f6190344f6190345f6190346f6190347f6190348f6190349f619034af619034bf619034cf619034df619034ef619034ff6190350f6190351f6190352f6190353f6190354f6190355f6190356f6190357f6190358f6190359f619035af619035bf619035cf619035df619035ef619035ff6190360f6190361f6190362f6190363f6190364f6190365f6190366f6190367f6190368f6190369f619036af619036bf619036cf619036df619036ef619036ff6190370f6190371f6190372f6190373f6190374f6190375f6190376f6190377f6190378f6190379f619037af619037bf619037cf619037df619037ef619037ff6190380f6190381f6190382f6190383f6190384f6190385f6190386f6190387f6190388f6190389f619038af619038bf619038cf619038df619038ef619038ff6190390f6190391f6190392f6190393f6190394f6190395f6190396f6190397f6190398f6190399f619039af619039bf619039cf619039df619039ef619039ff61903a0f61903a1f61903a2f61903a3f61903a4f61903a5f61903a6f61903a7f61903a8f61903a9f61903aaf61903abf61903acf61903adf61903aef61903aff61903b0f61903b1f61903b2f61903b3f61903b4f61903b5f61903b6f61903b7f61903b8f61903b9f61903baf61903bbf61903bcf61903bdf61903bef61903bff61903c0f61903c1f61903c2f61903c3f61903c4f61903c5f61903c6f61903c7f61903c8f61903c9f61903caf61903cbf61903ccf61903cdf61903cef61903cff61903d0f61903d1f61903d2f61903d3f61903d4f61903d5f61903d6f61903d7f61903d8f61903d9f61903daf61903dbf61903dcf61903ddf61903def61903dff61903e0f61903e1f61903e2f61903e3f61903e4f61903e5f61903e6f61903e7f61903e8f61903e9f61903eaf61903ebf61903ecf61903edf61903eef61903eff61903f0f61903f1f61903f2f61903f3f61903f4f61903f5f61903f6f61903f7f61903f8f61903f9f61903faf61903fbf61903fcf61903fdf61903fef61903fff6",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-MAP-ENTRIES-1024.cbor",
+      "sha256": "cd14c920d784b820b935acbd0ed440250c31dda7e4ce2e51b3bd8d301d846429"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 4104,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-TOTAL-ITEMS-4096",
+      "id": "RESOURCE-TOTAL-ITEMS-4096",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-TOTAL-ITEMS-4096.cbor",
+      "sha256": "f25188130e1e475655ca0027898a4ed761e8c5dc55352733ed4e48fe4893c437"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 33,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "RESOURCE-DEPTH-32",
+      "id": "RESOURCE-DEPTH-32",
+      "inline_hex": "8181818181818181818181818181818181818181818181818181818181818181f6",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-DEPTH-32.cbor",
+      "sha256": "02364caca9974b7f762159338cc93837127e417629a15abef71bbef26f7b039d"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "cbor",
+      "byte_length": 1,
+      "expectation_kind": "literal_hex",
+      "fixture_id": "RESOURCE-EXTENSION-COUNT-0",
+      "id": "RESOURCE-EXTENSION-COUNT-0",
+      "inline_hex": "f6",
+      "path": "conformance/prototypes/golden/serialization-v1/RESOURCE-EXTENSION-COUNT-0.cbor",
+      "sha256": "b0b2988b6bbe724bacda5e9e524736de0bc7dae41c46b4213c50e1d35d4e5f13"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "frame",
+      "byte_length": 121,
+      "digest_hex": "53c209c1a299f073ec8f66ef4fe28581b6c1ad282731b357def61f2f77ef4749",
+      "expectation_kind": "literal_hex",
+      "fixture_id": "DIGEST-FRAME-BASELINE",
+      "id": "DIGEST-FRAME-BASELINE",
+      "inline_hex": "537461745145442d446967657374000000000c746573742e66697874757265000000077368612d32353600000014737461747165642e63626f722d636f72652e763100000016746573742e73656d616e7469632d76616c75652e763100000014737461747165642e6469676573742d6c702e76310000000100",
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-FRAME-BASELINE.frame",
+      "sha256": "53c209c1a299f073ec8f66ef4fe28581b6c1ad282731b357def61f2f77ef4749"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "frame",
+      "byte_length": 119,
+      "digest_hex": "a041b193bc01ee5a13c88c0944f12b6373a11d843c6aaea4021e33fbd01ba8d9",
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "DIGEST-SCHEMA-BINDING-NOT-CONFORMANCE",
+      "id": "DIGEST-SCHEMA-BINDING-NOT-CONFORMANCE",
+      "inline_hex": "537461745145442d446967657374000000000c746573742e66697874757265000000077368612d32353600000014737461747165642e63626f722d636f72652e763100000014746573742e6d7573742d62652d746578742e763100000014737461747165642e6469676573742d6c702e76310000000100",
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-SCHEMA-BINDING-NOT-CONFORMANCE.frame",
+      "sha256": "a041b193bc01ee5a13c88c0944f12b6373a11d843c6aaea4021e33fbd01ba8d9"
+    },
+    {
+      "agreement": [
+        "python-oracle",
+        "rust-prototype"
+      ],
+      "artifact_kind": "frame",
+      "byte_length": 1048918,
+      "expectation_kind": "hex_recipe",
+      "fixture_id": "DIGEST-FRAME-ATTAINABLE-MAX",
+      "id": "DIGEST-FRAME-ATTAINABLE-MAX",
+      "path": "conformance/prototypes/golden/serialization-v1/DIGEST-FRAME-ATTAINABLE-MAX.frame",
+      "sha256": "c0ef40eaa288a90d68ab665d482a544cd335d464d90480cbcdb6d2c5a93dab48"
+    }
+  ]
+}
