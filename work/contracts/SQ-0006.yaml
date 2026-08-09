@@ -1,12 +1,237 @@
 {
-  "id":"SQ-0006","title":"Define schema v0 and golden vectors","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Versioned CDDL files and independently reviewed canonical vectors define the ADR-0011 data-free semantic fixture without freezing the artifact envelope.",
-  "dependencies":["SQ-0005"],
-  "allowed_paths":["schemas/**","conformance/golden/**","docs/spec/ir.md","docs/spec/canonicalization.md","docs/implementation/schema-development.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
-  "forbidden_paths":["generated/**","frontends/**","lean/**","backend/src/**"],
-  "public_changes":["schema v0"],
-  "steps":["Split accepted-RFC CDDL syntax into versioned numeric/common/toy files; avoid draft module/import syntax unless pinned and labeled Experimental","Define feature and extension behavior","Freeze ADR-0011 exact field names without data/table semantics or artifact-envelope fields","Keep v0 explicitly data-free; RFC-0006 and every normative data dialect/digest remain owned and blocked by SQ-0027","Create minimal/maximal valid examples","Create malformed/numeric/Unicode/unknown-critical negatives","Generate canonical bytes/digests from independently reviewed semantics","Document error codes and version policy"],
-  "tests":["CDDL parser validation","positive and negative fixtures","independent byte/digest comparison","roundtrip/idempotence"],
-  "reviewers":{"semantic_source":["ontology-architect"],"formal_conformance":["conformance-reviewer"],"adversarial":["security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["RFC-0001 is Accepted","Schema is explicitly data-free and contains no normative logical-data field/digest; RFC-0006 remains owned by SQ-0027","Every field has semantic prose and matches ADR-0011","Golden output is independently approved and not merely copied from Rust","Unknown critical fields fail","No generic ambiguous number","Artifact envelope semantics are not silently frozen"],
-  "commands":["make check"],"handoff_outputs":["Schema digest","fixture manifest","review record"]
+  "id": "SQ-0006",
+  "title": "Define schema v0 and golden vectors",
+  "status": "READY",
+  "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
+  "milestone": "Foundation bootstrap: data-free structural fixture",
+  "objective": "Define, validate, and independently review the closed ADR-0011 data-free foundation_structural v0 schema, canonical CBOR golden vectors, and fixture digests without defining the general statistical IR, artifact envelope, or RFC-0006 logical-data identity.",
+  "dependencies": ["SQ-0005"],
+  "decision_prerequisites": [
+    {"id": "RFC-0001", "status": "Accepted"}
+  ],
+  "dependency_evidence": [
+    "SQ-0005 is DONE in work/backlog.yaml and work/status.yaml",
+    "RFC-0001 and matching ADR-0004 are Accepted",
+    "The SQ-0005 permanent evidence verifier and differential conformance suite pass",
+    "RFC-0006 remains Draft, read-only, and owned by SQ-0027"
+  ],
+  "preclaim_gates": [
+    "A separately reviewed SQ-0005 evidence-lifecycle maintenance change must allow legitimate SQ-0006 READY, IN_PROGRESS, IN_REVIEW, and DONE successor transitions without regenerating, weakening, or rewriting the historical SQ-0005 evidence snapshot. At the 2026-08-10 planning-repair base, scripts/serialization/check_evidence.py still hard-codes SQ-0006 READY and the exact global ready/in-progress/done sets, so SQ-0006 must not be claimed until this gate is resolved."
+  ],
+  "allowed_paths": [
+    "work/contracts/SQ-0006.yaml",
+    "work/contracts/SQ-0007.yaml",
+    "work/contracts/SQ-0011.yaml",
+    "work/contracts/SQ-0013.yaml",
+    "work/contracts/SQ-0014.yaml",
+    "work/contracts/SQ-0015.yaml",
+    "schemas/v0/**",
+    "schemas/fixtures/v0/**",
+    "conformance/golden/v0/**",
+    "conformance/schema-v0/**",
+    "scripts/schema/**",
+    "source-audits/schema/**",
+    ".github/workflows/schema-v0.yml",
+    "Makefile",
+    "docs/spec/ir.md",
+    "docs/spec/canonicalization.md",
+    "docs/implementation/schema-development.md",
+    "docs/quality/dashboard.md",
+    "docs/exec-plans/active/0001-foundation-bootstrap.md",
+    "work/backlog.yaml",
+    "work/status.yaml",
+    "work/reviews/SQ-0006.md",
+    "work/handoffs/SQ-0006.md"
+  ],
+  "forbidden_paths": [
+    "rfcs/**",
+    "docs/adr/**",
+    "rfcs/0006-canonical-logical-data-digest.md",
+    "schemas/prototypes/**",
+    "backend/**",
+    "lean/**",
+    "frontends/**",
+    "generated/**",
+    "theorem-registry/**",
+    "methods/**",
+    "docs/spec/artifact.md"
+  ],
+  "forbidden_interfaces": [
+    "real-data or logical-table semantics",
+    "Arrow or other physical-to-logical lowering",
+    "artifact-envelope semantics",
+    "theorem identity, registry authorization, or theorem locks",
+    "certificate production or verification",
+    "public statistical experiment, estimand, procedure, claim, evidence, assurance, or interpretation ontology"
+  ],
+  "public_changes": [
+    "Experimental closed statqed.foundation-structural.v0 fixture schema",
+    "Experimental data-free canonical fixtures and fixture-digest vectors",
+    "Stable schema-stage error-code candidates limited to the v0 fixture"
+  ],
+  "accepted_decisions": [
+    "ADR-0011 foundation toy slice",
+    "RFC-0001 deterministic encoding",
+    "ADR-0004 deterministic CBOR/CDDL"
+  ],
+  "sources": [
+    "RFC 8610 published CDDL syntax and applicable verified errata",
+    "RFC 8949 as selected by Accepted RFC-0001",
+    "Accepted RFC-0001 semantic profile and statqed.digest-lp.v1 framing",
+    "Accepted ADR-0004 and ADR-0011",
+    "Exact official documentation, source revision, license, and advisory state for the selected pinned CDDL validator"
+  ],
+  "assumptions": [
+    "The fixture is data-free and structural only",
+    "Unknown fields fail closed",
+    "Absent future concepts remain absent rather than null or empty placeholders",
+    "The SQ-0005 Rust and Python prototypes are read-only independent comparison tools, not production authorities",
+    "Fixture digest equality is conditional on RFC-0001 framing and SHA-256 assumptions and is not logical-data identity",
+    "RFC-0002, RFC-0004, RFC-0006, and RFC-0007 remain unresolved for their broader owned semantics"
+  ],
+  "fixture_contract": {
+    "closed_map": true,
+    "fields": [
+      {"name": "schema_id", "required": true, "value": "statqed.foundation-structural.v0"},
+      {"name": "schema_version", "required": true, "value": 0},
+      {"name": "fixture_kind", "required": true, "value": "foundation_structural"},
+      {"name": "analysis_id", "required": true, "type": "ASCII identifier", "pattern": "[a-z0-9][a-z0-9._:-]{0,127}"},
+      {"name": "probability_context", "required": true, "value": "not_applicable"},
+      {"name": "features", "required": true, "value": []}
+    ],
+    "forbidden_fields": [
+      "data", "table", "design", "model", "experiment", "estimand",
+      "procedure", "claim", "numerical_obligation", "external_assumption",
+      "diagnostic", "extension", "provenance", "theorem", "theorem_lock",
+      "assurance_graph", "artifact", "certificate"
+    ]
+  },
+  "validation_layers": [
+    "RFC-0001 profile decoding",
+    "deterministic-byte conformance",
+    "CDDL structural shape",
+    "independent schema semantic validation",
+    "schema-fixture digest verification"
+  ],
+  "digest_frame": {
+    "purpose": "statqed.fixture.golden",
+    "algorithm": "sha-256",
+    "profile": "statqed.cbor-core.v1",
+    "object_class": "statqed.foundation-structural.v0",
+    "framing": "statqed.digest-lp.v1",
+    "nonclaim": "fixture digest only; not a logical-data digest"
+  },
+  "steps": [
+    "Claim SQ-0006 atomically in its contract, backlog, status ledger, and active-plan Progress section while preserving SQ-0008 READY and unstarted",
+    "Assign distinct CDDL/source, field-semantics, schema, independent-validator, golden/conformance, security, versioning, CI, and integration roles",
+    "Audit RFC 8610, applicable errata, ADR-0011, Accepted RFC-0001/ADR-0004, and the exact selected CDDL validator with dates, locators, licenses, maintenance, and advisory observations",
+    "Write field-level language-neutral semantic prose for exactly the six fixture fields before freezing CDDL or golden bytes",
+    "Implement versioned RFC 8610 CDDL sources and a deterministic manifest-ordered compiled schema without draft module/import syntax",
+    "Pin the exact CDDL validator version and record its toolchain, lock, license, platform, commands, and limitations",
+    "Implement a separate Python standard-library semantic validator with deterministic stable stage and error codes",
+    "Use the SQ-0005 Rust and Python prototypes read-only to compare canonical bytes; retain and block on any discovered prototype defect rather than patching schemas/prototypes",
+    "Create semantic-first positive fixtures for minimal, representative foundation.example-0001, maximum-length, and map-order-discriminating identifiers",
+    "Create the complete negative/adversarial corpus, preserving raw ordered map entries so duplicates are rejected before native-map collapse",
+    "Generate independently compared canonical CBOR bytes and statqed.fixture.golden digest frames with exact hashes and provenance",
+    "Create static evidence and dynamic verification tools with corruption tests, deterministic regeneration, resource checks, and no production-path contamination",
+    "Create least-privilege schema-v0 CI with pinned actions, exact tools, clean regeneration, read-only prototype comparisons, actual runner metadata, and no persisted credentials",
+    "Document only the narrow Experimental fixture, validation layers, local version boundary, trusted-computing-base limits, and explicit nonclaims",
+    "Obtain distinct source, semantic, conformance, adversarial, versioning, CI, and integration dispositions bound to exact hashes",
+    "After all gates and reviews pass, transition SQ-0006 atomically to DONE, recompute readiness, and change only newly eligible successor contract/backlog status fields without beginning successors"
+  ],
+  "tests": [
+    "Published-syntax CDDL parses with the exact pinned validator and compiled schema regeneration is byte-identical",
+    "Minimal, representative foundation.example-0001, maximum-length, and ordering-discriminating positive fixtures pass every separately reported validation layer",
+    "Both independent SQ-0005 implementations emit identical RFC-0001 canonical bytes for every accepted fixture",
+    "Each required field missing is rejected with schema.missing_field",
+    "Every forbidden future field and an arbitrary unknown field are rejected with schema.unknown_field",
+    "Duplicate fields are rejected before native-map collapse",
+    "Wrong schema_id, schema_version, fixture_kind, and probability_context are rejected with stable literal/version/kind/context codes",
+    "Nonempty features and a wrong-typed feature element are rejected with schema.feature_unsupported or schema.field_type",
+    "analysis_id rejects empty, over-128-byte, uppercase, Unicode, and invalid-punctuation values and accepts both sides of every length boundary",
+    "Every field with the wrong CBOR type is rejected with schema.field_type",
+    "Null substituted for any intentionally absent concept is rejected",
+    "RFC-0001 rejects nonpreferred CBOR heads, wrong map order, indefinite map/array/text, invalid UTF-8, trailing bytes, and malformed or truncated CBOR before schema validation",
+    "Wrong profile expectation is rejected at the profile layer",
+    "Wrong digest purpose, object-class identifier, framing identifier, payload, and digest are rejected at the digest layer",
+    "Any CDDL-accepted but semantically invalid value is rejected by the independent semantic validator with a stable schema code",
+    "A semantic-validator mutation accepting an unknown field is detected",
+    "An encoder mutation changing one accepted golden is detected",
+    "A decoder mutation collapsing a duplicate is detected",
+    "Resource boundaries cover input/output size, nesting, map/array count, text length, diagnostics, allocation, and execution timeout as applicable",
+    "Static evidence corruption rejects changed field semantics, changed CDDL, replaced golden bytes, missing negatives, changed error codes, removed independent results, stale review hashes, RFC-0006 modification, schemas/prototypes modification, production-backend contamination, and task-state drift",
+    "CDDL success is not reported as deterministic-byte, semantic, digest, statistical, or artifact verification",
+    "Clean regeneration leaves no untracked output and all retained subject hashes match"
+  ],
+  "error_codes": [
+    "schema.missing_field",
+    "schema.unknown_field",
+    "schema.field_type",
+    "schema.literal_mismatch",
+    "schema.version_unsupported",
+    "schema.identifier_syntax",
+    "schema.identifier_length",
+    "schema.feature_unsupported",
+    "schema.fixture_kind",
+    "schema.probability_context"
+  ],
+  "version_policy": [
+    "Any field name, required-field set, value domain, or field semantic change requires a new schema identifier/version",
+    "Nonsemantic comments or documentation corrections may preserve the identifier only after review",
+    "Unknown fields fail closed",
+    "No general backward-compatibility or migration guarantee is made",
+    "RFC-0007 retains ownership of the future general migration policy",
+    "RFC-0006 remains untouched"
+  ],
+  "status_transition_policy": {
+    "claim": "READY to IN_PROGRESS atomically in SQ-0006 contract, backlog, status, and active plan after every preclaim gate passes",
+    "review": "IN_PROGRESS to IN_REVIEW only after the exact schema, fixture, vector, evidence, and documentation subject is frozen",
+    "completion": "IN_REVIEW to DONE only after independent approval and all clean local and hosted gates pass",
+    "expected_successors_if_graph_unchanged": ["SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
+    "expected_blocked_count_if_graph_unchanged": 48,
+    "successor_execution": "Change only shared-readiness status fields and do not claim or implement any successor"
+  },
+  "reviewers": {
+    "semantic_source": ["schema/CDDL source curator", "field-semantics architect"],
+    "formal_conformance": ["independent semantic-validator engineer", "independent golden-vector/conformance reviewer"],
+    "adversarial": ["malformed/extension/security reviewer", "versioning and migration reviewer"],
+    "ci_reproducibility": ["CI/reproducibility reviewer"],
+    "integrator": ["integration-reviewer"]
+  },
+  "acceptance": [
+    "RFC-0001 and ADR-0004 remain Accepted with matching marked scopes; RFC-0006 remains byte-identical, Draft, and owned by SQ-0027",
+    "Every preclaim gate is resolved through a separately reviewed change before SQ-0006 leaves READY",
+    "The schema is a closed map with exactly the six contracted fields and no null placeholders or future ontology fields",
+    "Every field has independently approved semantic prose matching ADR-0011 and the executable validators",
+    "Only published RFC 8610 CDDL syntax is normative and the compiled schema is deterministically generated",
+    "Every accepted fixture has independent CDDL, semantic-validator, RFC-0001 byte, digest-frame, SHA-256, and source/output-hash evidence",
+    "Every required negative has a stable failure stage and code and all deliberate divergences are detected",
+    "The static evidence checker and all corruption tests pass from a clean checkout",
+    "The schema-v0, repository guardrail, serialization, Rust, and Lean workflows pass on the exact reviewed PR head",
+    "Review records bind exact source, CDDL, prose, fixture, golden, digest, validator, workflow, and commit hashes with independent dispositions",
+    "Documentation calls the fixture Experimental and makes no general IR, data, artifact, theorem, certificate, provenance, or statistical-validity claim",
+    "SQ-0008 remains READY and unstarted and no successor implementation begins",
+    "An independent integrator approves the exact green PR head; merge remains separately authorized"
+  ],
+  "commands": [
+    "make check",
+    "make list-work",
+    "git diff --check",
+    "python3 scripts/serialization/check_evidence.py",
+    "python3 scripts/serialization/run_conformance.py --verify",
+    "python3 scripts/schema/check_schema_v0.py",
+    "python3 scripts/schema/run_schema_v0.py --verify",
+    "the exact pinned CDDL validation command documented in docs/implementation/schema-development.md",
+    "the exact clean regeneration and corruption-test commands documented by SQ-0006"
+  ],
+  "handoff_outputs": [
+    "Versioned CDDL source and compiled-schema manifest with hashes",
+    "Field-level semantic specification and source audit",
+    "Positive and negative semantic fixture manifest",
+    "Independent canonical CBOR goldens and fixture-digest vectors",
+    "Static evidence verifier and dynamic schema-v0 conformance runner",
+    "Pinned schema-v0 workflow and exact green run IDs",
+    "SQ-0006 review record with independent dispositions and exact hashes",
+    "SQ-0006 handoff with branch, commits, commands, results, TCB, nonclaims, limitations, and computed successor set"
+  ]
 }

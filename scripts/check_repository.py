@@ -13,7 +13,8 @@ ALLOWED_TASK_STATUS = {"READY", "IN_PROGRESS", "BLOCKED", "IN_REVIEW", "DONE", "
 ALLOWED_DECISION_STATUS = {"Draft", "Accepted"}
 REQUIRED_FILES = [
     "README.md", "CHARTER.md", "ARCHITECTURE.md", "ROADMAP.md", "START_HERE.md",
-    "AGENTS.md", "GOVERNANCE.md", "SECURITY.md", "CONTRIBUTING.md", "CITATION.cff",
+    "AGENTS.md", "GOVERNANCE.md", "SECURITY.md", "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md", "CITATION.cff",
     "docs/design/core-beliefs.md", "docs/design/trust-model.md",
     "docs/spec/ir.md", "docs/spec/assurance-graph.md", "docs/spec/artifact.md",
     "docs/exec-plans/active/0001-foundation-bootstrap.md",
@@ -23,6 +24,12 @@ REQUIRED_FILES = [
     ".github/workflows/repository-guardrails.yml",
 ]
 LIVING_SECTIONS = ["## Progress", "## Surprises & Discoveries", "## Decision Log", "## Outcomes & Retrospective"]
+PUBLIC_DOCUMENT_HEADINGS = {
+    "README.md": "# StatQED",
+    "CONTRIBUTING.md": "# Contributing",
+    "SECURITY.md": "# Security",
+    "CODE_OF_CONDUCT.md": "# Code of Conduct",
+}
 
 
 def fail(message: str) -> None:
@@ -35,6 +42,191 @@ def load_json(path: Path):
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         fail(f"{path.relative_to(ROOT)} is not valid JSON-compatible YAML: {exc}")
+
+
+def public_document_errors(path_value: str, text: str) -> list[str]:
+    """Return deterministic public-surface policy failures for one document."""
+
+    heading = PUBLIC_DOCUMENT_HEADINGS[path_value]
+    errors: list[str] = []
+    nonblank = [line.strip() for line in text.splitlines() if line.strip()]
+
+    if not text.endswith("\n"):
+        errors.append("missing final newline")
+    if not text.startswith(f"{heading}\n"):
+        errors.append(f"must begin with {heading!r}")
+    if len(nonblank) < 2:
+        errors.append("must contain at least two nonblank lines")
+
+    if path_value == "README.md":
+        normalized = re.sub(r"[^a-z0-9]+", " ", text.casefold()).strip()
+        body = "\n".join(text.splitlines()[1:]) if text.startswith("#") else text
+        body = re.sub(r"<!--[\s\S]*?-->", "", body)
+        body = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", body)
+        normalized_body = re.sub(r"[^a-z0-9]+", " ", body.casefold()).strip()
+        placeholder = "repo for testing ideas"
+        if normalized == placeholder or normalized_body == placeholder:
+            errors.append("must not be the testing-ideas placeholder")
+
+    if path_value == "SECURITY.md":
+        normalized = " ".join(text.casefold().split())
+        has_production_boundary = (
+            "Not for production use" in text
+            or "Do not use this repository in production" in text
+        )
+        if not has_production_boundary:
+            errors.append("must contain an explicit production-use prohibition")
+        if (
+            "report suspected vulnerabilities through github private vulnerability reporting"
+            not in normalized
+        ):
+            errors.append("must contain a private-reporting instruction")
+
+    if path_value == "CONTRIBUTING.md":
+        normalized = " ".join(text.casefold().split())
+        rejects = bool(
+            re.search(
+                r"(?:\bnot currently accepting unsolicited contributions\b|"
+                r"\bunsolicited contributions are (?:not currently|not) accepted\b)",
+                normalized,
+            )
+        )
+        accepts = bool(
+            re.search(
+                r"(?:(?<!not )\bcurrently accepting unsolicited contributions\b|"
+                r"\bunsolicited contributions are (?:currently )?accepted\b)",
+                normalized,
+            )
+        )
+        if accepts == rejects:
+            errors.append(
+                "must state exactly one unsolicited-contribution acceptance stance"
+            )
+
+    return errors
+
+
+def check_public_document_mutation_fixtures() -> None:
+    """Prove minimized public-surface mutations are rejected for the intended reason."""
+
+    valid = {
+        "README.md": (
+            "# StatQED\n\nExperimental research workspace. No stable release or "
+            "supported API.\n\nNot for production use. Unsolicited contributions "
+            "are not currently accepted.\n"
+        ),
+        "CONTRIBUTING.md": (
+            "# Contributing\n\nThis repository is not currently accepting unsolicited "
+            "contributions.\n\nDevelopment follows an internal process.\n"
+        ),
+        "SECURITY.md": (
+            "# Security\n\nDo not use this repository in production.\n\nReport "
+            "suspected vulnerabilities through GitHub private vulnerability\n"
+            "reporting.\n"
+        ),
+        "CODE_OF_CONDUCT.md": (
+            "# Code of Conduct\n\nRepository interaction must remain professional.\n"
+        ),
+    }
+    for path_value, text in valid.items():
+        errors = public_document_errors(path_value, text)
+        if errors:
+            fail(
+                f"valid public-document control {path_value!r} failed: {errors}"
+            )
+
+    fixtures = [
+        (
+            "blank",
+            "README.md",
+            "",
+            [
+                "missing final newline",
+                "must begin with '# StatQED'",
+                "must contain at least two nonblank lines",
+            ],
+        ),
+        (
+            "whitespace-only",
+            "README.md",
+            " \n\t\n",
+            [
+                "must begin with '# StatQED'",
+                "must contain at least two nonblank lines",
+            ],
+        ),
+        (
+            "one-line-placeholder",
+            "README.md",
+            "Repo for testing ideas\n",
+            [
+                "must begin with '# StatQED'",
+                "must contain at least two nonblank lines",
+                "must not be the testing-ideas placeholder",
+            ],
+        ),
+        (
+            "wrong-heading",
+            "README.md",
+            "# Project\n\nExperimental workspace.\n",
+            ["must begin with '# StatQED'"],
+        ),
+        (
+            "linked-placeholder",
+            "README.md",
+            "# StatQED\n\n[Repo for testing ideas](https://example.test)\n",
+            ["must not be the testing-ideas placeholder"],
+        ),
+        (
+            "comment-padded-placeholder",
+            "README.md",
+            "# StatQED\n\nRepo for testing ideas.\n<!-- padding -->\n",
+            ["must not be the testing-ideas placeholder"],
+        ),
+        (
+            "missing-safety-boundary",
+            "SECURITY.md",
+            "# Security\n\nReport suspected vulnerabilities through GitHub private "
+            "vulnerability reporting.\n",
+            ["must contain an explicit production-use prohibition"],
+        ),
+        (
+            "missing-private-reporting",
+            "SECURITY.md",
+            "# Security\n\nDo not use this repository in production.\n",
+            ["must contain a private-reporting instruction"],
+        ),
+        (
+            "missing-contribution-stance",
+            "CONTRIBUTING.md",
+            "# Contributing\n\nDevelopment follows an internal process.\n",
+            ["must state exactly one unsolicited-contribution acceptance stance"],
+        ),
+        (
+            "contradictory-contribution-stance",
+            "CONTRIBUTING.md",
+            "# Contributing\n\nWe are currently accepting unsolicited contributions, "
+            "but unsolicited contributions are not accepted.\n",
+            ["must state exactly one unsolicited-contribution acceptance stance"],
+        ),
+        (
+            "missing-final-newline",
+            "CODE_OF_CONDUCT.md",
+            "# Code of Conduct\n\nRepository interaction must remain professional.",
+            ["missing final newline"],
+        ),
+    ]
+    for fixture_id, path_value, text, expected_errors in fixtures:
+        errors = public_document_errors(path_value, text)
+        if errors != expected_errors:
+            fail(
+                f"public-document mutation fixture {fixture_id!r} changed result; "
+                f"expected={expected_errors}, observed={errors}"
+            )
+
+    missing_fixture = set(REQUIRED_FILES) - {"CODE_OF_CONDUCT.md"}
+    if missing_required_files(missing_fixture) != ["CODE_OF_CONDUCT.md"]:
+        fail("public-document missing-file fixture did not reject CODE_OF_CONDUCT.md")
 
 
 def document_status(path: Path) -> str:
@@ -104,8 +296,13 @@ def check_readiness_regression_fixtures() -> None:
             )
 
 
+def missing_required_files(existing: set[str]) -> list[str]:
+    return [name for name in REQUIRED_FILES if name not in existing]
+
+
 def check_required_files() -> None:
-    missing = [name for name in REQUIRED_FILES if not (ROOT / name).is_file()]
+    existing = {name for name in REQUIRED_FILES if (ROOT / name).is_file()}
+    missing = missing_required_files(existing)
     if missing:
         fail(f"missing required files: {', '.join(missing)}")
 
@@ -117,6 +314,14 @@ def check_required_files() -> None:
     present = [str(path.relative_to(ROOT)) for path in forbidden if path.exists()]
     if present:
         fail(f"temporary bootstrap transport remains: {', '.join(present)}")
+
+
+def check_public_documents() -> None:
+    for path_value in PUBLIC_DOCUMENT_HEADINGS:
+        path = ROOT / path_value
+        errors = public_document_errors(path_value, path.read_text(encoding="utf-8"))
+        if errors:
+            fail(f"{path_value} public-surface policy failed: {'; '.join(errors)}")
 
 
 def check_backlog() -> tuple[list[dict], set[str], set[str], set[str]]:
@@ -325,7 +530,9 @@ def check_status(
 
 def main() -> None:
     check_readiness_regression_fixtures()
+    check_public_document_mutation_fixtures()
     check_required_files()
+    check_public_documents()
     tasks, done, ready, active = check_backlog()
     contract_count = check_contracts(tasks)
     check_plans()
