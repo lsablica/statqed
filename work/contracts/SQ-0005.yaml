@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0005","title":"Prototype deterministic serialization","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Resolve the normative encoding RFC using independently reproduced canonicalization prototypes.",
+  "id":"SQ-0005","title":"Prototype deterministic serialization","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Resolve the normative encoding RFC using independently reproduced canonicalization prototypes.",
   "dependencies":["SQ-0002","SQ-0004"],
   "allowed_paths":["schemas/prototypes/**","conformance/prototypes/**","docs/spec/canonicalization.md","docs/research/serialization/**","rfcs/0001-deterministic-encoding.md","rfcs/0006-canonical-logical-data-digest.md","docs/adr/0004-deterministic-cbor-cddl.md","docs/exec-plans/active/0001-foundation-bootstrap.md","work/status.yaml"],
   "forbidden_paths":["schemas/v0/**","frontends/**","lean/StatQED/Artifact/**"],

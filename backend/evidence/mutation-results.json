@@ -1,0 +1,106 @@
+{
+  "case_count": 20,
+  "cases": [
+    {
+      "classification": "rejected",
+      "id": "alternate-registry",
+      "reason": "project Cargo configuration rejected alternate registry"
+    },
+    {
+      "classification": "rejected",
+      "id": "ambient-cargo-credentials",
+      "reason": "environment allowlist rejected inherited Cargo credential variable"
+    },
+    {
+      "classification": "rejected",
+      "id": "changed-cargo-lock",
+      "reason": "binding rejected changed Cargo.lock bytes"
+    },
+    {
+      "classification": "rejected",
+      "id": "changed-package-rust-version",
+      "reason": "package policy rejected changed rust-version"
+    },
+    {
+      "classification": "rejected",
+      "id": "changed-workspace-rust-version",
+      "reason": "workspace policy rejected changed rust-version"
+    },
+    {
+      "classification": "rejected",
+      "id": "dependency-debug-text",
+      "reason": "runtime contract rejected unstable Debug output"
+    },
+    {
+      "classification": "rejected",
+      "id": "dependency-graph-without-lock",
+      "reason": "workspace policy and Cargo --locked rejected dependency graph drift"
+    },
+    {
+      "classification": "rejected",
+      "id": "floating-github-action",
+      "reason": "workflow policy rejected a floating action tag"
+    },
+    {
+      "classification": "rejected",
+      "id": "floor-network-acquisition",
+      "reason": "Rust 1.85.1 failed closed with an empty Cargo home in offline mode"
+    },
+    {
+      "classification": "rejected",
+      "id": "host-path-leakage",
+      "reason": "machine-output validator rejected host path"
+    },
+    {
+      "classification": "rejected",
+      "id": "nondeterministic-random-field",
+      "reason": "machine-output validator rejected random identifier field"
+    },
+    {
+      "classification": "rejected",
+      "id": "nondeterministic-timestamp-field",
+      "reason": "machine-output validator rejected timestamp field"
+    },
+    {
+      "classification": "rejected",
+      "id": "panic-on-malformed-input",
+      "reason": "runtime contract rejected panic on malformed input"
+    },
+    {
+      "classification": "rejected",
+      "id": "persisted-checkout-credentials",
+      "reason": "workflow policy rejected persisted checkout credentials"
+    },
+    {
+      "classification": "rejected",
+      "id": "project-unsafe-code",
+      "reason": "compiler rejected unsafe code under forbid"
+    },
+    {
+      "classification": "rejected",
+      "id": "removed-forbid-unsafe-code",
+      "reason": "static target policy rejected removed forbid"
+    },
+    {
+      "classification": "rejected",
+      "id": "workflow-alternate-registry",
+      "reason": "workflow policy rejected alternate registry environment"
+    },
+    {
+      "classification": "rejected",
+      "id": "workflow-cargo-credential",
+      "reason": "workflow policy rejected Cargo credential environment"
+    },
+    {
+      "classification": "rejected",
+      "id": "workflow-job-write-permission",
+      "reason": "workflow policy rejected a quoted job-level permission mapping"
+    },
+    {
+      "classification": "rejected",
+      "id": "workflow-write-permission",
+      "reason": "workflow policy rejected an extra top-level write permission"
+    }
+  ],
+  "schema_version": 1
+}

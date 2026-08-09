@@ -30,8 +30,8 @@ SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed too
 SQ-0001 constitutional baseline                       DONE
   └─ SQ-0002 toolchain research                      DONE
        ├─ SQ-0003 Lean bootstrap                     DONE
-       └─ SQ-0004 Rust bootstrap                     READY
-            └─ SQ-0005 serialization prototype
+       └─ SQ-0004 Rust bootstrap                     DONE
+            └─ SQ-0005 serialization prototype       READY
                  └─ RFC-0001 acceptance
                       └─ SQ-0006 schema v0
                            ├─ SQ-0007 theorem registry + RFC-0005
@@ -53,10 +53,11 @@ SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 
 Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
 
-SQ-0003 and SQ-0004 were independent READY tasks. SQ-0003 is now DONE after
-establishing the proof-backend build and trust-reporting surface. The computed
-successor set is SQ-0004 and SQ-0008 READY. Neither successor has begun; each
-requires a separate isolated execution and review transition.
+SQ-0003 and SQ-0004 were independent READY tasks and are now DONE after
+establishing their separately reviewed proof-backend and reference-workspace
+foundations. The computed successor set is SQ-0005 and SQ-0008 READY. Neither
+successor has begun; each requires a separate isolated execution and review
+transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
@@ -129,11 +130,11 @@ No statistical ontology, inference theorem, artifact checker, theorem-registry s
 
 ### SQ-0004 — Rust reference workspace bootstrap
 
-Status: **READY; unstarted**.
+Status: **DONE**.
 
 Follow `work/contracts/SQ-0004.yaml` in a separate execution.
 
-Required result:
+Completed result:
 
 - minimal `backend/` workspace pinned to Rust 1.97.1, Edition 2024, resolver 3, and `rust-version = "1.85.1"`;
 - one exact Cargo lock acquired with current Cargo and tested under Rust 1.85.1 offline;
@@ -259,9 +260,10 @@ git diff --check
 - [x] SQ-0001 constitutional baseline — DONE 2026-08-03.
 - [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
 - [x] SQ-0003 Lean/Mathlib bootstrap — DONE 2026-08-08 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap`; review package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7`. Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Distinct Mathlib/source, build, formal trust, adversarial mutation, CI/reproducibility, and integration roles approved the package. Exact-package Lean run `31279603416` and guardrails run `31279603408` passed cached and isolated-source gates.
-- [ ] SQ-0004 Rust bootstrap — READY; independently unstarted.
+- [x] SQ-0004 Rust bootstrap — DONE 2026-08-09 from `726821bf1a29995756dc10cbbecfd452dccad7e5` on `agent/SQ-0004-rust-bootstrap`; implementation `33d7a50f98996d01ce2a210e304d376e7d310e53`, corrected review package `cecbaa318f043bedd9898afe20e9f930c39eb732`, atomic transition `a8e886386cbef9437f0c6912f96d6d29ac6023c4`. Exact policy: Rust 1.97.1 for development/acquisition, Rust 1.85.1 for locked offline compatibility only, Edition 2024, resolver 3, and `rust-version = "1.85.1"`. Distinct Rust/source, workspace/MSRV, API/error-conformance, security/adversarial, CI/reproducibility, and integration reviewers approved the package; exact-package Rust run `31304551534` passed both jobs.
 - [ ] SQ-0008 core Lean types/RFC ownership — READY by dependency calculation; independently unstarted, with RFC-0002/RFC-0004 still Draft for that task to resolve.
-- [ ] SQ-0005 through SQ-0020.
+- [ ] SQ-0005 deterministic-serialization/RFC prototype — READY by dependency calculation and unstarted; RFC-0001/RFC-0006 remain Draft for its scoped work.
+- [ ] SQ-0006 through SQ-0020.
 
 ## Surprises & Discoveries
 
@@ -282,6 +284,9 @@ git diff --check
 - Arrow file and stream IPC forms differed physically; CBOR libraries exposed permissive/divergent edge behavior; cddl 0.10.6 requires Rust 1.88 and cannot satisfy the Rust 1.85.1 floor.
 - Python and Rust recommendations changed during review as new releases/source evidence appeared; superseded evidence was retained instead of rewritten.
 - Rust 1.85.1 remains useful only as an offline compiler/API floor because the recorded Cargo advisories prohibit using it for general acquisition.
+- SQ-0004's dependency-free production graph made the offline floor cheap and auditable, but it could not by itself prove that missing dependencies fail closed. A separate empty-Cargo-home fixture with an absent crate now demonstrates that Cargo 1.85.1 does not acquire while `--offline` is enforced.
+- Rust 1.85.0, rather than the selected 1.85.1 patch, introduced Edition 2024. The task records 1.85.1 as the directly tested floor without rewriting release history or treating resolver 3 as compatibility proof.
+- Current 2026 Cargo/tar, third-party-registry, and libssh2 advisories make the development/acquisition versus compatibility-floor distinction a security boundary: Cargo 1.97.1 acquires; Cargo 1.85.1 sees only the exact locked graph offline.
 - Readiness appears in backlog and detailed contracts; status transitions must update both atomically.
 - The first SQ-0002 merge referenced four ignored `.pytest_cache` files. The correction removed only those non-durable subjects and independently reverified 115 tracked hashes.
 - A successful repository-guardrails run on the final SQ-0002 merge checked the ledger but did not run the strict evidence verifier because `make check` did not include it. The 2026-08-08 post-merge maintenance made the verifier a permanent guardrail.
@@ -291,6 +296,7 @@ git diff --check
 - A root-level hosted identity probe did not select the project-local Lean channel automatically. Explicit `elan run leanprover/lean4:v4.32.2` made tool identity independent of working-directory selection; the failed hosted attempt remains retained.
 - The narrow production import built 88 jobs from source in about one minute locally and on the hosted runner. Local dependency/build state can nevertheless grow to several gigabytes, so `.lake` remains ignored and disposable while the small exact evidence records remain committed.
 - Completing SQ-0003 makes SQ-0008 READY even while RFC-0002/RFC-0004 remain Draft because SQ-0008 owns and must resolve those RFCs. Contract/backlog/status parity required a readiness-only SQ-0008 contract update; this does not begin SQ-0008.
+- SQ-0004 integration review found that a handoff attributed separate build and doctest commands to the 15-command isolated JSON transcript. Those gates had passed independently and in CI, but the retained transcript contains identity, lock-generation, acquisition, metadata, fmt, Clippy, test, and version-output commands. The corrected package now keeps those evidence classes explicit.
 
 ## Decision Log
 
@@ -317,6 +323,11 @@ git diff --check
 - 2026-08-08: Independent integration review approved package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7` and corrected the successor calculation to SQ-0004/SQ-0008 READY with `blocked_count: 55`; neither successor begins in SQ-0003.
 - 2026-08-08: Atomic transition `3194f12b1b14f48813e98db60cac9c42f5c7280c` recorded SQ-0003 DONE, SQ-0004/SQ-0008 READY, 55 blocked tasks, no active task, and Experimental-only Lean dashboard evidence.
 - 2026-08-08: Independent final review approved head `94a6381e25c18fbd317e119e8f6b80d91239ce61`; PR #5 merged as `92e3b331b1ae795a21d6e030a21e8ce8d7da03dd`, and main guardrails `31280203088` plus cached/source Lean run `31280203112` passed.
+- 2026-08-09: Kept the SQ-0004 production graph dependency-free and limited it to `statqed-core` plus a thin `statqed-cli`; no speculative schema, encoding, artifact, registry, certificate, or frontend crate was created.
+- 2026-08-09: Fixed the bootstrap CLI protocol at version 1 only for deterministic version and malformed-invocation responses, with exit 2, stable symbolic errors, literal response fixtures, and fixed 64-argument/4,096-byte-per-argument/8,192-byte-total limits. This is not an artifact-verifier schema or Draft-RFC decision.
+- 2026-08-09: Required Rust 1.97.1 for all acquisition and release-oriented tooling while restricting Rust/Cargo 1.85.1 to the exact committed graph under `--locked --offline`; the floor cannot read credentials or alternate registries and may not regenerate `Cargo.lock`.
+- 2026-08-09: Bound the Experimental workspace candidate to full rustc/Cargo source identities, a byte-reproducible local-only lock, 20 adversarial mutations, ten deterministic process fixtures, a normalized license inventory, and cargo-audit 0.22.2 against immutable RustSec database commit `1237bbe09d2701e14e6593a630fbaf28928df712`.
+- 2026-08-09: Independent integration review approved corrected package `cecbaa318f043bedd9898afe20e9f930c39eb732` after the isolated-transcript attribution was repaired. Atomic transition `a8e886386cbef9437f0c6912f96d6d29ac6023c4` records SQ-0004 DONE, SQ-0005/SQ-0008 READY, 54 blocked tasks, and no active task; neither successor begins in this execution.
 
 ## Outcomes & Retrospective
 
@@ -328,7 +339,7 @@ Eight high-level architectural ADRs are Accepted. Three narrower ADRs and nine R
 
 A strict verifier binds the compatibility report to 75 successful, failed, or unknown attempts, six recommendation records, 90 dated sources, retained logs/locks, and 115 durable tracked subjects. Corruption cases detect mutable recommendations, platform laundering, arbitrary reruns, failure normalization, empty locks, advisory corruption, environment inheritance, and unavailable recommended tooling. Distinct specialist and integration reviews approved the surface. No production toolchain, package, RFC, schema, or statistical semantics were introduced.
 
-Post-merge review found no blocking research defect. It converted the SQ-0002 verifier into a permanent repository guardrail and repaired stale successor planning. It made SQ-0003 and SQ-0004 READY; SQ-0003 subsequently completed while SQ-0004 remains unstarted. Full foundation retrospective remains SQ-0020 work.
+Post-merge review found no blocking research defect. It converted the SQ-0002 verifier into a permanent repository guardrail and repaired stale successor planning. It made SQ-0003 and SQ-0004 READY; both subsequently completed in separate reviewed executions. Full foundation retrospective remains SQ-0020 work.
 
 ### SQ-0003
 
@@ -345,5 +356,27 @@ reviewers approved the exact package. The exact-package hosted run exercised
 both cached and isolated-source paths. This is build, trust-surface, and axiom
 observation evidence only: no statistical semantics, source-fidelity claim,
 artifact-byte binding, theorem authorization, checker soundness, or verified
-analysis was introduced. The computed next READY set is SQ-0004 and SQ-0008;
-both remain unstarted. Full foundation retrospective remains SQ-0020 work.
+analysis was introduced. At SQ-0003 completion the computed next READY set was
+SQ-0004 and SQ-0008; SQ-0004 has since completed, while SQ-0008 remains READY
+and unstarted. Full foundation retrospective remains SQ-0020 work.
+
+### SQ-0004
+
+The repository now contains a minimal Experimental Rust reference workspace
+with dependency-free `statqed-core` and `statqed-cli` crates. Rust 1.97.1 owns
+acquisition, lock generation, development, formatting, Clippy, tests, and
+security tooling; Rust 1.85.1 compiles and tests only the exact lock offline.
+The lock reproduced byte-for-byte, both roles passed locally and on the hosted
+runner, and 20 unsafe, policy, lock, credential, registry, output, panic, and
+workflow mutations fail closed. The exact two-package inventory is MIT-only;
+the hash-bound RustSec observation reported no finding at the recorded database
+commit.
+
+Distinct source, workspace/MSRV, API, security, CI/reproducibility, and
+integration reviewers approved the corrected package. This is workspace,
+bounded bootstrap CLI, reproducibility, and point-in-time supply-chain evidence
+only: it introduces no statistical objects, schema, canonical bytes, digests,
+artifact verification, theorem registry, certificate system, frontend
+protocol, or Draft-RFC decision. The computed next READY set is SQ-0005 and
+SQ-0008; both remain unstarted. Full foundation retrospective remains SQ-0020
+work.
