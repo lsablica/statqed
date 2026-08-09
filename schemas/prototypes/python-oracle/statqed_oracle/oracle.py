@@ -1176,10 +1176,8 @@ def verify_digest_frame(
                 )
             length = int.from_bytes(frame[position : position + 4], "big")
             position += 4
-            limit = MAX_IDENTIFIER_BYTES if index < 5 else MAX_INPUT_BYTES
-            if length > limit:
-                code = "digest.component_length" if index < 5 else "digest.length"
-                raise OracleError("digest_verification", code)
+            if index == 5 and length > MAX_INPUT_BYTES:
+                raise OracleError("digest_verification", "digest.length")
             if position + length > len(frame):
                 raise OracleError(
                     "digest_verification", "digest.component_length"

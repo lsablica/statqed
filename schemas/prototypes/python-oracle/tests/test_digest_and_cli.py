@@ -146,6 +146,22 @@ class DigestTests(unittest.TestCase):
         bad_length = self.frame[:15] + b"\x00\x00\x00\xff" + self.frame[19:]
         self.assertEqual(self.verify(frame=bad_length).code, "digest.component_length")
 
+    def test_complete_overlong_identifiers_are_field_failures(self):
+        overlong = b"t" + b"a" * 128
+        for index, code in (
+            (0, "digest.purpose"),
+            (3, "digest.object_class_schema"),
+        ):
+            with self.subTest(code=code):
+                components = list(self.components)
+                components[index] = overlong
+                frame = manual_frame(components)
+                result = self.verify(
+                    frame=frame,
+                    digest=hashlib.sha256(frame).digest(),
+                )
+                self.assertEqual(result.code, code)
+
     def test_digest_failure_precedence(self):
         self.assertEqual(
             self.verify(frame=b"X", digest=b"").code,

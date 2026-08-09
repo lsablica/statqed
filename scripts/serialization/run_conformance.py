@@ -33,7 +33,7 @@ CDDL_PATH = ROOT / "schemas/prototypes/cddl/profile-v1.cddl"
 PYTHON_ORACLE_ROOT = ROOT / "schemas/prototypes/python-oracle"
 RUST_ROOT = ROOT / "schemas/prototypes/rust-cbor"
 
-EXPECTED_CASE_COUNT = 271
+EXPECTED_CASE_COUNT = 273
 PROFILE_ID = "statqed.cbor-core.v1"
 SCHEMA_ID = "test.semantic-value"
 SCHEMA_VERSION = 1
@@ -713,6 +713,16 @@ def digest_material(case: Mapping[str, Any], by_id: Mapping[str, dict[str, Any]]
     supplied_digest = hashlib.sha256(frame).digest()
     if case["id"] == "DIGEST-FRAME-ALLOCATION-CAP-PLUS1":
         frame = baseline + b"\x00" * (data["total_bytes"] - len(baseline))
+    elif case["id"] in {
+        "DIGEST-RAW-PURPOSE-BYTES-129",
+        "DIGEST-RAW-SCHEMA-BYTES-129",
+    }:
+        replacement = data["replace_component"]
+        changed = list(components)
+        changed[identifier_names[replacement["name"]]] = identifier_recipe(
+            replacement["ascii_recipe"]
+        ).encode("ascii")
+        frame = FRAME_MAGIC + b"".join(lp(component) for component in changed)
     elif case["input_layer"] == "raw_digest_frame":
         frame = bytes.fromhex(data["hex"])
     elif case["id"] == "DIGEST-MAGIC-BITFLIP":
