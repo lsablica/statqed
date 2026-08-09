@@ -119,6 +119,20 @@ def workflow_findings_text(text: str) -> list[str]:
         findings.append("workflow: action set or full-commit pin drifted")
     if re.search(r"uses:\s*[^\s#]+@(latest|main|master|v?\d+(?:\.\d+)*)\b", text):
         findings.append("workflow: floating action reference is prohibited")
+    if re.search(r"^\s+[A-Za-z0-9_-]+:\s*write\s*(?:#.*)?$", text, flags=re.MULTILINE):
+        findings.append("workflow: write permission is prohibited")
+    if re.search(
+        r"^\s*CARGO_[A-Z0-9_]*(?:TOKEN|CREDENTIAL|SECRET)[A-Z0-9_]*:\s*",
+        text,
+        flags=re.MULTILINE,
+    ):
+        findings.append("workflow: Cargo credential environment is prohibited")
+    if re.search(
+        r"^\s*(?:CARGO_REGISTRY_DEFAULT|CARGO_REGISTRIES_[A-Z0-9_]+_(?:INDEX|CREDENTIAL_PROVIDER)):\s*",
+        text,
+        flags=re.MULTILINE,
+    ):
+        findings.append("workflow: alternate registry environment is prohibited")
     required_fragments = (
         "permissions:\n  contents: read",
         "persist-credentials: false",
@@ -610,6 +624,42 @@ def mutation_results(root: Path) -> dict[str, Any]:
         "persisted-checkout-credentials",
         bool(workflow_findings_text(credential_workflow)),
         "workflow policy rejected persisted checkout credentials",
+    )
+    permission_workflow = workflow_text.replace(
+        "permissions:\n  contents: read",
+        "permissions:\n  contents: read\n  id-token: write",
+        1,
+    )
+    record(
+        "workflow-write-permission",
+        any("write permission" in item for item in workflow_findings_text(permission_workflow)),
+        "workflow policy rejected elevated write permission",
+    )
+    cargo_credential_workflow = workflow_text.replace(
+        "env:\n",
+        "env:\n  CARGO_REGISTRIES_CRATES_IO_TOKEN: ${{ secrets.CARGO_TOKEN }}\n",
+        1,
+    )
+    record(
+        "workflow-cargo-credential",
+        any(
+            "Cargo credential environment" in item
+            for item in workflow_findings_text(cargo_credential_workflow)
+        ),
+        "workflow policy rejected Cargo credential environment",
+    )
+    alternate_registry_workflow = workflow_text.replace(
+        "env:\n",
+        "env:\n  CARGO_REGISTRIES_UNREVIEWED_INDEX: https://registry.invalid/index\n",
+        1,
+    )
+    record(
+        "workflow-alternate-registry",
+        any(
+            "alternate registry environment" in item
+            for item in workflow_findings_text(alternate_registry_workflow)
+        ),
+        "workflow policy rejected alternate registry environment",
     )
 
     with tempfile.TemporaryDirectory(prefix="statqed-floor-network-") as temporary:
