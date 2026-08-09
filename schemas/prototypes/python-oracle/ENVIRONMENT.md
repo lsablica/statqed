@@ -23,9 +23,11 @@ empty. Imports are limited to the standard library: `argparse`, `dataclasses`,
 `subprocess`, and `unittest`.
 
 The direct evidence in this directory is limited to the listed CPython 3.12.13
-conda-forge interpreter on Linux x86-64. CI separately exercises the reviewed
-CPython 3.14.7 interpreter; that run is not inferred from this local result.
-No conda package was added or changed for this oracle.
+conda-forge interpreter on Linux x86-64. CPython 3.14.7 is a planned SQ-0005
+CI coverage point, not a reproduced oracle result at this subject. It becomes
+direct evidence only when the serialization-prototype workflow actually runs
+this oracle and records the runner metadata. No conda package was added or
+changed for this oracle.
 
 CPython is licensed under the Python Software Foundation License Version 2 and
 additional historical/component terms in its upstream distribution. The
