@@ -5,7 +5,7 @@
   "in_progress": [],
   "blocked_count": 53,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005"],
-  "last_integrated_commit": "9cd4fa315c17919e25351d474cf579a7b6909bd5",
+  "last_integrated_commit": "77c924a078c1481b9cead5979746109e51b85364",
   "last_updated": "2026-08-09",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
@@ -22,6 +22,7 @@
     "SQ-0005 is DONE after independent source, semantic, Rust, Python-lineage, conformance, security, cryptographic, formal/CDDL, CI/release, and pre-transition integration review of package 8e041fbe34742a0f32db776ee39cc5c2534f7f8d. The frozen implementation subject is 410465d773fc011ee01e38e6e76a79a60efe8837.",
     "RFC-0001 and matching ADR-0004 are Accepted for the bounded data-free statqed.cbor-core.v1 profile and statqed.digest-lp.v1 framing. This establishes Experimental serialization semantics and evidence only; it does not establish a production canonicalizer, artifact verification, provenance, logical-data identity, or statistical validity.",
     "The first hosted SQ-0005 run retained failure 31320961923 after its default shallow checkout could not read the reviewed baseline during final manifest regeneration. Focused correction 9cd4fa315c17919e25351d474cf579a7b6909bd5 added read-only full history only to that job, retained the failure, and passed serialization run 31321428088 including exact regeneration; final merge and post-merge evidence remain separate fail-closed gates.",
+    "Final integration audit found stale closing prose that contradicted the Accepted RFC-0001 and ADR-0004 headers. Correction 77c924a078c1481b9cead5979746109e51b85364 made only the post-decision status text consistent, preserved the byte-matched normative scope, regenerated all evidence bindings, and requires fresh exact-head and post-merge gates.",
     "The decision-aware calculation makes SQ-0006 and SQ-0008 READY with 53 blocked tasks and no active task. Both remain unstarted in this execution."
   ]
 }
