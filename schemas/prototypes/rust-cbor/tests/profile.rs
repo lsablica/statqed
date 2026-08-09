@@ -109,12 +109,12 @@ fn core_order_is_default_and_length_first_is_only_diagnostic() -> Result<(), Fai
 fn raw_map_retains_typed_equivalent_duplicates_before_order_checks() -> Result<(), Failure> {
     let bytes = [0xa2, 0x00, 0xf4, 0x18, 0x00, 0xf5];
     let raw = decode_raw(&bytes, &Limits::default())?;
-    let RawKind::Map(entries) = &raw.root.kind else {
+    let RawKind::Map(entries) = raw.root().kind() else {
         panic!("expected raw map")
     };
     assert_eq!(entries.len(), 2);
-    assert_eq!(raw.encoded(&entries[0].key), &[0x00]);
-    assert_eq!(raw.encoded(&entries[1].key), &[0x18, 0x00]);
+    assert_eq!(raw.encoded(entries[0].key()), Some(&[0x00][..]));
+    assert_eq!(raw.encoded(entries[1].key()), Some(&[0x18, 0x00][..]));
     assert_failure(
         validate_raw(&raw, &Profile::default()),
         ResultClass::Validity,
@@ -154,6 +154,16 @@ fn malformed_validity_expectedness_and_profile_codes_are_exact() {
         "validity.invalid_utf8",
     );
     assert_failure(
+        decode(&[0x61, 0xff, 0x00], &profile),
+        ResultClass::Validity,
+        "validity.invalid_utf8",
+    );
+    assert_failure(
+        decode(&[0xa2, 0x00, 0xf4, 0x00, 0xf5, 0x00], &profile),
+        ResultClass::Validity,
+        "validity.map_duplicate",
+    );
+    assert_failure(
         decode(&[0x00, 0x00], &profile),
         ResultClass::Expectedness,
         "expected.trailing_bytes",
@@ -178,6 +188,47 @@ fn malformed_validity_expectedness_and_profile_codes_are_exact() {
         ResultClass::DeterministicProfile,
         "profile.simple_forbidden",
     );
+}
+
+#[test]
+fn indefinite_string_chunks_count_as_total_items() {
+    let profile = Profile::default();
+    for (head, empty_chunk) in [(0x5f, 0x40), (0x7f, 0x60)] {
+        let mut at_limit = Vec::with_capacity(4_097);
+        at_limit.push(head);
+        at_limit.extend(core::iter::repeat_n(empty_chunk, 4_095));
+        at_limit.push(0xff);
+        assert_failure(
+            decode(&at_limit, &profile),
+            ResultClass::DeterministicProfile,
+            "profile.indefinite",
+        );
+
+        let mut over_limit = Vec::with_capacity(4_098);
+        over_limit.push(head);
+        over_limit.extend(core::iter::repeat_n(empty_chunk, 4_096));
+        over_limit.push(0xff);
+        assert_failure(
+            decode(&over_limit, &profile),
+            ResultClass::ResourceLimit,
+            "resource.total_items",
+        );
+    }
+}
+
+#[test]
+fn raw_tree_accessors_are_immutable_and_span_checked() -> Result<(), Failure> {
+    let short = decode_raw(&[0x00], &Limits::default())?;
+    let longer = decode_raw(&[0x18, 0x18], &Limits::default())?;
+    assert_eq!(
+        short.root().head_form(),
+        statqed_rust_cbor_prototype::HeadForm::Preferred
+    );
+    assert_eq!(short.root().span(), 0..1);
+    assert!(matches!(short.root().kind(), RawKind::Unsigned(0)));
+    assert_eq!(short.encoded(short.root()), Some(&[0x00][..]));
+    assert_eq!(short.encoded(longer.root()), None);
+    Ok(())
 }
 
 #[test]

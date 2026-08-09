@@ -63,6 +63,32 @@ fn decode_cli_accepts_request_envelope_and_reports_exact_failure() -> io::Result
 }
 
 #[test]
+fn decode_cli_preserves_validity_before_trailing_and_chunk_resource_precedence() -> io::Result<()> {
+    for (cbor_hex, expected_code) in [
+        ("61ff00", "validity.invalid_utf8"),
+        ("a200f400f500", "validity.map_duplicate"),
+    ] {
+        let request = format!("{{\"cbor_hex\":\"{cbor_hex}\"}}");
+        let output = invoke("decode", request.as_bytes())?;
+        assert_eq!(output.status.code(), Some(2));
+        assert_eq!(json_output(&output)["code"], expected_code);
+    }
+
+    let mut over_limit = Vec::with_capacity(4_098);
+    over_limit.push(0x5f);
+    over_limit.extend(core::iter::repeat_n(0x40, 4_096));
+    over_limit.push(0xff);
+    let request = format!(
+        "{{\"cbor_hex\":\"{}\"}}",
+        statqed_rust_cbor_prototype::hex_encode(&over_limit)
+    );
+    let output = invoke("decode", request.as_bytes())?;
+    assert_eq!(output.status.code(), Some(2));
+    assert_eq!(json_output(&output)["code"], "resource.total_items");
+    Ok(())
+}
+
+#[test]
 fn frame_and_verify_digest_commands_round_trip_exact_fields() -> io::Result<()> {
     let frame_request = br#"{"algorithm_id":"sha-256","cbor_hex":"f6","framing_id":"statqed.digest-lp.v1","object_class_schema_id":"test.object-v1","profile_id":"statqed.cbor-core.v1","purpose_id":"test.manifest"}"#;
     let framed = invoke("frame", frame_request)?;

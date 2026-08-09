@@ -269,20 +269,54 @@ pub enum HeadForm {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RawNode {
     /// Complete encoded byte range in [`RawDocument::source`].
-    pub span: Range<usize>,
+    span: Range<usize>,
     /// Preferred-argument observation for this item head.
-    pub head_form: HeadForm,
+    head_form: HeadForm,
     /// Parsed value, without native-map conversion.
-    pub kind: RawKind,
+    kind: RawKind,
+}
+
+impl RawNode {
+    /// Return the complete encoded byte range in the owning document.
+    #[must_use]
+    pub fn span(&self) -> Range<usize> {
+        self.span.clone()
+    }
+
+    /// Return the retained preferred-head observation.
+    #[must_use]
+    pub const fn head_form(&self) -> HeadForm {
+        self.head_form
+    }
+
+    /// Return the parsed raw kind without permitting mutation.
+    #[must_use]
+    pub const fn kind(&self) -> &RawKind {
+        &self.kind
+    }
 }
 
 /// One ordered raw map entry. Duplicates remain present here.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RawMapEntry {
     /// Raw key and its exact source span.
-    pub key: RawNode,
+    key: RawNode,
     /// Raw value and its exact source span.
-    pub value: RawNode,
+    value: RawNode,
+}
+
+impl RawMapEntry {
+    /// Return the retained raw key.
+    #[must_use]
+    pub const fn key(&self) -> &RawNode {
+        &self.key
+    }
+
+    /// Return the retained raw value.
+    #[must_use]
+    pub const fn value(&self) -> &RawNode {
+        &self.value
+    }
 }
 
 /// Lossless-within-profile raw CBOR kinds used before application validation.
@@ -324,8 +358,8 @@ pub enum RawKind {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RawDocument {
     source: Vec<u8>,
-    /// Root node.
-    pub root: RawNode,
+    root: RawNode,
+    consumed: usize,
 }
 
 impl RawDocument {
@@ -335,9 +369,22 @@ impl RawDocument {
         &self.source
     }
 
-    /// Return the exact encoded bytes for a node.
+    /// Return the immutable raw root node.
     #[must_use]
-    pub fn encoded<'a>(&'a self, node: &RawNode) -> &'a [u8] {
+    pub const fn root(&self) -> &RawNode {
+        &self.root
+    }
+
+    /// Return the encoded bytes for a node when its span fits this document.
+    ///
+    /// A node borrowed from a different document cannot trigger an indexing
+    /// panic; an out-of-range span returns `None`.
+    #[must_use]
+    pub fn encoded<'a>(&'a self, node: &RawNode) -> Option<&'a [u8]> {
+        self.source.get(node.span.clone())
+    }
+
+    fn encoded_trusted<'a>(&'a self, node: &RawNode) -> &'a [u8] {
         &self.source[node.span.clone()]
     }
 }
@@ -350,6 +397,21 @@ struct Parser<'a> {
 }
 
 impl Parser<'_> {
+    fn record_item(&mut self, offset: usize) -> Result<(), Failure> {
+        self.items_seen = self.items_seen.checked_add(1).ok_or_else(|| {
+            Failure::new(ResultClass::ResourceLimit, "resource.total_items", offset)
+        })?;
+        if self.items_seen > self.limits.max_total_items {
+            Err(Failure::new(
+                ResultClass::ResourceLimit,
+                "resource.total_items",
+                offset,
+            ))
+        } else {
+            Ok(())
+        }
+    }
+
     fn at_break(&self) -> bool {
         self.input.get(self.offset) == Some(&0xff)
     }
@@ -367,6 +429,7 @@ impl Parser<'_> {
                 break;
             }
             let chunk_start = self.offset;
+            self.record_item(chunk_start)?;
             let initial = self.read_u8()?;
             if initial >> 5 != major || initial & 0x1f == 31 {
                 return Err(Failure::new(
@@ -428,20 +491,7 @@ impl Parser<'_> {
 
     #[allow(clippy::too_many_lines)]
     fn parse_node(&mut self, depth: usize) -> Result<RawNode, Failure> {
-        self.items_seen = self.items_seen.checked_add(1).ok_or_else(|| {
-            Failure::new(
-                ResultClass::ResourceLimit,
-                "resource.total_items",
-                self.offset,
-            )
-        })?;
-        if self.items_seen > self.limits.max_total_items {
-            return Err(Failure::new(
-                ResultClass::ResourceLimit,
-                "resource.total_items",
-                self.offset,
-            ));
-        }
+        self.record_item(self.offset)?;
         if depth > self.limits.max_nesting_depth {
             return Err(Failure::new(
                 ResultClass::ResourceLimit,
@@ -784,8 +834,8 @@ impl Parser<'_> {
 ///
 /// # Errors
 ///
-/// Returns a stable [`Failure`] for malformed, invalid, non-profile, or
-/// resource-bounded input.
+/// Returns a stable [`Failure`] for malformed or resource-bounded input. Later
+/// phases, including trailing-byte expectedness, run in [`validate_raw`].
 pub fn decode_raw(input: &[u8], limits: &Limits) -> Result<RawDocument, Failure> {
     limits.check()?;
     if input.len() > limits.max_input_bytes {
@@ -809,16 +859,10 @@ pub fn decode_raw(input: &[u8], limits: &Limits) -> Result<RawDocument, Failure>
         items_seen: 0,
     };
     let root = parser.parse_node(0)?;
-    if parser.offset != input.len() {
-        return Err(Failure::new(
-            ResultClass::Expectedness,
-            "expected.trailing_bytes",
-            parser.offset,
-        ));
-    }
     Ok(RawDocument {
         source: input.to_vec(),
         root,
+        consumed: parser.offset,
     })
 }
 
@@ -955,8 +999,8 @@ fn validate_deterministic(
                 validate_deterministic(document, &entry.value, order)?;
             }
             for pair in entries.windows(2) {
-                let left = document.encoded(&pair[0].key);
-                let right = document.encoded(&pair[1].key);
+                let left = document.encoded_trusted(&pair[0].key);
+                let right = document.encoded_trusted(&pair[1].key);
                 if compare_encoded_keys(left, right, order) != Ordering::Less {
                     return Err(Failure::new(
                         ResultClass::DeterministicProfile,
@@ -1098,6 +1142,13 @@ pub fn validate_raw_with_expectations(
         ));
     }
     validate_cbor_validity(document, &document.root)?;
+    if document.consumed != document.source.len() {
+        return Err(Failure::new(
+            ResultClass::Expectedness,
+            "expected.trailing_bytes",
+            document.consumed,
+        ));
+    }
     validate_expectedness(document, &document.root)?;
     if expected_profile_id.is_some_and(|identifier| identifier != PROFILE_ID) {
         return Err(Failure::new(
