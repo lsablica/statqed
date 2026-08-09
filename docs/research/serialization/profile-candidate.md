@@ -219,7 +219,8 @@ separate; success at one phase says nothing about later phases.
 | `expectedness` | `expected.trailing_bytes`, `expected.map_key_type`, `expected.profile_id`, `expected.schema_id`, `expected.schema_version`, `expected.top_level`. These are well-formed/valid CBOR but not the kind or version requested by the application call. Empty input is `wellformed.truncated`; content after the first complete item is `expected.trailing_bytes`, so no overlapping `expected.single_item` code exists. |
 | `deterministic_profile` | `profile.non_preferred_head`, `profile.indefinite`, `profile.map_order`, `profile.tag_forbidden`, `profile.float_forbidden`, `profile.simple_forbidden`. These inputs are decodable but are not `statqed.cbor-core.v1` bytes. |
 | `cddl_shape` | `shape.cddl_mismatch` with a versioned rule identifier. It establishes only failure to match the selected published-syntax CDDL rule. |
-| `semantic_validity` | The `semantic.*` classes in the value-model note plus schema-owned invariants. It does not establish inferential, provenance, or kernel claims. |
+| `semantic_validity` | The `semantic.*` producer-value classes in the value-model note. These classify explicit generic atoms before encoding and do not absorb schema-owned invariants. |
+| `schema_mismatch` | `schema.mismatch` belongs only to a separately identified object-schema validator. The generic profile, CDDL prototype, and digest frame do not emit or manufacture it. |
 | `digest_verification` | `digest.magic`, `digest.component_length`, `digest.trailing_bytes`, `digest.purpose`, `digest.algorithm`, `digest.profile`, `digest.object_class_schema`, `digest.framing`, `digest.payload`, `digest.length`, `digest.mismatch`. Digest verification is conditional on every preceding phase actually requested by the caller; the framing function itself checks profile bytes and identifier binding but does not implement a schema registry. |
 | `accepted` | `accepted` only after every phase requested through that interface succeeds. A framing-only result names and binds the profile and object-class/schema identifiers but does not establish schema conformance. |
 
@@ -235,6 +236,7 @@ well_formedness
 < deterministic_profile
 < cddl_shape
 < semantic_validity
+< schema_mismatch (only when a separate schema validator is requested)
 < digest_verification
 < accepted
 ```

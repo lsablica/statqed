@@ -39,6 +39,7 @@
     "deterministic_profile",
     "cddl_shape",
     "semantic_validity",
+    "schema_mismatch",
     "digest_verification",
     "differential_detection",
     "operational_failure"
