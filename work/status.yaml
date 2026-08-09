@@ -5,7 +5,7 @@
   "in_progress": [],
   "blocked_count": 54,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004"],
-  "last_integrated_commit": "cecbaa318f043bedd9898afe20e9f930c39eb732",
+  "last_integrated_commit": "a8e886386cbef9437f0c6912f96d6d29ac6023c4",
   "last_updated": "2026-08-09",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
@@ -14,7 +14,7 @@
     "SQ-0003 is DONE with an Experimental Lean proof foundation after distinct source, build, formal, adversarial, CI/reproducibility, and integration review. The task merged as 92e3b331b1ae795a21d6e030a21e8ce8d7da03dd and its final reviewed merge-evidence record merged as b7f98a99cdc4babccd920c52f5a2e55f8051228c.",
     "SQ-0003 directly establishes only the exact Lean/Mathlib build environment, test-only smoke declaration, actual axiom observations, trust mutations, normal/source builds, and Lean CI; it introduces no statistical theorem, artifact binding, registry authority, or Draft RFC decision.",
     "A post-merge review on 2026-08-09 found no blocking SQ-0003 defect. It added fresh leanchecker replay of the compiled smoke module and imports, corrected stale launch/status metadata, and made the SQ-0004 final transition capable of updating SQ-0005 readiness without changing task states or Draft RFCs.",
-    "SQ-0004 is DONE after distinct source, workspace/MSRV, API, security/adversarial, CI/reproducibility, and integration review of corrected package cecbaa318f043bedd9898afe20e9f930c39eb732. Rust run 31304551534 passed both the 1.97.1 development/security and 1.85.1 exact-lock offline-floor jobs on that exact package head.",
+    "SQ-0004 is DONE after distinct source, workspace/MSRV, API, security/adversarial, CI/reproducibility, and integration review of corrected package cecbaa318f043bedd9898afe20e9f930c39eb732 and atomic transition a8e886386cbef9437f0c6912f96d6d29ac6023c4. Rust run 31304551534 passed both the 1.97.1 development/security and 1.85.1 exact-lock offline-floor jobs on the reviewed package head.",
     "SQ-0004 establishes only an Experimental dependency-free Rust foundation, deterministic bounded bootstrap CLI behavior, exact-lock reproduction, and point-in-time license/advisory evidence. It introduces no statistical, schema, encoding, artifact, registry, certificate, frontend, or verification semantics.",
     "The shared dependency calculation makes SQ-0005 and SQ-0008 READY with 54 blocked tasks and no active task. Both successors remain unstarted; RFC-0001 through RFC-0009 retain their actual Draft status."
   ]
