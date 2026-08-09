@@ -1,0 +1,134 @@
+{
+  "baseline_commit": "8875d8f6fa8e3b45e706ea567d45448927a02efa",
+  "coverage_roots": [
+    {
+      "extensions": [],
+      "path": "conformance/prototypes"
+    },
+    {
+      "extensions": [],
+      "path": "docs/research/serialization"
+    },
+    {
+      "extensions": [],
+      "path": "schemas/prototypes"
+    },
+    {
+      "extensions": [],
+      "path": "scripts/serialization"
+    },
+    {
+      "extensions": [],
+      "path": "source-audits/encoding"
+    }
+  ],
+  "expected_state": {
+    "blocked_count": 53,
+    "done": [
+      "SQ-0001",
+      "SQ-0002",
+      "SQ-0003",
+      "SQ-0004",
+      "SQ-0005"
+    ],
+    "in_progress": [],
+    "ready": [
+      "SQ-0006",
+      "SQ-0008"
+    ],
+    "statuses": {
+      "adr0004": "Accepted",
+      "backlog_sq0005": "DONE",
+      "backlog_sq0006": "READY",
+      "backlog_sq0008": "READY",
+      "contract_sq0005": "DONE",
+      "contract_sq0006": "READY",
+      "contract_sq0008": "READY",
+      "rfc0001": "Accepted"
+    }
+  },
+  "protected_prefixes": [
+    "backend",
+    "frontends",
+    "lean"
+  ],
+  "retained_failure_roots": [
+    "conformance/prototypes/results/failures"
+  ],
+  "review_record": "work/reviews/SQ-0005.md",
+  "review_subject_paths": [
+    ".github/workflows/serialization-prototypes.yml",
+    "conformance/prototypes/evidence/evidence-manifest.json",
+    "conformance/prototypes/fixtures/semantic-v1/catalog.json",
+    "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
+    "conformance/prototypes/generated-v1/manifest.json",
+    "conformance/prototypes/generated-v1/mutations.json",
+    "conformance/prototypes/generated-v1/results.json",
+    "conformance/prototypes/golden/serialization-v1/manifest.json",
+    "docs/adr/0004-deterministic-cbor-cddl.md",
+    "docs/research/serialization/profile-candidate.md",
+    "docs/research/serialization/semantic-value-model.md",
+    "rfcs/0001-deterministic-encoding.md",
+    "schemas/prototypes/cddl/profile-v1.cddl",
+    "schemas/prototypes/lineage.json",
+    "schemas/prototypes/python-oracle/.python-version",
+    "schemas/prototypes/python-oracle/LINEAGE.md",
+    "schemas/prototypes/rust-cbor/Cargo.lock",
+    "schemas/prototypes/rust-cbor/LINEAGE.md",
+    "schemas/prototypes/rust-cbor/evidence/advisory-report.json",
+    "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json",
+    "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json",
+    "scripts/serialization/check_evidence.py",
+    "scripts/serialization/run_conformance.py",
+    "source-audits/encoding/manifest.json"
+  ],
+  "schema": "statqed.sq0005-evidence-spec.v1",
+  "subject_files": [
+    {
+      "path": ".github/workflows/serialization-prototypes.yml",
+      "role": "least-privilege hosted reproduction"
+    },
+    {
+      "path": "Makefile",
+      "role": "permanent repository verification entry point"
+    },
+    {
+      "path": "docs/adr/0004-deterministic-cbor-cddl.md",
+      "role": "matching architecture decision"
+    },
+    {
+      "path": "docs/quality/dashboard.md",
+      "role": "evidence-scoped maturity statement"
+    },
+    {
+      "path": "docs/spec/canonicalization.md",
+      "role": "implementation-facing profile specification"
+    },
+    {
+      "path": "rfcs/0001-deterministic-encoding.md",
+      "role": "normative decision"
+    }
+  ],
+  "subject_roots": [
+    {
+      "path": "conformance/prototypes",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures"
+    },
+    {
+      "path": "docs/research/serialization",
+      "role": "semantic model and reviewed profile candidate"
+    },
+    {
+      "path": "schemas/prototypes",
+      "role": "independent prototype implementations, locks, lineage, CDDL, and security evidence"
+    },
+    {
+      "path": "scripts/serialization",
+      "role": "conformance, evidence, dependency, security, and corruption verifiers"
+    },
+    {
+      "path": "source-audits/encoding",
+      "role": "dated primary-source audit"
+    }
+  ]
+}

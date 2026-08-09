@@ -1,0 +1,228 @@
+name: Serialization prototypes
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: serialization-prototypes-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
+env:
+  CARGO_AUDIT_ARCHIVE_SHA256: ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39
+  CARGO_LOCK_SHA256: 2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180
+  RUSTSEC_ARCHIVE_SHA256: a5036fadecadb3e382f852b0d698460e931c85eb5e12e63447cc95875fe80256
+
+jobs:
+  python-oracle:
+    name: Independent Python oracle (${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12.13", "3.14.7"]
+    steps:
+      - name: Check out without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Record observed runner and interpreter
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 -VV
+          python3 -c 'import hashlib, platform, ssl, sys, unicodedata; print(platform.platform()); print(sys.byteorder); print(ssl.OPENSSL_VERSION); print(unicodedata.unidata_version); print(hashlib.sha256(b"StatQED").hexdigest())'
+          git rev-parse HEAD
+          # These are observations for this mutable hosted Linux/x86-64 image,
+          # not inferred macOS, Windows, ARM, or immutable-platform support.
+
+      - name: Run independent oracle tests without site packages
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: schemas/prototypes/python-oracle
+          PYTHONWARNINGS: error
+        run: |
+          python3 -S -m unittest discover \
+            -s schemas/prototypes/python-oracle/tests -p 'test_*.py' -v
+
+      - name: Confirm interpreter-independent dependency boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          requirements = Path("schemas/prototypes/python-oracle/requirements.txt")
+          effective = [
+              line for line in requirements.read_text(encoding="utf-8").splitlines()
+              if line.strip() and not line.lstrip().startswith("#")
+          ]
+          assert not effective, f"third-party Python requirements: {effective}"
+          PY
+          test -z "$(find schemas/prototypes/python-oracle -type d -name __pycache__ -print -quit)"
+          test -z "$(find schemas/prototypes/python-oracle -type f \( -name '*.pyc' -o -name '*.pyo' \) -print -quit)"
+          git diff --exit-code
+          git diff --check
+
+  conformance:
+    name: Rust, differential, security, and evidence gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+
+      - name: Record observed runner metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 -VV
+          rustup --version
+          git rev-parse HEAD
+          # This is direct evidence only for the observed hosted runner.
+
+      - name: Run repository guardrails and permanent evidence verifier
+        run: |
+          make check
+          make list-work
+          git diff --check
+
+      - name: Install exact Rust prototype toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
+          rustc +1.97.1 -Vv
+          cargo +1.97.1 -Vv
+          rustup component list --toolchain 1.97.1 --installed
+
+      - name: Reject ambient Cargo credentials and acquire exact graph cleanly
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          bad = sorted(
+              key for key in os.environ
+              if key.upper().startswith("CARGO_")
+              and any(part in key.upper() for part in ("TOKEN", "CREDENTIAL", "SECRET"))
+          )
+          assert not bad, f"ambient Cargo credential variables: {bad}"
+          PY
+          export CARGO_HOME="$RUNNER_TEMP/statqed-sq0005-cargo-home"
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/statqed-sq0005-cargo-target"
+          export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+          mkdir -p "$CARGO_HOME" "$CARGO_TARGET_DIR"
+          test ! -e "$CARGO_HOME/credentials"
+          test ! -e "$CARGO_HOME/credentials.toml"
+          test ! -e "$CARGO_HOME/config"
+          test ! -e "$CARGO_HOME/config.toml"
+          cargo +1.97.1 fetch --locked --manifest-path schemas/prototypes/rust-cbor/Cargo.toml
+          echo "CARGO_HOME=$CARGO_HOME" >> "$GITHUB_ENV"
+          echo "CARGO_TARGET_DIR=$CARGO_TARGET_DIR" >> "$GITHUB_ENV"
+
+      - name: Run exact locked Rust gates offline
+        env:
+          CARGO_NET_OFFLINE: "true"
+        working-directory: schemas/prototypes/rust-cbor
+        run: |
+          cargo +1.97.1 fmt --all -- --check
+          cargo +1.97.1 build --all-features --locked --offline
+          cargo +1.97.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          cargo +1.97.1 test --all-targets --all-features --locked --offline
+          cargo +1.97.1 test --doc --locked --offline
+
+      - name: Regenerate Cargo.lock independently and compare
+        shell: bash
+        env:
+          CARGO_NET_OFFLINE: "true"
+        run: |
+          set -euo pipefail
+          lock_root="$RUNNER_TEMP/statqed-sq0005-lock-reproduction"
+          cp -R schemas/prototypes/rust-cbor "$lock_root"
+          rm "$lock_root/Cargo.lock"
+          cargo +1.97.1 generate-lockfile --offline --manifest-path "$lock_root/Cargo.toml"
+          cmp schemas/prototypes/rust-cbor/Cargo.lock "$lock_root/Cargo.lock"
+          echo "$CARGO_LOCK_SHA256  schemas/prototypes/rust-cbor/Cargo.lock" | sha256sum --check --strict
+
+      - name: Reproduce dependency and license inventory
+        env:
+          CARGO_NET_OFFLINE: "true"
+        run: |
+          python3 scripts/serialization/dependency_inventory.py --check
+          python3 scripts/serialization/check_yanked.py
+
+      - name: Query current official crates.io yanked state
+        run: python3 scripts/serialization/check_yanked.py --live
+
+      - name: Verify differential corpus, deliberate divergences, CDDL boundary, and resources
+        env:
+          CARGO_NET_OFFLINE: "true"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python3 scripts/serialization/run_conformance.py --verify
+
+      - name: Retrieve immutable advisory inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          security_root="$RUNNER_TEMP/statqed-sq0005-security"
+          mkdir -p "$security_root"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/cargo-audit.tgz" \
+            'https://github.com/rustsec/rustsec/releases/download/cargo-audit%2Fv0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz'
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/rustsec.tar.gz" \
+            'https://codeload.github.com/RustSec/advisory-db/tar.gz/309ad29d8fe448bf986019e05d47b9e0e29a2218'
+          echo "$CARGO_AUDIT_ARCHIVE_SHA256  $security_root/cargo-audit.tgz" | sha256sum --check --strict
+          echo "$RUSTSEC_ARCHIVE_SHA256  $security_root/rustsec.tar.gz" | sha256sum --check --strict
+          echo "SQ0005_SECURITY_ROOT=$security_root" >> "$GITHUB_ENV"
+
+      - name: Verify hash-bound point-in-time advisory report
+        run: |
+          python3 scripts/serialization/security_audit.py \
+            --cargo-audit-archive "$SQ0005_SECURITY_ROOT/cargo-audit.tgz" \
+            --rustsec-archive "$SQ0005_SECURITY_ROOT/rustsec.tar.gz"
+
+      - name: Confirm static evidence and clean regeneration
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 scripts/serialization/source_audit_manifest.py
+          python3 scripts/serialization/check_evidence.py
+          python3 -m unittest scripts.serialization.tests.test_check_evidence -v
+          python3 scripts/serialization/build_evidence_manifest.py
+          git diff --exit-code
+          git diff --check
