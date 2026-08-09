@@ -94,7 +94,7 @@
     {
       "classification": "rejected",
       "id": "workflow-write-permission",
-      "reason": "workflow policy rejected elevated write permission"
+      "reason": "workflow policy rejected inline elevated permission mapping"
     }
   ],
   "schema_version": 1

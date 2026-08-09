@@ -119,18 +119,19 @@ def workflow_findings_text(text: str) -> list[str]:
         findings.append("workflow: action set or full-commit pin drifted")
     if re.search(r"uses:\s*[^\s#]+@(latest|main|master|v?\d+(?:\.\d+)*)\b", text):
         findings.append("workflow: floating action reference is prohibited")
-    if re.search(r"^\s+[A-Za-z0-9_-]+:\s*write\s*(?:#.*)?$", text, flags=re.MULTILINE):
-        findings.append("workflow: write permission is prohibited")
+    permission_declarations = [
+        line for line in text.splitlines() if re.match(r"^\s*permissions\s*:", line)
+    ]
+    if permission_declarations != ["permissions:"]:
+        findings.append("workflow: permissions must be one exact top-level mapping")
     if re.search(
-        r"^\s*CARGO_[A-Z0-9_]*(?:TOKEN|CREDENTIAL|SECRET)[A-Z0-9_]*:\s*",
+        r"CARGO_[A-Z0-9_]*(?:TOKEN|CREDENTIAL|SECRET)[A-Z0-9_]*",
         text,
-        flags=re.MULTILINE,
     ):
         findings.append("workflow: Cargo credential environment is prohibited")
     if re.search(
-        r"^\s*(?:CARGO_REGISTRY_DEFAULT|CARGO_REGISTRIES_[A-Z0-9_]+_(?:INDEX|CREDENTIAL_PROVIDER)):\s*",
+        r"(?:CARGO_REGISTRY_DEFAULT|CARGO_REGISTRIES_[A-Z0-9_]+_(?:INDEX|CREDENTIAL_PROVIDER))",
         text,
-        flags=re.MULTILINE,
     ):
         findings.append("workflow: alternate registry environment is prohibited")
     required_fragments = (
@@ -627,17 +628,21 @@ def mutation_results(root: Path) -> dict[str, Any]:
     )
     permission_workflow = workflow_text.replace(
         "permissions:\n  contents: read",
-        "permissions:\n  contents: read\n  id-token: write",
+        'permissions: {contents: read, id-token: "write"}',
         1,
     )
     record(
         "workflow-write-permission",
-        any("write permission" in item for item in workflow_findings_text(permission_workflow)),
-        "workflow policy rejected elevated write permission",
+        any(
+            "permissions must be one exact top-level mapping" in item
+            for item in workflow_findings_text(permission_workflow)
+        ),
+        "workflow policy rejected inline elevated permission mapping",
     )
     cargo_credential_workflow = workflow_text.replace(
-        "env:\n",
-        "env:\n  CARGO_REGISTRIES_CRATES_IO_TOKEN: ${{ secrets.CARGO_TOKEN }}\n",
+        "    timeout-minutes: 60\n",
+        "    timeout-minutes: 60\n"
+        "    env: {CARGO_REGISTRIES_CRATES_IO_TOKEN: fixture-token}\n",
         1,
     )
     record(
@@ -649,8 +654,9 @@ def mutation_results(root: Path) -> dict[str, Any]:
         "workflow policy rejected Cargo credential environment",
     )
     alternate_registry_workflow = workflow_text.replace(
-        "env:\n",
-        "env:\n  CARGO_REGISTRIES_UNREVIEWED_INDEX: https://registry.invalid/index\n",
+        "    timeout-minutes: 60\n",
+        "    timeout-minutes: 60\n"
+        "    env: {CARGO_REGISTRIES_UNREVIEWED_INDEX: https://registry.invalid/index}\n",
         1,
     )
     record(
