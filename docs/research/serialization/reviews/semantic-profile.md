@@ -18,15 +18,17 @@ and raw map entries, and gives every accepted semantic value one selected v1
 encoding. The Draft RFC, Proposed ADR, and Draft implementation-facing spec
 agree on the same bounded, data-free scope.
 
-The earlier interval, result-taxonomy, resource-counting, corpus-count, and
-source-attribution defects were corrected before this review. In the final
-subject, producer semantic validity no longer absorbs object-schema
-invariants; `schema_mismatch` belongs only to a separately identified schema
-validator. The RFC now correctly identifies RFC 9682 as the formal update to
-RFC 8610 and treats RFCs 9165 and 9741 as optional published extensions that
-the minimum profile does not require. That attribution correction changes no
-semantic constructor, accepted byte, equality relation, failure precedence,
-resource bound, or fixture expectation.
+The earlier interval, result-taxonomy, resource-counting, corpus-count,
+source-attribution, and raw digest-identifier precedence defects were corrected
+before this review. In the final subject, producer semantic validity no longer
+absorbs object-schema invariants; `schema_mismatch` belongs only to a separately
+identified schema validator. RFC 9682 is correctly identified as the formal
+update to RFC 8610, while RFCs 9165 and 9741 are optional published extensions
+that the minimum profile does not require. A missing digest length prefix or
+declared component body is now distinct from a fully present identifier that
+violates its field-specific grammar or expectation. These corrections do not
+change any accepted atom, equality relation, canonical byte, resource bound,
+or statistical boundary.
 
 This reviewer did not author or edit the candidate, semantic model, profile,
 fixtures, RFC, ADR, canonicalization spec, source audit, implementations, or
@@ -36,21 +38,26 @@ implementation correctness or by itself accept RFC-0001 or ADR-0004.
 
 ## Exact subject
 
-The review was performed at repository HEAD
-`a0737efe5a9bee1a6d37ac358d8a8b9a8011e78f`. The semantic model, profile,
-and complete fixture directory are unchanged from frozen semantic commit
-`b2ec69de45a3406cdcf29aec3243f81e8a42432f`.
+The reviewed candidate and implementation/evidence subject is commit
+`410465d773fc011ee01e38e6e76a79a60efe8837`. Later commits reachable from the
+current review-time HEAD add independent review records only; the candidate
+paths and hashes below are unchanged from `410465d`.
 
 | Subject | SHA-256 or identity |
 |---|---|
-| Semantic/fixture frozen commit | `b2ec69de45a3406cdcf29aec3243f81e8a42432f` |
+| Candidate implementation/evidence commit | `410465d773fc011ee01e38e6e76a79a60efe8837` |
+| Fixture frozen commit recorded by generated evidence | `b4d92a39e30fa5736c58bc71c57790ec215fbad7` |
 | `docs/research/serialization/semantic-value-model.md` | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
-| `docs/research/serialization/profile-candidate.md` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
-| `rfcs/0001-deterministic-encoding.md` | `79aa54a53d914bb47689a4256daddd2e5832da10936ec8b551e0d93d26ad7f38` |
+| `docs/research/serialization/profile-candidate.md` | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
+| `rfcs/0001-deterministic-encoding.md` | `d4258501486affdaf99ec95322bae1e1212806c896e33360a17c137fd2f51106` |
 | `docs/adr/0004-deterministic-cbor-cddl.md` | `004b41b65dc8450de6f0bd8431f7de2e1f885e95dfd985f50981e1c1c5c9e49d` |
 | RFC/ADR marked normative-scope block | `737847efcdb917f8c3db8c05c314c85f62775fa8ca80638a56de69cadb0fc060` |
-| `docs/spec/canonicalization.md` | `355bb36a3c41021ef75c52da61bf90501866cbef0abaa2f20bdb757e8f1afa90` |
-| Semantic fixture content tree | `61aca5d116ab07bae26265a35c112668c34dbfae2c274dda428d856cdbdfb2b6` |
+| `docs/spec/canonicalization.md` | `e0bc0628fd0ac05a43f06ac478c029e83a5daeb4fe88f2b00579d4f892cce61a` |
+| Semantic fixture content tree | `90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8` |
+| Generated result manifest | `e69e863053fad44faf2511cedbd53a13725e309cbdb0551621e217c2095dd6cd` |
+| Differential results | `4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274` |
+| Python executable/lock subject | `cc05dbf3d4996f44e204099ad335df843557571ae61aac8044903de5f9e41a9f` |
+| Rust executable/lock subject | `cb3c03907bc7cdf6f495be7d98d795347b3b51c1415637a6b1e8d71f558027ea` |
 | Primary-source audit manifest | `b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40` |
 | Unchanged Draft RFC-0006 | `e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429` |
 
@@ -63,7 +70,7 @@ sorted relative-path order as
 | `atoms-and-widths.json` | `2ffec8250ace8283959db11a29d2d7c2b55500429065d484394732c59e52dcd9` |
 | `catalog.json` | `d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3` |
 | `differential-mutants.json` | `313a784148be66fa471c2684be27512fbf5e0f446f7681dd27e8317b36c882e6` |
-| `digest-framing.json` | `75b11a2b6069f759710cd132d92a8ef1d91a0dbc1488f85f14f3920819277a19` |
+| `digest-framing.json` | `36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b` |
 | `malformed-and-strictness.json` | `b6af575d7111def454a642fa3052bc626f2aea2a4fee76cf7719677739fcf2af` |
 | `maps-and-unicode.json` | `c1053fc27be0e8afb60ef655038daca71b43e93c98a2abe5c0dae56e29efb110` |
 | `numeric-tags-extensions.json` | `5c50a8ed96b4e1a032f818b9ecec0ae2e6db9b4e2e746e1ed47bcd8cca739329` |
@@ -194,14 +201,24 @@ The 1,049,255-byte digest-frame allocation cap is correctly distinguished
 from the largest attainable valid frame of 1,048,918 bytes. Five seconds and
 128 MiB are operational harness evidence, not cross-platform semantic limits.
 
+Digest framing also has an exact structural-versus-field-error boundary. A
+missing or truncated four-byte prefix, or a component body shorter than its
+declared length, is `digest.component_length`. Once all declared identifier
+bytes are present, an empty, over-128-byte, non-ASCII, grammar-invalid,
+fixed-value, or caller-expectation mismatch receives the corresponding
+`digest.purpose`, `digest.algorithm`, `digest.profile`,
+`digest.object_class_schema`, or `digest.framing` result. The new raw 129-byte
+purpose and schema cases exercise this distinction without altering the frame
+grammar or any accepted vector.
+
 ## Fixture and non-vacuity audit
 
-The fixture tree contains 271 unique case identifiers: 70 accepted and 201
+The fixture tree contains 273 unique case identifiers: 70 accepted and 203
 rejected. Sixty-nine accepted cases have a binary expectation; the remaining
 accepted case is the deliberately non-normative exact diagnostic-rendering
 boundary. The class counts are 15 well-formedness, 10 validity, 6
 expectedness, 63 deterministic-profile, 1 CDDL-shape, 39 semantic-validity,
-31 digest-verification, 15 resource, 17 differential-detection, and 4
+33 digest-verification, 15 resource, 17 differential-detection, and 4
 operational-failure cases, in addition to the 70 accepted cases.
 
 The accepted language is nonempty and includes each accepted atom class and
