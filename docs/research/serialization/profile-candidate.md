@@ -390,6 +390,11 @@ Digest failure precedence is fixed. A whole frame beyond the allocation cap,
 an encoded payload length beyond 1 MiB, or a supplied digest whose length is
 not 32 bytes is `digest.length`. A missing/truncated four-byte prefix or a
 component shorter than its declared length is `digest.component_length`.
+Once an identifier component's declared bytes are fully present, an empty,
+over-128-byte, non-ASCII, grammar-invalid, fixed-value, or caller-expected
+mismatch fails the field-specific code (`digest.purpose`, `digest.algorithm`,
+`digest.profile`, `digest.object_class_schema`, or `digest.framing`); it is not
+reclassified as truncated framing.
 Complete bytes after the sixth framed component are
 `digest.trailing_bytes`. A syntactically framed empty, invalid, or
 non-profile payload is `digest.payload`. Only an exact 32-byte digest unequal

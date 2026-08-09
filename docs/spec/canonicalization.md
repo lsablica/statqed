@@ -82,6 +82,9 @@ LP32("statqed.digest-lp.v1") || LP32(payload)
 ASCII bytes, and match `[a-z0-9][a-z0-9._:-]*`. Payload is nonempty strict
 profile bytes. Verification binds all identifiers and rejects fallback,
 downgrade, truncation, extra bytes, component reordering, and ambiguity.
+A missing prefix or declared body is `digest.component_length`; a fully
+present identifier that violates its length, ASCII, grammar, fixed-value, or
+caller expectation fails its field-specific `digest.*` code.
 
 The frame binds but does not resolve or validate its object-class/schema
 identifier. Schema validation is a separate prerequisite. Digest equality is

@@ -244,6 +244,11 @@ purpose, algorithm, profile, object-class/schema, and framing identifiers and
 rejects unsupported fallback, downgrade, truncation, trailing data, reordered
 components, or length ambiguity before reporting a digest match.
 
+A missing length prefix or component body is `digest.component_length`. Once
+all bytes declared for an identifier are present, an empty, over-128-byte,
+non-ASCII, grammar-invalid, fixed-value, or caller-expected mismatch receives
+that field's specific `digest.*` code rather than a truncation code.
+
 The frame binds the schema identifier but does not resolve it or prove that
 the payload conforms to that schema. Schema validation is a separate caller
 prerequisite. No purpose or object-class identifier for real data or logical
@@ -268,7 +273,8 @@ only in separately pinned Experimental research and is not required here.
 ## Independent implementation and conformance evidence
 
 Semantic fixtures were committed before accepted golden bytes. The corpus has
-271 stable cases (70 accepted and 201 rejected) spanning accepted, boundary, one-over-limit, malformed,
+273 stable cases (70 accepted and 203 rejected) spanning accepted, boundary,
+one-over-limit, malformed,
 invalid, non-profile, unsupported, ambiguous, divergent, and resource cases.
 The Rust/library-backed prototype and direct standard-library Python oracle
 have independent source roots, parser/canonicalizer lineages, dependency
@@ -360,7 +366,7 @@ rather than embedded recursively in this document.
 | Subject | SHA-256 |
 |---|---|
 | Semantic value model | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
-| Profile candidate | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
+| Profile candidate | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 | Primary-source audit manifest | `b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40` |
 | Semantic fixture tree | `61aca5d116ab07bae26265a35c112668c34dbfae2c274dda428d856cdbdfb2b6` |
 | Generated result manifest | `9157bf5cc331b026353e12de4adbe9a623509aac9ef6e2a1e8fc22eba71f1d0d` |
