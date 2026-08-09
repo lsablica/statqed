@@ -14,6 +14,11 @@ before duplicate validation, rejects non-preferred input rather than repairing
 it, rejects every tag and float, and implements the candidate six-component
 SHA-256 length-prefix digest frame.
 
+The framing commands validate canonical profile bytes and bind the caller's
+exact object-class/schema identifier. They do not resolve that identifier or
+validate schema conformance; a schema-owning caller must perform that separate
+check before composing a stronger result.
+
 ## Run
 
 From the repository root, with the pinned interpreter:

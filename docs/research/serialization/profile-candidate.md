@@ -220,8 +220,8 @@ separate; success at one phase says nothing about later phases.
 | `deterministic_profile` | `profile.non_preferred_head`, `profile.indefinite`, `profile.map_order`, `profile.tag_forbidden`, `profile.float_forbidden`, `profile.simple_forbidden`. These inputs are decodable but are not `statqed.cbor-core.v1` bytes. |
 | `cddl_shape` | `shape.cddl_mismatch` with a versioned rule identifier. It establishes only failure to match the selected published-syntax CDDL rule. |
 | `semantic_validity` | The `semantic.*` classes in the value-model note plus schema-owned invariants. It does not establish inferential, provenance, or kernel claims. |
-| `digest_verification` | `digest.magic`, `digest.component_length`, `digest.trailing_bytes`, `digest.purpose`, `digest.algorithm`, `digest.profile`, `digest.object_class_schema`, `digest.framing`, `digest.payload`, `digest.length`, `digest.mismatch`. Digest verification is conditional on all preceding checks. |
-| `accepted` | `accepted` only after every requested phase succeeds. The result names profile and schema identifiers. |
+| `digest_verification` | `digest.magic`, `digest.component_length`, `digest.trailing_bytes`, `digest.purpose`, `digest.algorithm`, `digest.profile`, `digest.object_class_schema`, `digest.framing`, `digest.payload`, `digest.length`, `digest.mismatch`. Digest verification is conditional on every preceding phase actually requested by the caller; the framing function itself checks profile bytes and identifier binding but does not implement a schema registry. |
+| `accepted` | `accepted` only after every phase requested through that interface succeeds. A framing-only result names and binds the profile and object-class/schema identifiers but does not establish schema conformance. |
 
 ### Error precedence
 
@@ -351,8 +351,10 @@ padding, or trailing field. The framing is an injective byte construction and
 does not recursively depend on CBOR decoding.
 
 `payload` is the exact nonempty canonical byte string of one value already
-accepted under the named profile and object-class/schema. The five identifier
-components are 1 to 128 ASCII bytes and match
+accepted under the named profile. Before treating a framed result as a valid
+object, a caller must separately establish the payload's conformance to the
+named object-class/schema using its reviewed validator; the framing function
+only binds that identifier. The five identifier components are 1 to 128 ASCII bytes and match
 `[a-z0-9][a-z0-9._:-]{0,127}` exactly; there is no trimming or case folding.
 `algorithm_id` is exactly `sha-256`, `profile_id` is exactly
 `statqed.cbor-core.v1`, and `framing_id` is exactly
@@ -372,9 +374,12 @@ Verification parses exactly the fixed magic and six components and consumes
 the complete frame. It is called with externally expected purpose, algorithm,
 profile, object-class/schema, and framing identifiers. It rejects a supplied component
 mismatch before digest comparison, then revalidates the payload under the
-named profile/object-class/schema, reconstructs the frame, and compares all 32
-digest bytes. Unsupported algorithm, profile, framing, or schema values fail
-without fallback. A component whose length exceeds `u32` is unrepresentable;
+named deterministic profile, reconstructs the frame, and compares all 32
+digest bytes. It does not resolve or validate the bound object-class/schema;
+that is a separate prerequisite supplied by the schema-owning caller.
+Unsupported algorithm, profile, or framing values fail without fallback. A
+schema identifier not equal to the caller's externally expected identifier
+fails without fallback. A component whose length exceeds `u32` is unrepresentable;
 the tighter limits above fail first. Truncated length prefixes/components,
 prefix digests, concatenated digests, empty identifiers, empty payload fields,
 or concatenated payload items fail explicitly.
@@ -403,8 +408,8 @@ Required framing mutations include:
 - replay a valid frame under a caller-requested different purpose.
 
 The fixed magic and explicit lengths remove raw-concatenation ambiguity; they
-do not prove collision freedom, truthful provenance, or semantic equality outside the exact locked
-profile/schema/purpose assumptions.
+do not prove collision freedom, truthful provenance, schema conformance, or
+semantic equality outside the exact locked profile/schema/purpose assumptions.
 
 ## Acceptance, rejection, and normalization matrix
 

@@ -9,7 +9,7 @@ The implementation was written directly from these reviewed candidate inputs:
 | Input | SHA-256 |
 |---|---|
 | `docs/research/serialization/semantic-value-model.md` | `fc7d86cfe4eae00d25afeb1cd8601dff6d5173dce728c5f4a507b20d5fa34dca` |
-| `docs/research/serialization/profile-candidate.md` | `df04f1564e15be2747c321626f9eeb47d179d4a8eb2910734dc696730adf47a6` |
+| `docs/research/serialization/profile-candidate.md` | `d07816f7f3fadeb07b91196691848f3933a13f96503c86ed24c2ed9d42ed45bb` |
 
 The candidate documents cite RFC 8949 for CBOR well-formedness, validity,
 preferred serialization, and core deterministic ordering, and FIPS 180-4 for

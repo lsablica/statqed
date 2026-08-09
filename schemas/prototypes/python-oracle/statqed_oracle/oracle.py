@@ -1028,7 +1028,7 @@ def build_digest_frame(
     profile_id: str = PROFILE_ID,
     framing_id: str = FRAMING_ID,
 ) -> Result:
-    """Build and hash the six-component data-free digest frame."""
+    """Build and hash the frame; bind, but do not validate, the schema ID."""
 
     try:
         purpose = _identifier_bytes(purpose_id, "digest.purpose")
@@ -1071,7 +1071,7 @@ def verify_digest_frame(
     expected_profile_id: str = PROFILE_ID,
     expected_framing_id: str = FRAMING_ID,
 ) -> Result:
-    """Parse, domain-check, payload-check, and verify one digest frame."""
+    """Verify profile bytes and identifier binding, not schema conformance."""
 
     try:
         if len(frame) > MAX_DIGEST_FRAME_BYTES:
