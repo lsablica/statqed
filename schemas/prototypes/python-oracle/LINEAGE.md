@@ -2,10 +2,12 @@
 
 Status: **Experimental evidence record**.
 
-Implementation source: `89af5a7dbb837ea7d1557d1a715b34a814afdf95`,
-independent reference-oracle engineer. The final candidate inputs are bound
-below. The implementation commit incorporates the reviewed distinction between
-complete invalid digest identifiers and truncated length-prefixed components.
+Exact executable-tree source: `fd8dd9e344ff6bbe1488cb143f8b700c6c795efe`.
+The independent reference-oracle behavior is rooted at
+`89af5a7dbb837ea7d1557d1a715b34a814afdf95`; the later commit removes only a
+blank line at end of `__init__.py`. The final candidate inputs are bound below.
+The behavioral commit incorporates the reviewed distinction between complete
+invalid digest identifiers and truncated length-prefixed components.
 
 The implementation was written directly from these reviewed candidate inputs:
 

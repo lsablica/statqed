@@ -12,10 +12,13 @@ inputs used for its current behavior:
 
 The committed semantic-v1 corpus used for adversarial comparison is rooted at
 `b4d92a39e30fa5736c58bc71c57790ec215fbad7`. The final Rust source behavior is
-rooted at `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`. The later profile
-clarification records the field-specific failure behavior that this Rust source
-already implemented. A content change to either candidate input invalidates
-this lineage record until the Rust prototype is reviewed and retested.
+rooted at `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`; the exact frozen
+executable/lock tree is `fd8dd9e344ff6bbe1488cb143f8b700c6c795efe`, whose
+only later Rust changes remove blank lines at EOF from `.gitignore` and
+`rust-toolchain.toml`. The later profile clarification records the
+field-specific failure behavior that this Rust source already implemented. A
+content change to either candidate input invalidates this lineage record until
+the Rust prototype is reviewed and retested.
 
 ## Implementation ownership and library boundary
 
@@ -43,7 +46,7 @@ separate differential harness.
 ## Toolchain, dependency, and authority boundary
 
 The exact Rust toolchain is bound by `rust-toolchain.toml` SHA-256
-`da4fa49758e2d8da0f35f79049581134c98b02db0176e515e62367bf9242047c`.
+`8e390d6a0838315f972690f46ef8bae8b7ecc9ee6c1ed70140ef852869c2482e`.
 The dependency constraints are bound by `Cargo.toml` SHA-256
 `37e51170459929bd4a674eca8a2a0168f976de7191eb886ee193c360b8fc6fad`.
 Offline lock regeneration produces 22 packages and `Cargo.lock` SHA-256

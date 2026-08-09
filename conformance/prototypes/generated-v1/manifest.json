@@ -32,16 +32,16 @@
     "process_memory_mib": 128
   },
   "python_oracle": {
-    "frozen_commit": "89af5a7dbb837ea7d1557d1a715b34a814afdf95",
-    "implementation_source_sha256": "91de2c6d088dc65452d584ed25683e27f9205bdb67bb6dc377d3fa2ef5819433"
+    "frozen_commit": "fd8dd9e344ff6bbe1488cb143f8b700c6c795efe",
+    "implementation_source_sha256": "cc05dbf3d4996f44e204099ad335df843557571ae61aac8044903de5f9e41a9f"
   },
   "regeneration_command": "python3 scripts/serialization/run_conformance.py --regenerate",
   "rejected_count": 203,
   "rust_prototype": {
     "adversarial_fix_commit": "81aa7909591617589150bc9756ce904ac5fd5f20",
     "dependency_evidence_commit": "31a1a773f149248703db8b26930d0a3b4025a099",
-    "frozen_tree_commit": "14f1ffb0646b280fea805fbec6ba6bb8b3d1a282",
-    "implementation_source_sha256": "8983150cd08f36ef0c3f1dc84534593aaf8e694f25fed05817e118c09284e515",
+    "frozen_tree_commit": "fd8dd9e344ff6bbe1488cb143f8b700c6c795efe",
+    "implementation_source_sha256": "cb3c03907bc7cdf6f495be7d98d795347b3b51c1415637a6b1e8d71f558027ea",
     "prototype_commit": "2f0d778fff38bedd512dadd8603fc59e38be75b4",
     "status": "available",
     "transport_fix_commit": "4809224d2b06a10dc212865c8e1b667d3fe3e34a"
