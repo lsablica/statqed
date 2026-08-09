@@ -385,7 +385,8 @@ rather than embedded recursively in this document.
 
 ## Decision
 
-The evidence supports this deterministic CBOR profile and generic data-free
-frame as the acceptance candidate. This document remains Draft until all
-required review and integration gates bind the exact candidate. ADR-0004 must
-remain Proposed until the same normative scope is approved.
+The independently reviewed evidence supports, and the atomic SQ-0005
+transition accepts, this deterministic CBOR profile and generic data-free
+frame. This document is Accepted. Acceptance binds only the marked normative
+scope and its content-addressed evidence; it grants no production authority
+to either prototype and resolves none of RFC-0006's logical-data decisions.

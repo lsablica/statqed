@@ -69,8 +69,8 @@ computing base.
 
 ## Review
 
-This ADR remains Proposed while RFC-0001 remains Draft. It may become Accepted
-only when the exact marked scope above matches RFC-0001 byte-for-byte, all
-required independent reviews approve the content-addressed candidate, the
-serialization workflow is green, and the integration reviewer approves the
-atomic status transition.
+This ADR is Accepted because the exact marked scope above matches Accepted
+RFC-0001 byte-for-byte, the required distinct reviewers approved the
+content-addressed candidate, the serialization workflow passed, and the
+integration reviewer approved the atomic status transition. Acceptance does
+not strengthen the trust or validity claims beyond that marked scope.

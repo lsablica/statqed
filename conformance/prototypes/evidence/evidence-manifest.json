@@ -1192,7 +1192,7 @@
     {
       "path": "docs/adr/0004-deterministic-cbor-cddl.md",
       "role": "matching architecture decision",
-      "sha256": "db97698f5875b7a440e92665da8501301146032fad9c78ed0fe074ec175ecd67"
+      "sha256": "6149f7ffba3f0f805a9b10127d35d6b7547db86aae028054934e78810d5bbd14"
     },
     {
       "path": "docs/quality/dashboard.md",
@@ -1257,7 +1257,7 @@
     {
       "path": "rfcs/0001-deterministic-encoding.md",
       "role": "normative decision",
-      "sha256": "ff26632a8ef1e213a3ceb23846f581533236a5978b2f12b9a821ea6f21977291"
+      "sha256": "595811aa7ca4233349d2fab2f24f525b5009ee1956d7fb2d4922f5cf816b72a2"
     },
     {
       "path": "schemas/prototypes/cddl/README.md",
