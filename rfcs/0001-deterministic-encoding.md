@@ -368,17 +368,17 @@ rather than embedded recursively in this document.
 | Semantic value model | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
 | Profile candidate | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 | Primary-source audit manifest | `b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40` |
-| Semantic fixture tree | `61aca5d116ab07bae26265a35c112668c34dbfae2c274dda428d856cdbdfb2b6` |
-| Generated result manifest | `9157bf5cc331b026353e12de4adbe9a623509aac9ef6e2a1e8fc22eba71f1d0d` |
-| Differential results | `4ad3b4c121e0a1008ce783d8aaa5f80a43df187b8725ad918bbd78fa244dcdf0` |
+| Semantic fixture tree | `90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8` |
+| Generated result manifest | `aa9abfac51827b351c457a54b96a5e58333ac01b28139a6f1ea477403eb1328c` |
+| Differential results | `4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274` |
 | Deliberate-mutation results | `1b6c448a29ce76b83c5e85673731382dc24bba8a1902a7686988626015d22da6` |
 | Binary golden manifest | `8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1` |
 | Independent-lineage declaration | `7a7e48658e81e478c3858f265d24eb0c1402fa6169e7c03eb74363effb8208a4` |
-| Python executable/lock subjects | `3b25890342ebacfbc5ac0cf62dfcd190aa0836e6af757a2b37ed5d79fdb669cd` |
+| Python executable/lock subjects | `91de2c6d088dc65452d584ed25683e27f9205bdb67bb6dc377d3fa2ef5819433` |
 | Rust executable/lock subjects | `8983150cd08f36ef0c3f1dc84534593aaf8e694f25fed05817e118c09284e515` |
 | Rust `Cargo.lock` | `2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180` |
 | Published-syntax CDDL prototype | `05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0` |
-| Digest-framing semantic corpus | `75b11a2b6069f759710cd132d92a8ef1d91a0dbc1488f85f14f3920819277a19` |
+| Digest-framing semantic corpus | `36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b` |
 | Permanent evidence verifier | `864568ef80e2c1f0517999cf45130f744c6599eab34040932f1fa0258e0c7d0e` |
 | Serialization-prototype workflow | `ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117` |
 | Unchanged Draft RFC-0006 baseline | `e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429` |
