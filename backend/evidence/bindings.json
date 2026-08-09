@@ -16,7 +16,7 @@
     },
     {
       "path": "evidence/isolated-execution.json",
-      "sha256": "b2ca615d53ab6c911f72da7cd200ffc5721abc529c2b9fd8d8cdf73b14ee289d"
+      "sha256": "e8bb3da380eb06e318758ddbfc6bf861c914b8901b7217a14d4545d335407384"
     },
     {
       "path": "evidence/mutation-results.json",
@@ -52,7 +52,7 @@
     },
     {
       "path": "crates/statqed-cli/tests/cli.rs",
-      "sha256": "712517b94e1f8822cece9b2310dece3d0774e725639351f6b504869c0728eb31"
+      "sha256": "cb68b40533f28a032bb649cf12a399080a506b3ba0d2636bcb5d5b316189bd6b"
     },
     {
       "path": "crates/statqed-core/Cargo.toml",
@@ -60,14 +60,14 @@
     },
     {
       "path": "crates/statqed-core/src/lib.rs",
-      "sha256": "f32c8767c32aa7501176a8ae72dd58607da094c709780258530edd75c21fb65b"
+      "sha256": "336d7c2633f98d03f39332114a22aeba3dd8df50be6c823f353f6165d055300f"
     },
     {
       "path": "rust-toolchain.toml",
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     }
   ],
-  "source_manifest_sha256": "7af6f6f41c609647e883b550e1962ef3dcc6b13cf5a66a26ec7a373b26c33eb7",
+  "source_manifest_sha256": "ccaefa208de93c3e78a1e8c729298cc826345e789927e400646a22343820cea4",
   "tool_files": [
     {
       "path": "tools/check_workspace.py",

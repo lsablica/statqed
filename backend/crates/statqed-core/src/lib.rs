@@ -214,8 +214,8 @@ pub const fn version_json() -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::{
-        Command, ErrorCode, MAX_ARGUMENT_BYTES, MAX_ARGUMENTS, VersionFormat, parse_arguments,
-        version_json, version_text,
+        Command, ErrorCode, MAX_ARGUMENT_BYTES, MAX_ARGUMENTS, MAX_TOTAL_ARGUMENT_BYTES,
+        VersionFormat, parse_arguments, version_json, version_text,
     };
     use std::ffi::OsString;
 
@@ -329,6 +329,16 @@ mod tests {
         let repeated_over_limit = vec!["x"; MAX_ARGUMENTS + 1];
         assert_eq!(
             parse_arguments(repeated_over_limit),
+            Err(ErrorCode::InputLimitExceeded)
+        );
+
+        let aggregate_half = "x".repeat(MAX_TOTAL_ARGUMENT_BYTES / 2);
+        assert_eq!(
+            parse_arguments([aggregate_half.clone(), aggregate_half.clone()]),
+            Err(ErrorCode::UnknownCommand)
+        );
+        assert_eq!(
+            parse_arguments([aggregate_half.clone(), aggregate_half, "x".to_owned()]),
             Err(ErrorCode::InputLimitExceeded)
         );
     }

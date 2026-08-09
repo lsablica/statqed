@@ -2,7 +2,10 @@
 
 #![forbid(unsafe_code)]
 
-use statqed_core::{ErrorCode, MAX_ARGUMENT_BYTES, MAX_ARGUMENTS, version_json, version_text};
+use statqed_core::{
+    ErrorCode, MAX_ARGUMENT_BYTES, MAX_ARGUMENTS, MAX_TOTAL_ARGUMENT_BYTES, version_json,
+    version_text,
+};
 use std::ffi::OsStr;
 use std::io;
 use std::process::{Command, Output};
@@ -77,6 +80,29 @@ fn oversized_and_repeated_inputs_are_bounded() -> io::Result<()> {
     assert!(repeated_output.stdout.is_empty());
     assert_eq!(
         repeated_output.stderr,
+        error_line(ErrorCode::InputLimitExceeded)
+    );
+
+    let aggregate_half = "x".repeat(MAX_TOTAL_ARGUMENT_BYTES / 2);
+    let boundary_output = run([aggregate_half.clone(), aggregate_half.clone()])?;
+    assert_eq!(
+        boundary_output.status.code(),
+        Some(MALFORMED_INPUT_EXIT_CODE)
+    );
+    assert!(boundary_output.stdout.is_empty());
+    assert_eq!(
+        boundary_output.stderr,
+        error_line(ErrorCode::UnknownCommand)
+    );
+
+    let overflow_output = run([aggregate_half.clone(), aggregate_half, "x".to_owned()])?;
+    assert_eq!(
+        overflow_output.status.code(),
+        Some(MALFORMED_INPUT_EXIT_CODE)
+    );
+    assert!(overflow_output.stdout.is_empty());
+    assert_eq!(
+        overflow_output.stderr,
         error_line(ErrorCode::InputLimitExceeded)
     );
     Ok(())
