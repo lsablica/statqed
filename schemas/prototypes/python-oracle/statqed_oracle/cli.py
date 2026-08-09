@@ -19,6 +19,12 @@ from .oracle import (
 )
 
 
+# Non-normative typed-JSON transport cap. This is deliberately separate from
+# the one-MiB canonical-CBOR input/output profile limits; it accommodates the
+# largest reviewed typed projection without licensing unbounded stdin reads.
+MAX_TYPED_JSON_INPUT_BYTES = 2_200_000
+
+
 class _DuplicateJsonKey(ValueError):
     pass
 
@@ -37,7 +43,9 @@ def _reject_constant(value: str) -> None:
 
 
 def _read_json() -> Any:
-    raw = sys.stdin.buffer.read()
+    raw = sys.stdin.buffer.read(MAX_TYPED_JSON_INPUT_BYTES + 1)
+    if len(raw) > MAX_TYPED_JSON_INPUT_BYTES:
+        raise OracleError("resource", "resource.input_bytes")
     try:
         text = raw.decode("utf-8", "strict")
         return json.loads(

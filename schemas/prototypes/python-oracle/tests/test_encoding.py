@@ -78,6 +78,19 @@ class EncoderTests(unittest.TestCase):
         self.assert_code(Integer(1 << 64), "semantic.integer_range")
         self.assert_code(Integer(-(1 << 64) - 1), "semantic.integer_range")
 
+    def test_mistyped_library_values_fail_closed(self):
+        for value in (
+            Integer(True),
+            Integer(1.5),
+            ByteString("not-bytes"),
+            TextString(7),
+            Rational(1.0, 2),
+            Decimal(1, 0.0),
+            IEEEBits(64.0, 0),
+        ):
+            with self.subTest(value=value):
+                self.assert_code(value, "semantic.unsupported_value")
+
     def test_string_length_heads(self):
         self.assert_encoding(ByteString(b"x" * 23), "57" + "78" * 23)
         self.assert_encoding(ByteString(b"x" * 24), "5818" + "78" * 24)
@@ -202,6 +215,12 @@ class EncoderTests(unittest.TestCase):
     def test_typed_json_rejects_host_number_for_integer(self):
         with self.assertRaisesRegex(Exception, "semantic.unsupported_value"):
             semantic_from_typed_json({"type": "integer", "value": 1})
+
+    def test_typed_json_large_integer_is_runtime_independent(self):
+        with self.assertRaisesRegex(Exception, "semantic.integer_range"):
+            semantic_from_typed_json({"type": "integer", "value": "9" * 5000})
+        value = semantic_from_typed_json({"type": "bignum", "value": "9" * 5000})
+        self.assert_code(value, "semantic.unsupported_bignum")
 
 
 if __name__ == "__main__":

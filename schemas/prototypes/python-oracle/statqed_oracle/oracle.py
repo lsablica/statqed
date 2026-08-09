@@ -86,7 +86,11 @@ NULL: Final = Null()
 
 @dataclass(frozen=True)
 class Bignum:
-    value: int
+    # Typed JSON retains the decimal spelling because this class is always
+    # rejected by the v1 profile.  Avoiding host-integer conversion keeps an
+    # unsupported, very large value from depending on CPython's configurable
+    # decimal-digit limit.
+    value: int | str
 
 
 @dataclass(frozen=True)
@@ -581,6 +585,8 @@ def _encode_argument(major: int, argument: int) -> bytes:
 
 
 def _encode_integer(value: int) -> bytes:
+    if type(value) is not int:
+        raise OracleError("semantic_validity", "semantic.unsupported_value")
     if value < MIN_INTEGER or value > MAX_INTEGER:
         raise OracleError("semantic_validity", "semantic.integer_range")
     if value >= 0:
@@ -600,6 +606,8 @@ def _encode_key_identity(identity: tuple[str, int | str] | None) -> bytes:
 
 
 def _encode_text(value: str) -> bytes:
+    if not isinstance(value, str):
+        raise OracleError("semantic_validity", "semantic.unsupported_value")
     try:
         return value.encode("utf-8", "strict")
     except UnicodeEncodeError as error:
@@ -618,6 +626,8 @@ class _EncodeState:
 
 def _semantic_key_identity(value: SemanticValue) -> tuple[str, int | str]:
     if isinstance(value, Integer):
+        if type(value.value) is not int:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if value.value < MIN_INTEGER or value.value > MAX_INTEGER:
             raise OracleError("semantic_validity", "semantic.integer_range")
         return ("integer", value.value)
@@ -635,11 +645,18 @@ def _validate_interval(value: Interval) -> None:
     if value.closure not in ("open", "closed", "left_closed", "right_closed"):
         raise OracleError("semantic_validity", "semantic.interval_invalid")
     if isinstance(lower, Integer) and isinstance(upper, Integer):
+        if type(lower.value) is not int or type(upper.value) is not int:
+            raise OracleError("semantic_validity", "semantic.interval_invalid")
         if lower.value > upper.value:
             raise OracleError("semantic_validity", "semantic.interval_invalid")
         return
     if isinstance(lower, Rational) and isinstance(upper, Rational):
         for endpoint in (lower, upper):
+            if (
+                type(endpoint.numerator) is not int
+                or type(endpoint.denominator) is not int
+            ):
+                raise OracleError("semantic_validity", "semantic.interval_invalid")
             if endpoint.denominator <= 0 or math.gcd(
                 abs(endpoint.numerator), endpoint.denominator
             ) != 1:
@@ -651,6 +668,11 @@ def _validate_interval(value: Interval) -> None:
         return
     if isinstance(lower, Decimal) and isinstance(upper, Decimal):
         for endpoint in (lower, upper):
+            if (
+                type(endpoint.coefficient) is not int
+                or type(endpoint.exponent) is not int
+            ):
+                raise OracleError("semantic_validity", "semantic.interval_invalid")
             if (endpoint.coefficient == 0 and endpoint.exponent != 0) or (
                 endpoint.coefficient != 0 and endpoint.coefficient % 10 == 0
             ):
@@ -676,6 +698,8 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
     if isinstance(value, Integer):
         return _encode_integer(value.value)
     if isinstance(value, ByteString):
+        if type(value.value) is not bytes:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if len(value.value) > MAX_STRING_BYTES:
             raise OracleError("resource", "resource.string_bytes")
         return _encode_argument(2, len(value.value)) + value.value
@@ -691,6 +715,8 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
     if isinstance(value, Null):
         return b"\xf6"
     if isinstance(value, Array):
+        if type(value.items) is not tuple:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if len(value.items) > MAX_ARRAY_ITEMS:
             raise OracleError("resource", "resource.array_items")
         next_depth = open_depth + 1
@@ -699,6 +725,8 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
         body = b"".join(_encode_value(item, state, next_depth) for item in value.items)
         return _encode_argument(4, len(value.items)) + body
     if isinstance(value, Map):
+        if type(value.entries) is not tuple:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if len(value.entries) > MAX_MAP_ENTRIES:
             raise OracleError("resource", "resource.map_entries")
         next_depth = open_depth + 1
@@ -706,7 +734,10 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
             raise OracleError("resource", "resource.depth")
         keyed: list[tuple[bytes, SemanticValue, SemanticValue]] = []
         seen: set[tuple[str, int | str]] = set()
-        for key, map_value in value.entries:
+        for entry in value.entries:
+            if type(entry) is not tuple or len(entry) != 2:
+                raise OracleError("semantic_validity", "semantic.unsupported_value")
+            key, map_value = entry
             identity = _semantic_key_identity(key)
             if identity in seen:
                 raise OracleError("semantic_validity", "semantic.map_duplicate")
@@ -724,18 +755,24 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
     if isinstance(value, Bignum):
         raise OracleError("semantic_validity", "semantic.unsupported_bignum")
     if isinstance(value, Rational):
+        if type(value.numerator) is not int or type(value.denominator) is not int:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if value.denominator <= 0 or math.gcd(
             abs(value.numerator), value.denominator
         ) != 1:
             raise OracleError("semantic_validity", "semantic.rational_invalid")
         raise OracleError("semantic_validity", "semantic.unsupported_rational")
     if isinstance(value, Decimal):
+        if type(value.coefficient) is not int or type(value.exponent) is not int:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if (value.coefficient == 0 and value.exponent != 0) or (
             value.coefficient != 0 and value.coefficient % 10 == 0
         ):
             raise OracleError("semantic_validity", "semantic.decimal_non_normal")
         raise OracleError("semantic_validity", "semantic.unsupported_decimal")
     if isinstance(value, IEEEBits):
+        if type(value.width) is not int or type(value.bits) is not int:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         if value.width not in (16, 32, 64) or value.bits < 0 or value.bits >= (
             1 << value.width
         ):
@@ -745,8 +782,14 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
         _validate_interval(value)
         raise OracleError("semantic_validity", "semantic.unsupported_interval")
     if isinstance(value, ExtensionSequence):
+        if type(value.extensions) is not tuple or not all(
+            isinstance(extension, Extension) for extension in value.extensions
+        ):
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         seen_ids: set[str] = set()
         for extension in value.extensions:
+            if not isinstance(extension.type_id, str) or type(extension.critical) is not bool:
+                raise OracleError("semantic_validity", "semantic.unsupported_value")
             if extension.type_id in seen_ids:
                 raise OracleError("semantic_validity", "semantic.extension_duplicate")
             seen_ids.add(extension.type_id)
@@ -759,6 +802,8 @@ def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) ->
         )
         raise OracleError("semantic_validity", code)
     if isinstance(value, Extension):
+        if not isinstance(value.type_id, str) or type(value.critical) is not bool:
+            raise OracleError("semantic_validity", "semantic.unsupported_value")
         code = (
             "semantic.extension_critical_unknown"
             if value.critical
@@ -848,10 +893,32 @@ def _raw_to_semantic(raw: RawItem) -> SemanticValue:
     raise AssertionError(f"non-profile raw item reached semantic conversion: {raw.kind}")
 
 
-def _parse_decimal_string(value: Any) -> int:
+def _decimal_spelling(value: Any) -> str:
     if not isinstance(value, str) or not re.fullmatch(r"-?(0|[1-9][0-9]*)", value):
         raise OracleError("semantic_validity", "semantic.unsupported_value")
-    return int(value)
+    return value
+
+
+def _parse_profile_integer(value: Any) -> int:
+    spelling = _decimal_spelling(value)
+    negative = spelling.startswith("-")
+    magnitude = spelling[1:] if negative else spelling
+    limit = str(1 << 64) if negative else str(MAX_INTEGER)
+    if len(magnitude) > len(limit) or (
+        len(magnitude) == len(limit) and magnitude > limit
+    ):
+        raise OracleError("semantic_validity", "semantic.integer_range")
+    return int(spelling)
+
+
+def _parse_small_decimal(value: Any) -> int:
+    """Parse bounded diagnostic metadata without host digit-limit behavior."""
+
+    spelling = _decimal_spelling(value)
+    magnitude = spelling[1:] if spelling.startswith("-") else spelling
+    if len(magnitude) > 20:
+        raise OracleError("semantic_validity", "semantic.unsupported_value")
+    return int(spelling)
 
 
 def _require_object_fields(
@@ -869,7 +936,7 @@ def semantic_from_typed_json(obj: Any) -> SemanticValue:
     kind = obj["type"]
     if kind == "integer":
         _require_object_fields(obj, {"type", "value"})
-        return Integer(_parse_decimal_string(obj["value"]))
+        return Integer(_parse_profile_integer(obj["value"]))
     if kind == "bytes":
         _require_object_fields(obj, {"type", "hex"})
         value = obj["hex"]
@@ -913,18 +980,18 @@ def semantic_from_typed_json(obj: Any) -> SemanticValue:
         return NULL
     if kind == "bignum":
         _require_object_fields(obj, {"type", "value"})
-        return Bignum(_parse_decimal_string(obj["value"]))
+        return Bignum(_decimal_spelling(obj["value"]))
     if kind == "rational":
         _require_object_fields(obj, {"type", "numerator", "denominator"})
         return Rational(
-            _parse_decimal_string(obj["numerator"]),
-            _parse_decimal_string(obj["denominator"]),
+            _parse_small_decimal(obj["numerator"]),
+            _parse_small_decimal(obj["denominator"]),
         )
     if kind == "decimal":
         _require_object_fields(obj, {"type", "coefficient", "exponent"})
         return Decimal(
-            _parse_decimal_string(obj["coefficient"]),
-            _parse_decimal_string(obj["exponent"]),
+            _parse_small_decimal(obj["coefficient"]),
+            _parse_small_decimal(obj["exponent"]),
         )
     if kind == "ieee_bits":
         _require_object_fields(obj, {"type", "width", "bits_hex"})

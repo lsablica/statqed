@@ -7,6 +7,7 @@ import subprocess
 import sys
 import unittest
 
+from statqed_oracle.cli import MAX_TYPED_JSON_INPUT_BYTES
 from statqed_oracle.oracle import (
     ALGORITHM_ID,
     DIGEST_MAGIC,
@@ -290,6 +291,25 @@ class CliTests(unittest.TestCase):
                 code, _, obj = self.run_cli("encode", source)
                 self.assertEqual(code, 1)
                 self.assertEqual(obj["code"], "expected.typed_json")
+
+    def test_typed_json_transport_limit_on_both_sides(self):
+        value = b'{"type":"null"}'
+        accepted = b" " * (MAX_TYPED_JSON_INPUT_BYTES - len(value)) + value
+        code, _, result = self.run_cli("encode", accepted)
+        self.assertEqual(code, 0)
+        self.assertEqual(result["code"], "accepted")
+        rejected = b" " + accepted
+        code, _, result = self.run_cli("encode", rejected)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["code"], "resource.input_bytes")
+
+    def test_large_decimal_never_leaks_runtime_traceback(self):
+        source = json.dumps(
+            {"type": "integer", "value": "9" * 5000}, separators=(",", ":")
+        ).encode()
+        code, _, result = self.run_cli("encode", source)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["code"], "semantic.integer_range")
 
 
 if __name__ == "__main__":

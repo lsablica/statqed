@@ -28,10 +28,16 @@ CPython 3.14.7 interpreter; that run is not inferred from this local result.
 No conda package was added or changed for this oracle.
 
 CPython is licensed under the Python Software Foundation License Version 2 and
-additional historical/component terms in its upstream distribution. The PSF
-License Version 2 text used for this inventory is retained in
-`PSF-LICENSE-2.0.txt`. It is a runtime-license record and does not relicense the
-MIT repository source.
+additional historical/component terms in its upstream distribution. The
+retained `PSF-LICENSE-2.0.txt` is only the PSF License Version 2 portion and is
+not represented as the complete runtime distribution license. The exact
+installed CPython 3.12.13 `lib/python3.12/LICENSE.txt` has SHA-256
+`3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf` and
+contains the full history, PSF terms through 2023, historical licenses, and
+component notices. The interpreter is an execution dependency, not
+redistributed by this prototype; its complete upstream license must be
+re-audited if redistribution is proposed. None of these runtime terms
+relicense the MIT repository source.
 
 No network access, package installer, locale data, timezone, randomness, clock,
 hostname, environment-specific path, or mutable registry is used to determine

@@ -46,6 +46,11 @@ closed. Rejections exit 1; acceptance exits 0; argument-parser misuse exits 2.
 Results contain stable `result_class` and `code` fields and contain no clock,
 hostname, process identifier, or filesystem path.
 
+The non-normative typed-JSON transport reads at most 2,200,000 bytes. This
+separate bound accommodates the reviewed maximal typed projection while
+preventing an unbounded stdin read; it does not change the one-MiB canonical
+CBOR input/output limits.
+
 ## Typed JSON
 
 Integers are decimal strings so the projection cannot pass through an IEEE
@@ -58,6 +63,19 @@ number. Maps are entry arrays so duplicates remain representable:
 {"type":"array","items":[{"type":"boolean","value":false},{"type":"null"}]}
 {"type":"map","entries":[{"key":{"type":"text","value":"x"},"value":{"type":"null"}}]}
 ```
+
+Direct-range integer spellings are range-checked lexically before host-integer
+conversion. Consequently an oversized decimal spelling receives the stable
+`semantic.integer_range` result even when the interpreter's configurable
+decimal-digit conversion limit differs. Unsupported bignum spellings are
+retained as decimal text only long enough to return
+`semantic.unsupported_bignum`; they never enter the accepted value model.
+
+The stable subprocess interface is the typed-JSON CLI. The direct Python
+helpers are test and diagnostic APIs, not a compatibility contract, but their
+accepted constructors are nevertheless type-checked by `encode` and reject
+mistyped fields with `semantic.unsupported_value` instead of leaking a host
+exception.
 
 The diagnostic interface also recognizes explicitly unsupported `bignum`,
 `rational`, `decimal`, `ieee_bits`, `interval`, `extension`, and
