@@ -166,7 +166,7 @@ Candidate v1 rejects the following without fallback:
 | Rational / tag 30 | `profile.tag_forbidden`; an untagged two-element array remains only an array. | Invalid normal forms fail `semantic.rational_invalid`; well-formed values fail `semantic.unsupported_rational`. |
 | Decimal fraction / tag 4 | `profile.tag_forbidden`; text or array fallbacks do not acquire decimal meaning. | Non-normal values fail `semantic.decimal_non_normal`; well-formed values fail `semantic.unsupported_decimal`. |
 | IEEE bit pattern or CBOR float | Any half/single/double float, finite or not, fails `profile.float_forbidden`. | `semantic.unsupported_ieee_bits`. |
-| Interval | No implicit tag, array, or map interpretation exists. | Only `closed`, `open`, `left_closed`, and `right_closed` are recognized, with the latter two naming the included endpoint. Reversed bounds, equal-bound non-closed empty intervals, mixed endpoint kinds, and unknown closure tokens fail `semantic.interval_invalid`; otherwise `semantic.unsupported_interval`. |
+| Interval | No implicit tag, array, or map interpretation exists. | Only accepted-range integer endpoints and `closed`, `open`, `left_closed`, or `right_closed` are recognized, with the latter two naming the included endpoint. Reversed bounds, equal-bound non-closed empty intervals, rational/decimal/IEEE or mixed endpoints, and unknown closure tokens fail `semantic.interval_invalid`; otherwise `semantic.unsupported_interval`. |
 | Extension | No tag or generic container acquires extension semantics. | Duplicate IDs, unknown critical, and unsupported noncritical cases use the distinct semantic codes in the value-model note. |
 
 This includes signed zero, infinity, every NaN payload/sign, and finite CBOR
