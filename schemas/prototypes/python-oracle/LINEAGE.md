@@ -2,14 +2,17 @@
 
 Status: **Experimental evidence record**.
 
-Claim: `21c50ef`, independent reference-oracle engineer.
+Implementation source: `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`,
+independent reference-oracle engineer.  The final candidate inputs are bound
+below; later profile-only result-taxonomy clarification did not add an
+implementation dependency.
 
 The implementation was written directly from these reviewed candidate inputs:
 
 | Input | SHA-256 |
 |---|---|
-| `docs/research/serialization/semantic-value-model.md` | `fc7d86cfe4eae00d25afeb1cd8601dff6d5173dce728c5f4a507b20d5fa34dca` |
-| `docs/research/serialization/profile-candidate.md` | `d07816f7f3fadeb07b91196691848f3933a13f96503c86ed24c2ed9d42ed45bb` |
+| `docs/research/serialization/semantic-value-model.md` | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
+| `docs/research/serialization/profile-candidate.md` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
 
 The candidate documents cite RFC 8949 for CBOR well-formedness, validity,
 preferred serialization, and core deterministic ordering, and FIPS 180-4 for

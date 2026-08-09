@@ -7,11 +7,12 @@ inputs used for its current behavior:
 
 | Input | Source commit | SHA-256 |
 |---|---|---|
-| `docs/research/serialization/semantic-value-model.md` | `ac5ce971eca4f46e7725f56599e5a30e7025bd22` | `fc7d86cfe4eae00d25afeb1cd8601dff6d5173dce728c5f4a507b20d5fa34dca` |
-| `docs/research/serialization/profile-candidate.md` | `07b9461fef39dd0d81f1bce57f47e5c581b42956` | `d07816f7f3fadeb07b91196691848f3933a13f96503c86ed24c2ed9d42ed45bb` |
+| `docs/research/serialization/semantic-value-model.md` | `42b35e139a04a8618b7779c60f1739b40ae42c1f` | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
+| `docs/research/serialization/profile-candidate.md` | `b2ec69de45a3406cdcf29aec3243f81e8a42432f` | `c164816bb1d7c8bb1dd0683343d25b018964e2da417aa17a9bb366490d8b2679` |
 
 The committed semantic-v1 corpus used for adversarial comparison is rooted at
-`d21e411fa5331c57b0e89d2b6bd57384317c1572`. A content change to either
+`b2ec69de45a3406cdcf29aec3243f81e8a42432f`. The final Rust source behavior is
+rooted at `14f1ffb0646b280fea805fbec6ba6bb8b3d1a282`. A content change to either
 candidate input invalidates this lineage record until the Rust prototype is
 reviewed and retested.
 
