@@ -1976,12 +1976,15 @@ fn unsupported_ieee_bits(object: &JsonMap<String, JsonValue>) -> Result<Value, F
     Err(semantic_failure("semantic.unsupported_ieee_bits"))
 }
 
-fn interval_integer_bounds(object: &JsonMap<String, JsonValue>) -> Result<bool, Failure> {
-    let lower = parse_exact_i128(&object["lower"])
+fn interval_integer_bounds(
+    object: &JsonMap<String, JsonValue>,
+    closure: &str,
+) -> Result<bool, Failure> {
+    let lower = parse_integer_text(&object["lower"])
         .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
-    let upper = parse_exact_i128(&object["upper"])
+    let upper = parse_integer_text(&object["upper"])
         .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
-    Ok(lower <= upper)
+    Ok(lower < upper || (lower == upper && closure == "closed"))
 }
 
 fn unsupported_interval(object: &JsonMap<String, JsonValue>) -> Result<Value, Failure> {
@@ -1990,11 +1993,10 @@ fn unsupported_interval(object: &JsonMap<String, JsonValue>) -> Result<Value, Fa
     } else {
         "kind"
     };
-    let closure_valid = object
-        .get("closure")
-        .and_then(JsonValue::as_str)
-        .is_some_and(|closure| matches!(closure, "open" | "closed" | "left_open" | "right_open"));
-    if !closure_valid {
+    let Some(closure) = object.get("closure").and_then(JsonValue::as_str) else {
+        return Err(semantic_failure("semantic.interval_invalid"));
+    };
+    if !matches!(closure, "open" | "closed" | "left_closed" | "right_closed") {
         return Err(semantic_failure("semantic.interval_invalid"));
     }
     if exact_fields(
@@ -2002,8 +2004,7 @@ fn unsupported_interval(object: &JsonMap<String, JsonValue>) -> Result<Value, Fa
         &[discriminator, "endpoint_kind", "lower", "upper", "closure"],
     ) {
         let ordered = match object["endpoint_kind"].as_str() {
-            Some("integer") => interval_integer_bounds(object)?,
-            Some("rational" | "decimal") => true,
+            Some("integer") => interval_integer_bounds(object, closure)?,
             _ => false,
         };
         return if ordered {
@@ -2021,28 +2022,29 @@ fn unsupported_interval(object: &JsonMap<String, JsonValue>) -> Result<Value, Fa
     let upper = object["upper"]
         .as_object()
         .ok_or_else(|| semantic_failure("semantic.interval_invalid"))?;
-    let lower_kind = lower.get("type").or_else(|| lower.get("kind"));
-    let upper_kind = upper.get("type").or_else(|| upper.get("kind"));
-    let lower_kind = lower_kind.and_then(JsonValue::as_str);
-    if lower_kind != upper_kind.and_then(JsonValue::as_str) {
+    let lower_discriminator = if lower.contains_key("type") {
+        "type"
+    } else {
+        "kind"
+    };
+    let upper_discriminator = if upper.contains_key("type") {
+        "type"
+    } else {
+        "kind"
+    };
+    if !exact_fields(lower, &[lower_discriminator, "value"])
+        || !exact_fields(upper, &[upper_discriminator, "value"])
+        || lower[lower_discriminator].as_str() != Some("integer")
+        || upper[upper_discriminator].as_str() != Some("integer")
+    {
         return Err(semantic_failure("semantic.interval_invalid"));
     }
-    if lower_kind == Some("integer") {
-        let lower_value = lower
-            .get("value")
-            .or_else(|| lower.get("decimal"))
-            .ok_or_else(|| semantic_failure("semantic.interval_invalid"))?;
-        let upper_value = upper
-            .get("value")
-            .or_else(|| upper.get("decimal"))
-            .ok_or_else(|| semantic_failure("semantic.interval_invalid"))?;
-        let lower_value = parse_exact_i128(lower_value)
-            .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
-        let upper_value = parse_exact_i128(upper_value)
-            .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
-        if lower_value > upper_value {
-            return Err(semantic_failure("semantic.interval_invalid"));
-        }
+    let lower_value = parse_integer_text(&lower["value"])
+        .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
+    let upper_value = parse_integer_text(&upper["value"])
+        .map_err(|_| semantic_failure("semantic.interval_invalid"))?;
+    if lower_value > upper_value || (lower_value == upper_value && closure != "closed") {
+        return Err(semantic_failure("semantic.interval_invalid"));
     }
     Err(semantic_failure("semantic.unsupported_interval"))
 }

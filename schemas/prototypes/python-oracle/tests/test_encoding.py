@@ -144,6 +144,23 @@ class EncoderTests(unittest.TestCase):
             Interval(Integer(1), Integer(2), "closed"),
             "semantic.unsupported_interval",
         )
+        for closure in ("open", "left_closed", "right_closed"):
+            self.assert_code(
+                Interval(Integer(1), Integer(2), closure),
+                "semantic.unsupported_interval",
+            )
+        self.assert_code(
+            Interval(Integer(1), Integer(1), "closed"),
+            "semantic.unsupported_interval",
+        )
+        self.assert_code(
+            Interval(Integer(1), Integer(1), "open"),
+            "semantic.interval_invalid",
+        )
+        self.assert_code(
+            Interval(Integer(1), Integer(2), "left_open"),
+            "semantic.interval_invalid",
+        )
         self.assert_code(
             Interval(Integer(1), Rational(2, 1), "closed"),
             "semantic.interval_invalid",
@@ -154,7 +171,7 @@ class EncoderTests(unittest.TestCase):
                 Decimal(1, 1_000_000_000),
                 "closed",
             ),
-            "semantic.unsupported_interval",
+            "semantic.interval_invalid",
         )
         self.assert_code(
             Interval(

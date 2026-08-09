@@ -821,6 +821,22 @@ fn unsupported_typed_constructors_have_exact_semantic_codes() {
             "semantic.unsupported_interval",
         ),
         (
+            br#"{"type":"interval","endpoint_kind":"integer","lower":"1","upper":"2","closure":"left_closed"}"#.as_slice(),
+            "semantic.unsupported_interval",
+        ),
+        (
+            br#"{"type":"interval","endpoint_kind":"integer","lower":"1","upper":"1","closure":"closed"}"#.as_slice(),
+            "semantic.unsupported_interval",
+        ),
+        (
+            br#"{"type":"interval","endpoint_kind":"integer","lower":"1","upper":"1","closure":"open"}"#.as_slice(),
+            "semantic.interval_invalid",
+        ),
+        (
+            br#"{"type":"interval","endpoint_kind":"integer","lower":"1","upper":"2","closure":"left_open"}"#.as_slice(),
+            "semantic.interval_invalid",
+        ),
+        (
             br#"{"type":"interval","endpoint_kind":"integer","lower":"2","upper":"1","closure":"closed"}"#.as_slice(),
             "semantic.interval_invalid",
         ),

@@ -352,7 +352,7 @@ class CliTests(unittest.TestCase):
         source = json.dumps(decimal, separators=(",", ":")).encode()
         code, _, result = self.run_cli("encode", source)
         self.assertEqual(code, 1)
-        self.assertEqual(result["code"], "semantic.unsupported_interval")
+        self.assertEqual(result["code"], "semantic.interval_invalid")
 
 
 if __name__ == "__main__":

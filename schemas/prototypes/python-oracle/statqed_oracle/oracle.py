@@ -7,7 +7,6 @@ profile text.  It does not import a CBOR package or another StatQED encoder.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from fractions import Fraction
 import hashlib
 import hmac
 import json
@@ -650,71 +649,20 @@ def _semantic_key_identity(value: SemanticValue) -> tuple[str, int | str]:
 def _validate_interval(value: Interval) -> None:
     lower = value.lower
     upper = value.upper
-    if type(lower) is not type(upper):
-        raise OracleError("semantic_validity", "semantic.interval_invalid")
     if value.closure not in ("open", "closed", "left_closed", "right_closed"):
         raise OracleError("semantic_validity", "semantic.interval_invalid")
-    if isinstance(lower, Integer) and isinstance(upper, Integer):
-        if type(lower.value) is not int or type(upper.value) is not int:
-            raise OracleError("semantic_validity", "semantic.interval_invalid")
-        if lower.value > upper.value:
-            raise OracleError("semantic_validity", "semantic.interval_invalid")
-        return
-    if isinstance(lower, Rational) and isinstance(upper, Rational):
-        for endpoint in (lower, upper):
-            if (
-                type(endpoint.numerator) is not int
-                or type(endpoint.denominator) is not int
-            ):
-                raise OracleError("semantic_validity", "semantic.interval_invalid")
-            if endpoint.denominator <= 0 or math.gcd(
-                abs(endpoint.numerator), endpoint.denominator
-            ) != 1:
-                raise OracleError("semantic_validity", "semantic.interval_invalid")
-        if Fraction(lower.numerator, lower.denominator) > Fraction(
-            upper.numerator, upper.denominator
-        ):
-            raise OracleError("semantic_validity", "semantic.interval_invalid")
-        return
-    if isinstance(lower, Decimal) and isinstance(upper, Decimal):
-        for endpoint in (lower, upper):
-            if (
-                type(endpoint.coefficient) is not int
-                or type(endpoint.exponent) is not int
-            ):
-                raise OracleError("semantic_validity", "semantic.interval_invalid")
-            if (endpoint.coefficient == 0 and endpoint.exponent != 0) or (
-                endpoint.coefficient != 0 and endpoint.coefficient % 10 == 0
-            ):
-                raise OracleError("semantic_validity", "semantic.interval_invalid")
-        if _compare_decimal_values(lower, upper) > 0:
-            raise OracleError("semantic_validity", "semantic.interval_invalid")
-        return
-    raise OracleError("semantic_validity", "semantic.interval_invalid")
-
-
-def _compare_decimal_values(left: Decimal, right: Decimal) -> int:
-    """Compare exact coefficient/exponent pairs without materializing powers."""
-
-    if left.coefficient == right.coefficient == 0:
-        return 0
-    if left.coefficient < 0 <= right.coefficient:
-        return -1
-    if right.coefficient < 0 <= left.coefficient:
-        return 1
-
-    left_digits = str(abs(left.coefficient))
-    right_digits = str(abs(right.coefficient))
-    left_adjusted = len(left_digits) + left.exponent
-    right_adjusted = len(right_digits) + right.exponent
-    if left_adjusted != right_adjusted:
-        comparison = -1 if left_adjusted < right_adjusted else 1
-    else:
-        width = max(len(left_digits), len(right_digits))
-        left_aligned = left_digits.ljust(width, "0")
-        right_aligned = right_digits.ljust(width, "0")
-        comparison = (left_aligned > right_aligned) - (left_aligned < right_aligned)
-    return -comparison if left.coefficient < 0 else comparison
+    if not isinstance(lower, Integer) or not isinstance(upper, Integer):
+        raise OracleError("semantic_validity", "semantic.interval_invalid")
+    if type(lower.value) is not int or type(upper.value) is not int:
+        raise OracleError("semantic_validity", "semantic.interval_invalid")
+    if not (MIN_INTEGER <= lower.value <= MAX_INTEGER):
+        raise OracleError("semantic_validity", "semantic.interval_invalid")
+    if not (MIN_INTEGER <= upper.value <= MAX_INTEGER):
+        raise OracleError("semantic_validity", "semantic.interval_invalid")
+    if lower.value > upper.value or (
+        lower.value == upper.value and value.closure != "closed"
+    ):
+        raise OracleError("semantic_validity", "semantic.interval_invalid")
 
 
 def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) -> bytes:
