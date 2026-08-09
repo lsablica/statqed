@@ -1,0 +1,278 @@
+audit_id: SA-SQ0005-CBOR
+subject: CBOR deterministic encoding, validity, semantic tags, and registry currentness
+source:
+  work: RFC 8949, Concise Binary Object Representation (CBOR)
+  version: STD 94; RFC 8949; December 2020; with verified Erratum ID 8589
+  locator: https://www.rfc-editor.org/rfc/rfc8949.html, Sections 1.2, 3.2-3.4, 4.1-4.2.3, 5.2-5.6.1, 9, and 10
+  persistent_id: https://doi.org/10.17487/RFC8949
+controlled_statement: >-
+  RFC 8949 defines CBOR well-formedness, validity, preferred serialization,
+  and more than one deterministic encoding profile.  Its core deterministic
+  encoding (Section 4.2.1) uses preferred serialization, forbids
+  indefinite-length items, and orders map keys lexicographically by their
+  deterministic encodings.  The distinct length-first profile in Section
+  4.2.3 orders shorter encoded keys first.  A StatQED profile must select one
+  profile and also decide every application-dependent option in Section
+  4.2.2, tag semantics, duplicate-key handling, resource limits, and any
+  numeric semantic normal forms.  Neither RFC 8949 nor IANA registration by
+  itself supplies a unique rational, interval, or application semantic model.
+retrieved_at: '2026-08-09'
+source_records:
+  - work: RFC 8949
+    version: STD 94; RFC 8949; December 2020; Standards Track; obsoletes RFC 7049
+    locator: https://www.rfc-editor.org/rfc/rfc8949.html
+    persistent_id: https://doi.org/10.17487/RFC8949
+    status: Internet Standard
+    exact_anchors:
+      - Section 3.2, indefinite-length items and break handling
+      - Sections 3.4.3-3.4.4, bignums, decimal fractions, and bigfloats
+      - Section 3.4.5.1, tag 24 embedded CBOR
+      - Section 3.4.6, tag 55799 self-described CBOR
+      - Sections 4.1 and 4.2.1, preferred and core deterministic serialization
+      - Sections 4.2.2 and 4.2.3, protocol choices and length-first ordering
+      - Sections 5.3-5.3.2, validity and tag validity
+      - Sections 5.5-5.6.1, numeric and map semantics
+      - Section 10, security considerations
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the Revised BSD License notice stated in the RFC
+  - work: RFC 8949 errata record
+    version: Current record retrieved 2026-08-09
+    locator: https://www.rfc-editor.org/errata/rfc8949
+    persistent_id: https://www.rfc-editor.org/errata/eid8589
+    status: One matching erratum; EID 8589 is Verified, Technical; reported 2025-10-01 and verified 2025-11-07
+    exact_anchors:
+      - EID 8589, RFC 8949 Section 5.6.1
+    disposition: Apply the correction whenever NaN map keys are in scope; equivalence also requires identical sign bits
+  - work: IANA Concise Binary Object Representation (CBOR) Tags registry
+    version: Created 2013-09-19; last updated 2026-07-20
+    locator: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+    persistent_id: https://www.iana.org/assignments/cbor-tags/tags.csv
+    status: Current IANA registry snapshot at retrieval
+    exact_anchors:
+      - Registration procedures and rows 2, 3, 4, 5, 24, 30, 80-87, 264-270, and 55799
+    license: IANA protocol-parameter registry; cited as factual registry data
+  - work: CBOR tag 30 specification, Rational Numbers
+    version: IANA-linked individual specification retrieved 2026-08-09
+    locator: https://peteroupc.github.io/CBOR/rational.html
+    persistent_id: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml#tags
+    status: Registered tag specification; not an RFC
+    exact_anchors:
+      - Detailed Semantics
+      - Security Considerations
+    license: Author dedicates the specification to the public domain under CC0
+  - work: CBOR tags 264 and 265 specification, Arbitrary-Exponent Numbers
+    version: IANA-linked individual specification retrieved 2026-08-09
+    locator: https://peteroupc.github.io/CBOR/bigfrac.html
+    persistent_id: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml#tags
+    status: Registered tag specification; not an RFC
+    exact_anchors:
+      - Detailed Semantics
+      - Security Considerations
+    license: Author dedicates the specification to the public domain under CC0
+  - work: CBOR tags 268, 269, and 270 specification, Extended Numbers
+    version: IANA-linked individual specification retrieved 2026-08-09
+    locator: https://peteroupc.github.io/CBOR/extended.html
+    persistent_id: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml#tags
+    status: Registered tag specification; not an RFC
+    exact_anchors:
+      - Detailed Semantics, tags 268-270
+      - Security Considerations
+    license: Author dedicates the specification to the public domain under CC0
+  - work: Deterministic CBOR Encoding
+    version: draft-ietf-cbor-serialization-06; 23 April 2026; expires 25 October 2026
+    locator: https://datatracker.ietf.org/doc/html/draft-ietf-cbor-serialization-06
+    persistent_id: https://datatracker.ietf.org/doc/draft-ietf-cbor-serialization/
+    status: Active CBOR Working Group Internet-Draft; Work in Progress; non-normative for SQ-0005
+    exact_anchors:
+      - Deterministic serialization taxonomy and preferred-plus proposal
+    license: IETF Trust Legal Provisions for Internet-Drafts; Work in Progress boilerplate applies
+hypotheses:
+  - name: one_complete_data_item
+    class: source_explicit
+    source_anchor: RFC 8949 Sections 1.2 and 3
+    notes: A CBOR data item is parsed under the major-type and additional-information rules; trailing bytes are a separate framing concern.
+  - name: preferred_integer_length_and_tag_arguments
+    class: source_explicit
+    source_anchor: RFC 8949 Sections 4.1 and 4.2.1
+    notes: Integers, lengths, and tag arguments use the shortest permitted form in preferred serialization.
+  - name: no_indefinite_lengths
+    class: source_explicit
+    source_anchor: RFC 8949 Section 4.2.1
+    notes: Both RFC 8949 deterministic profiles exclude indefinite-length encodings.
+  - name: core_map_key_order
+    class: source_explicit
+    source_anchor: RFC 8949 Section 4.2.1
+    notes: Core deterministic encoding compares deterministic key encodings bytewise in lexical order.
+  - name: length_first_map_key_order
+    class: source_explicit
+    source_anchor: RFC 8949 Section 4.2.3
+    notes: The alternative profile compares encoded length before lexical bytes; it conflicts with core ordering for some maps.
+  - name: float_shortest_round_trip_form
+    class: source_explicit
+    source_anchor: RFC 8949 Sections 4.1 and 4.2.1
+    notes: If floating-point values are admitted, preferred serialization chooses the shortest width preserving the value; NaN has an additional preferred form.
+  - name: application_options_are_explicit
+    class: source_explicit
+    source_anchor: RFC 8949 Section 4.2.2
+    notes: Tag presence, bignum boundary, negative zero, NaN, and alternative numeric forms require protocol decisions.
+  - name: duplicate_map_keys_are_invalid
+    class: source_explicit
+    source_anchor: RFC 8949 Sections 5.3.1 and 5.6
+    notes: Duplicate encoded or application-equivalent map keys are a validity concern and cannot be detected after lossy map construction in general.
+  - name: invalid_utf8_is_invalid_cbor
+    class: source_explicit
+    source_anchor: RFC 8949 Section 5.3.1
+    notes: A text string containing invalid UTF-8 is invalid CBOR.
+  - name: nan_key_equivalence_sign_bit
+    class: source_explicit
+    source_anchor: RFC 8949 Section 5.6.1 as corrected by verified EID 8589
+    notes: NaN keys are equivalent only when their encoding width, payload, and sign bit agree.
+  - name: tags_are_not_self_validating
+    class: source_explicit
+    source_anchor: RFC 8949 Sections 3.4 and 5.3.2
+    notes: Tag validity depends on the tag specification and the tagged item; unknown tags can remain uninterpreted in generic decoding.
+  - name: tag_30_is_not_a_unique_rational_normal_form
+    class: source_explicit
+    source_anchor: CBOR tag 30 specification, Detailed Semantics
+    notes: The numerator and nonzero denominator need not be in lowest terms, so equal rational values can have distinct valid tag-30 encodings.
+  - name: no_registered_interval_tag
+    class: source_implicit_justified
+    source_anchor: IANA CBOR Tags registry snapshot last updated 2026-07-20
+    notes: Exhaustive registry inspection found no tag whose registered semantics is a mathematical interval; absence is snapshot-relative and must be rechecked if the registry changes.
+  - name: exact_semantic_normal_form
+    class: formalization_obligation
+    source_anchor: RFC 8949 Sections 3.4.3-3.4.4, 4.2.2, and 5.5; tag 30 Detailed Semantics
+    notes: StatQED must define value-level invariants for every admitted exact numeric form and prove or test unique representability; the standards do not provide the needed theorem.
+  - name: raw_map_entry_validation
+    class: formalization_obligation
+    source_anchor: RFC 8949 Sections 5.3.1 and 5.6
+    notes: Validation must observe every encoded key before conversion to a host map so duplicate or equivalent keys cannot be erased.
+  - name: strict_rejection_of_non_profile_bytes
+    class: strengthening_justified
+    source_anchor: RFC 8949 Sections 5.3 and 5.4; SQ-0005 deterministic-byte and digest requirements
+    notes: RFC 8949 permits other decoder policies, but a content-addressed profile should reject rather than silently normalize non-profile encodings. This requires architecture and independent review.
+  - name: core_order_selected_for_new_profile
+    class: strengthening_justified
+    source_anchor: RFC 8949 Sections 4.2.1 and 4.2.3
+    notes: Recommended because SQ-0005 has no RFC 7049 compatibility requirement; selecting length-first merely because prototype libraries implement it would be an unjustified implementation-driven strengthening.
+  - name: all_unlisted_tags_rejected
+    class: strengthening_justified
+    source_anchor: RFC 8949 Sections 3.4, 4.2.2, and 5.3.2
+    notes: Recommended for the first closed profile to prevent unknown semantics from changing bytes or interpretation; any extension mechanism must be separately versioned.
+  - name: forbid_tag_55799
+    class: strengthening_justified
+    source_anchor: RFC 8949 Section 3.4.6
+    notes: The self-described-CBOR tag adds no application semantics and optional use would create two byte encodings for the same artifact.
+  - name: accept_any_library_canonical_mode
+    class: strengthening_unjustified
+    source_anchor: RFC 8949 Sections 4.2.1 and 4.2.3
+    notes: Libraries commonly label the incompatible length-first variant canonical; the profile cannot inherit an undocumented library choice.
+  - name: infer_semantic_validity_from_deterministic_bytes
+    class: strengthening_unjustified
+    source_anchor: RFC 8949 Sections 4.2 and 5.3
+    notes: Deterministic serialization and CBOR validity do not establish StatQED schema or scientific semantics.
+  - name: reject_all_unicode_noncharacters_or_controls
+    class: strengthening_unjustified
+    source_anchor: RFC 8949 Sections 3.1 and 5.3.1
+    notes: Such code points can be valid UTF-8/CBOR text; a rejection requires an application-semantic source, not implementation convenience.
+variants:
+  - name: RFC 8949 core deterministic encoding
+    locator: RFC 8949 Section 4.2.1
+    conflict: Lexical byte ordering of deterministic key encodings.
+    disposition: Recommended profile basis, subject to architecture approval and complete Section 4.2.2 decisions.
+  - name: RFC 8949 length-first deterministic encoding
+    locator: RFC 8949 Section 4.2.3
+    conflict: Encoded length is compared before bytes; differs from core ordering and matches several library canonical modes.
+    disposition: Exclude unless a documented compatibility requirement outweighs the new-profile default; implementation convenience is not sufficient.
+  - name: variation-tolerant decoding
+    locator: RFC 8949 Section 5.4
+    conflict: Can accept multiple serializations and normalize them internally.
+    disposition: Suitable outside the strict artifact verifier boundary; do not use to decide digest acceptance.
+  - name: preferred-plus draft
+    locator: draft-ietf-cbor-serialization-06
+    conflict: Proposes an evolving deterministic-serialization taxonomy beyond published RFC 8949.
+    disposition: Record as current Work in Progress only; do not let it silently amend the accepted RFC profile.
+  - name: tag 30 rational versus project-normalized rational
+    locator: CBOR tag 30 specification, Detailed Semantics
+    conflict: Tag 30 allows non-lowest terms; a project normal form would be a StatQED specialization.
+    disposition: Tag 30 is a candidate only if the profile states and independently reviews the additional normal form.
+  - name: tags 268-270 extended numbers
+    locator: Extended Numbers, Detailed Semantics and Security Considerations
+    conflict: Adds signed zero, infinities, and NaNs and leaves invalid-item handling unspecified.
+    disposition: Exclude from the minimum exact-value profile.
+concept_mapping:
+  - source_concept: well-formed CBOR
+    statqed_concept: raw byte parser succeeds without reserved additional-information values, premature end, stray break, or trailing data
+    obligation: Keep this result distinct from validity, expectedness, schema conformance, profile conformance, and semantic validity.
+  - source_concept: valid CBOR
+    statqed_concept: well-formed item plus basic and tag-specific validity checks
+    obligation: Validate on a lossless representation before host-language coercion.
+  - source_concept: preferred serialization
+    statqed_concept: minimal integer, length, tag, and admitted floating encodings
+    obligation: Specify whether floats are admitted and how numeric tags cross representation boundaries.
+  - source_concept: deterministic encoding
+    statqed_concept: one named, versioned serialization profile
+    obligation: Give the profile an exact identifier and do not conflate core and length-first ordering.
+  - source_concept: CBOR tag
+    statqed_concept: closed semantic constructor selected by exact tag number and content invariant
+    obligation: Reject unknown tags in v1 or define a reviewed extension rule.
+  - source_concept: map key equivalence
+    statqed_concept: duplicate rejection over encoded and application-semantic equality
+    obligation: Apply verified EID 8589 if NaNs can be keys.
+quantifiers:
+  - statement: For every admitted semantic StatQED value, encoding under one fixed profile must produce exactly one byte string.
+    source_status: Not established by RFC 8949; project proof/test obligation.
+  - statement: For every accepted byte string, strict validation must consume exactly one complete item and establish each validation layer in order.
+    source_status: Specialization of RFC 8949 parsing and validity; framing and schema parts are project-original.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: map_order_conflict_witness
+    value: A map with encoded keys whose bytewise lexical and length-first orders differ.
+    purpose: Demonstrates that the two RFC 8949 deterministic variants cannot both define the same normative bytes.
+  - name: rational_nonuniqueness_witness
+    value: Tag 30 values [1, 2] and [2, 4].
+    purpose: Both denote one half under the tag specification, which does not require lowest terms.
+  - name: duplicate_key_loss_witness
+    value: A raw map containing the same key twice with different values.
+    purpose: Demonstrates why conversion to an ordinary host map before validation can erase a validity error.
+strengthenings:
+  - name: closed_tag_set
+    class: strengthening_justified
+    reason: Produces a versioned semantic boundary for content-addressed artifacts.
+    approval_required: architecture and independent semantic review
+  - name: strict_profile_rejection
+    class: strengthening_justified
+    reason: Prevents decoder normalization from making non-normative bytes digest-equivalent.
+    approval_required: architecture, security, and independent checker review
+  - name: normalized_rational_if_tag_30_is_selected
+    class: strengthening_justified
+    reason: Required for one semantic rational to have one normative representation; not granted by the tag specification.
+    approval_required: RFC resolution and independent semantic review
+weakenings:
+  - name: allow_unknown_tags
+    class: candidate_for_weakening
+    effect: Enlarges the accepted language and can create semantics the schema does not understand.
+    disposition: Defer to a future explicitly versioned extension profile.
+  - name: accept_and_reencode_non_profile_input
+    class: candidate_for_weakening
+    effect: Variation tolerance may be useful at import boundaries but must not be confused with strict artifact acceptance.
+    disposition: Keep outside the normative verifier path.
+attribution:
+  - kind: reproduced
+    work: RFC 8949
+    detail: CBOR syntax, validity layers, preferred serialization, and the two deterministic ordering variants are reproduced with exact section attribution.
+  - kind: corrected
+    work: RFC 8949 with verified EID 8589
+    detail: NaN map-key equivalence incorporates the verified sign-bit correction.
+  - kind: specialized
+    work: RFC 8949
+    detail: A closed strict StatQED profile would specialize permissive protocol choices; the specialization is not represented as an RFC mandate.
+  - kind: original
+    work: StatQED SQ-0005
+    detail: Exact numeric normal forms, interval representation, profile identifiers, and checker error semantics remain project decisions.
+  - kind: registry_observation
+    work: IANA CBOR Tags
+    detail: Candidate and excluded tags are based on the 2026-07-20 registry snapshot and must be rechecked before a later freeze.
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''

@@ -1,0 +1,244 @@
+audit_id: SA-SQ0005-CDDL
+subject: CDDL grammar, optional controls, errata, and module/import currentness
+source:
+  work: RFC 8610, Concise Data Definition Language (CDDL)
+  version: RFC 8610; June 2019; as updated by RFC 9682, November 2024
+  locator: https://www.rfc-editor.org/rfc/rfc8610.html, Sections 1-4 and Appendices B and G; updated grammar at RFC 9682 Appendix A
+  persistent_id: https://doi.org/10.17487/RFC8610
+controlled_statement: >-
+  CDDL specifies sets of acceptable CBOR or JSON data items and their
+  structure.  It does not specify CBOR serialization bytes, deterministic map
+  order, Unicode normalization, digest framing, or StatQED semantic validity.
+  The current published grammar is RFC 8610 as updated by RFC 9682.  RFCs 9165
+  and 9741 register optional control operators but are not needed by the
+  minimum SQ-0005 schema.  CDDL module/import directives remain Work in
+  Progress in draft-ietf-cbor-cddl-modules-06 and therefore cannot appear in a
+  normative schema; an experiment may pin that exact draft and remain
+  Experimental.
+retrieved_at: '2026-08-09'
+source_records:
+  - work: RFC 8610
+    version: June 2019; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc8610.html
+    persistent_id: https://doi.org/10.17487/RFC8610
+    status: Standards Track; updated by RFC 9682
+    exact_anchors:
+      - Section 1, goals and scope
+      - Section 2.2.4, root rule
+      - Section 3.5.3, map matching and nondeterministic order
+      - Sections 3.6 and 3.8, tags and control operators
+      - Section 4.2, automated checking
+      - Appendix B, collected ABNF, as replaced by RFC 9682 Appendix A
+      - Appendix G.2, byte-string escaping, as corrected by EID 6526 and RFC 9682
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the Revised BSD License notice stated in the RFC
+  - work: RFC 8610 errata record
+    version: Current record retrieved 2026-08-09
+    locator: https://www.rfc-editor.org/errata/rfc8610
+    persistent_id: https://www.rfc-editor.org/errata/rfc8610
+    status: Five matching errata; one Verified and four Held for Document Update
+    exact_anchors:
+      - EID 6526, Verified, Editorial, Appendix G.2; verified 2021-04-12
+      - EID 6278, Held for Document Update, Technical, Appendix B
+      - EID 6527, Held for Document Update, Technical, Appendix B
+      - EID 6543, Held for Document Update, Technical, Appendix B
+      - EID 6575, Held for Document Update, Technical, Section 2.2.3
+    disposition: Apply EID 6526; do not silently elevate Held errata. Use RFC 9682's published replacement grammar, which addresses the listed grammar issues and clarifies EID 6575.
+  - work: RFC 9165, Additional Control Operators for CDDL
+    version: December 2021; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9165.html
+    persistent_id: https://doi.org/10.17487/RFC9165
+    status: Standards Track extension; no matching errata retrieved 2026-08-09
+    exact_anchors:
+      - Section 2, .plus, .cat, and .det
+      - Section 3, .abnf and .abnfb
+      - Section 4, .feature
+      - Section 5, IANA registrations
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the Revised BSD License notice stated in the RFC
+  - work: RFC 9682, Updates to the CDDL Grammar
+    version: November 2024; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9682.html
+    persistent_id: https://doi.org/10.17487/RFC9682
+    status: Standards Track; explicitly updates RFC 8610; no matching errata retrieved 2026-08-09
+    exact_anchors:
+      - Section 2, clarifications and changes based on errata
+      - Section 3.1, empty data models
+      - Section 3.2, non-literal tag numbers and simple values
+      - Section 4, mixed-tool security considerations
+      - Appendix A, normative updated collected ABNF
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the Revised BSD License notice stated in the RFC
+  - work: RFC 9741, Additional Control Operators for Conversion and Processing of Text
+    version: March 2025; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9741.html
+    persistent_id: https://doi.org/10.17487/RFC9741
+    status: Standards Track extension; no matching errata retrieved 2026-08-09
+    exact_anchors:
+      - Section 2.1, base encodings
+      - Sections 2.2-2.4, .base10, .printf, and .json
+      - Section 3.1, .join
+      - Sections 4 and 5, IANA and security considerations
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the Revised BSD License notice stated in the RFC
+  - work: CDDL Module Structure
+    version: draft-ietf-cbor-cddl-modules-06; 1 March 2026; expires 2 September 2026
+    locator: https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cddl-modules-06
+    persistent_id: https://datatracker.ietf.org/doc/draft-ietf-cbor-cddl-modules/
+    status: Active CBOR Working Group Internet-Draft; intended status shown in draft text as Standards Track, while Datatracker metadata reports no intended RFC status; not an RFC
+    exact_anchors:
+      - Sections 2.3-2.6, directives, import, and include
+      - Section 2.7, command-line control
+      - Appendix A, ABNF
+      - Appendix B, cddlc version at least 0.2.5
+    license: IETF Trust Legal Provisions for Internet-Drafts; Work in Progress boilerplate applies
+hypotheses:
+  - name: cddl_describes_data_models
+    class: source_explicit
+    source_anchor: RFC 8610 Sections 1 and 2
+    notes: A CDDL model describes acceptable CBOR or JSON data structures.
+  - name: first_rule_is_root_for_standalone_model
+    class: source_explicit
+    source_anchor: RFC 8610 Section 2.2.4
+    notes: In a basic nonempty CDDL model the first rule supplies the root entry point.
+  - name: cddl_map_order_is_not_serialization_order
+    class: source_explicit
+    source_anchor: RFC 8610 Section 3.5.3
+    notes: CDDL map entries match without establishing deterministic encoded order.
+  - name: rfc_9682_replaces_collected_abnf
+    class: source_explicit
+    source_anchor: RFC 9682 Section 1 and Appendix A
+    notes: Appendix A is normative and replaces RFC 8610 Appendix B's collected ABNF.
+  - name: rfc_9682_features_can_break_old_tools
+    class: source_explicit
+    source_anchor: RFC 9682 Sections 2, 3, and 4
+    notes: Changes are backward compatible for old models but not necessarily forward compatible for old implementations; mixed tools can interpret models differently.
+  - name: rfc_9165_controls_are_optional_extensions
+    class: source_explicit
+    source_anchor: RFC 9165 Sections 2-5 and IANA CDDL Control Operators registry
+    notes: Publication and registration do not require a schema to use any control.
+  - name: rfc_9741_json_does_not_fix_json_serialization
+    class: source_explicit
+    source_anchor: RFC 9741 Section 2.4
+    notes: The .json control constrains conversion but does not constrain JSON whitespace or map order.
+  - name: cddl_modules_are_work_in_progress
+    class: source_explicit
+    source_anchor: draft-ietf-cbor-cddl-modules-06, Status of This Memo
+    notes: The document may be updated, replaced, or obsoleted and is inappropriate as a stable normative dependency.
+  - name: datatracker_and_draft_intended_status_conflict
+    class: source_explicit
+    source_anchor: draft-ietf-cbor-cddl-modules Datatracker metadata and -06 line 4 boilerplate
+    notes: The draft text says intended status Standards Track while the current Datatracker field says none; neither value makes the draft an RFC.
+  - name: schema_byte_determinism
+    class: formalization_obligation
+    source_anchor: RFC 8610 Sections 1-4 and RFC 8949 Section 4.2
+    notes: CDDL shape validation must be combined with a separate raw-byte deterministic-profile validator.
+  - name: schema_semantic_validity
+    class: formalization_obligation
+    source_anchor: RFC 8610 Section 4.2
+    notes: A successful CDDL match establishes structure only; StatQED value invariants and cross-field relations require separate checks.
+  - name: use_only_published_base_grammar
+    class: strengthening_justified
+    source_anchor: RFC 8610 as updated by RFC 9682; SQ-0005 standard-syntax requirement
+    notes: Normative schemas should restrict syntax to published RFC grammar actually supported by the conformance tool matrix.
+  - name: exclude_rfc_9165_controls_from_minimum_schema
+    class: candidate_for_weakening
+    source_anchor: RFC 9165 Sections 2-4
+    notes: None is needed for the minimum data-free structural model; a later exact need can add one through review.
+  - name: exclude_rfc_9741_controls_from_minimum_schema
+    class: candidate_for_weakening
+    source_anchor: RFC 9741 Sections 2-3
+    notes: Base conversion, formatting, JSON conversion, and join controls add no necessary minimum structure and widen tool variation.
+  - name: permit_unpinned_module_imports_normatively
+    class: strengthening_unjustified
+    source_anchor: draft-ietf-cbor-cddl-modules-06, Status of This Memo and Sections 2.3-2.6
+    notes: Tool availability cannot elevate evolving draft syntax or remote module resolution into the normative schema.
+  - name: cddl_conformance_implies_deterministic_cbor
+    class: strengthening_unjustified
+    source_anchor: RFC 8610 Section 3.5.3; RFC 8949 Section 4.2
+    notes: Structure matching does not constrain map serialization order or other deterministic options.
+  - name: held_errata_are_current_normative_text
+    class: strengthening_unjustified
+    source_anchor: RFC Editor Errata processing and RFC 8610 errata record
+    notes: Held for Document Update is not Verified status; use RFC 9682's published changes where applicable.
+variants:
+  - name: RFC 8610 original collected ABNF
+    locator: RFC 8610 Appendix B
+    conflict: Contains reported grammar defects and has been replaced by RFC 9682 Appendix A.
+    disposition: Historical baseline only; do not copy it as current grammar.
+  - name: RFC 8610 plus Verified EID 6526 only
+    locator: RFC 8610 Appendix G.2 and EID 6526
+    conflict: Does not by itself incorporate the later Standards Track grammar update.
+    disposition: Use RFC 9682 as the collected current grammar; record EID 6526 for lineage.
+  - name: RFC 8610 as updated by RFC 9682
+    locator: RFC 9682 Appendix A
+    conflict: Some older tools may not accept new syntax such as hexadecimal escapes, empty models, or non-literal head numbers.
+    disposition: Normative grammar basis; constrain the actual schema to the tested common subset when new features are unnecessary.
+  - name: RFC 9165 control operators
+    locator: RFC 9165 Sections 2-4
+    conflict: Optional semantic controls vary in tool support and are not required for a basic structural schema.
+    disposition: Exclude from the minimum normative schema.
+  - name: RFC 9741 text controls
+    locator: RFC 9741 Sections 2-3
+    conflict: Adds conversion and formatting semantics unrelated to core deterministic bytes.
+    disposition: Exclude from the minimum normative schema.
+  - name: draft CDDL modules
+    locator: draft-ietf-cbor-cddl-modules-06
+    conflict: Import/include syntax, resolution, and tool behavior can change before publication.
+    disposition: Normative exclusion; pin -06 only in a clearly Experimental prototype.
+concept_mapping:
+  - source_concept: CDDL data model
+    statqed_concept: versioned structural schema
+    obligation: Give each normative schema an explicit identifier and digest/provenance independent of import resolution.
+  - source_concept: CDDL match
+    statqed_concept: structural shape conformance
+    obligation: Do not label it deterministic-byte, semantic, provenance, or scientific verification.
+  - source_concept: CDDL control operator
+    statqed_concept: optional validator extension
+    obligation: List exact RFC, tool versions, and failure semantics before normative use.
+  - source_concept: CDDL module directive
+    statqed_concept: experimental source-composition mechanism
+    obligation: Pin the draft revision and resolved module content; no normative use before standards and review gates.
+quantifiers:
+  - statement: Every byte string accepted by the artifact verifier must first satisfy raw CBOR framing and profile checks, then the CDDL root rule, then semantic checks.
+    source_status: Project composition obligation; CDDL establishes only the middle structural relation.
+  - statement: Every normative CDDL file must have the same meaning under every supported conformance implementation and version.
+    source_status: Project conformance obligation motivated by RFC 9682 Section 4; not guaranteed by the standards.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: map_order_independence
+    value: Two CBOR maps with the same entries in different serialization orders.
+    purpose: They can match the same CDDL rule even though only one may satisfy a selected deterministic profile.
+  - name: mixed_tool_grammar_witness
+    value: A CDDL string literal using RFC 9682's \u{...} escape.
+    purpose: Shows why an RFC 8610-only parser can reject a model accepted by the current grammar.
+strengthenings:
+  - name: standard_syntax_only
+    class: strengthening_justified
+    reason: Keeps normative schemas reproducible across independently tested implementations.
+    approval_required: schema and conformance review
+  - name: no_normative_import_directives
+    class: strengthening_justified
+    reason: Current module structure is an active Internet-Draft with unresolved version and resolution semantics.
+    approval_required: schema review; revisit only after an RFC or explicit Experimental decision
+weakenings:
+  - name: experimental_pinned_modules
+    class: candidate_for_weakening
+    effect: Allows evaluation of draft-ietf-cbor-cddl-modules-06 without changing normative schema semantics.
+    disposition: Permissible only with Experimental status, exact draft pin, resolved-content capture, and no release-path dependency.
+attribution:
+  - kind: reproduced
+    work: RFC 8610 as updated by RFC 9682
+    detail: Structural-schema semantics and the current collected ABNF are attributed to the exact published standards.
+  - kind: corrected
+    work: RFC 8610 errata and RFC 9682
+    detail: Verified EID 6526 and the published RFC 9682 treatment of held grammar issues are recorded without elevating Held status independently.
+  - kind: specialized
+    work: RFCs 8610, 9165, 9682, and 9741
+    detail: The minimum StatQED schema uses a reviewed subset; exclusion of optional controls is a project profile choice, not a claim that the controls are invalid.
+  - kind: experimental
+    work: draft-ietf-cbor-cddl-modules-06
+    detail: Module/import syntax is recorded only as current Work in Progress.
+  - kind: original
+    work: StatQED SQ-0005
+    detail: Schema identifiers, resolved-source provenance, semantic checks, and byte-profile composition remain project definitions.
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''
