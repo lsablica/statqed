@@ -36,15 +36,25 @@ source_records:
       - Hash security-properties table, SHA-256 row
     disposition: Record 128-bit collision, 256-bit preimage, and message-length-dependent second-preimage strength as conditional cryptographic claims, not proofs of equality
   - work: RFC 9380, Hashing to Elliptic Curves
-    version: August 2023; Proposed Standard
+    version: August 2023; Informational
     locator: https://www.rfc-editor.org/rfc/rfc9380.html
     persistent_id: https://doi.org/10.17487/RFC9380
-    status: Standards Track; design guidance only for SQ-0005 framing
+    status: IRTF stream, CFRG consensus; not an Internet Standards Track specification; design guidance only for SQ-0005 framing
     exact_anchors:
+      - Status of This Memo
       - Section 2.2.5, domain separation
       - Section 3.1, domain-separation tag requirements
       - Section 10.7, Domain Separation for expand_message Variants
     license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the license notice stated in the RFC
+  - work: RFC 9380 errata record
+    version: Current record retrieved 2026-08-09
+    locator: https://www.rfc-editor.org/errata/rfc9380
+    persistent_id: https://www.rfc-editor.org/errata/eid7844
+    status: One Verified Editorial erratum, EID 7844, verified 2024-03-08
+    exact_anchors:
+      - EID 7844, Section 10.6 cross-reference correction
+    disposition: The editorial correction does not alter Sections 2.2.5, 3.1, or 10.7 used as non-normative design guidance
+    license: RFC Editor errata record; IETF Trust publication context
   - work: RFC 6920 and IANA Named Information Hash Algorithm Registry
     version: RFC 6920, April 2013; registry last updated 2025-10-14
     locator: https://www.iana.org/assignments/named-information/named-information.xhtml

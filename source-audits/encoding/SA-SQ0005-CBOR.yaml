@@ -77,13 +77,14 @@ source_records:
       - Detailed Semantics, tags 268-270
       - Security Considerations
     license: Author dedicates the specification to the public domain under CC0
-  - work: Deterministic CBOR Encoding
-    version: draft-ietf-cbor-serialization-06; 23 April 2026; expires 25 October 2026
-    locator: https://datatracker.ietf.org/doc/html/draft-ietf-cbor-serialization-06
+  - work: CBOR Serialization and Determinism
+    version: draft-ietf-cbor-serialization-08; 29 July 2026; expires 30 January 2027
+    locator: https://datatracker.ietf.org/doc/html/draft-ietf-cbor-serialization-08
     persistent_id: https://datatracker.ietf.org/doc/draft-ietf-cbor-serialization/
-    status: Active CBOR Working Group Internet-Draft; Work in Progress; non-normative for SQ-0005
+    status: Active CBOR Working Group Internet-Draft in WG Last Call at retrieval; Work in Progress; non-normative for SQ-0005
     exact_anchors:
-      - Deterministic serialization taxonomy and preferred-plus proposal
+      - Datatracker latest-revision metadata and WG state
+      - Sections 4-5, preferred-plus and deterministic serialization
     license: IETF Trust Legal Provisions for Internet-Drafts; Work in Progress boilerplate applies
 hypotheses:
   - name: one_complete_data_item
@@ -188,7 +189,7 @@ variants:
     conflict: Can accept multiple serializations and normalize them internally.
     disposition: Suitable outside the strict artifact verifier boundary; do not use to decide digest acceptance.
   - name: preferred-plus draft
-    locator: draft-ietf-cbor-serialization-06
+    locator: draft-ietf-cbor-serialization-08
     conflict: Proposes an evolving deterministic-serialization taxonomy beyond published RFC 8949.
     disposition: Record as current Work in Progress only; do not let it silently amend the accepted RFC profile.
   - name: tag 30 rational versus project-normalized rational

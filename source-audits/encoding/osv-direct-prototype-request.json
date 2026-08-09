@@ -1,0 +1,32 @@
+{
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "cbor2"
+      },
+      "version": "6.1.4"
+    },
+    {
+      "package": {
+        "ecosystem": "crates.io",
+        "name": "ciborium"
+      },
+      "version": "0.2.2"
+    },
+    {
+      "package": {
+        "ecosystem": "crates.io",
+        "name": "minicbor"
+      },
+      "version": "2.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "crates.io",
+        "name": "cddl"
+      },
+      "version": "0.10.6"
+    }
+  ]
+}

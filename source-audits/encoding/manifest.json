@@ -1,0 +1,54 @@
+{
+  "file_count": 9,
+  "files": [
+    {
+      "bytes": 5853,
+      "path": "source-audits/encoding/README.md",
+      "sha256": "80630d625bee1c21c901f81932c6077479846697a35b3b8ec9d4da9ddf2ba4cc"
+    },
+    {
+      "bytes": 17858,
+      "path": "source-audits/encoding/SA-SQ0005-CBOR.yaml",
+      "sha256": "f61098ab0a0a4bd8ff6b1c866772023a5ad2f283d0f7e78801cffaafc7196185"
+    },
+    {
+      "bytes": 15054,
+      "path": "source-audits/encoding/SA-SQ0005-CDDL.yaml",
+      "sha256": "714bb59f260517468487f7ead7fbf8cc2a5d5e32c14f4818fc738d0af0ac6da4"
+    },
+    {
+      "bytes": 12428,
+      "path": "source-audits/encoding/SA-SQ0005-CRYPTO.yaml",
+      "sha256": "d3feb17277b3fccafa2201f36290d2c89be5a98ab953fd75dfd749bb6da3ae36"
+    },
+    {
+      "bytes": 15548,
+      "path": "source-audits/encoding/SA-SQ0005-PROTOTYPES.yaml",
+      "sha256": "90ed358716e9d9f27de60d75d2eda4c5f1d8ae1c5fec38187dc3c2b962e9d506"
+    },
+    {
+      "bytes": 10780,
+      "path": "source-audits/encoding/SA-SQ0005-UNICODE.yaml",
+      "sha256": "9c722257cc62032e6ee2087f44ec9e55834e1ae00d1532e4e0982d57be4553b2"
+    },
+    {
+      "bytes": 905,
+      "path": "source-audits/encoding/osv-direct-prototype-observation.json",
+      "sha256": "419eac674c87f86b3adff12e57fe55d58b12f88fe8829dffc18576ad298a339a"
+    },
+    {
+      "bytes": 519,
+      "path": "source-audits/encoding/osv-direct-prototype-request.json",
+      "sha256": "6efff00478c1722fa295792fd09465156e474ae16ac083ae14f8997c59c2bd56"
+    },
+    {
+      "bytes": 54,
+      "path": "source-audits/encoding/osv-direct-prototype-response.json",
+      "sha256": "3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600"
+    }
+  ],
+  "retrieval_date": "2026-08-09",
+  "schema_id": "statqed.encoding-source-audit-manifest.v1",
+  "tree_hash_algorithm": "sha256(u64be(path_len)||path||u64be(content_len)||content for sorted paths)",
+  "tree_sha256": "75f8fe98338e4800230a7b9a9da7988f728bdf2516b170e969134482511686f2"
+}

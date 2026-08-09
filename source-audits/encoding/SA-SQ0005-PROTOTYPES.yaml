@@ -60,6 +60,10 @@ source_records:
     status: Response contained four empty result objects
     exact_anchors:
       - querybatch response results [{}, {}, {}, {}]
+      - Request SHA-256 6efff00478c1722fa295792fd09465156e474ae16ac083ae14f8997c59c2bd56
+      - Retained normalized response SHA-256 3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600
+      - Raw API response SHA-256 1d3b3028309f42f104f47f2023c84a49d3582b917a8eede35750fec991a596cf
+      - source-audits/encoding/osv-direct-prototype-observation.json
     disposition: Dated no-record observation only; not a security guarantee and not a transitive-dependency audit
   - work: serde_cbor repository
     version: Repository status retrieved 2026-08-09
@@ -215,7 +219,7 @@ attribution:
     detail: Behavior claims are restricted to the exact package versions and cited API/source anchors.
   - kind: security_observation
     work: OSV querybatch
-    detail: Four empty direct-version results are recorded only as a dated no-record observation.
+    detail: Four empty direct-version results and their exact request, normalized response, raw-response hash, and observation date are retained only as a dated no-record observation.
   - kind: excluded
     work: serde_cbor
     detail: Archived status is an explicit exclusion rather than an undocumented omission.

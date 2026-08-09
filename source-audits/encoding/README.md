@@ -27,10 +27,11 @@ Status: Draft source-curator evidence retrieved 2026-08-09. These records do not
 - RFC 8610 has EID 6526 Verified/Editorial and EIDs 6278, 6527, 6543, and 6575 Held for Document Update. RFC 9682 is the published grammar update and addresses these grammar topics.
 - RFCs 9165, 9682, and 9741 had no matching errata in the official records on 2026-08-09.
 - The CDDL module draft text says intended status Standards Track, while the Datatracker metadata reports no intended RFC status. Both agree that revision `-06` is only an active Internet-Draft.
-- The current CBOR serialization draft is `draft-ietf-cbor-serialization-06` (2026-04-23, expires 2026-10-25). It is nearby Work in Progress and cannot silently amend the RFC 8949 profile.
+- The current CBOR serialization draft is `draft-ietf-cbor-serialization-08` (2026-07-29, expires 2027-01-30; in WG Last Call at retrieval). It is nearby Work in Progress and cannot silently amend the RFC 8949 profile.
 - IANA registration proves allocation, not standards maturity or canonical semantic form. Tags 30, 264, 265, and 268-270 rely on individual specifications rather than RFCs.
 - NIST announced in 2023 that FIPS 180-4 will be revised, but no replacement was published by the retrieval date.
-- Direct exact-version OSV queries returned no records for `cbor2` 6.1.4, `ciborium` 0.2.2, `minicbor` 2.3.0, and `cddl` 0.10.6. This is neither a security guarantee nor a transitive graph audit.
+- RFC 9380 is an Informational IRTF/CFRG document, not an Internet Standards Track specification. Its one Verified Editorial erratum, EID 7844, corrects a Section 10.6 cross-reference and does not alter the domain-separation passages used only as design guidance here.
+- A retained exact-version OSV query returned four empty direct-package results for `cbor2` 6.1.4, `ciborium` 0.2.2, `minicbor` 2.3.0, and `cddl` 0.10.6 on 2026-08-09. The request, normalized response, raw-response hash, and observation record are retained. This is neither a security guarantee nor a transitive graph audit.
 
 ## Files
 
