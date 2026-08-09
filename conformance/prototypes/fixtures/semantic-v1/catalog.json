@@ -1,0 +1,80 @@
+{
+  "catalog_id": "statqed.sq0005.semantic-corpus.v1",
+  "fixture_schema_id": "statqed.semantic-fixture-catalog",
+  "fixture_schema_version": 1,
+  "status": "Experimental",
+  "profile_id": "statqed.cbor-core.v1",
+  "profile_version": 1,
+  "test_object_schema_id": "test.semantic-value",
+  "test_object_schema_version": 1,
+  "golden_status": "semantic_expectations_only_no_binary_golden_files",
+  "normative_authority": false,
+  "components": [
+    "atoms-and-widths.json",
+    "maps-and-unicode.json",
+    "numeric-tags-extensions.json",
+    "malformed-and-strictness.json",
+    "resources.json",
+    "digest-framing.json",
+    "differential-mutants.json"
+  ],
+  "required_case_fields": [
+    "id",
+    "input_layer",
+    "input",
+    "intended_class",
+    "accept",
+    "stable_code",
+    "expected_encoding",
+    "source_refs",
+    "rationale",
+    "purpose"
+  ],
+  "result_classes": [
+    "accepted",
+    "resource",
+    "well_formedness",
+    "validity",
+    "expectedness",
+    "deterministic_profile",
+    "cddl_shape",
+    "semantic_validity",
+    "digest_verification",
+    "differential_detection",
+    "operational_failure"
+  ],
+  "source_index": {
+    "PROFILE": "docs/research/serialization/profile-candidate.md",
+    "SEMANTIC_MODEL": "docs/research/serialization/semantic-value-model.md",
+    "RFC8949-3": "RFC 8949 section 3",
+    "RFC8949-4.1": "RFC 8949 section 4.1",
+    "RFC8949-4.2.1": "RFC 8949 section 4.2.1",
+    "RFC8949-4.2.2": "RFC 8949 section 4.2.2",
+    "RFC8949-4.2.3": "RFC 8949 section 4.2.3",
+    "RFC8949-5.3": "RFC 8949 section 5.3",
+    "RFC8949-5.6": "RFC 8949 section 5.6",
+    "FIPS180-4": "NIST FIPS 180-4 SHA-256 definition"
+  },
+  "encoding_expectation_kinds": {
+    "literal_hex": "A short exact candidate encoding calculated from the profile before implementation runs.",
+    "hex_recipe": "An exact deterministic construction for a large value; it is not a checked-in binary golden.",
+    "same_as_input_recipe": "The accepted raw-input recipe is already the exact deterministic output recipe and is referenced without expansion.",
+    "none": "Rejected semantic input or raw bytes have no accepted output encoding."
+  },
+  "manager_dispositions": [
+    "The 1049255-byte digest frame value is a conservative allocation cap; 1048918 bytes is the largest attainable valid frame and is the accepted boundary fixture.",
+    "wellformed.length_overflow is not a profile code because no finite input within the 1 MiB cap can isolate it; safe host arithmetic remains an implementation obligation.",
+    "expected.single_item is not a profile code: empty input is wellformed.truncated, extra complete content is expected.trailing_bytes, and partial trailing content follows parser precedence.",
+    "Extension identifiers are scanned completely for duplicates first; among unique entries, any critical extension selects semantic.extension_critical_unknown, otherwise semantic.extension_noncritical_unsupported, independent of sequence order.",
+    "Operational timeout, memory, crash, and exception outcomes are evidence classifications and never profile acceptance.",
+    "Exact diagnostic-limit cases remain recipe-level; the over-limit stable response is resource.diagnostic_bytes.",
+    "Digest precedence is digest.length for frame/payload/digest size, digest.component_length for missing or truncated LP data, digest.trailing_bytes for complete extra frame bytes, digest.payload for a framed empty/invalid/non-profile payload, and digest.mismatch only for an exact 32-byte unequal digest."
+  ],
+  "unresolved": [],
+  "nonclaims": [
+    "These files are semantic/raw-input review fixtures, not accepted golden vectors.",
+    "No prototype output was used as an oracle and no encoder or decoder was run to create these expectations.",
+    "Digest cases define data-free test framing only and do not define RFC-0006 logical-data semantics.",
+    "CDDL, digest, and byte agreement do not establish statistical, provenance, inferential, or kernel verification."
+  ]
+}
