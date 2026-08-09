@@ -1,7 +1,7 @@
 {
   "id": "SQ-0005",
   "title": "Prototype deterministic serialization",
-  "status": "READY",
+  "status": "IN_PROGRESS",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Milestone C — Settle an encoding prototype",
   "objective": "Select, specify, and independently reproduce the smallest data-free StatQED deterministic encoding profile; accept RFC-0001 only after byte-level, decoder, duplicate-key, numeric, Unicode, extension, domain-separation, malformed-input, and resource evidence passes independent review, while leaving RFC-0006 logical-data semantics untouched for SQ-0027.",
