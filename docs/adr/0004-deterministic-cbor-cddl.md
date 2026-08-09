@@ -1,29 +1,76 @@
-# ADR-0004: Deterministic CBOR with CDDL candidate
+# ADR-0004: Deterministic CBOR with published-syntax CDDL
 
 - Status: Proposed
 - Blocking RFC/task: RFC-0001 / SQ-0005
 - Decision owner: SQ-0005
+- Profile candidate: `statqed.cbor-core.v1`
 
 ## Context
 
-Normative hashing and cross-language interchange require one accepted representation for each accepted semantic object. RFC 8949 defines multiple deterministic choices, and CDDL shape validation does not settle semantic normalization or byte behavior.
+Normative hashing and cross-language interchange require one accepted byte
+representation for each accepted semantic structural object. RFC 8949 offers
+multiple deterministic map-order choices, and CDDL shape validation does not
+settle semantic values, duplicates, Unicode, normalization, canonical bytes,
+resource behavior, or digest framing.
 
 ## Candidate decision
 
-Prototype deterministic CBOR under one explicit RFC 8949 application profile with versioned CDDL files. JSON/YAML remain diagnostic/authoring projections only.
+<!-- SQ-0005-NORMATIVE-SCOPE-BEGIN -->
+StatQED normative structural objects use the versioned
+`statqed.cbor-core.v1` application profile of RFC 8949 CBOR. The profile uses
+preferred definite-length serialization and RFC 8949 Section 4.2.1 core
+deterministic map ordering. It accepts only direct-range integers, byte
+strings, exact Unicode text, arrays, raw-entry-validated maps with integer or
+text keys, booleans, and null. It rejects tags, floating point, indefinite and
+non-preferred encodings, duplicates, unknown extensions, and every unsupported
+semantic atom. Published RFC 8610 CDDL syntax may describe structural subsets
+but does not define deterministic bytes or semantic validity. Generic
+data-free digests use the separately identified six-component
+`statqed.digest-lp.v1` SHA-256 frame. This decision does not define archives,
+artifacts, logical tables, logical-data identity, or RFC-0006.
+<!-- SQ-0005-NORMATIVE-SCOPE-END -->
+
+RFC-0001 contains the complete semantic value model, numeric and Unicode
+policy, raw map-entry and duplicate rules, error taxonomy, resource limits,
+digest framing, security considerations, evidence, migration rules, and
+explicit nonclaims. That RFC is the detailed normative source; this ADR
+records the architecture consequence once accepted.
 
 ## Consequences
 
-The full numeric/tag, map-order, duplicate, Unicode, extension, decoder, domain-separation, malformed-input, and resource profile must be explicit. CDDL module/import draft syntax is not assumed to be a standard. The artifact envelope and logical-data digest are separately governed.
+- Structural schemas may use published RFC 8610 CDDL syntax, but CDDL success
+  is not canonical-byte, semantic, digest, provenance, proof, or statistical
+  verification.
+- Tags, floats, extensions, rational/decimal/bignum atoms, intervals, and
+  logical tables require later separately versioned decisions rather than
+  implementation-specific coercion.
+- Decoders preserve raw map entries until typed duplicate and order checks are
+  complete and reject non-profile bytes instead of silently normalizing them.
+- Object-class schema validation remains separate from generic profile and
+  digest-frame validation.
+- RFC-0006, artifact envelopes, archives, theorem locks, and certificates are
+  unaffected and remain separately governed.
 
-## Alternatives
+## Alternatives rejected for v1
 
-Canonical JSON and a custom format remain prototype comparators. Silent normalization versus strict rejection is an unresolved per-case decision.
+Length-first map ordering, silent decode/reencode normalization, library
+“canonical” defaults, canonical JSON, a custom binary format, Unicode
+normalization, numeric coercion, and normative CDDL draft module/import syntax
+are rejected for the reasons and discriminating evidence in RFC-0001.
 
 ## Validation and evidence
 
-RFC-0001 requires two genuinely independent implementations or oracles, reviewed semantic fixtures, canonical bytes/digests, malformed/resource tests, mutation detection, and security review.
+SQ-0005 commits semantic fixtures before golden bytes, uses independent Rust
+and Python implementation lineages, retains malformed/resource/failure
+evidence, proves deliberate encoder and decoder divergence detection, and
+binds the complete evidence package with a permanent verifier. Evidence does
+not promote either runtime or prototype implementation into the trusted
+computing base.
 
 ## Review
 
-This ADR must remain Proposed until RFC-0001 is Accepted. No current document may treat deterministic CBOR/CDDL as implemented or normative.
+This ADR remains Proposed while RFC-0001 remains Draft. It may become Accepted
+only when the exact marked scope above matches RFC-0001 byte-for-byte, all
+required independent reviews approve the content-addressed candidate, the
+serialization workflow is green, and the integration reviewer approves the
+atomic status transition.
