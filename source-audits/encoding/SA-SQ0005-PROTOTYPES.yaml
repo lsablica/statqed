@@ -1,0 +1,232 @@
+audit_id: SA-SQ0005-PROTOTYPES
+subject: Versioned CBOR and CDDL prototype library semantics, licenses, and advisory evidence
+source:
+  work: Official publisher metadata and versioned documentation for cbor2 6.1.4, ciborium 0.2.2, minicbor 2.3.0, and cddl 0.10.6
+  version: Exact versions current or selected on 2026-08-09
+  locator: https://pypi.org/pypi/cbor2/6.1.4/json; https://crates.io/api/v1/crates/ciborium/0.2.2; https://crates.io/api/v1/crates/minicbor/2.3.0; https://crates.io/api/v1/crates/cddl/0.10.6
+  persistent_id: Exact package names and immutable published versions in PyPI and crates.io
+controlled_statement: >-
+  These packages are untrusted prototype producers and differential oracles,
+  not normative definitions or members of the trusted computing base.  Their
+  default and so-called canonical behaviors do not necessarily match a chosen
+  StatQED profile.  Exact versions, flags, input paths, output bytes, and
+  implementation lineage must be captured.  Top-level publisher licenses are
+  source inputs; the selected Rust prototype's exact transitive graph is
+  separately bound to Cargo.lock and a dated RustSec observation.  Neither is
+  legal advice or a security guarantee.
+retrieved_at: '2026-08-09'
+source_records:
+  - work: cbor2
+    version: 6.1.4; released 2026-08-01T20:40:24Z; Python at least 3.10; not yanked
+    locator: https://pypi.org/pypi/cbor2/6.1.4/json; https://cbor2.readthedocs.io/en/latest/api.html; https://cbor2.readthedocs.io/en/latest/versionhistory.html
+    persistent_id: PyPI cbor2==6.1.4
+    status: Current PyPI release at retrieval; implemented in Rust; documentation says it has not been tested against malicious input
+    exact_anchors:
+      - API cbor2.dumps canonical parameter and CBOREncoder.encode_sortable_key
+      - API cbor2.loads defaults max_depth=400, allow_indefinite=True, allow_duplicate_keys=True
+      - Version history 6.1.4, fixes for map-key hash collision, truncated indefinite maps, and non-byte bignum payloads
+      - PyPI Security section
+    license: MIT license expression in PyPI core metadata; preserve license and copyright notice on redistribution
+  - work: ciborium
+    version: 0.2.2; published 2024-01-24; rust-version 1.58
+    locator: https://crates.io/api/v1/crates/ciborium/0.2.2; https://docs.rs/ciborium/0.2.2/ciborium/
+    persistent_id: crates.io ciborium 0.2.2
+    status: Current release at retrieval
+    exact_anchors:
+      - value/canonical.rs lines 8-60
+    license: Apache-2.0 publisher metadata; satisfy Apache License 2.0 notice and attribution obligations
+  - work: minicbor
+    version: 2.3.0; published 2026-07-23; no publisher-declared rust-version
+    locator: https://crates.io/api/v1/crates/minicbor/2.3.0; https://docs.rs/minicbor/2.3.0/minicbor/
+    persistent_id: crates.io minicbor 2.3.0
+    status: Current release at retrieval; low-level encoder, decoder, and token API
+    exact_anchors:
+      - minicbor::encode and minicbor::decode module APIs
+      - data::Token map, begin, and break variants
+    license: BlueOak-1.0.0 publisher metadata; redistribution must include or link the Blue Oak Model License 1.0.0 as required by that license
+  - work: cddl
+    version: 0.10.6; published 2026-06-29; rust-version 1.88.0
+    locator: https://crates.io/api/v1/crates/cddl/0.10.6; https://docs.rs/crate/cddl/0.10.6
+    persistent_id: crates.io cddl 0.10.6
+    status: Current release at retrieval; its default feature set includes published additional controls and draft extensions
+    exact_anchors:
+      - Crate metadata license, rust_version, and features
+      - docs.rs feature list, including additional-controls and draft-related features
+    license: MIT publisher metadata; preserve license and copyright notice on redistribution
+  - work: OSV query API
+    version: Query executed 2026-08-09 against exact direct package versions
+    locator: https://api.osv.dev/v1/querybatch; https://google.github.io/osv.dev/post-v1-querybatch/
+    persistent_id: Query tuple PyPI:cbor2:6.1.4; crates.io:ciborium:0.2.2; crates.io:minicbor:2.3.0; crates.io:cddl:0.10.6
+    status: Response contained four empty result objects
+    exact_anchors:
+      - querybatch response results [{}, {}, {}, {}]
+      - Request SHA-256 6efff00478c1722fa295792fd09465156e474ae16ac083ae14f8997c59c2bd56
+      - Retained normalized response SHA-256 3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600
+      - Raw API response SHA-256 1d3b3028309f42f104f47f2023c84a49d3582b917a8eede35750fec991a596cf
+      - source-audits/encoding/osv-direct-prototype-observation.json
+    disposition: Dated no-record observation only; not a security guarantee and not a transitive-dependency audit
+  - work: serde_cbor repository
+    version: Repository status retrieved 2026-08-09
+    locator: https://github.com/pyfisch/cbor
+    persistent_id: https://github.com/pyfisch/cbor
+    status: Archived/unmaintained project; excluded from the candidate prototype set
+    exact_anchors:
+      - Repository archive status and README maintenance statement
+    license: MIT OR Apache-2.0 historically, but irrelevant to selection unless reintroduced through review
+  - work: SQ-0005 Rust prototype resolved dependency graph
+    version: Cargo.lock SHA-256 2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180; 22 registry packages
+    locator: schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json
+    persistent_id: Cargo.lock content digest and crates.io package checksums
+    status: Exact offline cargo metadata inventory generated 2026-08-09
+    exact_anchors:
+      - Every package name, version, source, checksum, declared license, selected feature, and dependency role
+      - Inventory SHA-256 3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9
+    disposition: Point-in-time dependency and license metadata; not legal advice or permission to promote the prototype
+  - work: RustSec advisory database and cargo-audit
+    version: RustSec commit 309ad29d8fe448bf986019e05d47b9e0e29a2218; cargo-audit 0.22.2
+    locator: https://github.com/RustSec/advisory-db/commit/309ad29d8fe448bf986019e05d47b9e0e29a2218; https://github.com/rustsec/rustsec/releases/tag/cargo-audit%2Fv0.22.2
+    persistent_id: Hash-locked release archive, executable, database archive, inventory, and Cargo.lock in schemas/prototypes/rust-cbor/evidence/security-lock.json
+    status: Offline scan observed 2026-08-09; zero vulnerabilities and zero warnings for the exact lock
+    exact_anchors:
+      - Advisory report SHA-256 abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55
+      - Database commit timestamp 2026-08-09T12:34:06Z
+    disposition: Point-in-time no-record observation only; no claim about undisclosed issues, Rust/Cargo, operating system, CPython, or future database state
+  - work: Official crates.io exact-version API
+    version: 22 Cargo.lock registry packages queried 2026-08-09
+    locator: Per-package https://crates.io/api/v1/crates/{name}/{version} locators retained in schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json
+    persistent_id: Exact name, version, Cargo.lock checksum, locator, and observed yanked boolean
+    status: All 22 exact locked package versions reported yanked=false at retrieval
+    exact_anchors:
+      - Cargo.lock SHA-256 2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180
+      - Official API response checksum equality for every package
+    disposition: Point-in-time registry observation only; live CI and release review must repeat it and fail closed on yanked or checksum drift
+hypotheses:
+  - name: cbor2_canonical_is_length_first
+    class: source_explicit
+    source_anchor: cbor2 6.1.4 API, CBOREncoder.encode_sortable_key
+    notes: The sorting key is encoded length followed by encoding, corresponding to RFC 8949 Section 4.2.3 rather than core Section 4.2.1.
+  - name: cbor2_decode_defaults_are_strict_profile_defaults
+    class: strengthening_unjustified
+    source_anchor: cbor2 6.1.4 API, cbor2.loads
+    notes: Defaults accept indefinite items and duplicate keys; the prototype must set explicit strict flags and still validate all profile rules independently.
+  - name: cbor2_is_independent_python_implementation
+    class: strengthening_unjustified
+    source_anchor: cbor2 6.1.4 PyPI project description
+    notes: The package API is Python but the implementation is Rust; independence claims must use implementation lineage, not frontend language.
+  - name: ciborium_canonical_is_length_first
+    class: source_explicit
+    source_anchor: ciborium 0.2.2 value/canonical.rs lines 8-60
+    notes: It compares encoded length and then bytes, explicitly implementing RFC 8949 Section 4.2.3.
+  - name: minicbor_supplies_profile_ordering
+    class: source_implicit_justified
+    source_anchor: minicbor 2.3.0 encoder and token APIs
+    notes: Low-level output follows caller order; no source evidence establishes a built-in map sorter for the proposed profile.
+  - name: cddl_default_features_are_normative_cddl
+    class: strengthening_unjustified
+    source_anchor: cddl 0.10.6 feature metadata; RFC 8610 as updated by RFC 9682
+    notes: Tool support for optional or draft controls does not elevate them into the normative schema language.
+  - name: cddl_0106_matches_project_rust_floor
+    class: strengthening_unjustified
+    source_anchor: cddl 0.10.6 rust_version 1.88.0 and project Rust floor 1.85.1
+    notes: The tool cannot be assumed to compile under the project floor; isolate it as a dev tool or choose a separately audited compatible version.
+  - name: exact_version_and_flags
+    class: formalization_obligation
+    source_anchor: Official package metadata and versioned APIs
+    notes: Every differential result must record version, flags, input bytes, exit status, output bytes, and environment.
+  - name: independent_oracle_lineage
+    class: formalization_obligation
+    source_anchor: cbor2 implementation metadata and Rust crate metadata
+    notes: At least one oracle must be independent in algorithm/code lineage, not merely a second wrapper around the same implementation family.
+  - name: empty_osv_result_means_secure
+    class: strengthening_unjustified
+    source_anchor: OSV querybatch API semantics
+    notes: Absence of returned records is time- and database-relative and says nothing about undisclosed issues or unqueried transitive versions.
+  - name: top_level_license_closes_dependency_licenses
+    class: strengthening_unjustified
+    source_anchor: Publisher metadata license fields
+    notes: Each resolved transitive package and bundled code component needs separate license inventory before release.
+  - name: prototype_is_untrusted
+    class: source_implicit_justified
+    source_anchor: StatQED trust model and library security/currentness records
+    notes: Package output is evidence for tests, never the normative definition or kernel proof.
+variants:
+  - name: cbor2 6.1.4 canonical mode
+    locator: cbor2 API and version history
+    conflict: Convenient and actively fixed, but length-first ordering and permissive decoder defaults conflict with a strict core profile; implementation is Rust.
+    disposition: Candidate adversarial decoder/length-first oracle only with explicit flags; not an independent Python code lineage.
+  - name: ciborium 0.2.2 CanonicalValue
+    locator: value/canonical.rs lines 8-60
+    conflict: Explicit length-first algorithm.
+    disposition: Useful oracle for the excluded length-first variant and map-storage tests; not the core-profile normative encoder.
+  - name: minicbor 2.3.0 low-level encoder
+    locator: versioned encoder API
+    conflict: Caller controls order, so the prototype itself must implement every profile rule.
+    disposition: Candidate independent manual implementation within Rust, with differential and mutation tests.
+  - name: cddl 0.10.6
+    locator: versioned crate metadata and docs.rs features
+    conflict: Rust 1.88.0 requirement exceeds project floor and defaults include syntax beyond the minimum published subset.
+    disposition: Isolated dev-tool candidate only; disable unnecessary features and test exact schemas, or select another audited tool version.
+  - name: serde_cbor
+    locator: official repository archive status
+    conflict: Archived/unmaintained.
+    disposition: Excluded.
+concept_mapping:
+  - source_concept: library canonical mode
+    statqed_concept: named test oracle for one exact ordering variant
+    obligation: Never infer profile identity from the word canonical.
+  - source_concept: decoder success
+    statqed_concept: one untrusted parse observation
+    obligation: Compare against a strict raw-byte validator and preserved map-entry stream.
+  - source_concept: package license field
+    statqed_concept: top-level redistribution input
+    obligation: Generate a resolved transitive license inventory before release.
+  - source_concept: advisory query result
+    statqed_concept: dated external security observation
+    obligation: Repeat against the resolved lockfile and retain exact query evidence at the release gate.
+quantifiers:
+  - statement: Every golden and corrupted corpus item is run through every pinned oracle with explicit configuration.
+    source_status: Project conformance obligation.
+  - statement: Agreement of all prototype libraries implies correctness.
+    source_status: False; shared misinterpretation and shared implementation lineage remain possible.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: ordering_disagreement_corpus
+    value: Map keys selected so RFC 8949 core and length-first order disagree.
+    purpose: Prevents all canonical flags from appearing to agree on an uninformative corpus.
+  - name: permissive_default_corpus
+    value: Duplicate-key and indefinite-length CBOR items.
+    purpose: Confirms that explicit strict configuration and raw validation are necessary.
+  - name: cbor2_regression_corpus
+    value: Incomplete indefinite map and tag 2/3 with a non-byte-string payload.
+    purpose: Pins fixes called out in cbor2 6.1.4 and guards historical weak acceptance.
+strengthenings:
+  - name: exact_tool_pinning
+    class: strengthening_justified
+    reason: Software behavior and security fixes change across versions.
+    approval_required: conformance review
+  - name: explicit_flags_and_raw_vectors
+    class: strengthening_justified
+    reason: Defaults differ from the proposed strict profile and can erase errors.
+    approval_required: checker and conformance review
+weakenings:
+  - name: prototype_only_status
+    class: candidate_for_weakening
+    effect: Allows useful differential evidence without claiming the tools are normative or trusted.
+    disposition: Required trust-language boundary.
+attribution:
+  - kind: software_semantics
+    work: Exact publisher metadata and versioned documentation
+    detail: Behavior claims are restricted to the exact package versions and cited API/source anchors.
+  - kind: security_observation
+    work: OSV querybatch
+    detail: Four empty direct-version results and their exact request, normalized response, raw-response hash, and observation date are retained only as a dated no-record observation.
+  - kind: excluded
+    work: serde_cbor
+    detail: Archived status is an explicit exclusion rather than an undocumented omission.
+  - kind: original
+    work: StatQED prototype harness
+    detail: Corpus design, profile implementation, lineage independence, and release qualification remain project obligations.
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''

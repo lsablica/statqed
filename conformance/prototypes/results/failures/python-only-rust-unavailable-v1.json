@@ -1,0 +1,58 @@
+{
+  "record_id": "statqed.sq0005.failure.python-only-rust-unavailable.v1",
+  "status": "Experimental",
+  "date": "2026-08-09",
+  "command": "python3 scripts/serialization/run_conformance.py --python-only --regenerate",
+  "environment": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "python": "CPython 3.12.3",
+    "fixture_timeout_seconds": 5,
+    "process_memory_mib": 128,
+    "python_hash_seed": "0",
+    "python_bytecode_writes": false
+  },
+  "outcome": {
+    "status": "fail",
+    "semantic_fixture_count": 253,
+    "python_expectation_mismatch_count": 0,
+    "rust_unavailable_marker_count": 230,
+    "harness_only_case_count": 23,
+    "joint_golden_count": 0,
+    "mutation_count": 20,
+    "all_mutations_detected": true
+  },
+  "classification": {
+    "result": "implementation_unavailable",
+    "affected_implementation": "rust-prototype",
+    "meaning": "The explicitly requested Python-only run exercised every Python-applicable and harness-local case but could not supply the second independent implementation required for a joint golden.",
+    "nonclaim": "This is retained failure evidence, not evidence that Rust rejected 230 semantic inputs and not permission to accept Python output as a golden oracle."
+  },
+  "subjects": {
+    "semantic_files_sha256": {
+      "atoms-and-widths.json": "2ffec8250ace8283959db11a29d2d7c2b55500429065d484394732c59e52dcd9",
+      "catalog.json": "2c5269e37129a27922dbeecbbae63a2bd6a925e434a5da938315a03b423e5e70",
+      "differential-mutants.json": "313a784148be66fa471c2684be27512fbf5e0f446f7681dd27e8317b36c882e6",
+      "digest-framing.json": "75b11a2b6069f759710cd132d92a8ef1d91a0dbc1488f85f14f3920819277a19",
+      "malformed-and-strictness.json": "b6af575d7111def454a642fa3052bc626f2aea2a4fee76cf7719677739fcf2af",
+      "maps-and-unicode.json": "42fa6c9144c353ba6eb9d343b96d8b0e61e5ec4e472ff10e1ee1b769f2b704d6",
+      "numeric-tags-extensions.json": "2b1be7521420f0f20ce2def17e7e013baa892983f451ca0ea35fea6a47648492",
+      "resources.json": "7f0f02fa85fe96472884bc15f157f474cebebc7560d36991b69501f7cf067a31"
+    },
+    "cddl_sha256": "05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0",
+    "python_oracle_sources_sha256": {
+      "__init__.py": "3bcbb5207f8241a011cdc61fc8d5d0c064458a96b531dfc9fdb30cc677dc7fe0",
+      "cli.py": "3c6c8449cf7bd64576db1ce418a0a6f9a13cf48ae26b39ff774b64577200bdbc",
+      "oracle.py": "26040015042df33facd2329801174795c6933ec808d5d896f001909bf60b2f3e"
+    },
+    "runner_sha256": "aa11d7feca3bcf5b806d59809c4a174fb78f236f7b0058686954aa4092a545f5",
+    "discarded_full_results": {
+      "byte_length": 304186,
+      "sha256": "5951b450bfb2d616537308d47962058923ade01347b116b18d5fc7f012748551"
+    },
+    "discarded_minimized_failures": {
+      "byte_length": 67808,
+      "sha256": "c71fb24719b41ebf35eaf33fabe41748a038a8006fe61dc319a5841549354457"
+    }
+  }
+}

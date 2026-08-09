@@ -1,15 +1,15 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0005", "SQ-0008"],
+  "ready": ["SQ-0006", "SQ-0008"],
   "in_progress": [],
-  "blocked_count": 54,
-  "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004"],
-  "last_integrated_commit": "4aa0b9c145ce2595f3630d17abcfb7e4248579b4",
+  "blocked_count": 53,
+  "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005"],
+  "last_integrated_commit": "18eb333712a1475067bc7730ae1cd8f81f8d25e5",
   "last_updated": "2026-08-09",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
-    "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
+    "ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0006, ADR-0008, ADR-0009, ADR-0010, ADR-0011, and RFC-0001 are Accepted; ADR-0005, ADR-0007, and RFC-0002 through RFC-0009 retain explicit owners and blockers.",
     "SQ-0002 is DONE after specialist review and durable evidence packaging; its final evidence merge is 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
     "SQ-0003 is DONE with an Experimental Lean proof foundation after distinct source, build, formal, adversarial, CI/reproducibility, and integration review. The task merged as 92e3b331b1ae795a21d6e030a21e8ce8d7da03dd and its final reviewed merge-evidence record merged as b7f98a99cdc4babccd920c52f5a2e55f8051228c.",
     "SQ-0003 directly establishes only the exact Lean/Mathlib build environment, test-only smoke declaration, actual axiom observations, trust mutations, normal/source builds, and Lean CI; it introduces no statistical theorem, artifact binding, registry authority, or Draft RFC decision.",
@@ -17,6 +17,14 @@
     "SQ-0004 is DONE after distinct source, workspace/MSRV, API, security/adversarial, CI/reproducibility, and integration review of corrected package cecbaa318f043bedd9898afe20e9f930c39eb732. PR #8 merged as 7a83eb843a216886816553897bf541aeb0270c22 and PR #9 recorded the final merge/workflow evidence in main commit 4aa0b9c145ce2595f3630d17abcfb7e4248579b4.",
     "SQ-0004 establishes only an Experimental dependency-free Rust foundation, deterministic bounded bootstrap CLI behavior, exact-lock reproduction, and point-in-time license/advisory evidence. It introduces no statistical, schema, encoding, artifact, registry, certificate, frontend, or verification semantics.",
     "Independent post-merge review found no blocking SQ-0004 defect. It advanced the manager contract to SQ-0005 and expanded SQ-0005 around RFC ownership, independent canonicalization evidence, durable vectors, and a strict prohibition on resolving RFC-0006 logical-data semantics in SQ-0005.",
-    "The shared dependency calculation makes SQ-0005 and SQ-0008 READY with 54 blocked tasks and no active task. SQ-0005 is the recommended next isolated execution; SQ-0008 remains independently READY and unstarted. RFC-0001 through RFC-0009 retain their actual Draft status."
+    "The shared dependency calculation made SQ-0005 and SQ-0008 READY with 54 blocked tasks and no active task at the reviewed starting commit.",
+    "SQ-0005 was claimed on 2026-08-09 at 2026-08-09T12:00:50Z from 8875d8f6fa8e3b45e706ea567d45448927a02efa on agent/SQ-0005-deterministic-serialization. SQ-0008 remained independently READY and unstarted; RFC-0006 remained byte-identical, Draft, read-only, and owned by SQ-0027.",
+    "SQ-0005 is DONE after independent source, semantic, Rust, Python-lineage, conformance, security, cryptographic, formal/CDDL, CI/release, and pre-transition integration review of package 8e041fbe34742a0f32db776ee39cc5c2534f7f8d. The frozen implementation subject is 410465d773fc011ee01e38e6e76a79a60efe8837.",
+    "RFC-0001 and matching ADR-0004 are Accepted for the bounded data-free statqed.cbor-core.v1 profile and statqed.digest-lp.v1 framing. This establishes Experimental serialization semantics and evidence only; it does not establish a production canonicalizer, artifact verification, provenance, logical-data identity, or statistical validity.",
+    "The first hosted SQ-0005 run retained failure 31320961923 after its default shallow checkout could not read the reviewed baseline during final manifest regeneration. Focused correction 9cd4fa315c17919e25351d474cf579a7b6909bd5 added read-only full history only to that job, retained the failure, and passed serialization run 31321428088 including exact regeneration; final merge and post-merge evidence remain separate fail-closed gates.",
+    "Final integration audit found stale closing prose that contradicted the Accepted RFC-0001 and ADR-0004 headers. Correction 77c924a078c1481b9cead5979746109e51b85364 made only the post-decision status text consistent, preserved the byte-matched normative scope, regenerated all evidence bindings, and requires fresh exact-head and post-merge gates.",
+    "Independently approved scope amendment 34337cbcf89d24b7b29a5fa0d20616343dd5a316 authorized only two stale current-state corrections in ARCHITECTURE.md. Accepted-state synchronization 18eb333712a1475067bc7730ae1cd8f81f8d25e5 updated those two sentences, the RFC/ADR/spec disposition prose, and a 158-subject evidence manifest without changing the marked normative scope.",
+    "Synchronized content subject 6787022a4fb23bde589e62796fb13c3e8d4d78bf passed exact-head serialization run 31322606288 and PR serialization, guardrail, Rust, and Lean runs 31322603702, 31322603705, 31322603706, and 31322603742. Final metadata-only binding, independent merge review, and post-merge main evidence remain fail-closed gates.",
+    "The decision-aware calculation makes SQ-0006 and SQ-0008 READY with 53 blocked tasks and no active task. Both remain unstarted in this execution."
   ]
 }

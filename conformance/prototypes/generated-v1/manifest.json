@@ -1,0 +1,52 @@
+{
+  "accepted_count": 70,
+  "case_count": 273,
+  "cddl_sha256": "05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0",
+  "failure_count": 0,
+  "files": {
+    "failures.json": {
+      "bytes": 126,
+      "sha256": "dbda36bd8752d5662f77fb2be3feb6d519e8164c7fe41fad734c05376114970b"
+    },
+    "goldens.json": {
+      "bytes": 253,
+      "sha256": "d5e572e44e7930e50f0d44fdf4ece04e7a01ab7d9a6817dda62cbec074183e1c"
+    },
+    "mutations.json": {
+      "bytes": 5968,
+      "sha256": "1b6c448a29ce76b83c5e85673731382dc24bba8a1902a7686988626015d22da6"
+    },
+    "results.json": {
+      "bytes": 454145,
+      "sha256": "4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274"
+    }
+  },
+  "fixture_frozen_commit": "b4d92a39e30fa5736c58bc71c57790ec215fbad7",
+  "fixture_tree_sha256": "90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8",
+  "generator": "scripts/serialization/run_conformance.py",
+  "golden_manifest_sha256": "8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1",
+  "joint_golden_count": 69,
+  "operational_limits": {
+    "fixture_timeout_seconds": 5,
+    "platform_scope": "Linux",
+    "process_memory_mib": 128
+  },
+  "python_oracle": {
+    "frozen_commit": "fd8dd9e344ff6bbe1488cb143f8b700c6c795efe",
+    "implementation_source_sha256": "cc05dbf3d4996f44e204099ad335df843557571ae61aac8044903de5f9e41a9f"
+  },
+  "regeneration_command": "python3 scripts/serialization/run_conformance.py --regenerate",
+  "rejected_count": 203,
+  "rust_prototype": {
+    "adversarial_fix_commit": "81aa7909591617589150bc9756ce904ac5fd5f20",
+    "dependency_evidence_commit": "31a1a773f149248703db8b26930d0a3b4025a099",
+    "frozen_tree_commit": "fd8dd9e344ff6bbe1488cb143f8b700c6c795efe",
+    "implementation_source_sha256": "cb3c03907bc7cdf6f495be7d98d795347b3b51c1415637a6b1e8d71f558027ea",
+    "prototype_commit": "2f0d778fff38bedd512dadd8603fc59e38be75b4",
+    "status": "available",
+    "transport_fix_commit": "4809224d2b06a10dc212865c8e1b667d3fe3e34a"
+  },
+  "schema_id": "statqed.serialization-generated-manifest.v1",
+  "status": "pass",
+  "verification_command": "python3 scripts/serialization/run_conformance.py --verify"
+}

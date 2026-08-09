@@ -1,0 +1,178 @@
+audit_id: SA-SQ0005-UNICODE
+subject: UTF-8 validity and Unicode normalization disposition for deterministic artifacts
+source:
+  work: RFC 3629, UTF-8, a transformation format of ISO 10646
+  version: RFC 3629; November 2003; Unicode Standard 17.0.0 and UAX 15 Revision 57 used for current normalization context
+  locator: https://www.rfc-editor.org/rfc/rfc3629.html, Sections 3, 4, and 10
+  persistent_id: https://doi.org/10.17487/RFC3629
+controlled_statement: >-
+  CBOR text strings contain UTF-8, and invalid UTF-8 is invalid CBOR.  RFC 3629
+  restricts UTF-8 to Unicode scalar values through U+10FFFF, excluding surrogate
+  code points and overlong or otherwise malformed sequences.  Neither RFC 3629
+  nor RFC 8949 requires Unicode normalization.  Unicode 17.0.0 and UAX 15
+  Revision 57 define NFC, NFD, NFKC, and NFKD, but compatibility normalization
+  can erase semantic distinctions.  The recommended SQ-0005 baseline therefore
+  preserves the decoded scalar sequence exactly and performs no normalization;
+  any future normalization profile must pin an exact Unicode version and define
+  collision, unassigned-code-point, and error behavior.
+retrieved_at: '2026-08-09'
+source_records:
+  - work: RFC 3629
+    version: November 2003; Standards Track
+    locator: https://www.rfc-editor.org/rfc/rfc3629.html
+    persistent_id: https://doi.org/10.17487/RFC3629
+    status: Current UTF-8 Internet standard used by RFC 8949
+    exact_anchors:
+      - Section 3, UTF-8 definition and scalar range
+      - Section 4, syntax and invalid octets
+      - Section 10, security considerations including overlong sequences and illegal sequences
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the license notice stated in the RFC
+  - work: The Unicode Standard
+    version: 17.0.0; published 2025-09-09; ISBN 978-1-936213-35-1
+    locator: https://www.unicode.org/versions/Unicode17.0.0/
+    persistent_id: https://www.unicode.org/versions/Unicode17.0.0/
+    status: Current published Unicode version at retrieval; supersedes earlier versions
+    exact_anchors:
+      - Version References
+      - Core Specification Chapter 3, Section 3.11, Normalization Forms
+      - Updates and Errata link for post-release corrections
+    license: Unicode Terms of Use apply to the standard; Unicode data files and software are under the Unicode License v3, SPDX Unicode-3.0, where identified
+  - work: UAX 15, Unicode Normalization Forms
+    version: Revision 57; reissued for Unicode 17.0.0; dated 2025-07-30
+    locator: https://www.unicode.org/reports/tr15/tr15-57.html
+    persistent_id: https://www.unicode.org/reports/tr15/tr15-57.html
+    status: Unicode Standard Annex for Unicode 17.0.0; no significant changes reported for Unicode 17.0
+    exact_anchors:
+      - Sections 1.1-1.2, canonical and compatibility equivalence and four forms
+      - Section 3, conformance
+      - Section 11, normalization stability
+      - Sections 12-12.1, stable code points and Normalization Process for Stabilized Strings
+      - Revision 57 modification note
+    license: Unicode Terms of Use and UAX intellectual-property notice apply
+hypotheses:
+  - name: utf8_scalar_range
+    class: source_explicit
+    source_anchor: RFC 3629 Sections 3 and 4
+    notes: Valid UTF-8 encodes scalar values U+0000 through U+10FFFF except U+D800 through U+DFFF.
+  - name: reject_overlong_sequences
+    class: source_explicit
+    source_anchor: RFC 3629 Sections 3, 4, and 10
+    notes: A scalar has only its shortest valid UTF-8 encoding; overlong alternatives are malformed and security-relevant.
+  - name: reject_invalid_leading_octets
+    class: source_explicit
+    source_anchor: RFC 3629 Section 4
+    notes: C0, C1, and F5 through FF cannot begin valid UTF-8 under the restricted syntax.
+  - name: invalid_utf8_invalidates_cbor_text
+    class: source_explicit
+    source_anchor: RFC 8949 Section 5.3.1
+    notes: The raw CBOR validator must reject malformed UTF-8 rather than invoke a replacement-character decoder.
+  - name: four_normalization_forms
+    class: source_explicit
+    source_anchor: UAX 15 Sections 1.1-1.2
+    notes: NFC and NFD use canonical equivalence; NFKC and NFKD additionally apply compatibility equivalence.
+  - name: compatibility_normalization_can_change_semantic_distinctions
+    class: source_explicit
+    source_anchor: UAX 15 Section 1.1
+    notes: UAX 15 explicitly warns that compatibility decompositions used in mathematical notation can encode semantic distinctions.
+  - name: npss_rejects_unassigned_code_points
+    class: source_explicit
+    source_anchor: UAX 15 Section 12.1
+    notes: NPSS aborts if a code point is unassigned in the selected Unicode version.
+  - name: cbor_requires_normalization
+    class: not_applicable
+    source_anchor: RFC 8949 Sections 3.1 and 5.3.1
+    notes: RFC 8949 requires valid UTF-8 but states no normalization requirement.
+  - name: preserve_scalar_sequence_without_normalization
+    class: candidate_for_weakening
+    source_anchor: RFC 8949 text-string model; UAX 15 Sections 1 and 12
+    notes: Recommended baseline because it avoids silently identifying canonically or compatibly equivalent strings and avoids a Unicode-version dependency.
+  - name: pin_unicode_version_if_normalizing
+    class: formalization_obligation
+    source_anchor: Unicode 17.0.0 Version References and UAX 15 Sections 11-12
+    notes: A normalization profile must cite a complete Unicode version, form, conformance data, unassigned-code-point policy, and error behavior.
+  - name: normalization_collision_policy
+    class: formalization_obligation
+    source_anchor: UAX 15 Sections 1.1-1.2
+    notes: If normalized strings are map keys or identifiers, distinct inputs can collapse; the profile must reject collisions before host-map construction or define their semantics.
+  - name: silently_apply_nfkc
+    class: strengthening_unjustified
+    source_anchor: UAX 15 Section 1.1
+    notes: NFKC can erase meaningful mathematical distinctions and is not licensed by CBOR or the StatQED source semantics.
+  - name: silently_apply_nfc
+    class: strengthening_unjustified
+    source_anchor: UAX 15 Sections 1.1-1.2
+    notes: Canonical equivalence may be useful for selected identifiers, but treating all artifact text as NFC-equivalent is an unstated semantic strengthening.
+  - name: reject_noncharacters_and_controls
+    class: strengthening_unjustified
+    source_anchor: RFC 3629 Sections 3-4 and RFC 8949 Section 5.3.1
+    notes: Valid scalar values are not made invalid merely because an implementation considers them non-printable; an application-specific identifier grammar may impose a separately sourced restriction.
+variants:
+  - name: Preserve exact Unicode scalar sequence
+    locator: RFC 8949 text-string model
+    conflict: Canonically equivalent strings remain distinct values and distinct deterministic encodings.
+    disposition: Recommended baseline; transparent and version-independent after UTF-8 validation.
+  - name: NFC
+    locator: UAX 15 Sections 1.2 and 3
+    conflict: Canonically equivalent strings collapse and normalization depends on a specified Unicode implementation/version policy.
+    disposition: Do not apply globally; consider only for an explicitly defined identifier field after semantic review.
+  - name: NFKC
+    locator: UAX 15 Sections 1.1-1.2
+    conflict: Compatibility equivalence can remove visual or mathematical distinctions.
+    disposition: Exclude from baseline artifact canonicalization.
+  - name: NPSS with a selected form
+    locator: UAX 15 Sections 12-12.1
+    conflict: Gains cross-version stability by rejecting unassigned code points and therefore changes the accepted domain.
+    disposition: Future explicit profile candidate, not an implicit normalization mode.
+concept_mapping:
+  - source_concept: valid UTF-8 sequence
+    statqed_concept: losslessly decoded sequence of Unicode scalar values
+    obligation: Strict decoder with no replacement mode and exact rejection offsets/errors.
+  - source_concept: canonical equivalence
+    statqed_concept: possible field-specific identifier equivalence
+    obligation: Do not extend to ordinary labels or evidence text without a semantic source.
+  - source_concept: normalization form
+    statqed_concept: versioned optional canonicalization transform
+    obligation: Pin version/form and test collisions, idempotence, unassigned values, and cross-implementation conformance.
+quantifiers:
+  - statement: Every accepted text-string byte sequence decodes to exactly one sequence of Unicode scalar values under RFC 3629.
+    source_status: Source-supported when malformed and overlong sequences are rejected.
+  - statement: Every semantic StatQED text value has exactly one artifact byte representation.
+    source_status: Holds for preserved scalar sequences plus deterministic CBOR length encoding; normalization-based equivalence would require additional proof and collision rules.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: overlong_utf8_witness
+    value: C0 80, an illegal overlong attempt to encode U+0000.
+    purpose: Verifies strict UTF-8 rejection rather than replacement or permissive decoding.
+  - name: canonical_equivalence_witness
+    value: U+00E9 versus U+0065 U+0301.
+    purpose: Distinct preserved scalar sequences that NFC would collapse.
+  - name: compatibility_semantics_witness
+    value: U+210D MATHEMATICAL DOUBLE-STRUCK CAPITAL H versus ASCII H.
+    purpose: Demonstrates why compatibility normalization is not semantically neutral for mathematical text.
+strengthenings:
+  - name: strict_utf8_without_replacement
+    class: source_explicit
+    reason: Required by RFC 3629 and RFC 8949 validity.
+    approval_required: none beyond conformance review
+weakenings:
+  - name: no_unicode_normalization
+    class: candidate_for_weakening
+    effect: Accepts all valid scalar sequences and preserves distinctions rather than imposing a narrower normalized domain.
+    disposition: Recommended baseline.
+attribution:
+  - kind: reproduced
+    work: RFC 3629 and RFC 8949
+    detail: UTF-8 scalar range and malformed-sequence rejection are reproduced as encoding validity requirements.
+  - kind: reproduced
+    work: Unicode 17.0.0 and UAX 15 Revision 57
+    detail: Normalization forms, semantic cautions, and NPSS behavior are recorded with versioned anchors.
+  - kind: specialized
+    work: StatQED SQ-0005
+    detail: Preserving scalar sequences without normalization is a recommended profile choice, not a Unicode or CBOR mandate.
+  - kind: original
+    work: Future StatQED identifier profiles
+    detail: Any field-specific normalization or identifier repertoire would require separate semantics and review.
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''

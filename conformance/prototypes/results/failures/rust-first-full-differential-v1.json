@@ -1,0 +1,72 @@
+{
+  "record_id": "statqed.sq0005.failure.rust-first-full-differential.v1",
+  "status": "Experimental",
+  "date": "2026-08-09",
+  "command": "python3 scripts/serialization/run_conformance.py --regenerate",
+  "environment": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "fixture_timeout_seconds": 5,
+    "process_memory_mib": 128,
+    "rust_build": "cargo build --locked --offline in a temporary target directory"
+  },
+  "outcome": {
+    "status": "fail",
+    "semantic_fixture_count": 253,
+    "python_expectation_mismatch_count": 0,
+    "rust_distinct_mismatch_count": 16,
+    "cross_comparison_record_count": 16,
+    "total_failure_record_count": 32,
+    "joint_golden_candidate_count": 67,
+    "mutation_count": 20,
+    "all_mutations_detected": true
+  },
+  "minimized_groups": [
+    {
+      "kind": "semantic_producer_classification",
+      "fixture_ids": [
+        "MAP-PRODUCER-DUPLICATE-TEXT",
+        "MAP-KEY-BOOLEAN-FORBIDDEN",
+        "SEM-INTERVAL-REVERSED",
+        "EXTENSION-NONCRITICAL-UNKNOWN",
+        "EXTENSION-CRITICAL-UNKNOWN",
+        "EXTENSION-DUPLICATE-ID",
+        "EXTENSION-ORDER-NONCRITICAL-AB",
+        "EXTENSION-ORDER-NONCRITICAL-BA",
+        "EXTENSION-MIXED-CRITICAL-FIRST",
+        "EXTENSION-MIXED-CRITICAL-LAST",
+        "EXTENSION-DUPLICATE-AFTER-UNIQUE-CRITICAL",
+        "RESOURCE-EXTENSION-COUNT-1"
+      ],
+      "finding": "The Rust typed-JSON producer path used raw-validity or diagnostic-input results, or unsupported-before-invalid interval precedence, instead of the reviewed semantic.* producer codes."
+    },
+    {
+      "kind": "typed_json_transport_cap",
+      "fixture_ids": [
+        "RESOURCE-OUTPUT-BYTES-1048576",
+        "RESOURCE-OUTPUT-BYTES-1048577",
+        "DIGEST-FRAME-PAYLOAD-ONE-OVER"
+      ],
+      "finding": "The 2100000-byte diagnostic transport cap fired before the reviewed canonical-output or digest-payload boundary."
+    },
+    {
+      "kind": "missing_exact_frame_evidence_channel",
+      "fixture_ids": ["DIGEST-FRAME-ATTAINABLE-MAX"],
+      "finding": "The accepted 1048918-byte frame could not pass through the 4096-byte diagnostic envelope and no raw frame command existed."
+    }
+  ],
+  "subjects": {
+    "discarded_full_results": {
+      "byte_length": 400834,
+      "sha256": "defc3d0328235d4843e4d6e3336a0aa3bdd0e51fb7cc305825e3cbd5cdd2d258"
+    },
+    "discarded_minimized_failures": {
+      "byte_length": 12604,
+      "sha256": "d9e0ab8dac40d54e5785d541e259c6bff3d4237a8d84dd92abf6700c93839bf7"
+    },
+    "rust_main_sha256": "59bc2363489e8af6bb30fef39ac7da8232357e878cc27b2ad217c582c79f0e15",
+    "rust_lib_sha256": "860f54e4572aa577ab505d6771cf5bfdb2793820b7683a9661657c0132ddabf1",
+    "semantic_catalog_sha256": "2c5269e37129a27922dbeecbbae63a2bd6a925e434a5da938315a03b423e5e70"
+  },
+  "nonclaim": "The 67 candidate agreements were not installed as binary goldens because the complete suite had not passed; this record preserves failure evidence and does not authorize snapshot acceptance."
+}

@@ -1,0 +1,1 @@
+# Intentionally empty: the oracle has zero third-party Python dependencies.

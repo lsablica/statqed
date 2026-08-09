@@ -1,0 +1,30 @@
+{
+  "record_id": "statqed.sq0005.failure.simple-24-malformed-fixture.v1",
+  "status": "Experimental",
+  "date": "2026-08-09",
+  "classification": "reviewed_semantic_fixture_defect",
+  "minimized_input_hex": "f818",
+  "original_expectation": {
+    "fixture_id": "SIMPLE-24-RAW",
+    "result_class": "deterministic_profile",
+    "code": "profile.simple_forbidden"
+  },
+  "observed_and_source_required_result": {
+    "result_class": "well_formedness",
+    "code": "wellformed.reserved_additional",
+    "reason": "RFC 8949 well-formedness permits the two-byte simple-value form only when the following byte is at least 0x20; f8 18 is therefore malformed."
+  },
+  "resolution": {
+    "fixture_id": "SIMPLE-32-RAW",
+    "replacement_input_hex": "f820",
+    "result_class": "deterministic_profile",
+    "code": "profile.simple_forbidden",
+    "reason": "Simple value 32 is the minimized well-formed two-byte unsupported simple value and preserves the original test purpose."
+  },
+  "subjects": {
+    "original_commit": "d21e411",
+    "original_atoms_and_widths_sha256": "688ec7f9393b654684dda9c552f3e1a6ea6197d45d0c10935885463402f246aa",
+    "corrected_atoms_and_widths_sha256": "2ffec8250ace8283959db11a29d2d7c2b55500429065d484394732c59e52dcd9"
+  },
+  "nonclaim": "The correction changes one malformed conformance input; it does not broaden the accepted semantic value set or derive expectations from an implementation output."
+}

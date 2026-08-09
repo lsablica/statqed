@@ -1,0 +1,29 @@
+[package]
+name = "statqed-rust-cbor-prototype"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97.1"
+license = "MIT"
+publish = false
+description = "Experimental bounded deterministic-CBOR prototype for SQ-0005"
+
+[dependencies]
+minicbor = { version = "=2.3.0", features = ["std"] }
+serde = { version = "=1.0.228", default-features = false }
+serde_core = { version = "=1.0.228", default-features = false }
+serde_json = { version = "=1.0.151" }
+sha2 = { version = "=0.11.0" }
+itoa = { version = "=1.0.18" }
+memchr = { version = "=2.8.0", default-features = false }
+zmij = { version = "=1.0.21" }
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"

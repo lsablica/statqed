@@ -1,0 +1,6 @@
+{
+  "manifest_path": "conformance/prototypes/golden/serialization-v1/manifest.json",
+  "manifest_sha256": "8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1",
+  "schema_id": "statqed.serialization-golden-index.v1",
+  "vector_count": 69
+}

@@ -1,0 +1,12 @@
+; Experimental SQ-0005 structural view for statqed.cbor-core.v1.
+; Published RFC 8610 syntax only, with the RFC 9682 grammar update.
+; Profile validity, deterministic bytes, duplicate detection, resource limits,
+; semantic validity, and digest identity are checked outside CDDL.
+
+statqed-value = statqed-integer / bstr / tstr / statqed-array /
+  statqed-map / bool / nil
+
+statqed-integer = int
+statqed-array = [* statqed-value]
+statqed-map = {* statqed-key => statqed-value}
+statqed-key = int / tstr

@@ -1,0 +1,16 @@
+{
+  "classification": "procedural_fixture_incomplete",
+  "command": "CARGO_NET_OFFLINE=true cargo +1.97.1 generate-lockfile --manifest-path /tmp/statqed-sq0005-lock-repro/Cargo.toml --offline",
+  "exit_status": 101,
+  "failure_id": "SQ0005-RUST-LOCK-REPRO-MISSING-TARGETS",
+  "recorded_at": "2026-08-09T13:06:32Z",
+  "reason": "The initial isolated reproduction copied Cargo.toml and Cargo.lock but omitted src/ and tests/, so Cargo correctly reported that the manifest had no targets.",
+  "recovery": {
+    "action": "Copied the prototype src/ and tests/ directories into the isolated reproduction and reran the same offline command.",
+    "cargo_lock_sha256": "2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180",
+    "exit_status": 0,
+    "result": "Regenerated Cargo.lock was byte-identical to the committed lock."
+  },
+  "schema": "statqed.serialization-failure.v1",
+  "stderr": "error: failed to parse manifest at /tmp/statqed-sq0005-lock-repro/Cargo.toml: no targets specified in the manifest"
+}

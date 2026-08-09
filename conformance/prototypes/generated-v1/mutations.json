@@ -1,0 +1,163 @@
+{
+  "all_detected": true,
+  "mutation_count": 20,
+  "mutations": [
+    {
+      "detected": true,
+      "expected_sha256": "e703c6fdadad038a1ad72bc9ba506263ca833c778f2d1a6ff33ed0a210cbf7e5",
+      "first_difference_byte": 1,
+      "id": "EXECUTED-BAD-ENCODER-LENGTH-FIRST",
+      "mutant_kind": "length_first_map_order",
+      "mutant_sha256": "a0c38eb98224b45f68a5726b3e0dd590cf40ad94230cb59a0a7ecce002d4dad5",
+      "source_fixture": "MUTANT-ENCODER-LENGTH-FIRST-MAP"
+    },
+    {
+      "detected": true,
+      "id": "EXECUTED-BAD-DECODER-LAST-WINS",
+      "mutant_kind": "native_map_before_duplicate_scan",
+      "mutant_result": "accepted",
+      "required_code": "validity.map_duplicate",
+      "source_fixture": "MAP-DUPLICATE-EXACT-INT0"
+    },
+    {
+      "detected": true,
+      "id": "EXECUTED-BAD-DECODER-REENCODE",
+      "mutant_kind": "decode_reencode_upgrades_nonprofile",
+      "mutant_result": "accepted",
+      "required_code": "profile.non_preferred_head",
+      "source_fixture": "HEAD-NONPREF-U-0-AS-U8"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-ALLOCATES-DECLARED-STRING",
+      "linked_fixture": "RESOURCE-DECLARED-BSTR-U32PLUS1",
+      "mutant_kind": "allocate_declared_body_before_resource_check",
+      "required_code": "resource.string_bytes",
+      "stable_code": "differential.resource_guard"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-COERCES-FLOAT",
+      "linked_fixture": "FLOAT16-POSITIVE-ZERO",
+      "mutant_kind": "coerce_integral_float_to_integer",
+      "required_code": "profile.float_forbidden",
+      "stable_code": "differential.decoder_semantics"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-COLLAPSES-EQUIVALENT-RAW-DUPLICATE",
+      "linked_fixture": "MAP-DUPLICATE-EQUIVALENT-INT0",
+      "mutant_kind": "decode_keys_then_insert_into_native_map",
+      "required_code": "validity.map_duplicate",
+      "stable_code": "differential.duplicate_loss"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-COLLAPSES-EXACT-DUPLICATE",
+      "linked_fixture": "MAP-DUPLICATE-EXACT-INT0",
+      "mutant_kind": "insert_entries_into_native_map_before_duplicate_scan",
+      "required_code": "validity.map_duplicate",
+      "stable_code": "differential.duplicate_loss"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-IGNORES-TRAILING",
+      "linked_fixture": "EXPECTED-TRAILING-SECOND-ITEM",
+      "mutant_kind": "return_after_first_complete_item",
+      "required_code": "expected.trailing_bytes",
+      "stable_code": "differential.decoder_acceptance"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-REENCODE-UPGRADES-INPUT",
+      "linked_fixture": "HEAD-NONPREF-U-0-AS-U8",
+      "mutant_kind": "decode_then_reencode_before_validation",
+      "required_code": "profile.non_preferred_head",
+      "stable_code": "differential.decoder_acceptance"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-REPLACES-INVALID-UTF8",
+      "linked_fixture": "UTF8-OVERLONG-NUL",
+      "mutant_kind": "replace_invalid_utf8_with_u_fffd",
+      "required_code": "validity.invalid_utf8",
+      "stable_code": "differential.decoder_semantics"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DECODER-STRIPS-TAG",
+      "linked_fixture": "TAG2-BIGNUM-POSITIVE",
+      "mutant_kind": "treat_unknown_tag_as_transparent",
+      "required_code": "profile.tag_forbidden",
+      "stable_code": "differential.decoder_acceptance"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DIGEST-FALLBACK",
+      "linked_fixture": "DIGEST-ALGORITHM-SUBSTITUTE-NO-FALLBACK",
+      "mutant_kind": "fallback_unknown_algorithm_to_sha256",
+      "required_code": "digest.algorithm",
+      "stable_code": "differential.digest_domain"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DIGEST-HASHES-UNFRAMED-PAYLOAD",
+      "mutant_input_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "mutant_kind": "hash_payload_only",
+      "required_input_sha256": "53c209c1a299f073ec8f66ef4fe28581b6c1ad282731b357def61f2f77ef4749",
+      "stable_code": "differential.digest_domain"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-DIGEST-PREFIX-COMPARE",
+      "linked_fixture": "DIGEST-SUPPLIED-LENGTH-31",
+      "mutant_kind": "accept_matching_digest_prefix",
+      "required_code": "digest.length",
+      "stable_code": "differential.digest_domain"
+    },
+    {
+      "detected": true,
+      "first_difference_byte": 1,
+      "id": "MUTANT-ENCODER-LENGTH-FIRST-MAP",
+      "mutant_kind": "sort_map_keys_by_length_then_lexicographic",
+      "stable_code": "differential.encoder_bytes"
+    },
+    {
+      "detected": true,
+      "first_difference_byte": 1,
+      "id": "MUTANT-ENCODER-LENGTH-FIRST-MIXED-KEY",
+      "mutant_kind": "sort_map_keys_by_length_then_lexicographic",
+      "stable_code": "differential.encoder_bytes"
+    },
+    {
+      "detected": true,
+      "first_difference_byte": 0,
+      "id": "MUTANT-ENCODER-NFC-NORMALIZATION",
+      "mutant_kind": "normalize_text_to_nfc",
+      "stable_code": "differential.encoder_bytes"
+    },
+    {
+      "detected": true,
+      "first_difference_byte": 0,
+      "id": "MUTANT-ENCODER-OVERWIDE-ZERO",
+      "mutant_kind": "encode_small_unsigned_with_u8_argument",
+      "stable_code": "differential.encoder_bytes"
+    },
+    {
+      "detected": true,
+      "first_difference_byte": 0,
+      "id": "MUTANT-ENCODER-TRANSPARENT-TAG",
+      "mutant_kind": "wrap_every_value_in_tag_0",
+      "stable_code": "differential.encoder_bytes"
+    },
+    {
+      "detected": true,
+      "id": "MUTANT-PRODUCER-IGNORES-NONCRITICAL-EXTENSION",
+      "linked_fixture": "EXTENSION-NONCRITICAL-UNKNOWN",
+      "mutant_kind": "drop_unknown_noncritical_extensions",
+      "required_code": "semantic.extension_noncritical_unsupported",
+      "stable_code": "differential.encoder_bytes"
+    }
+  ],
+  "schema_id": "statqed.serialization-mutation-evidence.v1"
+}

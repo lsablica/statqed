@@ -22,7 +22,7 @@ No real statistical method is claimed complete at this milestone.
 
 StatQED's main foundation risk is semantic incoherence, not insufficient generated code. The project therefore freezes only small interfaces after prototypes, negative tests, and independent review. The first vertical slice must exercise the complete cross-language and proof path while remaining data-free, non-statistical, and test-only.
 
-SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed toolchain recommendations but initialized no production project and accepted no Draft RFC semantics. SQ-0003 and SQ-0004 have now completed the separately reviewed Lean and Rust production bootstraps. The recommended next isolated execution is SQ-0005; SQ-0008 remains independently READY.
+SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed toolchain recommendations but initialized no production project and accepted no Draft RFC semantics. SQ-0003 and SQ-0004 completed the separately reviewed Lean and Rust production bootstraps. SQ-0005 has now accepted the bounded data-free RFC-0001 profile after independent prototype and conformance review. The computed next isolated tasks are SQ-0006 and SQ-0008; both remain READY and unstarted.
 
 ## Dependency and decision graph
 
@@ -31,9 +31,9 @@ SQ-0001 constitutional baseline                       DONE
   └─ SQ-0002 toolchain research                      DONE
        ├─ SQ-0003 Lean bootstrap                     DONE
        └─ SQ-0004 Rust bootstrap                     DONE
-            └─ SQ-0005 serialization prototype       READY
-                 └─ RFC-0001 acceptance
-                      └─ SQ-0006 schema v0
+            └─ SQ-0005 serialization prototype       DONE
+                 └─ RFC-0001                         ACCEPTED
+                      └─ SQ-0006 schema v0            READY
                            ├─ SQ-0007 theorem registry + RFC-0005
                            ├─ SQ-0010 artifact envelope + RFC-0008
                            ├─ SQ-0011 canonical backend
@@ -53,11 +53,10 @@ SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 
 Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
 
-SQ-0003 and SQ-0004 were independent READY tasks and are now DONE after
-establishing their separately reviewed proof-backend and reference-workspace
-foundations. The computed successor set is SQ-0005 and SQ-0008 READY. Neither
-successor has begun; each requires a separate isolated execution and review
-transition.
+SQ-0003, SQ-0004, and SQ-0005 are DONE after separately reviewed proof-backend,
+reference-workspace, and encoding-profile foundations. The computed successor
+set is SQ-0006 and SQ-0008 READY. Neither successor has begun; each requires a
+separate isolated execution and review transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
@@ -244,7 +243,7 @@ make list-work
 git diff --check
 ```
 
-`make check` includes repository/ledger guardrails and the immutable SQ-0002 evidence verifier. Each later task adds exact scoped commands to its contract and nearest `AGENTS.md`/implementation guide. SQ-0005 must add a standard-library verifier for its accepted profile and retained evidence to this permanent check path before completion.
+`make check` includes repository/ledger guardrails, the immutable SQ-0002 toolchain-evidence verifier, and the permanent SQ-0005 serialization-evidence verifier. Each later task adds exact scoped commands to its contract and nearest `AGENTS.md`/implementation guide.
 
 ## Recovery and idempotence
 
@@ -264,7 +263,7 @@ git diff --check
 - [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
 - [x] SQ-0003 Lean/Mathlib bootstrap — DONE 2026-08-08 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap`; review package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7`. Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Distinct Mathlib/source, build, formal trust, adversarial mutation, CI/reproducibility, and integration roles approved the package. Exact-package Lean run `31279603416` and guardrails run `31279603408` passed cached and isolated-source gates.
 - [x] SQ-0004 Rust bootstrap — DONE 2026-08-09 from `726821bf1a29995756dc10cbbecfd452dccad7e5` on `agent/SQ-0004-rust-bootstrap`; implementation `33d7a50f98996d01ce2a210e304d376e7d310e53`, corrected review package `cecbaa318f043bedd9898afe20e9f930c39eb732`, atomic transition `a8e886386cbef9437f0c6912f96d6d29ac6023c4`, final reviewed head `35a8404920dee19ecda6e8c6a0e549cacd06b069`, task merge `7a83eb843a216886816553897bf541aeb0270c22`, and post-merge evidence commit `4aa0b9c145ce2595f3630d17abcfb7e4248579b4`. Exact policy: Rust 1.97.1 for development/acquisition, Rust 1.85.1 for locked offline compatibility only, Edition 2024, resolver 3, and `rust-version = "1.85.1"`. Distinct Rust/source, workspace/MSRV, API/error-conformance, security/adversarial, CI/reproducibility, and integration reviewers approved the package; final main Rust, guardrail, and Lean workflows passed.
-- [ ] SQ-0005 deterministic-serialization/RFC prototype — READY and recommended next isolated execution; RFC-0001 remains Draft for this task to resolve, while RFC-0006 remains read-only under SQ-0027 ownership.
+- [x] SQ-0005 deterministic-serialization/RFC prototype — DONE 2026-08-09 from `8875d8f6fa8e3b45e706ea567d45448927a02efa` on `agent/SQ-0005-deterministic-serialization`; frozen implementation `410465d773fc011ee01e38e6e76a79a60efe8837`, independently approved pre-transition package `8e041fbe34742a0f32db776ee39cc5c2534f7f8d`, atomic transition `cc1021e33441b4bfba5c1459d644d2c5a6b79127`, focused hosted-evidence correction `9cd4fa315c17919e25351d474cf579a7b6909bd5`, Accepted-status correction `77c924a078c1481b9cead5979746109e51b85364`, scope amendment `34337cbcf89d24b7b29a5fa0d20616343dd5a316`, and accepted-state synchronization `18eb333712a1475067bc7730ae1cd8f81f8d25e5`. Direct local platform: Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64. Synchronized content head `6787022a4fb23bde589e62796fb13c3e8d4d78bf` passed exact-head serialization run `31322606288` plus PR serialization `31322603702`, guardrails `31322603705`, Rust `31322603706`, and Lean `31322603742`; the run covered both exact Python jobs, locked Rust gates, 273 cases, supply-chain observations, 158-subject evidence verification, 12 corruption tests, and byte-identical manifest regeneration. RFC-0001 and matching ADR-0004 accept the bounded data-free `statqed.cbor-core.v1` profile and generic `statqed.digest-lp.v1` framing. Distinct source, semantic, Rust, Python-lineage, conformance, parser/security, cryptographic, formal/CDDL, CI/release, and integration roles approved the transition. RFC-0006 remains byte-identical and Draft under SQ-0027; no logical-data semantics entered this task.
 - [ ] SQ-0008 core Lean types/RFC ownership — independently READY and unstarted, with RFC-0002/RFC-0004 still Draft for that task to resolve.
 - [ ] SQ-0006 through SQ-0020.
 
@@ -301,6 +300,14 @@ git diff --check
 - Completing SQ-0003 makes SQ-0008 READY even while RFC-0002/RFC-0004 remain Draft because SQ-0008 owns and must resolve those RFCs. Contract/backlog/status parity required a readiness-only SQ-0008 contract update; this does not begin SQ-0008.
 - SQ-0004 integration review found that a handoff attributed separate build and doctest commands to the 15-command isolated JSON transcript. Those gates had passed independently and in CI, but the retained transcript contains identity, lock-generation, acquisition, metadata, fmt, Clippy, test, and version-output commands. The corrected package now keeps those evidence classes explicit.
 - The SQ-0004 post-merge review found no Rust defect but exposed a planning boundary error: the old SQ-0005 contract allowed direct edits to RFC-0006 despite SQ-0027 ownership. The corrected contract makes RFC-0006 read-only and requires independent encoding lineage, durable evidence, and explicit data-free scope.
+- RFC 8949's core and length-first deterministic profiles produce different map order for real key pairs. The accepted v1 profile selects complete-key-byte core order explicitly; library defaults cannot silently select the compatibility alternative.
+- Duplicate evidence disappears if a decoder constructs a native map too early. Both prototypes therefore retain ordered raw entries through validity, key-class, typed-duplicate, preferred-head, and ordering checks.
+- Independent cryptographic review found one initially inconsistent boundary: complete 129-byte identifiers and truncated length-prefixed components were classified alike by one oracle. Two semantic-first raw-frame fixtures now preserve the reviewed field-specific-versus-truncation distinction across both implementations.
+- A normal working-tree `git diff --check` did not expose three blank lines at EOF already committed on the branch. Branch-wide comparison against the reviewed base did; the exact tree bindings and generated manifest were regenerated after the cleanup.
+- The accepted profile is intentionally narrower than generic CBOR: no tags, floats, bignums, rationals, decimals, normalization, intervals, or extensions become normative merely because a library can decode them. Explicit exclusion keeps future semantics reviewable.
+- The source-only Rust prototype has complete lock-bound license expressions and point-in-time RustSec evidence, but binary redistribution still requires a reviewed third-party notice bundle.
+- A one-commit hosted checkout can verify the current evidence package yet still fail a baseline-relative provenance check. The first serialization run retained this failure; the narrowly reviewed correction fetches full read-only history only for the baseline-dependent job and leaves Python-only jobs shallow.
+- Status headers alone were insufficient to keep the accepted decision record coherent: final integration review found stale Draft/Proposed closing prose in otherwise Accepted RFC/ADR documents. The corrected evidence now binds status-consistent decision prose without changing the marked normative bytes.
 
 ## Decision Log
 
@@ -335,6 +342,16 @@ git diff --check
 - 2026-08-09: Final reviewed head `35a8404920dee19ecda6e8c6a0e549cacd06b069` was green and PR #8 merged as `7a83eb843a216886816553897bf541aeb0270c22`. Main Rust run `31305247261`, guardrails `31305247241`, and unchanged Lean run `31305247233` passed before post-merge metadata recording.
 - 2026-08-09: PR #9 recorded final SQ-0004 merge/workflow evidence in main commit `4aa0b9c145ce2595f3630d17abcfb7e4248579b4`; main Rust `31305825523`, guardrails `31305825572`, and Lean `31305825538` passed.
 - 2026-08-09: Independent post-merge review approved SQ-0004 without changing Rust code or task state, selected SQ-0005 as the next isolated task, and rebuilt its contract around RFC-0001 ownership, genuinely independent canonicalization evidence, permanent evidence verification, and strict non-ownership of RFC-0006.
+- 2026-08-09: Selected `statqed.cbor-core.v1`: RFC 8949 Section 4.2.1 core deterministic ordering, preferred definite-length encoding, direct-range integers, exact Unicode preservation without normalization, integer/text map keys, and a closed tag/float/extension-free v1 subset.
+- 2026-08-09: Selected staged strict verification rather than decode-and-reencode repair. Well-formedness, CBOR validity, application expectedness, deterministic profile, CDDL shape, semantic validity, schema validation, digest verification, resources, and operational failure remain separate result classes.
+- 2026-08-09: Selected the generic data-free `statqed.digest-lp.v1` SHA-256 frame with purpose, algorithm, profile, object-class/schema, framing version, explicit lengths, and payload. It binds identifiers but grants no schema authority and resolves no RFC-0006 logical-data decision.
+- 2026-08-09: Independent integration authorized package `8e041fbe34742a0f32db776ee39cc5c2534f7f8d` after eight specialist review records approved frozen implementation `410465d773fc011ee01e38e6e76a79a60efe8837`; hosted CI and final evidence verification remain fail-closed merge gates.
+- 2026-08-09: Accepted RFC-0001 and matching ADR-0004, marked SQ-0005 DONE, and made only SQ-0006 readiness state READY. SQ-0008 remains READY/unstarted; RFC-0006 remains unchanged Draft under SQ-0027. The decision-aware ledger reports 53 blocked tasks and no active task.
+- 2026-08-09: Retained hosted run `31320961923` as a reproducibility-environment failure when final evidence regeneration could not read base `8875d8f...` from a one-commit checkout. Independent CI review approved focused correction `9cd4fa315c17919e25351d474cf579a7b6909bd5`, which gives only the conformance job full read-only history; serialization run `31321428088` then passed every job and regenerated the 157-subject manifest byte-identically.
+- 2026-08-09: Final integration audit blocked merge because stale closing paragraphs still called RFC-0001 Draft and ADR-0004 Proposed. Correction `77c924a078c1481b9cead5979746109e51b85364` made that post-decision prose consistent with the Accepted headers and atomic transition, preserved the byte-identical marked scope, and regenerated the content-addressed evidence package.
+- 2026-08-09: A separate reviewed scope amendment authorized only two current-state wording corrections in `ARCHITECTURE.md`, which otherwise remained outside SQ-0005 scope. The amendment permits replacing stale RFC-0001 candidate language with the Accepted bounded data-free decision and forbids any architecture, trust, package-boundary, or normative-scope change.
+- 2026-08-09: Accepted-state synchronization `18eb333712a1475067bc7730ae1cd8f81f8d25e5` used that narrow authority for exactly two architecture sentences, corrected RFC/ADR/spec disposition language, and added `ARCHITECTURE.md` to the permanent evidence and review subject map. The marked RFC/ADR scope remained byte-identical; the regenerated manifest binds 158 subjects.
+- 2026-08-09: Synchronized content head `6787022a4fb23bde589e62796fb13c3e8d4d78bf` passed exact-head serialization run `31322606288` and the complete PR regression set: serialization `31322603702`, repository guardrails `31322603705`, Rust development/offline floor `31322603706`, and Lean trust/mutations `31322603742`.
 
 ## Outcomes & Retrospective
 
@@ -391,3 +408,30 @@ integration record, selected SQ-0005 as the recommended next task, and removed
 RFC-0006 from SQ-0005's writable scope. The computed READY set remains SQ-0005
 and SQ-0008; both are unstarted. Full foundation retrospective remains SQ-0020
 work.
+
+### SQ-0005
+
+RFC-0001 and ADR-0004 now define one bounded data-free deterministic encoding
+profile. `statqed.cbor-core.v1` selects RFC 8949 core map order, preferred
+definite-length bytes, exact Unicode preservation, narrow map keys, and a
+closed semantic subset. `statqed.digest-lp.v1` provides generic length-prefixed
+SHA-256 framing without defining logical-data identity or schema authority.
+
+Independent Rust and Python implementations preserve raw map entries and agree
+across 273 semantic-first cases: 70 accepted, 203 rejected, zero differential
+failures, 69 retained joint goldens, and 20 detected deliberate divergences.
+The permanent evidence verifier binds the source audit, profile, fixtures,
+goldens, failures, implementation lineage, dependencies, reviews, RFC/ADR
+state, RFC-0006 baseline, SQ-0008, and protected production trees.
+
+The first hosted run failed closed on missing Git history rather than weakening
+the baseline comparison. The retained failure and independently reviewed
+checkout correction were then exercised by successful hosted run
+`31321428088` on observed Ubuntu 24.04.4/x86-64 image `20260720.247.2`.
+
+This is Experimental semantics and conformance evidence. Neither prototype is
+production authority or part of the proof TCB; CDDL is structural only; digest
+equality is conditional; and no artifact, logical table, provenance,
+certificate, theorem, numerical, inferential, or statistical validity claim is
+introduced. The computed successor set is SQ-0006 and SQ-0008 READY, both
+unstarted. Full foundation retrospective remains SQ-0020 work.

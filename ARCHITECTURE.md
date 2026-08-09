@@ -78,7 +78,7 @@ A Rust reference implementation will:
 - parse versioned source representations;
 - validate structural constraints;
 - lower supported constructs to canonical form;
-- encode according to the Accepted normative profile (deterministic CBOR is the current RFC-0001 candidate);
+- encode according to the Accepted `statqed.cbor-core.v1` deterministic CBOR profile from RFC-0001;
 - compute logical data and theorem-lock digests;
 - expose a stable CLI;
 - generate or consume language bindings;
@@ -159,7 +159,7 @@ The bundle contains:
 - citations;
 - optional reports.
 
-The candidate direction for normative structured objects is deterministic CBOR governed by versioned CDDL files. JSON/YAML views would be for inspection and authoring only. RFC-0001/SQ-0005 must select and validate the complete encoding profile before this becomes normative. Arrow is a candidate interoperable tabular transport; RFC-0006 must define any transport-independent logical data object and digest.
+Normative data-free structured objects use the bounded deterministic CBOR profile accepted by RFC-0001/SQ-0005 and may use versioned published-syntax CDDL for structural subsets. JSON/YAML views remain for inspection and authoring only. Arrow is a candidate interoperable tabular transport; RFC-0006 must define any transport-independent logical data object and digest.
 
 ### 8. Theorem registry
 

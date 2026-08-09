@@ -1,0 +1,14 @@
+{
+  "endpoint": "https://api.osv.dev/v1/querybatch",
+  "http_method": "POST",
+  "observation_date": "2026-08-09",
+  "raw_response_sha256": "1d3b3028309f42f104f47f2023c84a49d3582b917a8eede35750fec991a596cf",
+  "request_path": "source-audits/encoding/osv-direct-prototype-request.json",
+  "request_sha256": "6efff00478c1722fa295792fd09465156e474ae16ac083ae14f8997c59c2bd56",
+  "response_normalization": "Parsed the raw JSON response and rendered it with two-space indentation, original array order, and one trailing newline; no keys or values changed.",
+  "response_path": "source-audits/encoding/osv-direct-prototype-response.json",
+  "response_sha256": "3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600",
+  "result_count": 4,
+  "result_summary": "Four empty result objects aligned by position with the four request queries.",
+  "schema_id": "statqed.osv-direct-prototype-observation.v1"
+}

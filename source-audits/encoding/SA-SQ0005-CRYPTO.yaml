@@ -1,0 +1,212 @@
+audit_id: SA-SQ0005-CRYPTO
+subject: SHA-256 selection, algorithm identifiers, and domain-framing obligations
+source:
+  work: NIST FIPS 180-4, Secure Hash Standard, Update 1
+  version: August 2015; current at retrieval; NIST planning note dated 2023-03-07 announces a future revision
+  locator: https://csrc.nist.gov/pubs/fips/180-4/upd1/final, Sections 5.1.1, 5.2.1, 5.3.3, and 6.2
+  persistent_id: https://doi.org/10.6028/NIST.FIPS.180-4
+controlled_statement: >-
+  SHA-256 is the function specified by FIPS 180-4 Sections 5 and 6.2 and
+  returns a 256-bit digest.  The hash standard does not define what a StatQED
+  artifact digest means or how purpose, algorithm, profile, schema, framing
+  version, and payload are separated.  SQ-0005 must define an injective,
+  versioned binary preimage frame and use the full 32-octet output.  RFC 9380
+  provides relevant domain-separation design guidance but its exact
+  constructions are hash-to-curve-specific; the StatQED frame remains an
+  original protocol definition requiring cryptographic and checker review.
+retrieved_at: '2026-08-09'
+source_records:
+  - work: FIPS 180-4, Secure Hash Standard, Update 1
+    version: August 2015; supersedes the 2012 publication
+    locator: https://csrc.nist.gov/pubs/fips/180-4/upd1/final
+    persistent_id: https://doi.org/10.6028/NIST.FIPS.180-4
+    status: Current published FIPS at retrieval; NIST decided in 2023 to revise it, but no replacement was published by 2026-08-09
+    exact_anchors:
+      - Section 5.1.1, SHA-224 and SHA-256 padding
+      - Section 5.2.1, message parsing
+      - Section 5.3.3, SHA-256 initial hash values
+      - Section 6.2, SHA-256 computation
+    license: United States government standard; cite the publication and do not infer a software license from it
+  - work: NIST Hash Functions project
+    version: Current page retrieved 2026-08-09
+    locator: https://csrc.nist.gov/projects/hash-functions
+    persistent_id: https://csrc.nist.gov/projects/hash-functions
+    status: Current NIST supplementary guidance
+    exact_anchors:
+      - Hash security-properties table, SHA-256 row
+    disposition: Record 128-bit collision, 256-bit preimage, and message-length-dependent second-preimage strength as conditional cryptographic claims, not proofs of equality
+  - work: RFC 9380, Hashing to Elliptic Curves
+    version: August 2023; Informational
+    locator: https://www.rfc-editor.org/rfc/rfc9380.html
+    persistent_id: https://doi.org/10.17487/RFC9380
+    status: IRTF stream, CFRG consensus; not an Internet Standards Track specification; design guidance only for SQ-0005 framing
+    exact_anchors:
+      - Status of This Memo
+      - Section 2.2.5, domain separation
+      - Section 3.1, domain-separation tag requirements
+      - Section 10.7, Domain Separation for expand_message Variants
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the license notice stated in the RFC
+  - work: RFC 9380 errata record
+    version: Current record retrieved 2026-08-09
+    locator: https://www.rfc-editor.org/errata/rfc9380
+    persistent_id: https://www.rfc-editor.org/errata/eid7844
+    status: One Verified Editorial erratum, EID 7844, verified 2024-03-08
+    exact_anchors:
+      - EID 7844, Section 10.6 cross-reference correction
+    disposition: The editorial correction does not alter Sections 2.2.5, 3.1, or 10.7 used as non-normative design guidance
+    license: RFC Editor errata record; IETF Trust publication context
+  - work: RFC 6920 and IANA Named Information Hash Algorithm Registry
+    version: RFC 6920, April 2013; registry last updated 2025-10-14
+    locator: https://www.iana.org/assignments/named-information/named-information.xhtml
+    persistent_id: https://doi.org/10.17487/RFC6920
+    status: Registry row 1 is sha-256, 256 bits, current; rows 2-6 are truncated SHA-256 variants
+    exact_anchors:
+      - RFC 6920 Section 9.4
+      - IANA Hash Algorithm Registry, rows 1-6
+    disposition: Use the textual identifier sha-256 and full output; do not reuse registry numeric ID 1 without naming its registry context
+  - work: IANA COSE Algorithms registry
+    version: Current registry retrieved 2026-08-09
+    locator: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
+    persistent_id: https://www.iana.org/assignments/cose/algorithms.csv
+    status: COSE algorithm -16 is SHA-256, recommended Yes
+    exact_anchors:
+      - Algorithms row SHA-256, value -16
+    disposition: COSE -16 is a COSE-local value and must not silently become StatQED's generic algorithm identifier
+  - work: NIST SP 800-185, SHA-3 Derived Functions
+    version: December 2016
+    locator: https://csrc.nist.gov/pubs/sp/800/185/final
+    persistent_id: https://doi.org/10.6028/NIST.SP.800-185
+    status: Current NIST recommendation; nearby variant, not selected
+    exact_anchors:
+      - cSHAKE customization and TupleHash
+    disposition: Do not copy SHA-3/Keccak framing constructions as if they standardized a SHA-256 artifact frame
+hypotheses:
+  - name: sha256_function_definition
+    class: source_explicit
+    source_anchor: FIPS 180-4 Sections 5.1.1, 5.2.1, 5.3.3, and 6.2
+    notes: These sections define preprocessing, state, and compression for SHA-256.
+  - name: sha256_output_length
+    class: source_explicit
+    source_anchor: FIPS 180-4 Section 6.2
+    notes: The output is 256 bits, represented in the profile as exactly 32 octets.
+  - name: full_sha256_identifier
+    class: source_explicit
+    source_anchor: IANA Named Information Hash Algorithm Registry row 1
+    notes: sha-256 identifies the full 256-bit function in that registry context.
+  - name: collision_strength_is_128_bits
+    class: source_explicit
+    source_anchor: NIST Hash Functions project, security-properties table
+    notes: This is a computational security-strength statement, not kernel-verified equality.
+  - name: distinct_domains_need_distinct_unambiguous_encodings
+    class: source_implicit_justified
+    source_anchor: RFC 9380 Sections 2.2.5, 3.1, and 10.7
+    notes: RFC 9380 motivates distinct prefix/suffix-free domain encodings; its exact formulas are specific to its constructions.
+  - name: statqed_frame_is_defined_by_fips_180_4
+    class: not_applicable
+    source_anchor: FIPS 180-4 scope
+    notes: FIPS defines SHA-256, not application preimage semantics.
+  - name: injective_statqed_frame
+    class: formalization_obligation
+    source_anchor: SQ-0005 digest-frame contract; RFC 9380 domain-separation guidance
+    notes: Purpose, algorithm, profile, schema, framing version, and payload boundaries must be unambiguous; prove or exhaustively mutation-test the encoder/decoder relation.
+  - name: full_output_no_truncation
+    class: strengthening_justified
+    source_anchor: IANA Named Information rows 1-6 and NIST strength table
+    notes: Recommended initial profile to avoid silently selecting weaker registered truncated variants.
+  - name: domain_frame_covers_all_interpretation_ids
+    class: strengthening_justified
+    source_anchor: SQ-0005 contract and RFC 9380 domain-separation rationale
+    notes: Prevents purpose, algorithm, profile, schema, and framing downgrade/replay across otherwise identical payload bytes.
+  - name: naive_concatenation_is_unambiguous
+    class: strengthening_unjustified
+    source_anchor: RFC 9380 Section 10.7
+    notes: Variable-length components need a typed/prefix-free frame; delimiter-free concatenation can admit distinct parses.
+  - name: digest_match_proves_payload_equality
+    class: strengthening_unjustified
+    source_anchor: NIST Hash Functions security properties
+    notes: A digest match is conditional on collision/second-preimage assumptions and correct framing; it is not a proof of provenance, semantics, or scientific validity.
+  - name: reuse_cose_minus_16_without_context
+    class: strengthening_unjustified
+    source_anchor: IANA COSE Algorithms registry
+    notes: Registry integer identifiers are scoped; reuse would create an unstated protocol coupling.
+variants:
+  - name: full SHA-256
+    locator: FIPS 180-4 and IANA Named Information row 1
+    conflict: 32-octet output, strongest SHA-256 option in the named-information registry.
+    disposition: Recommended.
+  - name: truncated SHA-256
+    locator: IANA Named Information rows 2-6 and COSE SHA-256/64 row -15
+    conflict: Lower security strength and additional algorithm identifiers.
+    disposition: Exclude from the initial profile.
+  - name: COSE algorithm identifier -16
+    locator: IANA COSE Algorithms registry
+    conflict: Defined within COSE, not as a universal algorithm number.
+    disposition: Do not reuse unless the frame explicitly adopts the COSE registry namespace.
+  - name: cSHAKE or TupleHash framing
+    locator: NIST SP 800-185
+    conflict: Standard customization/tuple facilities use SHA-3-derived functions rather than SHA-256.
+    disposition: Nearby design variant only; changing the hash function would require a new profile and source audit.
+  - name: RFC 9380 domain-separation formulas
+    locator: RFC 9380 Section 10.7
+    conflict: Designed to separate hash-to-curve expansion and related random-oracle uses.
+    disposition: Use as design evidence, not as the normative StatQED preimage syntax.
+concept_mapping:
+  - source_concept: SHA-256 message
+    statqed_concept: exact bytes of the versioned digest frame
+    obligation: Publish an octet-level frame and golden vectors.
+  - source_concept: hash output
+    statqed_concept: 32-octet digest evidence
+    obligation: Reject wrong algorithm IDs and wrong digest lengths before comparison.
+  - source_concept: domain separation tag
+    statqed_concept: fixed magic plus versioned purpose/profile/schema/framing identifiers
+    obligation: Make the entire tuple injective, not only the initial magic.
+  - source_concept: collision resistance
+    statqed_concept: explicit computational assumption behind content addressing
+    obligation: Never label it kernel-verified equality or provenance.
+quantifiers:
+  - statement: For all distinct admitted frame tuples, their encoded preimages are distinct before hashing.
+    source_status: Project proof obligation; cryptographic collision resistance does not repair a non-injective frame.
+  - statement: For all accepted digest fields, the algorithm is exactly sha-256 and the digest is exactly 32 octets.
+    source_status: Recommended profile specialization.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: concatenation_ambiguity_witness
+    value: Variable fields (ab, c) and (a, bc) under delimiter-free concatenation.
+    purpose: Demonstrates why the frame needs typed or length-delimited components.
+  - name: downgrade_witness
+    value: Same payload with a changed profile or schema identifier.
+    purpose: The framed preimage and digest must change.
+  - name: truncation_witness
+    value: A 16-octet prefix of a valid SHA-256 digest.
+    purpose: Verifier must reject by length, not compare a prefix.
+strengthenings:
+  - name: full_sha256_only
+    class: strengthening_justified
+    reason: Prevents implicit downgrade to registered truncated variants.
+    approval_required: cryptographic and architecture review
+  - name: injective_versioned_frame
+    class: formalization_obligation
+    reason: Required before any content-address interpretation is sound.
+    approval_required: cryptographic and checker-soundness review
+weakenings:
+  - name: algorithm_agility
+    class: candidate_for_weakening
+    effect: A future profile can admit additional algorithms only through new exact identifiers and downgrade-safe framing.
+    disposition: Keep v1 closed to sha-256; reserve no ambiguous generic numeric codes.
+attribution:
+  - kind: reproduced
+    work: FIPS 180-4
+    detail: SHA-256 algorithm and output size are attributed to the NIST standard.
+  - kind: reproduced
+    work: IANA registries and RFC 6920
+    detail: Algorithm strings and registry-scoped numeric values are recorded without conflating namespaces.
+  - kind: specialized
+    work: RFC 9380
+    detail: Domain-separation principles inform review, but no hash-to-curve-specific formula is represented as the StatQED frame.
+  - kind: original
+    work: StatQED SQ-0005
+    detail: The exact artifact preimage frame, purpose strings, identifiers, and failure semantics remain project-original and unresolved pending review.
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''
