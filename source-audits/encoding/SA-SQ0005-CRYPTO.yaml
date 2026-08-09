@@ -43,7 +43,7 @@ source_records:
     exact_anchors:
       - Section 2.2.5, domain separation
       - Section 3.1, domain-separation tag requirements
-      - Section 10.7, domain separation for other applications
+      - Section 10.7, Domain Separation for expand_message Variants
     license: IETF Trust Legal Provisions in effect at publication; extracted Code Components require the license notice stated in the RFC
   - work: RFC 6920 and IANA Named Information Hash Algorithm Registry
     version: RFC 6920, April 2013; registry last updated 2025-10-14
