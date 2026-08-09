@@ -1,0 +1,11 @@
+[package]
+name = "statqed-core"
+description = "Bounded, deterministic command surface for the StatQED backend"
+edition.workspace = true
+license.workspace = true
+publish = false
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true

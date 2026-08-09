@@ -1,0 +1,39 @@
+{
+  "cargo_lock_sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3",
+  "limitations": [
+    "License metadata is not a substitute for reviewing distributed license texts.",
+    "The SQ-0004 graph has no third-party crate dependency; Rust tooling and the operating system are outside this inventory."
+  ],
+  "package_count": 2,
+  "packages": [
+    {
+      "checksum": null,
+      "depended_on_by": [],
+      "features": [],
+      "license": "MIT",
+      "name": "statqed-cli",
+      "roles": [
+        "workspace"
+      ],
+      "source": "path:crates/statqed-cli",
+      "version": "0.1.0"
+    },
+    {
+      "checksum": null,
+      "depended_on_by": [
+        "statqed-cli"
+      ],
+      "features": [],
+      "license": "MIT",
+      "name": "statqed-core",
+      "roles": [
+        "normal",
+        "workspace"
+      ],
+      "source": "path:crates/statqed-core",
+      "version": "0.1.0"
+    }
+  ],
+  "registry_package_count": 0,
+  "schema_version": 1
+}

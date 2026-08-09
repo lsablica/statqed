@@ -1,0 +1,18 @@
+[package]
+name = "statqed-cli"
+description = "Thin command-line interface for the StatQED backend"
+edition.workspace = true
+license.workspace = true
+publish = false
+rust-version.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "statqed"
+path = "src/main.rs"
+
+[dependencies]
+statqed-core = { path = "../statqed-core" }
+
+[lints]
+workspace = true

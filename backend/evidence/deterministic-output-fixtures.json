@@ -1,0 +1,104 @@
+{
+  "cases": [
+    {
+      "args": [
+        "--version"
+      ],
+      "exit_status": 0,
+      "id": "version-text-short",
+      "stderr": "",
+      "stdout": "statqed 0.1.0\n"
+    },
+    {
+      "args": [
+        "version",
+        "--format",
+        "json"
+      ],
+      "exit_status": 0,
+      "id": "version-json",
+      "stderr": "",
+      "stdout": "{\"protocol_version\":1,\"program\":\"statqed\",\"version\":\"0.1.0\",\"rust\":{\"reference\":\"1.97.1\",\"compatibility_floor\":\"1.85.1\",\"edition\":\"2024\"}}\n"
+    },
+    {
+      "args": [],
+      "exit_status": 2,
+      "id": "error-missing-command",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"missing_command\",\"message\":\"a command is required\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "unknown"
+      ],
+      "exit_status": 2,
+      "id": "error-unknown-command",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"unknown_command\",\"message\":\"the command is not supported\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "--unknown"
+      ],
+      "exit_status": 2,
+      "id": "error-unknown-option",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"unknown_option\",\"message\":\"the option is not supported\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "version",
+        "--format"
+      ],
+      "exit_status": 2,
+      "id": "error-missing-value",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"missing_value\",\"message\":\"the option requires a value\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "version",
+        "--format",
+        ""
+      ],
+      "exit_status": 2,
+      "id": "error-empty-value",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"empty_value\",\"message\":\"the option value must not be empty\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "version",
+        "--format",
+        "{"
+      ],
+      "exit_status": 2,
+      "id": "error-invalid-value",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"invalid_value\",\"message\":\"the option value is not supported\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "version",
+        "--format",
+        "json",
+        "--format"
+      ],
+      "exit_status": 2,
+      "id": "error-repeated-option",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"repeated_option\",\"message\":\"the option may be provided only once\"}}\n",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "version",
+        "extra"
+      ],
+      "exit_status": 2,
+      "id": "error-unexpected-argument",
+      "stderr": "{\"protocol_version\":1,\"error\":{\"code\":\"unexpected_argument\",\"message\":\"the command has an unexpected argument\"}}\n",
+      "stdout": ""
+    }
+  ],
+  "schema_version": 1
+}

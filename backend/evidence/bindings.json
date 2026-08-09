@@ -1,0 +1,93 @@
+{
+  "cargo_lock_sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3",
+  "deterministic_output_fixture_sha256": "41a8675a17c8e8fba799cb9811e2dc90170d30eb20d377c35c15d892b48a8927",
+  "evidence_files": [
+    {
+      "path": "evidence/advisory-report.json",
+      "sha256": "521a22ceb0a147306af89022a4bf1537cff76b31e2fd80181aaa1854aa472942"
+    },
+    {
+      "path": "evidence/dependency-license-inventory.json",
+      "sha256": "e68c036a44ac100a615cc642ebaaa55850466ea10aba1eddf84f9873635215db"
+    },
+    {
+      "path": "evidence/deterministic-output-fixtures.json",
+      "sha256": "41a8675a17c8e8fba799cb9811e2dc90170d30eb20d377c35c15d892b48a8927"
+    },
+    {
+      "path": "evidence/isolated-execution.json",
+      "sha256": "b2ca615d53ab6c911f72da7cd200ffc5721abc529c2b9fd8d8cdf73b14ee289d"
+    },
+    {
+      "path": "evidence/mutation-results.json",
+      "sha256": "df619ba23754e6d75352b2b902fdc0bea2c12d18e1cde11baa7ce23785dc42df"
+    },
+    {
+      "path": "evidence/security-lock.json",
+      "sha256": "7afc4b4c5abf7ee02a178e4a1dc26b53d0dd376f35ba2818759dae6c49477428"
+    },
+    {
+      "path": "evidence/source-lock.json",
+      "sha256": "7f45f629ff17eb8843e36d703fe6911b6b54d4236cb88f02efe3c9fb99208275"
+    }
+  ],
+  "mutation_corpus_sha256": "b62eaa99f409e3f416af69cf3819420ead653dfab90e1fee5dc048b93640b4cd",
+  "schema_version": 1,
+  "source_manifest": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "dc49b4186d2f0e188993e1a1ccf43b9ce831de71e323431dd1e3028636de2c91"
+    },
+    {
+      "path": "crates/statqed-cli/Cargo.toml",
+      "sha256": "f93f73f46cf3af273146ea1c25a90973cf9539fb12c893458cee9cc25e6268b4"
+    },
+    {
+      "path": "crates/statqed-cli/src/main.rs",
+      "sha256": "7d0d85cbb4e4960bbd3262cc70b0e74604cc6e241db2959d3ef3716f42152f34"
+    },
+    {
+      "path": "crates/statqed-cli/tests/cli.rs",
+      "sha256": "712517b94e1f8822cece9b2310dece3d0774e725639351f6b504869c0728eb31"
+    },
+    {
+      "path": "crates/statqed-core/Cargo.toml",
+      "sha256": "631e617337bdb1c9ce49a14647cfc3cfe627cdca1d6425230c1d365b28c3b10c"
+    },
+    {
+      "path": "crates/statqed-core/src/lib.rs",
+      "sha256": "f32c8767c32aa7501176a8ae72dd58607da094c709780258530edd75c21fb65b"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
+    }
+  ],
+  "source_manifest_sha256": "7af6f6f41c609647e883b550e1962ef3dcc6b13cf5a66a26ec7a373b26c33eb7",
+  "tool_files": [
+    {
+      "path": "tools/check_workspace.py",
+      "sha256": "68d075232d37db9ce3dfa4f0f0180d64b847da759284ac33c95cdc6e07c3688a"
+    },
+    {
+      "path": "tools/dependency_inventory.py",
+      "sha256": "8c32f8a98c648323f77f7ab6425d0cf304887e06bf49ba5cf575a90c1e0e4af4"
+    },
+    {
+      "path": "tools/run_isolated_checks.py",
+      "sha256": "ba1055a0d1e1e31bd41bf997655fbc2eb25b752c65c5bd4fe169e0097cc80bb7"
+    },
+    {
+      "path": "tools/security_audit.py",
+      "sha256": "ef68782de1b61464fbfd4b8dc065b55629802c5df4bffc57b8fd81ea9633b6f4"
+    }
+  ],
+  "workflow": {
+    "path": ".github/workflows/rust.yml",
+    "sha256": "5b5a336075aec1fd71db5d057adf3414d1a2f4c0d2a0085343def889b9ed304b"
+  }
+}

@@ -1,0 +1,251 @@
+name: Rust reference workspace
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
+env:
+  EXPECTED_RUSTC_DEV_COMMIT: 8bab26f4f68e0e26f0bb7960be334d5b520ea452
+  EXPECTED_CARGO_DEV_COMMIT: c980f4866141969fab6254a680546a277789d6f0
+  EXPECTED_RUSTC_FLOOR_COMMIT: 4eb161250e340c8f48f66e2b929ef4a5bed7c181
+  EXPECTED_CARGO_FLOOR_COMMIT: d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7
+  EXPECTED_LOCK_SHA256: 408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3
+  CARGO_AUDIT_ARCHIVE_SHA256: ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39
+  RUSTSEC_ARCHIVE_SHA256: e154beaeb3a566f503be8e230c4b4796561e75e60cad7ac6890929dbe4301e4d
+
+jobs:
+  development:
+    name: Rust 1.97.1 development and security gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+
+      - name: Record observed runner metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 --version
+          rustup --version
+          git rev-parse HEAD
+          # This records one mutable hosted image. It is not an immutable
+          # Linux, non-Linux, or cross-architecture compatibility claim.
+
+      - name: Run repository guardrails
+        run: |
+          make check
+          make list-work
+          git diff --check
+
+      - name: Install and validate exact toolchains
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
+          rustup toolchain install 1.85.1 --profile minimal --component rustfmt --component clippy
+          rustc_dev="$(rustc +1.97.1 -Vv)"
+          cargo_dev="$(cargo +1.97.1 -Vv)"
+          rustc_floor="$(rustc +1.85.1 -Vv)"
+          cargo_floor="$(cargo +1.85.1 -Vv)"
+          printf '%s\n%s\n%s\n%s\n' "$rustc_dev" "$cargo_dev" "$rustc_floor" "$cargo_floor"
+          [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
+          [[ "$cargo_dev" == *"commit-hash: $EXPECTED_CARGO_DEV_COMMIT"* ]]
+          [[ "$rustc_floor" == *"commit-hash: $EXPECTED_RUSTC_FLOOR_COMMIT"* ]]
+          [[ "$cargo_floor" == *"commit-hash: $EXPECTED_CARGO_FLOOR_COMMIT"* ]]
+          rustup component list --toolchain 1.97.1 --installed | grep -Fx 'clippy-x86_64-unknown-linux-gnu'
+          rustup component list --toolchain 1.97.1 --installed | grep -Fx 'rustfmt-x86_64-unknown-linux-gnu'
+
+      - name: Verify workspace policy and deterministic CLI
+        run: python3 backend/tools/check_workspace.py --json
+
+      - name: Run primary development gates
+        working-directory: backend
+        env:
+          CARGO_NET_OFFLINE: "true"
+        run: |
+          cargo +1.97.1 fmt --check
+          cargo +1.97.1 build --workspace --all-features --locked --offline
+          cargo +1.97.1 clippy --workspace --all-targets --all-features --locked --offline -- -D warnings
+          cargo +1.97.1 test --workspace --all-targets --all-features --locked --offline
+          cargo +1.97.1 test --workspace --all-features --doc --locked --offline
+
+      - name: Reproduce lock and clean acquisition/build boundaries
+        run: python3 backend/tools/run_isolated_checks.py
+
+      - name: Run adversarial mutation corpus
+        run: python3 backend/tools/check_workspace.py --run-mutations --json
+
+      - name: Verify normalized dependency and license inventory
+        run: python3 backend/tools/dependency_inventory.py
+
+      - name: Retrieve immutable advisory inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          security_root="$RUNNER_TEMP/statqed-rust-security-inputs"
+          mkdir -p "$security_root"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/cargo-audit.tgz" \
+            https://github.com/rustsec/rustsec/releases/download/cargo-audit/v0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/rustsec.tar.gz" \
+            https://codeload.github.com/RustSec/advisory-db/tar.gz/1237bbe09d2701e14e6593a630fbaf28928df712
+          echo "$CARGO_AUDIT_ARCHIVE_SHA256  $security_root/cargo-audit.tgz" | sha256sum --check --strict
+          echo "$RUSTSEC_ARCHIVE_SHA256  $security_root/rustsec.tar.gz" | sha256sum --check --strict
+
+      - name: Verify hash-bound point-in-time advisory report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 backend/tools/security_audit.py \
+            --cargo-audit-archive "$RUNNER_TEMP/statqed-rust-security-inputs/cargo-audit.tgz" \
+            --rustsec-archive "$RUNNER_TEMP/statqed-rust-security-inputs/rustsec.tar.gz"
+
+      - name: Confirm generated and reviewed files did not drift
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$EXPECTED_LOCK_SHA256  backend/Cargo.lock" | sha256sum --check --strict
+          git diff --exit-code
+          git diff --check
+
+  msrv-offline:
+    name: Rust 1.85.1 exact-lock offline floor
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+
+      - name: Record observed runner metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 --version
+          git rev-parse HEAD
+          # The floor claim is limited to this observed hosted Linux x86-64 image.
+
+      - name: Run repository guardrails
+        run: |
+          make check
+          make list-work
+          git diff --check
+
+      - name: Install and validate current acquisition and floor toolchains
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup toolchain install 1.85.1 --profile minimal --component clippy --component rustfmt
+          rustc_dev="$(rustc +1.97.1 -Vv)"
+          cargo_dev="$(cargo +1.97.1 -Vv)"
+          rustc_floor="$(rustc +1.85.1 -Vv)"
+          cargo_floor="$(cargo +1.85.1 -Vv)"
+          printf '%s\n%s\n%s\n%s\n' "$rustc_dev" "$cargo_dev" "$rustc_floor" "$cargo_floor"
+          [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
+          [[ "$cargo_dev" == *"commit-hash: $EXPECTED_CARGO_DEV_COMMIT"* ]]
+          [[ "$rustc_floor" == *"commit-hash: $EXPECTED_RUSTC_FLOOR_COMMIT"* ]]
+          [[ "$cargo_floor" == *"commit-hash: $EXPECTED_CARGO_FLOOR_COMMIT"* ]]
+
+      - name: Acquire exact graph with current Cargo, then test floor offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          floor_root="$RUNNER_TEMP/statqed-rust-floor"
+          cargo_proxy_dir="$(dirname "$(command -v cargo)")"
+          rustup_home="$(rustup show home)"
+          mkdir -p "$floor_root/home" "$floor_root/cargo-home" "$floor_root/target" \
+            "$floor_root/xdg-config" "$floor_root/xdg-cache" "$floor_root/tmp"
+          test -z "$(find "$floor_root/cargo-home" -mindepth 1 -print -quit)"
+          python3 - <<'PY'
+          import os
+          bad = sorted(
+              key for key in os.environ
+              if key.upper().startswith("CARGO_")
+              and any(part in key.upper() for part in ("TOKEN", "CREDENTIAL", "SECRET"))
+          )
+          assert not bad, f"ambient Cargo credential variables: {bad}"
+          PY
+          env -i \
+            HOME="$floor_root/home" \
+            CARGO_HOME="$floor_root/cargo-home" \
+            CARGO_TARGET_DIR="$floor_root/target" \
+            RUSTUP_HOME="$rustup_home" \
+            XDG_CONFIG_HOME="$floor_root/xdg-config" \
+            XDG_CACHE_HOME="$floor_root/xdg-cache" \
+            TMPDIR="$floor_root/tmp" \
+            PATH="$cargo_proxy_dir:/usr/bin:/bin" \
+            LANG=C.UTF-8 LC_ALL=C.UTF-8 TZ=UTC CARGO_TERM_COLOR=never \
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse \
+            cargo +1.97.1 fetch --locked --manifest-path backend/Cargo.toml
+          floor_env=(
+            env -i
+            HOME="$floor_root/home"
+            CARGO_HOME="$floor_root/cargo-home"
+            CARGO_TARGET_DIR="$floor_root/target"
+            RUSTUP_HOME="$rustup_home"
+            XDG_CONFIG_HOME="$floor_root/xdg-config"
+            XDG_CACHE_HOME="$floor_root/xdg-cache"
+            TMPDIR="$floor_root/tmp"
+            PATH="$cargo_proxy_dir:/usr/bin:/bin"
+            LANG=C.UTF-8 LC_ALL=C.UTF-8 TZ=UTC CARGO_TERM_COLOR=never
+            CARGO_NET_OFFLINE=true
+          )
+          "${floor_env[@]}" cargo +1.85.1 metadata --locked --offline \
+            --format-version 1 --manifest-path backend/Cargo.toml
+          "${floor_env[@]}" cargo +1.85.1 build --workspace --all-features \
+            --locked --offline --manifest-path backend/Cargo.toml
+          "${floor_env[@]}" cargo +1.85.1 clippy --workspace --all-targets \
+            --all-features --locked --offline --manifest-path backend/Cargo.toml \
+            -- -D warnings
+          "${floor_env[@]}" cargo +1.85.1 test --workspace --all-targets \
+            --all-features --locked --offline --manifest-path backend/Cargo.toml
+          "${floor_env[@]}" cargo +1.85.1 test --workspace --all-features --doc \
+            --locked --offline --manifest-path backend/Cargo.toml
+
+      - name: Confirm lock and repository state did not drift
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$EXPECTED_LOCK_SHA256  backend/Cargo.lock" | sha256sum --check --strict
+          git diff --exit-code
+          git diff --check

@@ -1,0 +1,22 @@
+{
+  "cargo_audit": {
+    "archive_filename": "cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz",
+    "archive_sha256": "ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39",
+    "archive_url": "https://github.com/rustsec/rustsec/releases/download/cargo-audit/v0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz",
+    "executable_sha256": "473b9a71e5cb5bde22f69c32f749c9b83931287d92dc36b91cb04f6705640ef2",
+    "license": "MIT OR Apache-2.0",
+    "release_tag": "cargo-audit/v0.22.2",
+    "version": "0.22.2"
+  },
+  "cargo_lock_sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3",
+  "dependency_license_inventory_sha256": "e68c036a44ac100a615cc642ebaaa55850466ea10aba1eddf84f9873635215db",
+  "retrieval_date": "2026-08-09",
+  "rustsec_advisory_db": {
+    "archive_sha256": "e154beaeb3a566f503be8e230c4b4796561e75e60cad7ac6890929dbe4301e4d",
+    "archive_url": "https://codeload.github.com/RustSec/advisory-db/tar.gz/1237bbe09d2701e14e6593a630fbaf28928df712",
+    "commit": "1237bbe09d2701e14e6593a630fbaf28928df712",
+    "commit_time": "2026-08-06T09:34:42Z",
+    "license": "CC0-1.0 with explicitly marked CC-BY-4.0 exceptions"
+  },
+  "schema_version": 1
+}

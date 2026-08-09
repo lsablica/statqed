@@ -1,0 +1,126 @@
+{
+  "retrieval_date": "2026-08-09",
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "rust-1.97.1-release",
+      "locator": "https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/",
+      "observation": "Rust 1.97.1 is the patched development release and fixes an LLVM optimization miscompilation."
+    },
+    {
+      "id": "rust-1.97.1-source",
+      "locator": "https://github.com/rust-lang/rust/commit/8bab26f4f68e0e26f0bb7960be334d5b520ea452",
+      "observation": "rustc commit 8bab26f4f68e0e26f0bb7960be334d5b520ea452 embeds Cargo commit c980f4866141969fab6254a680546a277789d6f0."
+    },
+    {
+      "id": "rust-1.85.1-release",
+      "locator": "https://blog.rust-lang.org/2025/03/18/Rust-1.85.1/",
+      "observation": "Rust 1.85.1 is a patch release in the first Edition-2024-capable line."
+    },
+    {
+      "id": "rust-1.85.0-edition",
+      "locator": "https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/",
+      "observation": "Rust 1.85.0, not 1.85.1, stabilized Edition 2024."
+    },
+    {
+      "id": "rust-1.85.1-source",
+      "locator": "https://github.com/rust-lang/rust/commit/4eb161250e340c8f48f66e2b929ef4a5bed7c181",
+      "observation": "rustc commit 4eb161250e340c8f48f66e2b929ef4a5bed7c181 embeds Cargo commit d73d2caf9e41a39daf2a8d6ce60ec80bf354d2a7."
+    },
+    {
+      "id": "cargo-rust-version",
+      "locator": "https://doc.rust-lang.org/cargo/reference/rust-version.html",
+      "observation": "rust-version declares a minimum supported compiler and is checked for package targets; it is not a security-support or compatibility proof."
+    },
+    {
+      "id": "cargo-resolver",
+      "locator": "https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions",
+      "observation": "Resolver 3 uses incompatible-rust-version fallback and can still select an incompatible dependency when no compatible candidate exists."
+    },
+    {
+      "id": "edition-2024-resolver",
+      "locator": "https://doc.rust-lang.org/edition-guide/rust-2024/cargo-resolver.html",
+      "observation": "Edition 2024 implies resolver 3, but a virtual workspace must set resolver = 3 explicitly."
+    },
+    {
+      "id": "cargo-workspace",
+      "locator": "https://doc.rust-lang.org/cargo/reference/workspaces.html#the-lints-table",
+      "observation": "Each member must opt into workspace lint inheritance with lints.workspace = true."
+    },
+    {
+      "id": "cargo-fetch",
+      "locator": "https://doc.rust-lang.org/cargo/commands/cargo-fetch.html",
+      "observation": "Current Cargo can acquire a locked graph before locked, offline floor checks."
+    },
+    {
+      "id": "rustup-1.29.0",
+      "locator": "https://blog.rust-lang.org/2026/03/12/Rustup-1.29.0/",
+      "observation": "rustup 1.29.0 commit 28d1352dbcb436d3111c3594b9e1588e94950464 supports exact patch-version toolchains; minimal profiles require explicit rustfmt and Clippy components."
+    },
+    {
+      "id": "rust-platform-support",
+      "locator": "https://doc.rust-lang.org/rustc/platform-support.html",
+      "observation": "x86_64-unknown-linux-gnu is an upstream Tier-1 host-tools target; upstream tier status does not prove StatQED workspace support."
+    },
+    {
+      "id": "cargo-cve-2026-33056",
+      "locator": "https://blog.rust-lang.org/2026/03/21/cve-2026-33056/",
+      "observation": "Cargo/tar archive handling before the patched release line requires the compatibility floor to remain offline and non-acquiring."
+    },
+    {
+      "id": "rust-1.94.1-tar-fixes",
+      "locator": "https://blog.rust-lang.org/2026/03/26/1.94.1-release/",
+      "observation": "Rust 1.94.1 updated tar to 0.4.45 for CVE-2026-33055 and CVE-2026-33056; Cargo 1.85.1 predates those fixes."
+    },
+    {
+      "id": "cargo-cve-2026-5222",
+      "locator": "https://blog.rust-lang.org/2026/05/25/cve-2026-5222/",
+      "observation": "Cargo 1.85.1 is in the affected sparse third-party-registry credential-normalization range."
+    },
+    {
+      "id": "cargo-cve-2026-5223",
+      "locator": "https://blog.rust-lang.org/2026/05/25/cve-2026-5223/",
+      "observation": "Cargo versions before Rust 1.96.0 mishandled symlinks from malicious third-party registry tarballs; crates.io was unaffected."
+    },
+    {
+      "id": "rust-1.96.1-libssh2",
+      "locator": "https://blog.rust-lang.org/2026/06/30/Rust-1.96.1/",
+      "observation": "Later Cargo distributions include libssh2 security fixes not present in Cargo 1.85.1."
+    },
+    {
+      "id": "cargo-audit-0.22.2",
+      "locator": "https://github.com/rustsec/rustsec/releases/tag/cargo-audit%2Fv0.22.2",
+      "observation": "cargo-audit 0.22.2 remains the current official release; source commit 281452c35cf0870969042374110f099a411bc185."
+    },
+    {
+      "id": "rustsec-advisory-db",
+      "locator": "https://github.com/RustSec/advisory-db/commit/1237bbe09d2701e14e6593a630fbaf28928df712",
+      "observation": "The production point-in-time scan uses immutable advisory database commit 1237bbe09d2701e14e6593a630fbaf28928df712."
+    },
+    {
+      "id": "github-action-sha-policy",
+      "locator": "https://docs.github.com/en/actions/how-tos/create-and-publish-actions/manage-custom-actions#using-a-commits-sha-for-release-management",
+      "observation": "Workflow actions are pinned to full commits and require monitored updates."
+    },
+    {
+      "id": "github-hosted-runners",
+      "locator": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+      "observation": "Hosted runner labels resolve to mutable images, so each run records observed image metadata without turning it into a cross-platform support claim."
+    },
+    {
+      "id": "actions-checkout-v7.0.1",
+      "locator": "https://github.com/actions/checkout/releases/tag/v7.0.1",
+      "observation": "Official commit 3d3c42e5aac5ba805825da76410c181273ba90b1; MIT."
+    },
+    {
+      "id": "actions-setup-python-v7.0.0",
+      "locator": "https://github.com/actions/setup-python/releases/tag/v7.0.0",
+      "observation": "Official commit 5fda3b95a4ea91299a34e894583c3862153e4b97; MIT."
+    }
+  ],
+  "tool_licenses": {
+    "Rust/Cargo/rustup/cargo-audit": "MIT OR Apache-2.0; Rust distributions include third-party notices",
+    "RustSec advisory database": "CC0-1.0 with explicitly marked CC-BY-4.0 imports",
+    "GitHub actions used": "MIT"
+  }
+}

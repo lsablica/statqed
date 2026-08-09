@@ -1,0 +1,23 @@
+{
+  "cargo_audit": {
+    "archive_sha256": "ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39",
+    "executable_sha256": "473b9a71e5cb5bde22f69c32f749c9b83931287d92dc36b91cb04f6705640ef2",
+    "version": "0.22.2"
+  },
+  "cargo_lock_sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3",
+  "limitations": [
+    "This is a point-in-time RustSec database observation, not a security guarantee.",
+    "The scan covers the exact Cargo.lock crate graph, not rustc, Cargo, rustup, the operating system, or unmodeled native libraries.",
+    "Yanked-state network queries are disabled so the scan is reproducible and offline."
+  ],
+  "result": {
+    "dependency_count_reported_by_cargo_audit": 2,
+    "vulnerability_count": 0,
+    "warning_count": 0
+  },
+  "rustsec_advisory_db": {
+    "archive_sha256": "e154beaeb3a566f503be8e230c4b4796561e75e60cad7ac6890929dbe4301e4d",
+    "commit": "1237bbe09d2701e14e6593a630fbaf28928df712"
+  },
+  "schema_version": 1
+}

@@ -282,6 +282,9 @@ git diff --check
 - Arrow file and stream IPC forms differed physically; CBOR libraries exposed permissive/divergent edge behavior; cddl 0.10.6 requires Rust 1.88 and cannot satisfy the Rust 1.85.1 floor.
 - Python and Rust recommendations changed during review as new releases/source evidence appeared; superseded evidence was retained instead of rewritten.
 - Rust 1.85.1 remains useful only as an offline compiler/API floor because the recorded Cargo advisories prohibit using it for general acquisition.
+- SQ-0004's dependency-free production graph made the offline floor cheap and auditable, but it could not by itself prove that missing dependencies fail closed. A separate empty-Cargo-home fixture with an absent crate now demonstrates that Cargo 1.85.1 does not acquire while `--offline` is enforced.
+- Rust 1.85.0, rather than the selected 1.85.1 patch, introduced Edition 2024. The task records 1.85.1 as the directly tested floor without rewriting release history or treating resolver 3 as compatibility proof.
+- Current 2026 Cargo/tar, third-party-registry, and libssh2 advisories make the development/acquisition versus compatibility-floor distinction a security boundary: Cargo 1.97.1 acquires; Cargo 1.85.1 sees only the exact locked graph offline.
 - Readiness appears in backlog and detailed contracts; status transitions must update both atomically.
 - The first SQ-0002 merge referenced four ignored `.pytest_cache` files. The correction removed only those non-durable subjects and independently reverified 115 tracked hashes.
 - A successful repository-guardrails run on the final SQ-0002 merge checked the ledger but did not run the strict evidence verifier because `make check` did not include it. The 2026-08-08 post-merge maintenance made the verifier a permanent guardrail.
@@ -317,6 +320,10 @@ git diff --check
 - 2026-08-08: Independent integration review approved package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7` and corrected the successor calculation to SQ-0004/SQ-0008 READY with `blocked_count: 55`; neither successor begins in SQ-0003.
 - 2026-08-08: Atomic transition `3194f12b1b14f48813e98db60cac9c42f5c7280c` recorded SQ-0003 DONE, SQ-0004/SQ-0008 READY, 55 blocked tasks, no active task, and Experimental-only Lean dashboard evidence.
 - 2026-08-08: Independent final review approved head `94a6381e25c18fbd317e119e8f6b80d91239ce61`; PR #5 merged as `92e3b331b1ae795a21d6e030a21e8ce8d7da03dd`, and main guardrails `31280203088` plus cached/source Lean run `31280203112` passed.
+- 2026-08-09: Kept the SQ-0004 production graph dependency-free and limited it to `statqed-core` plus a thin `statqed-cli`; no speculative schema, encoding, artifact, registry, certificate, or frontend crate was created.
+- 2026-08-09: Fixed the bootstrap CLI protocol at version 1 only for deterministic version and malformed-invocation responses, with exit 2, stable symbolic errors, literal response fixtures, and fixed 64-argument/4,096-byte-per-argument/8,192-byte-total limits. This is not an artifact-verifier schema or Draft-RFC decision.
+- 2026-08-09: Required Rust 1.97.1 for all acquisition and release-oriented tooling while restricting Rust/Cargo 1.85.1 to the exact committed graph under `--locked --offline`; the floor cannot read credentials or alternate registries and may not regenerate `Cargo.lock`.
+- 2026-08-09: Bound the Experimental workspace candidate to full rustc/Cargo source identities, a byte-reproducible local-only lock, 16 adversarial mutations, ten deterministic process fixtures, a normalized license inventory, and cargo-audit 0.22.2 against immutable RustSec database commit `1237bbe09d2701e14e6593a630fbaf28928df712`.
 
 ## Outcomes & Retrospective
 
