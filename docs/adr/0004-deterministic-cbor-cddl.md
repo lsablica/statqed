@@ -3,7 +3,7 @@
 - Status: Accepted
 - Blocking RFC/task: RFC-0001 / SQ-0005
 - Decision owner: SQ-0005
-- Profile candidate: `statqed.cbor-core.v1`
+- Profile: `statqed.cbor-core.v1`
 
 ## Context
 
@@ -34,7 +34,7 @@ RFC-0001 contains the complete semantic value model, numeric and Unicode
 policy, raw map-entry and duplicate rules, error taxonomy, resource limits,
 digest framing, security considerations, evidence, migration rules, and
 explicit nonclaims. That RFC is the detailed normative source; this ADR
-records the architecture consequence once accepted.
+records the Accepted architecture consequence.
 
 ## Consequences
 

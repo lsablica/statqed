@@ -354,19 +354,19 @@ verification of `.statqed` artifacts.
 
 Every original validation-plan item is represented by a positive, negative,
 boundary, malformed, resource, differential, deliberate-divergence, framing,
-or retained-failure record. Acceptance remains gated on the final
-content-addressed source, semantic, interoperability, formal, implementation,
-security, cryptographic, CI, and integration reviews and a green hosted
-serialization-prototype workflow.
+or retained-failure record. The content-addressed source, semantic,
+interoperability, formal, implementation, security, cryptographic, CI, and
+integration reviews approved the exact subject, and the hosted
+serialization-prototype workflow passed.
 
-The acceptance candidate is bound to these exact evidence subjects. The RFC's
+The Accepted profile is bound to these exact evidence subjects. The RFC's
 own hash and the matching ADR hash are bound by the independent review record
 rather than embedded recursively in this document.
 
 | Subject | SHA-256 |
 |---|---|
 | Semantic value model | `a94588e54fdc3e2aa08e73f5f6e76bb71128940bb245305b2dec9dffa2ffcfb2` |
-| Profile candidate | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
+| Accepted profile evidence | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 | Primary-source audit manifest | `b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40` |
 | Semantic fixture tree | `90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8` |
 | Generated result manifest | `e69e863053fad44faf2511cedbd53a13725e309cbdb0551621e217c2095dd6cd` |

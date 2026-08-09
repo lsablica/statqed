@@ -58,6 +58,7 @@
   "review_record": "work/reviews/SQ-0005.md",
   "review_subject_paths": [
     ".github/workflows/serialization-prototypes.yml",
+    "ARCHITECTURE.md",
     "conformance/prototypes/evidence/evidence-manifest.json",
     "conformance/prototypes/fixtures/semantic-v1/catalog.json",
     "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
@@ -84,6 +85,10 @@
   ],
   "schema": "statqed.sq0005-evidence-spec.v1",
   "subject_files": [
+    {
+      "path": "ARCHITECTURE.md",
+      "role": "current architecture source-of-truth binding for the Accepted encoding profile"
+    },
     {
       "path": ".github/workflows/serialization-prototypes.yml",
       "role": "least-privilege hosted reproduction"

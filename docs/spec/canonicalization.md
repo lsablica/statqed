@@ -1,7 +1,7 @@
 # Canonicalization Specification
 
-Status: **Draft** acceptance candidate for RFC-0001; logical-data
-canonicalization remains blocked on RFC-0006.
+Status: **Draft** implementation-facing summary of Accepted RFC-0001;
+logical-data canonicalization remains blocked on RFC-0006.
 
 ## Scope
 

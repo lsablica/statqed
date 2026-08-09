@@ -698,6 +698,7 @@
   "review_record": "work/reviews/SQ-0005.md",
   "review_subject_paths": [
     ".github/workflows/serialization-prototypes.yml",
+    "ARCHITECTURE.md",
     "conformance/prototypes/evidence/evidence-manifest.json",
     "conformance/prototypes/fixtures/semantic-v1/catalog.json",
     "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
@@ -730,6 +731,11 @@
       "sha256": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536"
     },
     {
+      "path": "ARCHITECTURE.md",
+      "role": "current architecture source-of-truth binding for the Accepted encoding profile",
+      "sha256": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a"
+    },
+    {
       "path": "Makefile",
       "role": "permanent repository verification entry point",
       "sha256": "57e32f3e74ef9a550a728a6a176b08211311f1161f01f5056e9f5413c3a0132c"
@@ -737,7 +743,7 @@
     {
       "path": "conformance/prototypes/evidence/evidence-spec.json",
       "role": "semantic fixtures, binary vectors, differential results, and retained failures",
-      "sha256": "26fccac7ca0ab94e9ae270e92016aacc3d7ade25a28ee548347d0322dfc394c6"
+      "sha256": "9f83411678faaa18e494a09b1335d8b9c01f356644ad7f34ed3432971408d407"
     },
     {
       "path": "conformance/prototypes/fixtures/semantic-v1/atoms-and-widths.json",
@@ -1192,7 +1198,7 @@
     {
       "path": "docs/adr/0004-deterministic-cbor-cddl.md",
       "role": "matching architecture decision",
-      "sha256": "6149f7ffba3f0f805a9b10127d35d6b7547db86aae028054934e78810d5bbd14"
+      "sha256": "a27be26c3d4e89518943b08a4d042ef9a2c824612df77c45ad07abd5bcb587f4"
     },
     {
       "path": "docs/quality/dashboard.md",
@@ -1252,12 +1258,12 @@
     {
       "path": "docs/spec/canonicalization.md",
       "role": "implementation-facing profile specification",
-      "sha256": "e0bc0628fd0ac05a43f06ac478c029e83a5daeb4fe88f2b00579d4f892cce61a"
+      "sha256": "058c191e73b71713de618072b4f1f9575f032c8d8a1e75c183b43a65fc78de54"
     },
     {
       "path": "rfcs/0001-deterministic-encoding.md",
       "role": "normative decision",
-      "sha256": "595811aa7ca4233349d2fab2f24f525b5009ee1956d7fb2d4922f5cf816b72a2"
+      "sha256": "0f542ba487e77a2008a71ef6c92b642cf89503d96d8da63680575e109a97741f"
     },
     {
       "path": "schemas/prototypes/cddl/README.md",
