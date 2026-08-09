@@ -242,13 +242,13 @@ class CliTests(unittest.TestCase):
         cls.environment = dict(os.environ)
         cls.environment["PYTHONPATH"] = str(cls.root)
 
-    def run_cli(self, command, raw_input):
+    def run_cli(self, command, raw_input, *, environment=None):
         completed = subprocess.run(
             [sys.executable, "-m", "statqed_oracle.cli", command],
             input=raw_input,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=self.environment,
+            env=self.environment if environment is None else environment,
             check=False,
         )
         self.assertEqual(completed.stderr, b"")
@@ -310,6 +310,49 @@ class CliTests(unittest.TestCase):
         code, _, result = self.run_cli("encode", source)
         self.assertEqual(code, 1)
         self.assertEqual(result["code"], "semantic.integer_range")
+
+    def test_unquoted_large_json_number_is_environment_independent(self):
+        source = b'{"type":"integer","value":' + b"9" * 5000 + b"}"
+        observed = []
+        for setting in ("4300", "0"):
+            environment = dict(self.environment)
+            environment["PYTHONINTMAXSTRDIGITS"] = setting
+            code, output, result = self.run_cli(
+                "encode", source, environment=environment
+            )
+            self.assertEqual(code, 1)
+            self.assertEqual(result["code"], "semantic.unsupported_value")
+            observed.append(output)
+        self.assertEqual(observed[0], observed[1])
+
+    def test_deep_json_and_large_decimal_interval_fail_closed(self):
+        deep = (
+            b'{"type":"array","items":[' * 2000
+            + b'{"type":"null"}'
+            + b"]}" * 2000
+        )
+        code, _, result = self.run_cli("encode", deep)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["code"], "resource.depth")
+
+        decimal = {
+            "closure": "closed",
+            "lower": {
+                "coefficient": "1",
+                "exponent": "1000000000",
+                "type": "decimal",
+            },
+            "type": "interval",
+            "upper": {
+                "coefficient": "1",
+                "exponent": "1000000000",
+                "type": "decimal",
+            },
+        }
+        source = json.dumps(decimal, separators=(",", ":")).encode()
+        code, _, result = self.run_cli("encode", source)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["code"], "semantic.unsupported_interval")
 
 
 if __name__ == "__main__":

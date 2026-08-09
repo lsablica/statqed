@@ -148,6 +148,22 @@ class EncoderTests(unittest.TestCase):
             Interval(Integer(1), Rational(2, 1), "closed"),
             "semantic.interval_invalid",
         )
+        self.assert_code(
+            Interval(
+                Decimal(1, 1_000_000_000),
+                Decimal(1, 1_000_000_000),
+                "closed",
+            ),
+            "semantic.unsupported_interval",
+        )
+        self.assert_code(
+            Interval(
+                Decimal(2, 1_000_000_000),
+                Decimal(1, 1_000_000_000),
+                "closed",
+            ),
+            "semantic.interval_invalid",
+        )
 
     def test_extension_precedence(self):
         duplicate = ExtensionSequence(
@@ -221,6 +237,13 @@ class EncoderTests(unittest.TestCase):
             semantic_from_typed_json({"type": "integer", "value": "9" * 5000})
         value = semantic_from_typed_json({"type": "bignum", "value": "9" * 5000})
         self.assert_code(value, "semantic.unsupported_bignum")
+
+    def test_typed_json_depth_fails_before_host_recursion(self):
+        value = {"type": "null"}
+        for _ in range(33):
+            value = {"type": "array", "items": [value]}
+        with self.assertRaisesRegex(Exception, "resource.depth"):
+            semantic_from_typed_json(value)
 
 
 if __name__ == "__main__":

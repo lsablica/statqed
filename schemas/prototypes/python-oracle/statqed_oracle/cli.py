@@ -29,6 +29,15 @@ class _DuplicateJsonKey(ValueError):
     pass
 
 
+class _OversizedJsonInteger:
+    """A host JSON number intentionally left outside the typed value model."""
+
+    __slots__ = ("spelling",)
+
+    def __init__(self, spelling: str):
+        self.spelling = spelling
+
+
 def _strict_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     obj: dict[str, Any] = {}
     for key, value in pairs:
@@ -42,6 +51,13 @@ def _reject_constant(value: str) -> None:
     raise ValueError(value)
 
 
+def _parse_json_integer(value: str) -> int | _OversizedJsonInteger:
+    magnitude = value[1:] if value.startswith("-") else value
+    if len(magnitude) > 20:
+        return _OversizedJsonInteger(value)
+    return int(value)
+
+
 def _read_json() -> Any:
     raw = sys.stdin.buffer.read(MAX_TYPED_JSON_INPUT_BYTES + 1)
     if len(raw) > MAX_TYPED_JSON_INPUT_BYTES:
@@ -52,7 +68,10 @@ def _read_json() -> Any:
             text,
             object_pairs_hook=_strict_object,
             parse_constant=_reject_constant,
+            parse_int=_parse_json_integer,
         )
+    except RecursionError as error:
+        raise OracleError("resource", "resource.depth") from error
     except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
         raise OracleError("expectedness", "expected.typed_json") from error
 

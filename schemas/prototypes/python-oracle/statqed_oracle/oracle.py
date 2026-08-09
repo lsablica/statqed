@@ -624,6 +624,16 @@ class _EncodeState:
             raise OracleError("resource", "resource.total_items")
 
 
+@dataclass
+class _TypedJsonState:
+    total_items: int = 0
+
+    def item(self) -> None:
+        self.total_items += 1
+        if self.total_items > MAX_TOTAL_ITEMS:
+            raise OracleError("resource", "resource.total_items")
+
+
 def _semantic_key_identity(value: SemanticValue) -> tuple[str, int | str]:
     if isinstance(value, Integer):
         if type(value.value) is not int:
@@ -677,20 +687,34 @@ def _validate_interval(value: Interval) -> None:
                 endpoint.coefficient != 0 and endpoint.coefficient % 10 == 0
             ):
                 raise OracleError("semantic_validity", "semantic.interval_invalid")
-        left = Fraction(lower.coefficient) * (
-            10 ** lower.exponent
-            if lower.exponent >= 0
-            else Fraction(1, 10 ** -lower.exponent)
-        )
-        right = Fraction(upper.coefficient) * (
-            10 ** upper.exponent
-            if upper.exponent >= 0
-            else Fraction(1, 10 ** -upper.exponent)
-        )
-        if left > right:
+        if _compare_decimal_values(lower, upper) > 0:
             raise OracleError("semantic_validity", "semantic.interval_invalid")
         return
     raise OracleError("semantic_validity", "semantic.interval_invalid")
+
+
+def _compare_decimal_values(left: Decimal, right: Decimal) -> int:
+    """Compare exact coefficient/exponent pairs without materializing powers."""
+
+    if left.coefficient == right.coefficient == 0:
+        return 0
+    if left.coefficient < 0 <= right.coefficient:
+        return -1
+    if right.coefficient < 0 <= left.coefficient:
+        return 1
+
+    left_digits = str(abs(left.coefficient))
+    right_digits = str(abs(right.coefficient))
+    left_adjusted = len(left_digits) + left.exponent
+    right_adjusted = len(right_digits) + right.exponent
+    if left_adjusted != right_adjusted:
+        comparison = -1 if left_adjusted < right_adjusted else 1
+    else:
+        width = max(len(left_digits), len(right_digits))
+        left_aligned = left_digits.ljust(width, "0")
+        right_aligned = right_digits.ljust(width, "0")
+        comparison = (left_aligned > right_aligned) - (left_aligned < right_aligned)
+    return -comparison if left.coefficient < 0 else comparison
 
 
 def _encode_value(value: SemanticValue, state: _EncodeState, open_depth: int) -> bytes:
@@ -928,8 +952,16 @@ def _require_object_fields(
         raise OracleError("semantic_validity", "semantic.unsupported_value")
 
 
-def semantic_from_typed_json(obj: Any) -> SemanticValue:
+def semantic_from_typed_json(
+    obj: Any,
+    *,
+    _open_depth: int = 0,
+    _state: _TypedJsonState | None = None,
+) -> SemanticValue:
     """Parse the diagnostic typed-JSON projection without numeric coercion."""
+
+    state = _TypedJsonState() if _state is None else _state
+    state.item()
 
     if not isinstance(obj, dict) or not isinstance(obj.get("type"), str):
         raise OracleError("semantic_validity", "semantic.unsupported_value")
@@ -954,19 +986,38 @@ def semantic_from_typed_json(obj: Any) -> SemanticValue:
         _require_object_fields(obj, {"type", "items"})
         if not isinstance(obj["items"], list):
             raise OracleError("semantic_validity", "semantic.unsupported_value")
-        return Array(semantic_from_typed_json(item) for item in obj["items"])
+        if len(obj["items"]) > MAX_ARRAY_ITEMS:
+            raise OracleError("resource", "resource.array_items")
+        next_depth = _open_depth + 1
+        if next_depth > MAX_DEPTH:
+            raise OracleError("resource", "resource.depth")
+        return Array(
+            semantic_from_typed_json(
+                item, _open_depth=next_depth, _state=state
+            )
+            for item in obj["items"]
+        )
     if kind == "map":
         _require_object_fields(obj, {"type", "entries"})
         if not isinstance(obj["entries"], list):
             raise OracleError("semantic_validity", "semantic.unsupported_value")
+        if len(obj["entries"]) > MAX_MAP_ENTRIES:
+            raise OracleError("resource", "resource.map_entries")
+        next_depth = _open_depth + 1
+        if next_depth > MAX_DEPTH:
+            raise OracleError("resource", "resource.depth")
         entries: list[tuple[SemanticValue, SemanticValue]] = []
         for entry in obj["entries"]:
             if not isinstance(entry, dict) or set(entry) != {"key", "value"}:
                 raise OracleError("semantic_validity", "semantic.unsupported_value")
             entries.append(
                 (
-                    semantic_from_typed_json(entry["key"]),
-                    semantic_from_typed_json(entry["value"]),
+                    semantic_from_typed_json(
+                        entry["key"], _open_depth=next_depth, _state=state
+                    ),
+                    semantic_from_typed_json(
+                        entry["value"], _open_depth=next_depth, _state=state
+                    ),
                 )
             )
         return Map(entries)
@@ -1008,25 +1059,46 @@ def semantic_from_typed_json(obj: Any) -> SemanticValue:
         _require_object_fields(obj, {"type", "lower", "upper", "closure"})
         if not isinstance(obj["closure"], str):
             raise OracleError("semantic_validity", "semantic.unsupported_value")
+        next_depth = _open_depth + 1
+        if next_depth > MAX_DEPTH:
+            raise OracleError("resource", "resource.depth")
         return Interval(
-            semantic_from_typed_json(obj["lower"]),
-            semantic_from_typed_json(obj["upper"]),
+            semantic_from_typed_json(
+                obj["lower"], _open_depth=next_depth, _state=state
+            ),
+            semantic_from_typed_json(
+                obj["upper"], _open_depth=next_depth, _state=state
+            ),
             obj["closure"],
         )
     if kind == "extension":
         _require_object_fields(obj, {"type", "type_id", "critical", "body"})
         if not isinstance(obj["type_id"], str) or type(obj["critical"]) is not bool:
             raise OracleError("semantic_validity", "semantic.unsupported_value")
+        next_depth = _open_depth + 1
+        if next_depth > MAX_DEPTH:
+            raise OracleError("resource", "resource.depth")
         return Extension(
-            obj["type_id"], obj["critical"], semantic_from_typed_json(obj["body"])
+            obj["type_id"],
+            obj["critical"],
+            semantic_from_typed_json(
+                obj["body"], _open_depth=next_depth, _state=state
+            ),
         )
     if kind == "extension_sequence":
         _require_object_fields(obj, {"type", "extensions"})
         if not isinstance(obj["extensions"], list):
             raise OracleError("semantic_validity", "semantic.unsupported_value")
+        if len(obj["extensions"]) > MAX_TOTAL_ITEMS:
+            raise OracleError("resource", "resource.total_items")
+        next_depth = _open_depth + 1
+        if next_depth > MAX_DEPTH:
+            raise OracleError("resource", "resource.depth")
         extensions: list[Extension] = []
         for extension_obj in obj["extensions"]:
-            extension = semantic_from_typed_json(extension_obj)
+            extension = semantic_from_typed_json(
+                extension_obj, _open_depth=next_depth, _state=state
+            )
             if not isinstance(extension, Extension):
                 raise OracleError("semantic_validity", "semantic.unsupported_value")
             extensions.append(extension)

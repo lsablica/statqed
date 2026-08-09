@@ -77,6 +77,14 @@ accepted constructors are nevertheless type-checked by `encode` and reject
 mistyped fields with `semantic.unsupported_value` instead of leaking a host
 exception.
 
+The JSON reader uses its own bounded integer-token parser, so CPython's
+`PYTHONINTMAXSTRDIGITS` setting cannot change a result code. It maps excessive
+JSON nesting to `resource.depth`, and semantic projection applies the same
+depth, collection, and total-item ceilings before recursive construction.
+Decimal interval comparison uses digit/exponent comparison without
+materializing `10 ** exponent`, so unsupported diagnostic values cannot turn a
+short request into an unbounded host allocation.
+
 The diagnostic interface also recognizes explicitly unsupported `bignum`,
 `rational`, `decimal`, `ieee_bits`, `interval`, `extension`, and
 `extension_sequence` constructors so that producer failures receive the
