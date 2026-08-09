@@ -183,6 +183,52 @@ fn json_transport_input_cap_is_exact_and_not_a_profile_limit() -> io::Result<()>
 }
 
 #[test]
+fn typed_json_transport_failures_do_not_depend_on_serde_limits() -> io::Result<()> {
+    let mut deep = Vec::with_capacity(54_015);
+    for _ in 0..2_000 {
+        deep.extend_from_slice(br#"{"type":"array","items":["#);
+    }
+    deep.extend_from_slice(br#"{"type":"null"}"#);
+    for _ in 0..2_000 {
+        deep.extend_from_slice(b"]}");
+    }
+    assert_eq!(deep.len(), 54_015);
+    let deep_output = invoke("encode", &deep)?;
+    assert_eq!(deep_output.status.code(), Some(2));
+    assert_eq!(json_output(&deep_output)["code"], "resource.depth");
+
+    let mut oversized_number = br#"{"type":"integer","value":"#.to_vec();
+    oversized_number.extend(core::iter::repeat_n(b'9', 5_000));
+    oversized_number.extend_from_slice(b"}");
+    assert_eq!(oversized_number.len(), 5_027);
+    let number_output = invoke("encode", &oversized_number)?;
+    assert_eq!(number_output.status.code(), Some(2));
+    let number_json = json_output(&number_output);
+    assert_eq!(number_json["result_class"], "semantic_validity");
+    assert_eq!(number_json["code"], "semantic.unsupported_value");
+
+    for (digits, expected_code) in [
+        ("1", "semantic.unsupported_value"),
+        ("99999999999999999999", "semantic.unsupported_value"),
+        ("999999999999999999999", "semantic.unsupported_value"),
+    ] {
+        let input = format!(r#"{{"type":"integer","value":{digits}}}"#);
+        let output = invoke("encode", input.as_bytes())?;
+        assert_eq!(output.status.code(), Some(2));
+        assert_eq!(json_output(&output)["code"], expected_code);
+    }
+
+    let escaped = format!(
+        r#"{{"type":"text","value":"\"{}[[[[{{{{\\\"still text"}}"#,
+        "9".repeat(100)
+    );
+    let escaped_output = invoke("encode-raw", escaped.as_bytes())?;
+    assert!(escaped_output.status.success());
+    assert!(escaped_output.stderr.is_empty());
+    Ok(())
+}
+
+#[test]
 fn frame_raw_exposes_the_attainable_maximum_binary_frame() -> io::Result<()> {
     let first_hex = "00".repeat(1_030);
     let regular_hex = "00".repeat(1_024);

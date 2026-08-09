@@ -33,6 +33,13 @@ const PROFILE_MAX_TOTAL_ITEMS: usize = 4_096;
 const PROFILE_MAX_NESTING_DEPTH: usize = 32;
 const PROFILE_MAX_DIAGNOSTIC_BYTES: usize = 4_096;
 const PROFILE_MAX_DIGEST_FRAME_BYTES: usize = 1_049_255;
+// A depth-32 typed map can have an object, entries array, and entry object at
+// each semantic level, followed by one scalar object at the leaf.
+const TYPED_JSON_MAX_RAW_NESTING: usize = 3 * PROFILE_MAX_NESTING_DEPTH + 1;
+// JSON integer magnitudes longer than the decimal width of the direct CBOR
+// domain are never meaningful typed metadata. Detect them before serde so the
+// result cannot depend on its number representation or runtime digit limits.
+const TYPED_JSON_MAX_UNQUOTED_INTEGER_DIGITS: usize = 20;
 
 /// Lowest integer accepted by direct CBOR major types 0 and 1.
 pub const MIN_INTEGER: i128 = -(1_i128 << 64);
@@ -1726,6 +1733,106 @@ fn semantic_failure(code: &'static str) -> Failure {
     Failure::new(ResultClass::SemanticValidity, code, 0)
 }
 
+const fn is_json_whitespace(byte: u8) -> bool {
+    matches!(byte, b' ' | b'\t' | b'\n' | b'\r')
+}
+
+fn has_json_value_prefix(input: &[u8], start: usize) -> bool {
+    input[..start]
+        .iter()
+        .rev()
+        .find(|byte| !is_json_whitespace(**byte))
+        .is_none_or(|byte| matches!(byte, b'[' | b',' | b':'))
+}
+
+fn json_integer_token(input: &[u8], start: usize) -> Option<(usize, usize)> {
+    if !has_json_value_prefix(input, start) {
+        return None;
+    }
+    let mut cursor = start;
+    if input.get(cursor) == Some(&b'-') {
+        cursor += 1;
+    }
+    let digit_start = cursor;
+    match input.get(cursor) {
+        Some(b'0') => {
+            cursor += 1;
+            if input.get(cursor).is_some_and(u8::is_ascii_digit) {
+                return None;
+            }
+        }
+        Some(b'1'..=b'9') => {
+            cursor += 1;
+            while input.get(cursor).is_some_and(u8::is_ascii_digit) {
+                cursor += 1;
+            }
+        }
+        _ => return None,
+    }
+    if input
+        .get(cursor)
+        .is_some_and(|byte| matches!(byte, b'.' | b'e' | b'E'))
+    {
+        return None;
+    }
+    if input
+        .get(cursor)
+        .is_some_and(|byte| !is_json_whitespace(*byte) && !matches!(byte, b',' | b']' | b'}'))
+    {
+        return None;
+    }
+    Some((cursor, cursor - digit_start))
+}
+
+fn preflight_typed_json(input: &[u8]) -> Result<(), Failure> {
+    let mut raw_depth = 0_usize;
+    let mut cursor = 0_usize;
+    let mut in_string = false;
+    let mut escaped = false;
+    while cursor < input.len() {
+        let byte = input[cursor];
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if byte == b'\\' {
+                escaped = true;
+            } else if byte == b'"' {
+                in_string = false;
+            }
+            cursor += 1;
+            continue;
+        }
+        match byte {
+            b'"' => in_string = true,
+            b'{' | b'[' => {
+                raw_depth = raw_depth
+                    .checked_add(1)
+                    .ok_or_else(|| Failure::new(ResultClass::ResourceLimit, "resource.depth", 0))?;
+                if raw_depth > TYPED_JSON_MAX_RAW_NESTING {
+                    return Err(Failure::new(
+                        ResultClass::ResourceLimit,
+                        "resource.depth",
+                        0,
+                    ));
+                }
+            }
+            b'}' | b']' => raw_depth = raw_depth.saturating_sub(1),
+            b'-' | b'0'..=b'9' => {
+                if let Some((end, digits)) = json_integer_token(input, cursor) {
+                    if digits > TYPED_JSON_MAX_UNQUOTED_INTEGER_DIGITS {
+                        return Err(semantic_failure("semantic.unsupported_value"));
+                    }
+                    cursor = end;
+                    continue;
+                }
+            }
+            _ => {}
+        }
+        cursor += 1;
+    }
+    Ok(())
+}
+
 fn exact_fields(object: &JsonMap<String, JsonValue>, fields: &[&str]) -> bool {
     object.len() == fields.len() && fields.iter().all(|field| object.contains_key(*field))
 }
@@ -1742,20 +1849,26 @@ fn discriminator(object: &JsonMap<String, JsonValue>) -> Option<(&str, &str)> {
 }
 
 fn parse_integer_text(value: &JsonValue) -> Result<i128, Failure> {
-    let integer = value
+    let spelling = value
         .as_str()
-        .ok_or_else(|| diagnostic_failure("INTEGER_MUST_BE_DECIMAL_STRING"))?
-        .parse::<i128>()
-        .map_err(|_| diagnostic_failure("INTEGER_DECIMAL_INVALID"))?;
-    if (MIN_INTEGER..=MAX_INTEGER).contains(&integer) {
-        Ok(integer)
-    } else {
-        Err(Failure::new(
-            ResultClass::SemanticValidity,
-            "semantic.integer_range",
-            0,
-        ))
+        .ok_or_else(|| semantic_failure("semantic.unsupported_value"))?;
+    let (negative, magnitude) = spelling
+        .strip_prefix('-')
+        .map_or((false, spelling), |magnitude| (true, magnitude));
+    if magnitude.is_empty() || !magnitude.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(diagnostic_failure("INTEGER_DECIMAL_INVALID"));
     }
+    let limit = if negative {
+        "18446744073709551616"
+    } else {
+        "18446744073709551615"
+    };
+    if magnitude.len() > limit.len() || (magnitude.len() == limit.len() && magnitude > limit) {
+        return Err(semantic_failure("semantic.integer_range"));
+    }
+    spelling
+        .parse::<i128>()
+        .map_err(|_| diagnostic_failure("INTEGER_DECIMAL_INVALID"))
 }
 
 fn parse_exact_i128(value: &JsonValue) -> Result<i128, Failure> {
@@ -1934,13 +2047,61 @@ fn unsupported_interval(object: &JsonMap<String, JsonValue>) -> Result<Value, Fa
     Err(semantic_failure("semantic.unsupported_interval"))
 }
 
-fn classify_extensions(extensions: &JsonValue) -> Result<Value, Failure> {
+#[derive(Default)]
+struct TypedJsonState {
+    total_items: usize,
+}
+
+impl TypedJsonState {
+    fn item(&mut self) -> Result<(), Failure> {
+        self.total_items = self
+            .total_items
+            .checked_add(1)
+            .ok_or_else(|| Failure::new(ResultClass::ResourceLimit, "resource.total_items", 0))?;
+        if self.total_items > PROFILE_MAX_TOTAL_ITEMS {
+            Err(Failure::new(
+                ResultClass::ResourceLimit,
+                "resource.total_items",
+                0,
+            ))
+        } else {
+            Ok(())
+        }
+    }
+}
+
+fn typed_child_depth(depth: usize) -> Result<usize, Failure> {
+    if depth >= PROFILE_MAX_NESTING_DEPTH {
+        Err(Failure::new(
+            ResultClass::ResourceLimit,
+            "resource.depth",
+            0,
+        ))
+    } else {
+        Ok(depth + 1)
+    }
+}
+
+fn classify_extensions(
+    extensions: &JsonValue,
+    state: &mut TypedJsonState,
+    depth: usize,
+) -> Result<Value, Failure> {
     let extensions = extensions
         .as_array()
         .ok_or_else(|| diagnostic_failure("EXTENSIONS_INVALID"))?;
+    if extensions.len() > PROFILE_MAX_TOTAL_ITEMS.saturating_sub(state.total_items) {
+        return Err(Failure::new(
+            ResultClass::ResourceLimit,
+            "resource.total_items",
+            0,
+        ));
+    }
+    let extension_depth = typed_child_depth(depth)?;
     let mut type_ids: Vec<&str> = Vec::with_capacity(extensions.len());
     let mut any_critical = false;
     for extension in extensions {
+        state.item()?;
         let extension = extension
             .as_object()
             .ok_or_else(|| diagnostic_failure("EXTENSION_INVALID"))?;
@@ -1956,6 +2117,8 @@ fn classify_extensions(extensions: &JsonValue) -> Result<Value, Failure> {
         let critical = extension["critical"]
             .as_bool()
             .ok_or_else(|| diagnostic_failure("EXTENSION_INVALID"))?;
+        let body_depth = typed_child_depth(extension_depth)?;
+        let _body = parse_diagnostic_value(&extension["body"], state, body_depth)?;
         if type_ids.contains(&type_id) {
             return Err(semantic_failure("semantic.extension_duplicate"));
         }
@@ -1971,7 +2134,11 @@ fn classify_extensions(extensions: &JsonValue) -> Result<Value, Failure> {
     }
 }
 
-fn unsupported_extension(object: &JsonMap<String, JsonValue>) -> Result<Value, Failure> {
+fn unsupported_extension(
+    object: &JsonMap<String, JsonValue>,
+    state: &mut TypedJsonState,
+    depth: usize,
+) -> Result<Value, Failure> {
     let discriminator = if object.contains_key("type") {
         "type"
     } else {
@@ -1980,14 +2147,25 @@ fn unsupported_extension(object: &JsonMap<String, JsonValue>) -> Result<Value, F
     if !exact_fields(object, &[discriminator, "type_id", "critical", "body"]) {
         return Err(diagnostic_failure("EXTENSION_INVALID"));
     }
-    let mut extension = JsonMap::new();
-    for field in ["type_id", "critical", "body"] {
-        extension.insert(field.to_owned(), object[field].clone());
+    object["type_id"]
+        .as_str()
+        .ok_or_else(|| diagnostic_failure("EXTENSION_INVALID"))?;
+    let critical = object["critical"]
+        .as_bool()
+        .ok_or_else(|| diagnostic_failure("EXTENSION_INVALID"))?;
+    let body_depth = typed_child_depth(depth)?;
+    let _body = parse_diagnostic_value(&object["body"], state, body_depth)?;
+    if critical {
+        Err(semantic_failure("semantic.extension_critical_unknown"))
+    } else {
+        Err(semantic_failure(
+            "semantic.extension_noncritical_unsupported",
+        ))
     }
-    classify_extensions(&JsonValue::Array(vec![JsonValue::Object(extension)]))
 }
 
-fn parse_diagnostic_key(value: &JsonValue) -> Result<Key, Failure> {
+fn parse_diagnostic_key(value: &JsonValue, state: &mut TypedJsonState) -> Result<Key, Failure> {
+    state.item()?;
     let object = value
         .as_object()
         .ok_or_else(|| diagnostic_failure("KEY_MUST_BE_OBJECT"))?;
@@ -1999,10 +2177,19 @@ fn parse_diagnostic_key(value: &JsonValue) -> Result<Key, Failure> {
         "integer" if exact_fields(object, &["type", "value"]) => {
             parse_integer_text(&object["value"]).map(Key::Integer)
         }
-        "text" if exact_fields(object, &["type", "value"]) => object["value"]
-            .as_str()
-            .map(|text| Key::Text(text.to_owned()))
-            .ok_or_else(|| diagnostic_failure("TEXT_VALUE_INVALID")),
+        "text" if exact_fields(object, &["type", "value"]) => {
+            let text = object["value"]
+                .as_str()
+                .ok_or_else(|| diagnostic_failure("TEXT_VALUE_INVALID"))?;
+            if text.len() > PROFILE_MAX_STRING_BYTES {
+                return Err(Failure::new(
+                    ResultClass::ResourceLimit,
+                    "resource.string_bytes",
+                    0,
+                ));
+            }
+            Ok(Key::Text(text.to_owned()))
+        }
         "integer" | "text" => Err(diagnostic_failure("UNKNOWN_OR_MISSING_FIELD")),
         "bytes" | "boolean" | "null" | "array" | "map" | "bignum" | "rational" | "decimal"
         | "ieee_bits" | "interval" | "extension" | "extension_sequence" => {
@@ -2012,7 +2199,29 @@ fn parse_diagnostic_key(value: &JsonValue) -> Result<Key, Failure> {
     }
 }
 
-fn parse_diagnostic_value(value: &JsonValue) -> Result<Value, Failure> {
+fn parse_diagnostic_bytes(value: &JsonValue) -> Result<Value, Failure> {
+    let hex = value
+        .as_str()
+        .ok_or_else(|| diagnostic_failure("BYTES_HEX_INVALID"))?;
+    if !hex.len().is_multiple_of(2) || hex.bytes().any(|byte| hex_nibble(byte).is_none()) {
+        return Err(diagnostic_failure("BYTES_HEX_INVALID"));
+    }
+    if hex.len() / 2 > PROFILE_MAX_STRING_BYTES {
+        return Err(Failure::new(
+            ResultClass::ResourceLimit,
+            "resource.string_bytes",
+            0,
+        ));
+    }
+    hex_decode(hex).map(Value::Bytes)
+}
+
+fn parse_diagnostic_value(
+    value: &JsonValue,
+    state: &mut TypedJsonState,
+    depth: usize,
+) -> Result<Value, Failure> {
+    state.item()?;
     let object = value
         .as_object()
         .ok_or_else(|| diagnostic_failure("VALUE_MUST_BE_OBJECT"))?;
@@ -2022,27 +2231,51 @@ fn parse_diagnostic_value(value: &JsonValue) -> Result<Value, Failure> {
         "integer" if exact_fields(object, &["type", "value"]) => {
             parse_integer_text(&object["value"]).map(Value::Integer)
         }
-        "bytes" if exact_fields(object, &["type", "hex"]) => object["hex"]
-            .as_str()
-            .ok_or_else(|| diagnostic_failure("BYTES_HEX_INVALID"))
-            .and_then(hex_decode)
-            .map(Value::Bytes),
-        "text" if exact_fields(object, &["type", "value"]) => object["value"]
-            .as_str()
-            .map(|text| Value::Text(text.to_owned()))
-            .ok_or_else(|| diagnostic_failure("TEXT_VALUE_INVALID")),
-        "array" if exact_fields(object, &["type", "items"]) => object["items"]
-            .as_array()
-            .ok_or_else(|| diagnostic_failure("ARRAY_ITEMS_INVALID"))?
-            .iter()
-            .map(parse_diagnostic_value)
-            .collect::<Result<Vec<_>, _>>()
-            .map(Value::Array),
+        "bytes" if exact_fields(object, &["type", "hex"]) => parse_diagnostic_bytes(&object["hex"]),
+        "text" if exact_fields(object, &["type", "value"]) => {
+            let text = object["value"]
+                .as_str()
+                .ok_or_else(|| diagnostic_failure("TEXT_VALUE_INVALID"))?;
+            if text.len() > PROFILE_MAX_STRING_BYTES {
+                return Err(Failure::new(
+                    ResultClass::ResourceLimit,
+                    "resource.string_bytes",
+                    0,
+                ));
+            }
+            Ok(Value::Text(text.to_owned()))
+        }
+        "array" if exact_fields(object, &["type", "items"]) => {
+            let items = object["items"]
+                .as_array()
+                .ok_or_else(|| diagnostic_failure("ARRAY_ITEMS_INVALID"))?;
+            if items.len() > PROFILE_MAX_ARRAY_ITEMS {
+                return Err(Failure::new(
+                    ResultClass::ResourceLimit,
+                    "resource.array_items",
+                    0,
+                ));
+            }
+            let child_depth = typed_child_depth(depth)?;
+            let mut output = Vec::with_capacity(items.len());
+            for item in items {
+                output.push(parse_diagnostic_value(item, state, child_depth)?);
+            }
+            Ok(Value::Array(output))
+        }
         "map" if exact_fields(object, &["type", "entries"]) => {
             let entries = object["entries"]
                 .as_array()
                 .ok_or_else(|| diagnostic_failure("MAP_ENTRIES_INVALID"))?;
-            let mut output = Vec::new();
+            if entries.len() > PROFILE_MAX_MAP_ENTRIES {
+                return Err(Failure::new(
+                    ResultClass::ResourceLimit,
+                    "resource.map_entries",
+                    0,
+                ));
+            }
+            let child_depth = typed_child_depth(depth)?;
+            let mut output = Vec::with_capacity(entries.len());
             for entry in entries {
                 let entry = entry
                     .as_object()
@@ -2051,8 +2284,8 @@ fn parse_diagnostic_value(value: &JsonValue) -> Result<Value, Failure> {
                     return Err(diagnostic_failure("UNKNOWN_OR_MISSING_FIELD"));
                 }
                 output.push(MapEntry {
-                    key: parse_diagnostic_key(&entry["key"])?,
-                    value: parse_diagnostic_value(&entry["value"])?,
+                    key: parse_diagnostic_key(&entry["key"], state)?,
+                    value: parse_diagnostic_value(&entry["value"], state, child_depth)?,
                 });
             }
             Ok(Value::Map(output))
@@ -2067,9 +2300,9 @@ fn parse_diagnostic_value(value: &JsonValue) -> Result<Value, Failure> {
         "decimal" => unsupported_decimal(object),
         "ieee_bits" => unsupported_ieee_bits(object),
         "interval" => unsupported_interval(object),
-        "extension" => unsupported_extension(object),
+        "extension" => unsupported_extension(object, state, depth),
         "extension_sequence" if exact_fields(object, &[discriminator, "extensions"]) => {
-            classify_extensions(&object["extensions"])
+            classify_extensions(&object["extensions"], state, depth)
         }
         "integer" | "bytes" | "text" | "array" | "map" | "boolean" | "null" => {
             Err(diagnostic_failure("UNKNOWN_OR_MISSING_FIELD"))
@@ -2080,14 +2313,20 @@ fn parse_diagnostic_value(value: &JsonValue) -> Result<Value, Failure> {
 
 /// Parse the non-normative typed JSON projection.
 ///
+/// A lexical preflight bounds raw JSON nesting and oversized unquoted integer
+/// tokens before `serde_json` runs. Semantic construction then applies the
+/// profile's depth, collection, total-item, and string limits before cloning or
+/// allocating the corresponding [`Value`] storage.
+///
 /// # Errors
 ///
 /// Returns stable expectedness or semantic failures for malformed,
 /// unexpected, invalid-normal-form, or explicitly unsupported typed JSON.
 pub fn value_from_diagnostic_json(input: &[u8]) -> Result<Value, Failure> {
+    preflight_typed_json(input)?;
     let json: JsonValue =
         serde_json::from_slice(input).map_err(|_| diagnostic_failure("INVALID_JSON"))?;
-    parse_diagnostic_value(&json)
+    parse_diagnostic_value(&json, &mut TypedJsonState::default(), 0)
 }
 
 fn diagnostic_key(key: &Key) -> JsonValue {

@@ -596,8 +596,8 @@ fn typed_json_uses_decimal_strings_and_full_integer_edges() -> Result<(), Failur
     );
     assert_failure(
         value_from_diagnostic_json(br#"{"type":"integer","value":24}"#),
-        ResultClass::Expectedness,
-        "expected.top_level",
+        ResultClass::SemanticValidity,
+        "semantic.unsupported_value",
     );
     let value = Value::Array(vec![Value::Bytes(vec![0, 255]), Value::Null]);
     assert_eq!(
@@ -605,6 +605,184 @@ fn typed_json_uses_decimal_strings_and_full_integer_edges() -> Result<(), Failur
         value
     );
     Ok(())
+}
+
+#[test]
+fn typed_json_preflight_and_conversion_bounds_are_stable() -> Result<(), Failure> {
+    fn nested_typed_arrays(wrappers: usize) -> Vec<u8> {
+        let mut input = Vec::with_capacity(wrappers * 27 + 15);
+        for _ in 0..wrappers {
+            input.extend_from_slice(br#"{"type":"array","items":["#);
+        }
+        input.extend_from_slice(br#"{"type":"null"}"#);
+        for _ in 0..wrappers {
+            input.extend_from_slice(b"]}");
+        }
+        input
+    }
+
+    let at_semantic_depth = nested_typed_arrays(32);
+    let mut expected = Value::Null;
+    for _ in 0..32 {
+        expected = Value::Array(vec![expected]);
+    }
+    assert_eq!(value_from_diagnostic_json(&at_semantic_depth)?, expected);
+    assert_failure(
+        value_from_diagnostic_json(&nested_typed_arrays(33)),
+        ResultClass::ResourceLimit,
+        "resource.depth",
+    );
+    assert_failure(
+        value_from_diagnostic_json(&nested_typed_arrays(2_000)),
+        ResultClass::ResourceLimit,
+        "resource.depth",
+    );
+
+    // A depth-32 map projection reaches 97 raw JSON object/array levels.
+    // The scanner admits that necessary ceiling and rejects the next level
+    // before serde's recursion behavior can affect the result.
+    let at_raw_depth = format!("{}0{}", "[".repeat(97), "]".repeat(97));
+    assert_failure(
+        value_from_diagnostic_json(at_raw_depth.as_bytes()),
+        ResultClass::Expectedness,
+        "expected.top_level",
+    );
+    let beyond_raw_depth = format!("{}0{}", "[".repeat(98), "]".repeat(98));
+    assert_failure(
+        value_from_diagnostic_json(beyond_raw_depth.as_bytes()),
+        ResultClass::ResourceLimit,
+        "resource.depth",
+    );
+
+    let at_integer_token_boundary = br#"{"type":"integer","value":99999999999999999999}"#;
+    assert_failure(
+        value_from_diagnostic_json(at_integer_token_boundary),
+        ResultClass::SemanticValidity,
+        "semantic.unsupported_value",
+    );
+    let beyond_integer_token_boundary = br#"{"type":"integer","value":999999999999999999999}"#;
+    assert_failure(
+        value_from_diagnostic_json(beyond_integer_token_boundary),
+        ResultClass::SemanticValidity,
+        "semantic.unsupported_value",
+    );
+    assert_failure(
+        value_from_diagnostic_json(br#"{"type":"integer","value":999999999999999999999.0}"#),
+        ResultClass::SemanticValidity,
+        "semantic.unsupported_value",
+    );
+
+    let quoted_digits = "9".repeat(5_000);
+    let quoted_integer = format!(r#"{{"type":"integer","value":"{quoted_digits}"}}"#);
+    assert_failure(
+        value_from_diagnostic_json(quoted_integer.as_bytes()),
+        ResultClass::SemanticValidity,
+        "semantic.integer_range",
+    );
+    let escaped_text = format!(
+        r#"{{"type":"text","value":"\"{}[[[[{{{{\\\"still text"}}"#,
+        "9".repeat(100)
+    );
+    assert!(matches!(
+        value_from_diagnostic_json(escaped_text.as_bytes()),
+        Ok(Value::Text(_))
+    ));
+    Ok(())
+}
+
+#[test]
+fn typed_json_conversion_checks_collection_total_and_string_limits() {
+    fn null_array(items: usize) -> Vec<u8> {
+        let mut input = Vec::with_capacity(25 + items * 16);
+        input.extend_from_slice(br#"{"type":"array","items":["#);
+        for index in 0..items {
+            if index != 0 {
+                input.push(b',');
+            }
+            input.extend_from_slice(br#"{"type":"null"}"#);
+        }
+        input.extend_from_slice(b"]}");
+        input
+    }
+
+    fn total_items_projection(last_inner_items: usize) -> Vec<u8> {
+        let mut input = br#"{"type":"array","items":["#.to_vec();
+        for (index, items) in [1_023, 1_023, 1_023, last_inner_items]
+            .into_iter()
+            .enumerate()
+        {
+            if index != 0 {
+                input.push(b',');
+            }
+            input.extend_from_slice(&null_array(items));
+        }
+        input.extend_from_slice(b"]}");
+        input
+    }
+
+    assert!(matches!(
+        value_from_diagnostic_json(&null_array(1_024)),
+        Ok(Value::Array(items)) if items.len() == 1_024
+    ));
+    assert_failure(
+        value_from_diagnostic_json(&null_array(1_025)),
+        ResultClass::ResourceLimit,
+        "resource.array_items",
+    );
+
+    let mut map = br#"{"type":"map","entries":["#.to_vec();
+    for index in 0..1_024 {
+        if index != 0 {
+            map.push(b',');
+        }
+        map.extend_from_slice(
+            format!(
+                r#"{{"key":{{"type":"integer","value":"{index}"}},"value":{{"type":"null"}}}}"#
+            )
+            .as_bytes(),
+        );
+    }
+    map.extend_from_slice(b"]}");
+    assert!(matches!(
+        value_from_diagnostic_json(&map),
+        Ok(Value::Map(entries)) if entries.len() == 1_024
+    ));
+    let insert_at = map.len() - 2;
+    map.splice(
+        insert_at..insert_at,
+        br#",{"key":{"type":"integer","value":"1024"},"value":{"type":"null"}}"#
+            .iter()
+            .copied(),
+    );
+    assert_failure(
+        value_from_diagnostic_json(&map),
+        ResultClass::ResourceLimit,
+        "resource.map_entries",
+    );
+
+    assert!(value_from_diagnostic_json(&total_items_projection(1_022)).is_ok());
+    assert_failure(
+        value_from_diagnostic_json(&total_items_projection(1_023)),
+        ResultClass::ResourceLimit,
+        "resource.total_items",
+    );
+
+    let at_text_limit = format!(r#"{{"type":"text","value":"{}"}}"#, "x".repeat(65_536));
+    assert!(value_from_diagnostic_json(at_text_limit.as_bytes()).is_ok());
+    let beyond_text_limit = format!(r#"{{"type":"text","value":"{}"}}"#, "x".repeat(65_537));
+    assert_failure(
+        value_from_diagnostic_json(beyond_text_limit.as_bytes()),
+        ResultClass::ResourceLimit,
+        "resource.string_bytes",
+    );
+    let at_bytes_limit = format!(r#"{{"type":"bytes","hex":"{}"}}"#, "00".repeat(65_536));
+    assert!(value_from_diagnostic_json(at_bytes_limit.as_bytes()).is_ok());
+    let beyond_bytes_limit = format!(r#"{{"type":"bytes","hex":"{}"}}"#, "00".repeat(65_537));
+    assert_failure(
+        value_from_diagnostic_json(beyond_bytes_limit.as_bytes()),
+        ResultClass::ResourceLimit,
+        "resource.string_bytes",
+    );
 }
 
 #[test]
