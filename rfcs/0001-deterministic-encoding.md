@@ -369,13 +369,13 @@ rather than embedded recursively in this document.
 | Profile candidate | `6cbf0f686a1f35b5c6fac8411ef5abc708c9c4410b5fdb2ee510c513df067d2f` |
 | Primary-source audit manifest | `b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40` |
 | Semantic fixture tree | `90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8` |
-| Generated result manifest | `aa9abfac51827b351c457a54b96a5e58333ac01b28139a6f1ea477403eb1328c` |
+| Generated result manifest | `e69e863053fad44faf2511cedbd53a13725e309cbdb0551621e217c2095dd6cd` |
 | Differential results | `4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274` |
 | Deliberate-mutation results | `1b6c448a29ce76b83c5e85673731382dc24bba8a1902a7686988626015d22da6` |
 | Binary golden manifest | `8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1` |
 | Independent-lineage declaration | `7a7e48658e81e478c3858f265d24eb0c1402fa6169e7c03eb74363effb8208a4` |
-| Python executable/lock subjects | `91de2c6d088dc65452d584ed25683e27f9205bdb67bb6dc377d3fa2ef5819433` |
-| Rust executable/lock subjects | `8983150cd08f36ef0c3f1dc84534593aaf8e694f25fed05817e118c09284e515` |
+| Python executable/lock subjects | `cc05dbf3d4996f44e204099ad335df843557571ae61aac8044903de5f9e41a9f` |
+| Rust executable/lock subjects | `cb3c03907bc7cdf6f495be7d98d795347b3b51c1415637a6b1e8d71f558027ea` |
 | Rust `Cargo.lock` | `2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180` |
 | Published-syntax CDDL prototype | `05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0` |
 | Digest-framing semantic corpus | `36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b` |
