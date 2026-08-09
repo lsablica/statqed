@@ -79,6 +79,26 @@ class DigestTests(unittest.TestCase):
         )
         self.assertTrue(self.verify().accepted)
 
+    def test_schema_identifier_is_bound_but_not_resolved(self):
+        schema_id = "test.must-be-text.v1"
+        framed = build_digest_frame(
+            purpose_id=self.purpose,
+            object_class_schema_id=schema_id,
+            payload=b"\x00",
+        )
+        self.assertTrue(framed.accepted, framed.code)
+        verified = verify_digest_frame(
+            frame=framed.frame,
+            digest=framed.digest,
+            expected_purpose_id=self.purpose,
+            expected_object_class_schema_id=schema_id,
+        )
+        self.assertTrue(verified.accepted, verified.code)
+        # Integer(0) is canonical profile data. This deliberately unresolvable
+        # test ID receives no schema interpretation here; a schema-owning
+        # caller must separately reject it if the named object requires text.
+        self.assertEqual(verified.value.value, 0)
+
     def test_domain_substitution_is_rejected_before_digest_comparison(self):
         cases = (
             ({"expected_purpose_id": "test.other"}, "digest.purpose"),
