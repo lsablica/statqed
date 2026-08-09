@@ -687,6 +687,7 @@
     "lean"
   ],
   "retained_failures": [
+    "conformance/prototypes/results/failures/hosted-shallow-checkout-baseline-v1.json",
     "conformance/prototypes/results/failures/lock-reproduction-missing-targets.json",
     "conformance/prototypes/results/failures/python-only-rust-unavailable-v1.json",
     "conformance/prototypes/results/failures/rust-adversarial-reject-v1.json",
@@ -726,7 +727,7 @@
     {
       "path": ".github/workflows/serialization-prototypes.yml",
       "role": "least-privilege hosted reproduction",
-      "sha256": "ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117"
+      "sha256": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536"
     },
     {
       "path": "Makefile",
@@ -1154,6 +1155,11 @@
       "sha256": "8db0e43760421ea694e0e2d7095ade93a821ce5f3b7c66eaf954d7fe969af7a1"
     },
     {
+      "path": "conformance/prototypes/results/failures/hosted-shallow-checkout-baseline-v1.json",
+      "role": "semantic fixtures, binary vectors, differential results, and retained failures",
+      "sha256": "c78fcfb1efa2741db07118c228a9a753f54edffa86ea47beb21970100019b6d2"
+    },
+    {
       "path": "conformance/prototypes/results/failures/lock-reproduction-missing-targets.json",
       "role": "semantic fixtures, binary vectors, differential results, and retained failures",
       "sha256": "76d84d663a1d3ef9c0fd79c91473b707c9afeabd98d38c67d3781fd082595b7f"
@@ -1201,7 +1207,7 @@
     {
       "path": "docs/research/serialization/reviews/ci-release.md",
       "role": "semantic model and reviewed profile candidate",
-      "sha256": "291ffb68267b3a4f22275d5716e212592982923d3a661921490791b96ac18580"
+      "sha256": "06a40a970cfd64cf07dd0eadd937669447991ec9d9711b9952290bd3fa397be0"
     },
     {
       "path": "docs/research/serialization/reviews/conformance.md",
@@ -1251,7 +1257,7 @@
     {
       "path": "rfcs/0001-deterministic-encoding.md",
       "role": "normative decision",
-      "sha256": "8a45ea17e19ecb18fdc94256f3fbb02839aebbfe6189bd61f59272dd96c80d19"
+      "sha256": "ff26632a8ef1e213a3ceb23846f581533236a5978b2f12b9a821ea6f21977291"
     },
     {
       "path": "schemas/prototypes/cddl/README.md",

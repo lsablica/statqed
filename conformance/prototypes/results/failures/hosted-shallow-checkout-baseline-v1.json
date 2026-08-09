@@ -1,0 +1,14 @@
+{
+  "classification": "reproducibility_environment_failure",
+  "command": "python3 scripts/serialization/build_evidence_manifest.py",
+  "expected": "the reviewed baseline commit is locally available for protected-path and RFC-0006 hashing",
+  "failure": "fatal: path 'rfcs/0006-canonical-logical-data-digest.md' exists on disk, but not in '8875d8f6fa8e3b45e706ea567d45448927a02efa'",
+  "job_id": 93263761605,
+  "reason": "actions/checkout used its default one-commit shallow history in the conformance job",
+  "remediation": "set fetch-depth: 0 only on the conformance checkout while retaining persist-credentials: false",
+  "run_id": 31320961923,
+  "schema_id": "statqed.sq0005-retained-failure.v1",
+  "status": "retained",
+  "subject_commit": "cc1021e33441b4bfba5c1459d644d2c5a6b79127",
+  "workflow": "Serialization prototypes"
+}

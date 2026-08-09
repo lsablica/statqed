@@ -2,202 +2,127 @@
 
 Status: **Experimental review record**
 
-Disposition: **APPROVE FOR HOSTED EXECUTION**
+Disposition: **APPROVE FOR HOSTED RERUN**
 
 Review date: 2026-08-09
 
-Reviewer: `/root/sq0005_ci_release_backup`, acting as the distinct CI,
+Reviewer: `/root/sq0005_ci_release_backup`, acting as the independent CI,
 reproducibility, dependency-gate, and release-boundary reviewer
 
 ## Decision
 
-The exact implementation subject and workflow below are approved for hosted
-execution. The workflow is least-privilege, uses exact action commits and exact
-language patch versions, separates dependency acquisition from locked offline
-Rust execution, checks lock and evidence regeneration, and exercises the
-retained conformance, corruption, license, yanked-state, and advisory paths.
+The focused checkout correction is approved for hosted rerun. The first hosted
+run reached the final deterministic-regeneration step after every earlier
+workflow gate passed, then failed because the default one-commit checkout did
+not contain the reviewed baseline object. Setting `fetch-depth: 0` only on the
+conformance checkout is necessary and sufficient for the current verifier.
 
-This is a conditional pre-hosted disposition. It is not permission to merge,
-accept RFC-0001, mark ADR-0004 Accepted, or mark SQ-0005 DONE. Final approval
-requires the workflow to pass on the exact final post-transition pull-request
-head, including the then-present evidence manifest and final ledger states, and
-to pass again on the merged `main` commit. The observed hosted image metadata
-must be retained with those runs.
+This remains conditional. A successful rerun on the exact corrected head and a
+successful post-merge run on `main` are required before merge/integration may
+be described as green.
 
-## Exact subject
+## Exact subjects
 
 | Subject | Exact identity |
 |---|---|
-| Reviewed implementation commit | `410465d773fc011ee01e38e6e76a79a60efe8837` |
-| Reviewed repository tree | `a93ac8fe4befe4da52ff0ef5ee928ea04679b85c` |
-| Workflow | `.github/workflows/serialization-prototypes.yml` |
-| Workflow SHA-256 | `ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117` |
-| Cargo.lock SHA-256 | `2e9c4f95aa0aa54ab2338e980d388f9f0223be8964d94f82d82f086f2dadb180` |
-| Conformance runner SHA-256 | `8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c` |
-| Static evidence verifier SHA-256 | `864568ef80e2c1f0517999cf45130f744c6599eab34040932f1fa0258e0c7d0e` |
-| Dependency inventory SHA-256 | `3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9` |
-| Retained yanked-state record SHA-256 | `fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b` |
-| Retained advisory report SHA-256 | `abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55` |
-| Security reproducer SHA-256 | `d31f7baf094049d5d8437d6fd104af25874c0530e9f18f792ed629dfcf16ee39` |
+| Original implementation subject | `410465d773fc011ee01e38e6e76a79a60efe8837` |
+| First hosted/final-state subject | `cc1021e33441b4bfba5c1459d644d2c5a6b79127` |
+| Failed hosted run | `31320961923` |
+| Failed conformance job | `93263761605` |
+| Failed step | `Confirm static evidence and clean regeneration` |
+| Corrected workflow SHA-256 | `3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536` |
+| Retained failure record | `conformance/prototypes/results/failures/hosted-shallow-checkout-baseline-v1.json` |
+| Retained failure SHA-256 | `c78fcfb1efa2741db07118c228a9a753f54edffa86ea47beb21970100019b6d2` |
+| Required baseline | `8875d8f6fa8e3b45e706ea567d45448927a02efa` |
 
-The workflow and implementation paths above are byte-identical between the
-reviewed commit and the review-time branch. Later commits visible during this
-review changed specialist review records, not the workflow or implementations.
+The focused manager change adds only `fetch-depth: 0` to the conformance
+checkout, retains the minimized failure record, and rebinds the RFC workflow
+hash. It does not change an implementation, fixture, semantic rule, action
+revision, toolchain, lock, permission, or execution command.
 
-## Workflow authority and action pins
+## Hosted failure disposition
 
-The workflow runs for pull requests, pushes to `main`, and manual dispatch. It
-does not use `pull_request_target`. Top-level permissions are exactly
-`contents: read`; both checkouts set `persist-credentials: false`; there is no
-write permission, artifact upload, package publication, release, deployment,
-or token-bearing step. Job timeouts are 20 and 60 minutes. Workflow concurrency
-is explicit and cancels superseded pull-request and push runs.
+Official GitHub run metadata confirms:
 
-Every `uses:` reference is a 40-hex commit:
+- workflow `Serialization prototypes`, pull-request head `cc1021e...`;
+- Python 3.12.13 job `93263761564`: success;
+- Python 3.14.7 job `93263761592`: success;
+- conformance job `93263761605`: failure only in its final step;
+- source-audit verification passed;
+- static evidence verification passed for 156 subjects and 203 negative
+  fixtures;
+- all 12 evidence-corruption tests passed; and
+- evidence-manifest regeneration then failed because `git show` could not
+  resolve baseline commit `8875d8f...` in the depth-one clone.
 
-- `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1`,
-  verified through the official GitHub API as tag `v7.0.1`;
-- `actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97`,
-  verified through the official GitHub API as tag `v7.0.0`.
+The retained record classifies this as
+`reproducibility_environment_failure`, binds the run, job, head, command, exact
+failure, cause, and remediation, and does not rewrite the failed observation
+as success.
 
-There is no floating action tag, branch, or `@latest`. The hosted runner label
-`ubuntu-24.04` remains a mutable service label; the workflow records
-`RUNNER_OS`, `RUNNER_ARCH`, `RUNNER_NAME`, `ImageOS`, `ImageVersion`,
-`/etc/os-release`, `uname`, tool versions, and the exact repository commit.
-Its comments correctly limit direct evidence to the observed hosted runner and
-do not infer macOS, Windows, ARM, big-endian, alternate-libc, or immutable
-Linux support.
+## Why complete history is required
 
-## Python matrix
+The permanent evidence builder compares protected paths and RFC-0006 against
+the exact reviewed base. It must read
+`8875d8f...:rfcs/0006-canonical-logical-data-digest.md` from Git, not trust only
+the current working-tree copy. A depth-one checkout contains the file but not
+the historical commit object, so it cannot establish byte identity with the
+reviewed baseline.
 
-The independent-oracle job selects exact CPython `3.12.13` and `3.14.7`, runs
-the standard-library test suite with `-S`, errors on warnings, disables bytecode
-generation, proves the requirements file has no effective third-party entry,
-rejects `__pycache__`/bytecode residue, and ends with clean-diff checks.
+`8875d8f...` is an ancestor of the failed head. `fetch-depth: 0` makes the
+needed commit and tree objects locally available, which is sufficient for all
+existing `git show`/protected-diff operations. No submodule, LFS object,
+additional action, write permission, persisted credential, or executable from
+old history is needed. The Python-only jobs retain shallow checkouts because
+they do not run baseline-dependent evidence regeneration.
 
-Official `actions/python-versions` release records were available at review
-time for both exact patches: `3.12.13-27650778726` (published 2026-06-16) and
-`3.14.7-31064857500` (published 2026-08-06). Local execution directly covered
-only conda-forge CPython 3.12.13; all 57 oracle tests passed. CPython 3.14.7 is
-therefore a configured hosted candidate until the exact workflow run succeeds,
-not local or cross-platform support evidence.
+## Least privilege and unchanged gates
 
-## Rust acquisition, offline execution, and lock drift
+The workflow still has only `contents: read`; checkout remains pinned to
+`3d3c42e5aac5ba805825da76410c181273ba90b1` and keeps
+`persist-credentials: false`. Setup Python remains commit-pinned. Timeouts,
+concurrency, exact Python 3.12.13/3.14.7, exact Rust 1.97.1, clean Cargo home,
+locked/offline Rust gates, Cargo.lock drift, differential/mutation/resource
+tests, inventory/live-yanked checks, immutable advisory inputs, corruption
+tests, clean regeneration, and runner metadata are unchanged.
 
-The conformance job installs exact Rust 1.97.1 with the minimal profile plus
-rustfmt and Clippy, and records full Rust and Cargo version output. Dependency
-acquisition then uses a new runner-temporary `CARGO_HOME` and target directory,
-rejects ambient Cargo credential variables and credential/config files, and
-fetches only the committed graph with `--locked`. The runner-created Cargo
-locations are passed to later steps explicitly.
+Fetching read-only history increases downloaded Git objects but does not
+expand repository permissions or execute historical content. Only scripts at
+the checked-out reviewed head execute. Hosted `ubuntu-24.04` remains a mutable
+observed runner, not a cross-platform or immutable-platform support claim.
 
-After acquisition, formatting, build, Clippy with warnings denied, all-target
-tests, and doc tests run with the exact toolchain and locked/offline graph.
-Cargo network access is disabled for those gates. A separate runner-temporary
-copy removes its lock, regenerates it offline, compares it byte-for-byte, and
-checks the fixed lock SHA-256. Thus Rust 1.97.1 performs acquisition, while the
-actual verification gates do not silently acquire or rewrite dependencies.
+The workflow has no upload, release, deployment, or write-token step. Its
+license and advisory results remain exact-lock, point-in-time observations,
+not distribution approval or a security guarantee.
 
-Fresh local review execution with Rust 1.97.1 passed format, locked/offline
-build, Clippy, 31 unit/integration tests (9 CLI and 22 profile), and doc tests.
-SQ-0005's isolated prototype declares 1.97.1 as its own minimum and does not
-claim that the production backend's distinct Rust 1.85.1 floor applies to this
-research crate.
-
-## Conformance, evidence, license, and advisory gates
-
-The workflow runs repository guardrails, the permanent evidence verifier,
-the 273-case differential conformance verifier, deliberate divergence and
-resource checks embedded in that runner, source-audit regeneration, evidence
-corruption tests, evidence-manifest regeneration, and a final clean diff.
-Consequently a changed generated result, golden, failure record, review binding,
-or manifest cannot pass merely because one implementation changed.
-
-The dependency inventory is regenerated from exact locked/offline Cargo
-metadata and must byte-match the retained normalized inventory. The retained
-crates.io checksum/yanked record is checked offline, then CI performs a separate
-fail-closed live query for all 22 exact package versions. This live query is a
-current registry observation, deliberately not deterministic historical
-evidence.
-
-The advisory step downloads cargo-audit 0.22.2 and RustSec database commit
-`309ad29d8fe448bf986019e05d47b9e0e29a2218`; immutable content hashes are
-checked before safe extraction and execution. The reproducer uses isolated
-home and Cargo directories, disables database fetching and yanked lookup, and
-requires the retained zero-vulnerability/zero-warning report to reproduce.
-This is a lock-bound point-in-time observation, not a security guarantee.
-
-Every locked crate has an exact checksum and Cargo-declared license expression
-in the normalized inventory. The separate Rust/security review inspected
-packaged license/notice material. This workflow does not create a distributable
-third-party notice bundle, so the branch remains source-only Experimental
-evidence and the absence of any release/upload step is required. Binary or
-package distribution needs a fresh complete license/notices review.
-
-## Update, rollback, and release boundary
-
-The RFC candidate and implementation specification require a semantic/profile
-change to reopen RFC-0001 and refresh sources, fixtures, both implementations,
-locks, license/advisory evidence, workflow, and reviews together. Rollback must
-restore one complete previously reviewed evidence set and identifiers; partial
-rollback fails as evidence drift. The workflow's fixed toolchain, action,
-Cargo.lock, advisory archive, database, and evidence hashes support that policy.
-
-No prototype is production authority. CI agreement does not prove artifact
-validity, source fidelity, logical-data identity, provenance, cryptographic
-collision absence, proof validity, or statistical validity. RFC-0006 and
-production `backend/`, `lean/`, and frontend code remain outside this review.
-
-## Commands and results
+## Review checks
 
 ```text
-git diff --exit-code 410465d773fc011ee01e38e6e76a79a60efe8837 -- \
-  .github/workflows/serialization-prototypes.yml schemas/prototypes \
-  scripts/serialization conformance/prototypes \
-  rfcs/0001-deterministic-encoding.md \
-  docs/adr/0004-deterministic-cbor-cddl.md \
-  docs/spec/canonicalization.md
-  PASS: implementation subject unchanged at review time
+gh run view 31320961923 --job 93263761605 --log-failed
+  PASS: exact run/head/jobs and shallow-baseline failure reproduced in logs
 
-static workflow assertions
-  PASS: all actions use 40-hex commits; contents:read; checkout credentials
-  disabled; explicit timeouts/concurrency; no pull_request_target
+sha256sum .github/workflows/serialization-prototypes.yml
+  PASS: 3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536
 
-official GitHub API tag checks
-  PASS: checkout v7.0.1 and setup-python v7.0.0 resolve to configured commits
+git merge-base --is-ancestor 8875d8f... cc1021e...
+  PASS: baseline belongs to the reviewed ancestry
 
-official actions/python-versions release checks
-  PASS: exact 3.12.13 and 3.14.7 hosted tool releases exist
-
-make check
-  PASS: pre-transition repository checks and SQ-0002 verifier
-
-make list-work
-  PASS: SQ-0005 IN_PROGRESS; SQ-0008 READY
-
-CPython 3.12.13 standard-library oracle suite
-  PASS: 57 tests
-
-Rust 1.97.1 fmt/build/clippy/test/doc with --locked --offline
-  PASS: format; build; Clippy -D warnings; 31 tests; doc tests
+git diff --check
+  PASS: focused manager change has no whitespace errors
 ```
 
 ## Conditions before merge
 
-1. Build the final evidence manifest only after the atomic RFC/ADR/task/status
-   transition and exact final specialist reviews are present.
-2. Run `serialization-prototypes` on that exact pull-request head. Both exact
-   Python matrix jobs and the conformance job must succeed; retain run ID,
-   commit, timestamps, and observed runner-image metadata.
-3. Confirm `make check` invokes the SQ-0005 permanent evidence verifier in the
-   final state and that the explicit verifier, corruption suite, conformance,
-   clean regeneration, lock, live-yanked, license-inventory, and immutable
-   advisory gates all pass in the hosted run.
-4. Recheck that the workflow file hash remains
-   `ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117`;
-   any workflow change invalidates this disposition and requires re-review.
-5. After merge, require the same workflow to pass on the exact `main` merge
-   commit before the default branch is described as green.
+1. Commit the focused correction and rebind every final evidence/review hash
+   affected by the workflow and retained failure record.
+2. Rerun `Serialization prototypes` on that exact pull-request head. Both
+   Python jobs and the complete conformance job, especially deterministic
+   manifest regeneration and final clean diff, must succeed.
+3. Retain run ID, head SHA, job IDs, timestamps, and observed runner-image
+   metadata. Do not replace the retained failed-run record.
+4. Any further workflow change invalidates this disposition and requires
+   another focused review.
+5. Require the same workflow to succeed on the exact merged `main` commit.
 
-Subject to those conditions, there is no CI, reproducibility, dependency-gate,
-platform-claim, or release-boundary blocker to hosted execution.
+Subject to those conditions, the shallow-checkout failure is correctly
+explained and the full-history conformance checkout is approved for rerun.

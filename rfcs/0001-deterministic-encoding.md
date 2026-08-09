@@ -380,7 +380,7 @@ rather than embedded recursively in this document.
 | Published-syntax CDDL prototype | `05ee85b0d028af588ed9e95e83fdf017259988f05709de85f033cb0ab5badda0` |
 | Digest-framing semantic corpus | `36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b` |
 | Permanent evidence verifier | `864568ef80e2c1f0517999cf45130f744c6599eab34040932f1fa0258e0c7d0e` |
-| Serialization-prototype workflow | `ee7b9643374d001cd595f4232d42780bdf70b8c78c2cbe0396551501d3674117` |
+| Serialization-prototype workflow | `3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536` |
 | Unchanged Draft RFC-0006 baseline | `e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429` |
 
 ## Decision
