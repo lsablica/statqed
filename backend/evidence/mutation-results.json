@@ -1,5 +1,5 @@
 {
-  "case_count": 19,
+  "case_count": 20,
   "cases": [
     {
       "classification": "rejected",
@@ -93,8 +93,13 @@
     },
     {
       "classification": "rejected",
+      "id": "workflow-job-write-permission",
+      "reason": "workflow policy rejected a quoted job-level permission mapping"
+    },
+    {
+      "classification": "rejected",
       "id": "workflow-write-permission",
-      "reason": "workflow policy rejected inline elevated permission mapping"
+      "reason": "workflow policy rejected an extra top-level write permission"
     }
   ],
   "schema_version": 1

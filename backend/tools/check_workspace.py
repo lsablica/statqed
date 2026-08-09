@@ -119,11 +119,24 @@ def workflow_findings_text(text: str) -> list[str]:
         findings.append("workflow: action set or full-commit pin drifted")
     if re.search(r"uses:\s*[^\s#]+@(latest|main|master|v?\d+(?:\.\d+)*)\b", text):
         findings.append("workflow: floating action reference is prohibited")
-    permission_declarations = [
-        line for line in text.splitlines() if re.match(r"^\s*permissions\s*:", line)
-    ]
+    lines = text.splitlines()
+    permission_pattern = re.compile(
+        r'''^\s*(?:permissions|"permissions"|'permissions')\s*:'''
+    )
+    permission_declarations = [line for line in lines if permission_pattern.match(line)]
     if permission_declarations != ["permissions:"]:
         findings.append("workflow: permissions must be one exact top-level mapping")
+    else:
+        permission_index = lines.index("permissions:")
+        permission_body: list[str] = []
+        for line in lines[permission_index + 1 :]:
+            if not line.strip():
+                continue
+            if not line.startswith((" ", "\t")):
+                break
+            permission_body.append(line)
+        if permission_body != ["  contents: read"]:
+            findings.append("workflow: only contents read permission is allowed")
     if re.search(
         r"CARGO_[A-Z0-9_]*(?:TOKEN|CREDENTIAL|SECRET)[A-Z0-9_]*",
         text,
@@ -628,16 +641,29 @@ def mutation_results(root: Path) -> dict[str, Any]:
     )
     permission_workflow = workflow_text.replace(
         "permissions:\n  contents: read",
-        'permissions: {contents: read, id-token: "write"}',
+        'permissions:\n  contents: read\n  id-token: "write"',
         1,
     )
     record(
         "workflow-write-permission",
         any(
-            "permissions must be one exact top-level mapping" in item
+            "only contents read permission" in item
             for item in workflow_findings_text(permission_workflow)
         ),
-        "workflow policy rejected inline elevated permission mapping",
+        "workflow policy rejected an extra top-level write permission",
+    )
+    job_permission_workflow = workflow_text.replace(
+        "    timeout-minutes: 60\n",
+        '    timeout-minutes: 60\n    "permissions": {id-token: "write"}\n',
+        1,
+    )
+    record(
+        "workflow-job-write-permission",
+        any(
+            "permissions must be one exact top-level mapping" in item
+            for item in workflow_findings_text(job_permission_workflow)
+        ),
+        "workflow policy rejected a quoted job-level permission mapping",
     )
     cargo_credential_workflow = workflow_text.replace(
         "    timeout-minutes: 60\n",

@@ -323,7 +323,7 @@ git diff --check
 - 2026-08-09: Kept the SQ-0004 production graph dependency-free and limited it to `statqed-core` plus a thin `statqed-cli`; no speculative schema, encoding, artifact, registry, certificate, or frontend crate was created.
 - 2026-08-09: Fixed the bootstrap CLI protocol at version 1 only for deterministic version and malformed-invocation responses, with exit 2, stable symbolic errors, literal response fixtures, and fixed 64-argument/4,096-byte-per-argument/8,192-byte-total limits. This is not an artifact-verifier schema or Draft-RFC decision.
 - 2026-08-09: Required Rust 1.97.1 for all acquisition and release-oriented tooling while restricting Rust/Cargo 1.85.1 to the exact committed graph under `--locked --offline`; the floor cannot read credentials or alternate registries and may not regenerate `Cargo.lock`.
-- 2026-08-09: Bound the Experimental workspace candidate to full rustc/Cargo source identities, a byte-reproducible local-only lock, 19 adversarial mutations, ten deterministic process fixtures, a normalized license inventory, and cargo-audit 0.22.2 against immutable RustSec database commit `1237bbe09d2701e14e6593a630fbaf28928df712`.
+- 2026-08-09: Bound the Experimental workspace candidate to full rustc/Cargo source identities, a byte-reproducible local-only lock, 20 adversarial mutations, ten deterministic process fixtures, a normalized license inventory, and cargo-audit 0.22.2 against immutable RustSec database commit `1237bbe09d2701e14e6593a630fbaf28928df712`.
 
 ## Outcomes & Retrospective
 
