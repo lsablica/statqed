@@ -320,15 +320,15 @@
       "purpose": "Strict rejection of an unsupported simple value."
     },
     {
-      "id": "SIMPLE-24-RAW",
+      "id": "SIMPLE-32-RAW",
       "input_layer": "raw_cbor",
-      "input": {"kind": "literal_hex", "hex": "f818"},
+      "input": {"kind": "literal_hex", "hex": "f820"},
       "intended_class": "deterministic_profile",
       "accept": false,
       "stable_code": "profile.simple_forbidden",
       "expected_encoding": {"kind": "none"},
       "source_refs": ["PROFILE", "RFC8949-3"],
-      "rationale": "An unassigned simple value remains forbidden even in preferred syntax.",
+      "rationale": "Simple value 32 is well formed in the two-byte form and remains forbidden.",
       "purpose": "Reject non-Boolean/non-null simple values."
     },
     {
