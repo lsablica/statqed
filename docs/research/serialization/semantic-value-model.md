@@ -109,10 +109,12 @@ fully parsed map containing both faults still reports the duplicate class.
 The abstract `Extension` constructor exists only to make producer failure
 explicit. Candidate v1 has no known extension identifiers and accepts zero
 extensions. When a producer attempts to encode an extension sequence, it must
-first reject duplicate identifiers and then distinguish an unknown critical
-extension from an unsupported noncritical extension. It may not discard either
-kind. This supplies stable negative cases without assigning an extension wire
-format.
+first reject duplicate identifiers across the complete sequence. If the
+unique sequence contains any critical extension, it then returns
+`semantic.extension_critical_unknown`; otherwise it returns
+`semantic.extension_noncritical_unsupported`. This result is independent of
+sequence order. It may not discard either kind. This supplies stable negative
+cases without assigning an extension wire format.
 
 ## Equality and non-equivalence
 

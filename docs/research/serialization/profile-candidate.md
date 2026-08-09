@@ -198,8 +198,12 @@ Candidate v1 defines no extension wire representation and accepts an extension
 count of zero. Unknown critical extensions fail closed. Unknown noncritical
 extensions are also unsupported and must not be discarded. Duplicate
 extension identifiers are rejected before unknown/critical disposition at the
-semantic producer boundary. Ordinary arrays/maps cannot be relabeled as
-extensions without a later schema and profile decision.
+semantic producer boundary. After proving uniqueness over the complete
+extension sequence, the producer reports
+`semantic.extension_critical_unknown` if any entry is critical; otherwise it
+reports `semantic.extension_noncritical_unsupported`. This rule is independent
+of insertion order. Ordinary arrays/maps cannot be relabeled as extensions
+without a later schema and profile decision.
 
 ## Strict decoder and result taxonomy
 
@@ -210,9 +214,9 @@ separate; success at one phase says nothing about later phases.
 | Phase/result class | Candidate codes and meaning |
 |---|---|
 | `resource` | `resource.input_bytes`, `resource.output_bytes`, `resource.string_bytes`, `resource.array_items`, `resource.map_entries`, `resource.total_items`, `resource.depth`, `resource.diagnostic_bytes`. A declared size beyond a bound may fail immediately, before the body is read. |
-| `well_formedness` | `wellformed.truncated`, `wellformed.reserved_additional`, `wellformed.unexpected_break`, `wellformed.indefinite_chunk_type`, `wellformed.length_overflow`, `wellformed.map_pair_missing`. The bytes do not form one processable CBOR item. |
+| `well_formedness` | `wellformed.truncated`, `wellformed.reserved_additional`, `wellformed.unexpected_break`, `wellformed.indefinite_chunk_type`, `wellformed.map_pair_missing`. The bytes do not form one processable CBOR item. A host-arithmetic overflow is an implementation failure, not a profile result: a finite input admitted by the 1 MiB input bound cannot supply a profile-level overflow fixture. |
 | `validity` | `validity.invalid_utf8` and `validity.map_duplicate`. Duplicate detection uses the application key equality above and occurs before map collapse. Candidate v1 interprets no tags, so it does not apply tag-specific content-validity rules. |
-| `expectedness` | `expected.single_item`, `expected.trailing_bytes`, `expected.map_key_type`, `expected.profile_id`, `expected.schema_id`, `expected.schema_version`, `expected.top_level`. These are well-formed/valid CBOR but not the kind or version requested by the application call. |
+| `expectedness` | `expected.trailing_bytes`, `expected.map_key_type`, `expected.profile_id`, `expected.schema_id`, `expected.schema_version`, `expected.top_level`. These are well-formed/valid CBOR but not the kind or version requested by the application call. Empty input is `wellformed.truncated`; content after the first complete item is `expected.trailing_bytes`, so no overlapping `expected.single_item` code exists. |
 | `deterministic_profile` | `profile.non_preferred_head`, `profile.indefinite`, `profile.map_order`, `profile.tag_forbidden`, `profile.float_forbidden`, `profile.simple_forbidden`. These inputs are decodable but are not `statqed.cbor-core.v1` bytes. |
 | `cddl_shape` | `shape.cddl_mismatch` with a versioned rule identifier. It establishes only failure to match the selected published-syntax CDDL rule. |
 | `semantic_validity` | The `semantic.*` classes in the value-model note plus schema-owned invariants. It does not establish inferential, provenance, or kernel claims. |
@@ -272,7 +276,15 @@ declared environment with a 5-second per-fixture timeout and a 128 MiB process
 memory ceiling. Those operational numbers are security/conformance evidence,
 not cross-platform semantic equivalence. A timeout, allocation failure, stack
 overflow, exception, or panic must fail closed and must never yield
-`accepted`.
+`accepted`. The harness records those outcomes as `operational.timeout`,
+`operational.memory`, `operational.crash`, or `operational.exception`; these
+are evidence classifications rather than profile result codes.
+
+The 1,049,255-byte frame bound is a conservative allocation cap, not an
+attainable accepted-vector boundary. Because `algorithm_id`, `profile_id`, and
+`framing_id` are fixed at 7, 20, and 20 bytes, respectively, the largest valid
+frame has two 128-byte caller-owned identifiers and is 1,048,918 bytes. Both
+the attainable boundary and its one-over-limit input are conformance cases.
 
 Headers that declare a string or collection above a limit may return the
 resource code immediately even if the supplied body is truncated. This avoids
@@ -353,6 +365,8 @@ The digest is the 32-byte SHA-256 result over the complete framed byte string.
 The stored digest must be exactly 32 bytes. With five maximum-size identifiers
 and a maximum-size payload, the frame is at most 1,049,255 bytes: 15 magic
 bytes, 24 length bytes, 640 identifier bytes, and 1,048,576 payload bytes.
+That is the allocation cap above; the exact fixed identifiers make 1,048,918
+bytes the largest frame which can actually validate.
 
 Verification parses exactly the fixed magic and six components and consumes
 the complete frame. It is called with externally expected purpose, algorithm,
@@ -364,6 +378,15 @@ without fallback. A component whose length exceeds `u32` is unrepresentable;
 the tighter limits above fail first. Truncated length prefixes/components,
 prefix digests, concatenated digests, empty identifiers, empty payload fields,
 or concatenated payload items fail explicitly.
+
+Digest failure precedence is fixed. A whole frame beyond the allocation cap,
+an encoded payload length beyond 1 MiB, or a supplied digest whose length is
+not 32 bytes is `digest.length`. A missing/truncated four-byte prefix or a
+component shorter than its declared length is `digest.component_length`.
+Complete bytes after the sixth framed component are
+`digest.trailing_bytes`. A syntactically framed empty, invalid, or
+non-profile payload is `digest.payload`. Only an exact 32-byte digest unequal
+to SHA-256 of the otherwise valid reconstructed frame is `digest.mismatch`.
 
 Required framing mutations include:
 
