@@ -17,6 +17,7 @@
   "allowed_paths": [
     "work/contracts/SQ-0005.yaml",
     "work/contracts/SQ-0006.yaml",
+    "ARCHITECTURE.md",
     "schemas/prototypes/**",
     "conformance/prototypes/**",
     "docs/spec/canonicalization.md",
@@ -65,7 +66,8 @@
     "RFC-0001 deterministic normative encoding profile, if and only if the complete reviewed validation plan passes",
     "ADR-0004 disposition and wording, if and only if it exactly matches an Accepted RFC-0001",
     "Draft canonicalization specification for the data-free foundation object classes",
-    "No logical-data model, physical-to-logical lowering, or RFC-0006 data digest is created by this task"
+    "No logical-data model, physical-to-logical lowering, or RFC-0006 data digest is created by this task",
+    "Post-acceptance integration maintenance may update only the two stale ARCHITECTURE.md current-state sentences that still call Accepted RFC-0001 a candidate; it may not change architecture, package boundaries, trust claims, or the marked normative scope"
   ],
   "accepted_decisions": [
     "ADR-0001 — foundation-phase monorepo",

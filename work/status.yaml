@@ -9,7 +9,7 @@
   "last_updated": "2026-08-09",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
-    "ADR-0001, ADR-0002, ADR-0003, ADR-0006, ADR-0008, ADR-0009, ADR-0010, and ADR-0011 are Accepted; ADR-0004, ADR-0005, ADR-0007 and RFC-0001 through RFC-0009 retain explicit owners and blockers.",
+    "ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0006, ADR-0008, ADR-0009, ADR-0010, ADR-0011, and RFC-0001 are Accepted; ADR-0005, ADR-0007, and RFC-0002 through RFC-0009 retain explicit owners and blockers.",
     "SQ-0002 is DONE after specialist review and durable evidence packaging; its final evidence merge is 01c5b6e1bfacf332dbb01259aa19258a3edd0f9e.",
     "SQ-0003 is DONE with an Experimental Lean proof foundation after distinct source, build, formal, adversarial, CI/reproducibility, and integration review. The task merged as 92e3b331b1ae795a21d6e030a21e8ce8d7da03dd and its final reviewed merge-evidence record merged as b7f98a99cdc4babccd920c52f5a2e55f8051228c.",
     "SQ-0003 directly establishes only the exact Lean/Mathlib build environment, test-only smoke declaration, actual axiom observations, trust mutations, normal/source builds, and Lean CI; it introduces no statistical theorem, artifact binding, registry authority, or Draft RFC decision.",

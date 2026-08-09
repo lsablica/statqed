@@ -22,7 +22,7 @@ No real statistical method is claimed complete at this milestone.
 
 StatQED's main foundation risk is semantic incoherence, not insufficient generated code. The project therefore freezes only small interfaces after prototypes, negative tests, and independent review. The first vertical slice must exercise the complete cross-language and proof path while remaining data-free, non-statistical, and test-only.
 
-SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed toolchain recommendations but initialized no production project and accepted no Draft RFC semantics. SQ-0003 and SQ-0004 have now completed the separately reviewed Lean and Rust production bootstraps. The recommended next isolated execution is SQ-0005; SQ-0008 remains independently READY.
+SQ-0001 established the constitutional boundaries. SQ-0002 selected reviewed toolchain recommendations but initialized no production project and accepted no Draft RFC semantics. SQ-0003 and SQ-0004 completed the separately reviewed Lean and Rust production bootstraps. SQ-0005 has now accepted the bounded data-free RFC-0001 profile after independent prototype and conformance review. The computed next isolated tasks are SQ-0006 and SQ-0008; both remain READY and unstarted.
 
 ## Dependency and decision graph
 
@@ -31,9 +31,9 @@ SQ-0001 constitutional baseline                       DONE
   └─ SQ-0002 toolchain research                      DONE
        ├─ SQ-0003 Lean bootstrap                     DONE
        └─ SQ-0004 Rust bootstrap                     DONE
-            └─ SQ-0005 serialization prototype       READY
-                 └─ RFC-0001 acceptance
-                      └─ SQ-0006 schema v0
+            └─ SQ-0005 serialization prototype       DONE
+                 └─ RFC-0001                         ACCEPTED
+                      └─ SQ-0006 schema v0            READY
                            ├─ SQ-0007 theorem registry + RFC-0005
                            ├─ SQ-0010 artifact envelope + RFC-0008
                            ├─ SQ-0011 canonical backend
@@ -53,11 +53,10 @@ SQ-0019 ─ SQ-0020 independent foundation review + RFC-0007/RFC-0009
 
 Task eligibility is computed by `work/backlog.yaml`, accepted decision prerequisites, and `scripts/check_repository.py`. This diagram explains the intended path but does not override the ledger.
 
-SQ-0003 and SQ-0004 were independent READY tasks and are now DONE after
-establishing their separately reviewed proof-backend and reference-workspace
-foundations. The computed successor set is SQ-0005 and SQ-0008 READY. Neither
-successor has begun; each requires a separate isolated execution and review
-transition.
+SQ-0003, SQ-0004, and SQ-0005 are DONE after separately reviewed proof-backend,
+reference-workspace, and encoding-profile foundations. The computed successor
+set is SQ-0006 and SQ-0008 READY. Neither successor has begun; each requires a
+separate isolated execution and review transition.
 
 ## Milestone A — Ratify the constitution (SQ-0001)
 
@@ -244,7 +243,7 @@ make list-work
 git diff --check
 ```
 
-`make check` includes repository/ledger guardrails and the immutable SQ-0002 evidence verifier. Each later task adds exact scoped commands to its contract and nearest `AGENTS.md`/implementation guide. SQ-0005 must add a standard-library verifier for its accepted profile and retained evidence to this permanent check path before completion.
+`make check` includes repository/ledger guardrails, the immutable SQ-0002 toolchain-evidence verifier, and the permanent SQ-0005 serialization-evidence verifier. Each later task adds exact scoped commands to its contract and nearest `AGENTS.md`/implementation guide.
 
 ## Recovery and idempotence
 
@@ -350,6 +349,7 @@ git diff --check
 - 2026-08-09: Accepted RFC-0001 and matching ADR-0004, marked SQ-0005 DONE, and made only SQ-0006 readiness state READY. SQ-0008 remains READY/unstarted; RFC-0006 remains unchanged Draft under SQ-0027. The decision-aware ledger reports 53 blocked tasks and no active task.
 - 2026-08-09: Retained hosted run `31320961923` as a reproducibility-environment failure when final evidence regeneration could not read base `8875d8f...` from a one-commit checkout. Independent CI review approved focused correction `9cd4fa315c17919e25351d474cf579a7b6909bd5`, which gives only the conformance job full read-only history; serialization run `31321428088` then passed every job and regenerated the 157-subject manifest byte-identically.
 - 2026-08-09: Final integration audit blocked merge because stale closing paragraphs still called RFC-0001 Draft and ADR-0004 Proposed. Correction `77c924a078c1481b9cead5979746109e51b85364` made that post-decision prose consistent with the Accepted headers and atomic transition, preserved the byte-identical marked scope, and regenerated the content-addressed evidence package.
+- 2026-08-09: A separate reviewed scope amendment authorized only two current-state wording corrections in `ARCHITECTURE.md`, which otherwise remained outside SQ-0005 scope. The amendment permits replacing stale RFC-0001 candidate language with the Accepted bounded data-free decision and forbids any architecture, trust, package-boundary, or normative-scope change.
 
 ## Outcomes & Retrospective
 
