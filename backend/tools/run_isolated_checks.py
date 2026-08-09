@@ -101,15 +101,16 @@ def run_suite() -> dict[str, Any]:
     started = dt.datetime.now(dt.timezone.utc)
     committed_lock = (ROOT / "Cargo.lock").read_bytes()
     records: list[dict[str, Any]] = []
-    version_environment = os.environ.copy()
     version_commands = [
         (["rustc", "+1.97.1", "--version"], "rustc-dev-version"),
         (["cargo", "+1.97.1", "--version"], "cargo-dev-version"),
         (["rustc", "+1.85.1", "--version"], "rustc-floor-version"),
         (["cargo", "+1.85.1", "--version"], "cargo-floor-version"),
     ]
-    for command, command_id in version_commands:
-        records.append(run_command(command, ROOT, version_environment, command_id))
+    with tempfile.TemporaryDirectory(prefix="statqed-version-identities-") as temporary_name:
+        version_environment = environment(Path(temporary_name), offline=True)
+        for command, command_id in version_commands:
+            records.append(run_command(command, ROOT, version_environment, command_id))
 
     lock_reproductions = []
     for repetition in (1, 2):

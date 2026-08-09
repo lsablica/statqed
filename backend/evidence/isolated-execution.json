@@ -9,11 +9,11 @@
         "--version"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.012,
-      "end": "2026-08-09T08:16:28.519075Z",
+      "elapsed_seconds": 0.011,
+      "end": "2026-08-09T08:18:43.286159Z",
       "exit_status": 0,
       "id": "rustc-dev-version",
-      "start": "2026-08-09T08:16:28.507260Z",
+      "start": "2026-08-09T08:18:43.275372Z",
       "stderr": "",
       "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14)\n"
     },
@@ -25,10 +25,10 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.008,
-      "end": "2026-08-09T08:16:28.526877Z",
+      "end": "2026-08-09T08:18:43.293968Z",
       "exit_status": 0,
       "id": "cargo-dev-version",
-      "start": "2026-08-09T08:16:28.519095Z",
+      "start": "2026-08-09T08:18:43.286178Z",
       "stderr": "",
       "stdout": "cargo 1.97.1 (c980f4866 2026-06-30)\n"
     },
@@ -39,11 +39,11 @@
         "--version"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.01,
-      "end": "2026-08-09T08:16:28.536416Z",
+      "elapsed_seconds": 0.009,
+      "end": "2026-08-09T08:18:43.303331Z",
       "exit_status": 0,
       "id": "rustc-floor-version",
-      "start": "2026-08-09T08:16:28.526894Z",
+      "start": "2026-08-09T08:18:43.293988Z",
       "stderr": "",
       "stdout": "rustc 1.85.1 (4eb161250 2025-03-15)\n"
     },
@@ -54,11 +54,11 @@
         "--version"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.009,
-      "end": "2026-08-09T08:16:28.545138Z",
+      "elapsed_seconds": 0.007,
+      "end": "2026-08-09T08:18:43.310171Z",
       "exit_status": 0,
       "id": "cargo-floor-version",
-      "start": "2026-08-09T08:16:28.536433Z",
+      "start": "2026-08-09T08:18:43.303350Z",
       "stderr": "",
       "stdout": "cargo 1.85.1 (d73d2caf9 2024-12-31)\n"
     },
@@ -70,10 +70,10 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.033,
-      "end": "2026-08-09T08:16:28.580939Z",
+      "end": "2026-08-09T08:18:43.345403Z",
       "exit_status": 0,
       "id": "lock-generation-1",
-      "start": "2026-08-09T08:16:28.547891Z",
+      "start": "2026-08-09T08:18:43.312887Z",
       "stderr": "",
       "stdout": ""
     },
@@ -84,11 +84,11 @@
         "generate-lockfile"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.025,
-      "end": "2026-08-09T08:16:28.609236Z",
+      "elapsed_seconds": 0.026,
+      "end": "2026-08-09T08:18:43.374934Z",
       "exit_status": 0,
       "id": "lock-generation-2",
-      "start": "2026-08-09T08:16:28.583893Z",
+      "start": "2026-08-09T08:18:43.348630Z",
       "stderr": "",
       "stdout": ""
     },
@@ -100,11 +100,11 @@
         "--locked"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.039,
-      "end": "2026-08-09T08:16:28.649381Z",
+      "elapsed_seconds": 0.041,
+      "end": "2026-08-09T08:18:43.416881Z",
       "exit_status": 0,
       "id": "dev-fetch-locked",
-      "start": "2026-08-09T08:16:28.610442Z",
+      "start": "2026-08-09T08:18:43.376209Z",
       "stderr": "",
       "stdout": ""
     },
@@ -120,12 +120,12 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.016,
-      "end": "2026-08-09T08:16:28.665141Z",
+      "end": "2026-08-09T08:18:43.432576Z",
       "exit_status": 0,
       "id": "dev-metadata-locked-offline",
-      "start": "2026-08-09T08:16:28.649431Z",
+      "start": "2026-08-09T08:18:43.416901Z",
       "stderr": "",
-      "stdout": "{\"packages\":[{\"name\":\"statqed-cli\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Thin command-line interface for the StatQED backend\",\"source\":null,\"dependencies\":[{\"name\":\"statqed-core\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core\"}],\"targets\":[{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"statqed\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"},{\"name\":\"statqed-core\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Bounded, deterministic command surface for the StatQED backend\",\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"statqed_core\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"}],\"workspace_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"workspace_default_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"resolve\":{\"nodes\":[{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"dependencies\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"deps\":[{\"name\":\"statqed_core\",\"pkg\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dep_kinds\":[{\"kind\":null,\"target\":null}]}],\"features\":[]},{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dependencies\":[],\"deps\":[],\"features\":[]}],\"root\":null},\"target_directory\":\"/tmp/statqed-dev-acquisition-bse_ypqf/target\",\"build_directory\":\"/tmp/statqed-dev-acquisition-bse_ypqf/target\",\"version\":1,\"workspace_root\":\"/tmp/statqed-sq0004/backend\",\"metadata\":null}\n"
+      "stdout": "{\"packages\":[{\"name\":\"statqed-cli\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Thin command-line interface for the StatQED backend\",\"source\":null,\"dependencies\":[{\"name\":\"statqed-core\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core\"}],\"targets\":[{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"statqed\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"},{\"name\":\"statqed-core\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Bounded, deterministic command surface for the StatQED backend\",\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"statqed_core\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"}],\"workspace_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"workspace_default_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"resolve\":{\"nodes\":[{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"dependencies\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"deps\":[{\"name\":\"statqed_core\",\"pkg\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dep_kinds\":[{\"kind\":null,\"target\":null}]}],\"features\":[]},{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dependencies\":[],\"deps\":[],\"features\":[]}],\"root\":null},\"target_directory\":\"/tmp/statqed-dev-acquisition-s9jv49u0/target\",\"build_directory\":\"/tmp/statqed-dev-acquisition-s9jv49u0/target\",\"version\":1,\"workspace_root\":\"/tmp/statqed-sq0004/backend\",\"metadata\":null}\n"
     },
     {
       "command": [
@@ -138,10 +138,10 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.041,
-      "end": "2026-08-09T08:16:28.706252Z",
+      "end": "2026-08-09T08:18:43.473120Z",
       "exit_status": 0,
       "id": "dev-fmt",
-      "start": "2026-08-09T08:16:28.665161Z",
+      "start": "2026-08-09T08:18:43.432613Z",
       "stderr": "",
       "stdout": ""
     },
@@ -161,10 +161,10 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.195,
-      "end": "2026-08-09T08:16:28.901357Z",
+      "end": "2026-08-09T08:18:43.668201Z",
       "exit_status": 0,
       "id": "dev-clippy",
-      "start": "2026-08-09T08:16:28.706273Z",
+      "start": "2026-08-09T08:18:43.473140Z",
       "stderr": "    Checking statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n    Checking statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s\n",
       "stdout": ""
     },
@@ -179,13 +179,13 @@
         "--offline"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.528,
-      "end": "2026-08-09T08:16:29.429616Z",
+      "elapsed_seconds": 0.523,
+      "end": "2026-08-09T08:18:44.190923Z",
       "exit_status": 0,
       "id": "dev-tests",
-      "start": "2026-08-09T08:16:28.901374Z",
-      "stderr": "   Compiling statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n   Compiling statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s\n     Running unittests src/main.rs (/tmp/statqed-dev-acquisition-bse_ypqf/target/debug/deps/statqed-15612d6245c77bef)\n     Running tests/cli.rs (/tmp/statqed-dev-acquisition-bse_ypqf/target/debug/deps/cli-790cd31ddc715f8f)\n     Running unittests src/lib.rs (/tmp/statqed-dev-acquisition-bse_ypqf/target/debug/deps/statqed_core-d19b0a42ff477c80)\n   Doc-tests statqed_core\n",
-      "stdout": "\nrunning 1 test\ntest tests::broken_output_is_handled_without_panicking ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 5 tests\ntest non_utf8_unix_input_has_stable_error_output ... ok\ntest oversized_and_repeated_inputs_are_bounded ... ok\ntest malformed_categories_have_exact_json_and_exit_code ... ok\ntest version_output_is_exact_and_repeatable ... ok\ntest deterministic_randomized_sequences_do_not_panic ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n\nrunning 6 tests\ntest tests::classifies_malformed_and_unsupported_forms ... ok\ntest tests::enforces_resource_limits_at_both_sides ... ok\ntest tests::parses_supported_version_forms ... ok\ntest tests::rejects_non_utf8_unix_arguments_without_panicking ... ok\ntest tests::version_and_error_json_are_exact_and_deterministic ... ok\ntest tests::randomized_argument_sequences_never_panic ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+      "start": "2026-08-09T08:18:43.668219Z",
+      "stderr": "   Compiling statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n   Compiling statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s\n     Running unittests src/main.rs (/tmp/statqed-dev-acquisition-s9jv49u0/target/debug/deps/statqed-15612d6245c77bef)\n     Running tests/cli.rs (/tmp/statqed-dev-acquisition-s9jv49u0/target/debug/deps/cli-790cd31ddc715f8f)\n     Running unittests src/lib.rs (/tmp/statqed-dev-acquisition-s9jv49u0/target/debug/deps/statqed_core-d19b0a42ff477c80)\n   Doc-tests statqed_core\n",
+      "stdout": "\nrunning 1 test\ntest tests::broken_output_is_handled_without_panicking ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 5 tests\ntest non_utf8_unix_input_has_stable_error_output ... ok\ntest oversized_and_repeated_inputs_are_bounded ... ok\ntest malformed_categories_have_exact_json_and_exit_code ... ok\ntest version_output_is_exact_and_repeatable ... ok\ntest deterministic_randomized_sequences_do_not_panic ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n\nrunning 6 tests\ntest tests::enforces_resource_limits_at_both_sides ... ok\ntest tests::classifies_malformed_and_unsupported_forms ... ok\ntest tests::parses_supported_version_forms ... ok\ntest tests::rejects_non_utf8_unix_arguments_without_panicking ... ok\ntest tests::version_and_error_json_are_exact_and_deterministic ... ok\ntest tests::randomized_argument_sequences_never_panic ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
     },
     {
       "command": [
@@ -203,11 +203,11 @@
         "json"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.017,
-      "end": "2026-08-09T08:16:29.446329Z",
+      "elapsed_seconds": 0.016,
+      "end": "2026-08-09T08:18:44.207043Z",
       "exit_status": 0,
       "id": "dev-cli-json",
-      "start": "2026-08-09T08:16:29.429636Z",
+      "start": "2026-08-09T08:18:44.190943Z",
       "stderr": "",
       "stdout": "{\"protocol_version\":1,\"program\":\"statqed\",\"version\":\"0.1.0\",\"rust\":{\"reference\":\"1.97.1\",\"compatibility_floor\":\"1.85.1\",\"edition\":\"2024\"}}\n"
     },
@@ -223,12 +223,12 @@
       ],
       "cwd": "backend",
       "elapsed_seconds": 0.043,
-      "end": "2026-08-09T08:16:29.497301Z",
+      "end": "2026-08-09T08:18:44.258000Z",
       "exit_status": 0,
       "id": "floor-metadata-locked-offline",
-      "start": "2026-08-09T08:16:29.454402Z",
+      "start": "2026-08-09T08:18:44.214753Z",
       "stderr": "",
-      "stdout": "{\"packages\":[{\"name\":\"statqed-cli\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Thin command-line interface for the StatQED backend\",\"source\":null,\"dependencies\":[{\"name\":\"statqed-core\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core\"}],\"targets\":[{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"statqed\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"},{\"name\":\"statqed-core\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Bounded, deterministic command surface for the StatQED backend\",\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"statqed_core\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"}],\"workspace_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"workspace_default_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"resolve\":{\"nodes\":[{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"dependencies\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"deps\":[{\"name\":\"statqed_core\",\"pkg\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dep_kinds\":[{\"kind\":null,\"target\":null}]}],\"features\":[]},{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dependencies\":[],\"deps\":[],\"features\":[]}],\"root\":null},\"target_directory\":\"/tmp/statqed-floor-offline-apttkdzm/target\",\"version\":1,\"workspace_root\":\"/tmp/statqed-sq0004/backend\",\"metadata\":null}\n"
+      "stdout": "{\"packages\":[{\"name\":\"statqed-cli\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Thin command-line interface for the StatQED backend\",\"source\":null,\"dependencies\":[{\"name\":\"statqed-core\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core\"}],\"targets\":[{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"statqed\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-cli/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"},{\"name\":\"statqed-core\",\"version\":\"0.1.0\",\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"license\":\"MIT\",\"license_file\":null,\"description\":\"Bounded, deterministic command surface for the StatQED backend\",\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"statqed_core\",\"src_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/tmp/statqed-sq0004/backend/crates/statqed-core/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.85.1\"}],\"workspace_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"workspace_default_members\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"resolve\":{\"nodes\":[{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-cli#0.1.0\",\"dependencies\":[\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\"],\"deps\":[{\"name\":\"statqed_core\",\"pkg\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dep_kinds\":[{\"kind\":null,\"target\":null}]}],\"features\":[]},{\"id\":\"path+file:///tmp/statqed-sq0004/backend/crates/statqed-core#0.1.0\",\"dependencies\":[],\"deps\":[],\"features\":[]}],\"root\":null},\"target_directory\":\"/tmp/statqed-floor-offline-90nj29g6/target\",\"version\":1,\"workspace_root\":\"/tmp/statqed-sq0004/backend\",\"metadata\":null}\n"
     },
     {
       "command": [
@@ -245,12 +245,12 @@
         "warnings"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.163,
-      "end": "2026-08-09T08:16:29.659961Z",
+      "elapsed_seconds": 0.179,
+      "end": "2026-08-09T08:18:44.437211Z",
       "exit_status": 0,
       "id": "floor-clippy-locked-offline",
-      "start": "2026-08-09T08:16:29.497323Z",
-      "stderr": "    Checking statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n    Checking statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s\n",
+      "start": "2026-08-09T08:18:44.258019Z",
+      "stderr": "    Checking statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n    Checking statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s\n",
       "stdout": ""
     },
     {
@@ -264,16 +264,16 @@
         "--offline"
       ],
       "cwd": "backend",
-      "elapsed_seconds": 0.611,
-      "end": "2026-08-09T08:16:30.270513Z",
+      "elapsed_seconds": 0.594,
+      "end": "2026-08-09T08:18:45.031486Z",
       "exit_status": 0,
       "id": "floor-tests-locked-offline",
-      "start": "2026-08-09T08:16:29.659979Z",
-      "stderr": "   Compiling statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n   Compiling statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s\n     Running unittests src/main.rs (/tmp/statqed-floor-offline-apttkdzm/target/debug/deps/statqed-2cc43cf3159eb33a)\n     Running tests/cli.rs (/tmp/statqed-floor-offline-apttkdzm/target/debug/deps/cli-2f47fc94f86dd941)\n     Running unittests src/lib.rs (/tmp/statqed-floor-offline-apttkdzm/target/debug/deps/statqed_core-01cf8f825d4aede0)\n   Doc-tests statqed_core\n",
+      "start": "2026-08-09T08:18:44.437228Z",
+      "stderr": "   Compiling statqed-core v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-core)\n   Compiling statqed-cli v0.1.0 (/tmp/statqed-sq0004/backend/crates/statqed-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.39s\n     Running unittests src/main.rs (/tmp/statqed-floor-offline-90nj29g6/target/debug/deps/statqed-2cc43cf3159eb33a)\n     Running tests/cli.rs (/tmp/statqed-floor-offline-90nj29g6/target/debug/deps/cli-2f47fc94f86dd941)\n     Running unittests src/lib.rs (/tmp/statqed-floor-offline-90nj29g6/target/debug/deps/statqed_core-01cf8f825d4aede0)\n   Doc-tests statqed_core\n",
       "stdout": "\nrunning 1 test\ntest tests::broken_output_is_handled_without_panicking ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 5 tests\ntest non_utf8_unix_input_has_stable_error_output ... ok\ntest oversized_and_repeated_inputs_are_bounded ... ok\ntest malformed_categories_have_exact_json_and_exit_code ... ok\ntest version_output_is_exact_and_repeatable ... ok\ntest deterministic_randomized_sequences_do_not_panic ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n\nrunning 6 tests\ntest tests::classifies_malformed_and_unsupported_forms ... ok\ntest tests::parses_supported_version_forms ... ok\ntest tests::enforces_resource_limits_at_both_sides ... ok\ntest tests::rejects_non_utf8_unix_arguments_without_panicking ... ok\ntest tests::version_and_error_json_are_exact_and_deterministic ... ok\ntest tests::randomized_argument_sequences_never_panic ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
     }
   ],
-  "end": "2026-08-09T08:16:30.278894Z",
+  "end": "2026-08-09T08:18:45.040157Z",
   "environment_policy": {
     "alternate_registries": false,
     "constructed": [
@@ -316,5 +316,5 @@
     "system": "Linux"
   },
   "schema_version": 1,
-  "start": "2026-08-09T08:16:28.507151Z"
+  "start": "2026-08-09T08:18:43.274819Z"
 }
