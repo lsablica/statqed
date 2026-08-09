@@ -129,7 +129,7 @@ No statistical ontology, inference theorem, artifact checker, theorem-registry s
 
 ### SQ-0004 — Rust reference workspace bootstrap
 
-Status: **READY; unstarted**.
+Status: **IN_PROGRESS**.
 
 Follow `work/contracts/SQ-0004.yaml` in a separate execution.
 
@@ -259,7 +259,7 @@ git diff --check
 - [x] SQ-0001 constitutional baseline — DONE 2026-08-03.
 - [x] SQ-0002 toolchain research — DONE 2026-08-05; final evidence-packaging merge `01c5b6e1bfacf332dbb01259aa19258a3edd0f9e`; 75 probes, six recommendations, 90 sources, and 115 durable tracked subjects.
 - [x] SQ-0003 Lean/Mathlib bootstrap — DONE 2026-08-08 from `d32c50adaec62543e1a7fbc52f62e33ce8f373bb` on `agent/SQ-0003-lean-bootstrap`; review package `34e4d856e3ee5c85aab91a0427f9b4176aa7aac7`. Exact pair: Lean `leanprover/lean4:v4.32.2` / commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c`, Lake `5.0.0-src+f3b06c7`. Distinct Mathlib/source, build, formal trust, adversarial mutation, CI/reproducibility, and integration roles approved the package. Exact-package Lean run `31279603416` and guardrails run `31279603408` passed cached and isolated-source gates.
-- [ ] SQ-0004 Rust bootstrap — READY; independently unstarted.
+- [ ] SQ-0004 Rust bootstrap — IN_PROGRESS since 2026-08-09T09:27:36+02:00 from `726821bf1a29995756dc10cbbecfd452dccad7e5` on `agent/SQ-0004-rust-bootstrap` in `/tmp/statqed-sq0004`. Fixed policy: Rust 1.97.1 for development/acquisition, Rust 1.85.1 for locked offline compatibility only, Edition 2024, resolver 3, and `rust-version = "1.85.1"`. Assigned distinct Rust/source, workspace/MSRV, API/error-conformance, security/adversarial, CI/reproducibility, and integration reviewer roles. Starting platform: Linux 7.0.0-28-generic x86_64 GNU/Linux.
 - [ ] SQ-0008 core Lean types/RFC ownership — READY by dependency calculation; independently unstarted, with RFC-0002/RFC-0004 still Draft for that task to resolve.
 - [ ] SQ-0005 through SQ-0020.
 

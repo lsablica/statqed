@@ -1,7 +1,7 @@
 {
   "id": "SQ-0004",
   "title": "Bootstrap Rust reference workspace",
-  "status": "READY",
+  "status": "IN_PROGRESS",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Milestone B — Pin and bootstrap toolchains",
   "objective": "A clean checkout builds, lints, tests, and security-checks a minimal Rust reference-backend workspace using Rust 1.97.1 with a compatibility-only Rust 1.85.1 floor, deterministic machine-readable CLI errors, no unsafe project code, and no statistical or schema semantics.",
