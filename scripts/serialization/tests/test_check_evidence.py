@@ -610,6 +610,37 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         self.assert_rejected("Makefile inline recipes are prohibited")
 
+    def test_lifecycle_check_target_specific_assignment_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            "check: check-repo check-sq0002-evidence check-sq0005-evidence",
+            "check: MAKEFLAGS = -i check-repo check-sq0002-evidence "
+            "check-sq0005-evidence",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("target-specific assignments are prohibited")
+
+    def test_lifecycle_pattern_specific_shell_assignment_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8") + "\n%: SHELL = /bin/true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("target-specific assignments are prohibited")
+
+    def test_lifecycle_recipe_after_blank_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            "\tpython3 scripts/serialization/check_evidence.py\n\nlist-work:",
+            "\tpython3 scripts/serialization/check_evidence.py\n\n"
+            "\t@printf 'corruption\\n' >> "
+            "docs/research/serialization/profile-candidate.md\n\nlist-work:",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("Makefile recipe changed")
+
     def test_lifecycle_dashboard_html_comment_wrapper_is_rejected(self) -> None:
         path = self.root / "docs/quality/dashboard.md"
         text = path.read_text(encoding="utf-8")

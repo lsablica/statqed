@@ -597,12 +597,21 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         special = [target for target in targets if target.startswith(".")]
         if special and targets != [".PHONY"]:
             raise EvidenceError("SQ-0005 Makefile special target is prohibited")
+        remainder = match.group("rest").strip()
+        if re.search(
+            r"(?:^|\s)[A-Za-z_.][A-Za-z0-9_.-]*\s*"
+            r"(?:::=|:=|\+=|\?=|!=|=)",
+            remainder,
+        ):
+            raise EvidenceError(
+                "SQ-0005 Makefile target-specific assignments are prohibited"
+            )
         rules.append(
             (
                 index,
                 targets,
                 match.group("separator"),
-                match.group("rest").strip().split(),
+                remainder.split(),
             )
         )
 
@@ -641,8 +650,6 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
             recipes.append(line)
             continue
         if not line.strip() or line.lstrip().startswith("#"):
-            if recipes:
-                break
             continue
         break
     if recipes != ["\tpython3 scripts/serialization/check_evidence.py"]:

@@ -62,7 +62,7 @@ reviewed commits jointly enforce the lifecycle boundary.
 
 ## Regression evidence
 
-The original 12 evidence-corruption tests remain present. Thirty-eight
+The original 12 evidence-corruption tests remain present. Forty-one
 additional lifecycle-model tests cover the frozen completion snapshot and
 historical successor contracts; SQ-0006 READY,
 IN_PROGRESS, IN_REVIEW, and DONE; SQ-0008 status-only evolution; SQ-0005
@@ -72,9 +72,10 @@ SQ-0008 semantic drift; production-path drift; scientific-subject drift; and
 the distinction between local evidence invariants and global ledger checks.
 They also cover active-review redirection; plain, grouped, multi-target,
 indented, and variable-expanded Makefile shadowing; assignments, inline
-comments/recipes, phony, and special-target bypasses; shared-document content
-and rendering-context corruption; and permitted successor-owned documentation
-additions.
+comments/inline recipes, recipes separated by blank lines, target- and
+pattern-specific assignments, phony, and special-target bypasses;
+shared-document content and rendering-context corruption; and permitted
+successor-owned documentation additions.
 
 Exact local and hosted command dispositions are added to this record only
 after the content-addressed candidate passes them. The SQ-0006 preclaim gate
@@ -97,7 +98,7 @@ must remain unresolved until that review and hosted CI are complete.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "e0745ae5bf4cde30eeeb6148600bd00c324ca9de7c4061e150d7da67d27a403f",
+  "conformance/prototypes/evidence/evidence-manifest.json": "ff5ca8ad151b8b39b02c04471c397b112001f29b294d18be4f1646d359318317",
   "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -119,9 +120,9 @@ must remain unresolved until that review and hosted CI are complete.
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
   "scripts/serialization/build_evidence_manifest.py": "3a0f29acabbdec759526f50f53394a77c47df035cd90495c81e60c677b04be09",
-  "scripts/serialization/check_evidence.py": "59d7015214adde42a698e2dba547a4b8993a010e14a90c7f508f361f73dbc6be",
+  "scripts/serialization/check_evidence.py": "7595b4bb7a667c3a1cd39a0dce01837d740610eab3bedc3ccfcd066049f7ed29",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "5959c3abfcc50bdcf88def50d5518dfc566894680aff18fa6ffa13c497518e36",
+  "scripts/serialization/tests/test_check_evidence.py": "66805d27ec9b6d8c86e229c7e76084dce7e552c51846eaaed521aa5ccc5cb4f3",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }
