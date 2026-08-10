@@ -60,6 +60,77 @@ def semantic_projection_sha256(
     return sha256_bytes(canonical_json_bytes(projection))
 
 
+def markdown_sections_projection_sha256(value: bytes, headings: list[str]) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise RuntimeError(f"invalid UTF-8 shared document: {error}") from error
+    lines = text.splitlines(keepends=True)
+    heading_rows = [
+        (index, line[3:].rstrip("\r\n"))
+        for index, line in enumerate(lines)
+        if line.startswith("## ")
+    ]
+    if len({name for _, name in heading_rows}) != len(heading_rows):
+        raise RuntimeError("shared Markdown document has duplicate level-two headings")
+    positions = {name: index for index, name in heading_rows}
+    if any(name not in positions for name in headings):
+        raise RuntimeError("shared Markdown document lacks a protected heading")
+    first_heading = min(index for index, _ in heading_rows)
+    sections: dict[str, str] = {}
+    all_indices = [index for index, _ in heading_rows]
+    for name in headings:
+        start = positions[name]
+        end = next((index for index in all_indices if index > start), len(lines))
+        sections[name] = "".join(lines[start:end])
+    projection = {"preamble": "".join(lines[:first_heading]), "sections": sections}
+    return sha256_bytes(canonical_json_bytes(projection))
+
+
+def sq0005_dashboard_projection_sha256(value: bytes) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise RuntimeError(f"invalid UTF-8 quality dashboard: {error}") from error
+    rows = [
+        line
+        for line in text.splitlines(keepends=True)
+        if line.startswith("| Deterministic encoding profile |")
+    ]
+    if len(rows) != 1:
+        raise RuntimeError("quality dashboard lacks one encoding-profile row")
+    begin = "SQ-0005 adds one Experimental deterministic"
+    end = "does not define logical-data identity."
+    if text.count(begin) != 1 or text.count(end) != 1:
+        raise RuntimeError("quality dashboard lacks one SQ-0005 evidence statement")
+    evidence_start = text.index(begin)
+    evidence_end = text.index(end, evidence_start) + len(end)
+    nonblank = [line for line in text.splitlines(keepends=True) if line.strip()]
+    if len(nonblank) < 2:
+        raise RuntimeError("quality dashboard preamble is incomplete")
+    projection = {
+        "heading": nonblank[0],
+        "status": nonblank[1],
+        "encoding_profile_row": rows[0],
+        "sq0005_evidence": text[evidence_start:evidence_end],
+    }
+    return sha256_bytes(canonical_json_bytes(projection))
+
+
+def shared_document_projection_sha256(value: bytes, policy: dict[str, Any]) -> str:
+    projection = policy.get("projection")
+    if projection == "markdown_preamble_and_sections_v1":
+        headings = policy.get("headings")
+        if not isinstance(headings, list) or not all(
+            isinstance(item, str) for item in headings
+        ):
+            raise RuntimeError("invalid shared Markdown heading policy")
+        return markdown_sections_projection_sha256(value, headings)
+    if projection == "sq0005_dashboard_v1" and sorted(policy) == ["projection"]:
+        return sq0005_dashboard_projection_sha256(value)
+    raise RuntimeError(f"unsupported shared-document projection: {projection}")
+
+
 def relative(value: str) -> PurePosixPath:
     path = PurePosixPath(value)
     if path.is_absolute() or not path.parts or ".." in path.parts:
@@ -117,6 +188,17 @@ def historical_subjects(spec: dict[str, Any]) -> list[dict[str, str]]:
     if sha256_bytes(canonical_json_bytes(subjects)) != binding["subjects_sha256"]:
         raise RuntimeError("historical SQ-0005 subject map mismatch")
     return subjects
+
+
+def historical_successor_contracts(spec: dict[str, Any]) -> dict[str, Any]:
+    bindings = copy.deepcopy(spec["historical_successor_contracts"])
+    if sorted(bindings) != ["SQ-0006", "SQ-0008"]:
+        raise RuntimeError("historical successor contract bindings changed")
+    for task_id, binding in sorted(bindings.items()):
+        blob = run_git(["show", f"{binding['commit']}:{binding['path']}"])
+        if sha256_bytes(blob) != binding["sha256"]:
+            raise RuntimeError(f"historical {task_id} contract hash mismatch")
+    return bindings
 
 
 def fixture_ids() -> tuple[list[str], list[str]]:
@@ -203,6 +285,14 @@ def build() -> dict[str, Any]:
         baseline_sq0008,
         sq0008_integrity["omitted_fields"],
     )
+    shared_documents = live_invariants["shared_document_integrity"]
+    for path, policy in sorted(shared_documents.items()):
+        completion_blob = run_git(
+            ["show", f"{spec['historical_manifest']['commit']}:{path}"]
+        )
+        policy["projection_sha256"] = shared_document_projection_sha256(
+            completion_blob, policy
+        )
     return {
         "accepted_fixture_ids": accepted,
         "baseline": {
@@ -218,6 +308,7 @@ def build() -> dict[str, Any]:
         "historical_completion_state": spec["historical_completion_state"],
         "historical_manifest": spec["historical_manifest"],
         "historical_review": spec["historical_review"],
+        "historical_successor_contracts": historical_successor_contracts(spec),
         "historical_subjects": frozen_subjects,
         "independent_origins": origins,
         "live_invariants": live_invariants,

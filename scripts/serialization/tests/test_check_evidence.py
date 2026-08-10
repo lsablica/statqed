@@ -83,6 +83,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.frozen_historical_sq0008 = manifest["baseline"][
             "sq0008_contract_sha256"
         ]
+        self.frozen_historical_contracts = canonical_bytes(
+            manifest["historical_successor_contracts"]
+        )
         self.frozen_high_value = {
             path: digest(self.root / path) for path in HIGH_VALUE_PATHS
         }
@@ -143,6 +146,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.assertEqual(
             manifest["baseline"]["sq0008_contract_sha256"],
             self.frozen_historical_sq0008,
+        )
+        self.assertEqual(
+            canonical_bytes(manifest["historical_successor_contracts"]),
+            self.frozen_historical_contracts,
         )
         self.assertEqual(
             {path: digest(self.root / path) for path in HIGH_VALUE_PATHS},
@@ -345,7 +352,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path.write_text("// prohibited SQ-0005 contamination\n", encoding="utf-8")
         self.assert_rejected("protected production path-set drift")
 
-    # Nineteen lifecycle-model regressions cover all required positive/negative cases.
+    # Lifecycle-model regressions cover required positive and negative cases.
 
     def test_lifecycle_historical_completion_snapshot_verifies(self) -> None:
         self.assertEqual(
@@ -407,6 +414,14 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.rewrite_review_bindings()
         self.assert_rejected("historical SQ-0005 completion snapshot changed")
 
+    def test_lifecycle_historical_successor_contract_binding_mutation_is_rejected(
+        self,
+    ) -> None:
+        manifest = self.manifest()
+        manifest["historical_successor_contracts"]["SQ-0006"]["sha256"] = "0" * 64
+        self.write_manifest(manifest)
+        self.assert_rejected("historical successor contract bindings changed")
+
     def test_lifecycle_rfc0001_draft_is_rejected_after_rebind(self) -> None:
         relative = "rfcs/0001-deterministic-encoding.md"
         self.mutate_status_header(relative, "Draft")
@@ -458,6 +473,59 @@ class EvidenceCorruptionTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.assert_rejected("subject SHA-256 mismatch")
+
+    def test_lifecycle_canonicalization_owned_section_change_is_rejected(self) -> None:
+        path = self.root / "docs/spec/canonicalization.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "ordering is rejected.",
+            "ordering is accepted.",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("shared SQ-0005 document projection changed")
+
+    def test_lifecycle_dashboard_sq0005_claim_change_is_rejected(self) -> None:
+        path = self.root / "docs/quality/dashboard.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "It is not a production canonicalizer",
+            "It is a production canonicalizer",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("shared SQ-0005 document projection changed")
+
+    def test_lifecycle_successor_document_additions_verify(self) -> None:
+        canonicalization = self.root / "docs/spec/canonicalization.md"
+        canonicalization.write_text(
+            canonicalization.read_text(encoding="utf-8")
+            + "## Successor-owned schema note\n\nExperimental successor evidence.\n",
+            encoding="utf-8",
+        )
+        dashboard = self.root / "docs/quality/dashboard.md"
+        dashboard.write_text(
+            dashboard.read_text(encoding="utf-8")
+            + "\nSuccessor-owned Experimental evidence.\n",
+            encoding="utf-8",
+        )
+        self.assert_verified()
+
+    def test_lifecycle_duplicate_makefile_target_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\ncheck-sq0005-evidence:\n\t@true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile target is not unique")
+
+    def test_lifecycle_active_review_redirection_is_rejected(self) -> None:
+        manifest = self.manifest()
+        original = self.root / manifest["review_record"]
+        redirected = self.root / "work/reviews/fake-review.md"
+        redirected.write_bytes(original.read_bytes())
+        manifest["review_record"] = "work/reviews/fake-review.md"
+        self.write_manifest(manifest)
+        self.assert_rejected("active SQ-0005 lifecycle review path changed")
 
     def test_lifecycle_global_blocked_count_is_repository_owned(self) -> None:
         path = self.root / "work/status.yaml"

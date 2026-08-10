@@ -25,6 +25,10 @@ and its subject-map aggregate
 `59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105`.
 The original SQ-0005 review remains bound at
 `a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7`.
+The unchanged semantic fixture tree remains explicitly bound at
+`90fc4b5a1346f0693b84a0fa9a6a1e1fa4ac535aff2b83d6177313c6779fa3c8`.
+The full historical SQ-0006 and SQ-0008 contract hashes are retained as
+separate completion bindings in addition to the original subject map.
 
 No RFC-0001 normative bytes, ADR-0004 normative bytes, profile semantics,
 prototype source, semantic fixtures, golden vectors, generated conformance
@@ -45,8 +49,11 @@ the repair was authored.
 - The repository guardrail, rather than SQ-0005 evidence, owns global task-set
   and blocked-count consistency.
 - Shared successor-owned planning and documentation paths remain historically
-  bound but are not falsely live-frozen by SQ-0005.
-- The Makefile must continue to invoke the permanent SQ-0005 evidence check.
+  bound but are not falsely live-frozen by SQ-0005. Deterministic section
+  projections preserve SQ-0005-owned canonicalization and dashboard content
+  while allowing separately reviewed successor sections and claims.
+- The Makefile must contain exactly one SQ-0005 evidence target with the exact
+  verifier recipe; include/SHELL indirection and target shadowing are rejected.
 
 A static verifier cannot prove temporal monotonicity between two otherwise
 allowed successor statuses without history. Contract/backlog agreement,
@@ -55,13 +62,17 @@ reviewed commits jointly enforce the lifecycle boundary.
 
 ## Regression evidence
 
-The original 12 evidence-corruption tests remain present. Nineteen additional
-lifecycle-model tests cover the frozen completion snapshot; SQ-0006 READY,
+The original 12 evidence-corruption tests remain present. Twenty-five
+additional lifecycle-model tests cover the frozen completion snapshot and
+historical successor contracts; SQ-0006 READY,
 IN_PROGRESS, IN_REVIEW, and DONE; SQ-0008 status-only evolution; SQ-0005
 regression; contract/backlog disagreement; illegal status; historical-state
 mutation; RFC/ADR regression and scope divergence; RFC-0006 ownership drift;
 SQ-0008 semantic drift; production-path drift; scientific-subject drift; and
 the distinction between local evidence invariants and global ledger checks.
+They also cover active-review redirection, Makefile target shadowing, shared
+documentation corruption, and permitted successor-owned documentation
+additions.
 
 Exact local and hosted command dispositions are added to this record only
 after the content-addressed candidate passes them. The SQ-0006 preclaim gate
@@ -84,8 +95,8 @@ must remain unresolved until that review and hosted CI are complete.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "7ef68745c0c26d4a6ad9219b065fc1db74216d28abc287d4e3566ad086fdc5e1",
-  "conformance/prototypes/evidence/evidence-spec.json": "c2c5a57e0968530e8f56ddf7cf023339620e2ec604a29620293c7e14d930acef",
+  "conformance/prototypes/evidence/evidence-manifest.json": "e064f96e82e45eb19adfb318ab7cc933705ccfe3afc79e359e3aa1fce20a9b9e",
+  "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
   "conformance/prototypes/generated-v1/manifest.json": "e69e863053fad44faf2511cedbd53a13725e309cbdb0551621e217c2095dd6cd",
@@ -105,10 +116,10 @@ must remain unresolved until that review and hosted CI are complete.
   "schemas/prototypes/rust-cbor/evidence/advisory-report.json": "abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55",
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
-  "scripts/serialization/build_evidence_manifest.py": "eb69311f2114e6c01f3cb45a7b9ac4ae376df55c13a90ca794ae99aed5809eb6",
-  "scripts/serialization/check_evidence.py": "aa783b12b14a6670c4c5235d3cb5232c2e17b097113f5e3731e140d1bea04762",
+  "scripts/serialization/build_evidence_manifest.py": "9ea824f9d36b68e919e296ad0de7ae7e1c66df8c1cc6f981099ca226f5674b00",
+  "scripts/serialization/check_evidence.py": "6014a2ccc1ead8b5b054f74e07c58ed7b058d962b2f05983a44af774180ecd9e",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "bd1cc3528b7d825bee5dabe8caa039c5c5c21aadfb6d7120e5070a06017ef734",
+  "scripts/serialization/tests/test_check_evidence.py": "ba77e99fc09ddce102276bf4fc47c08f8a3cf9ff7a374f9913388174525d959d",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }

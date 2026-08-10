@@ -926,6 +926,18 @@
       "sha256": "3212e2cbaa17d6a3b3cdbafe016d0425f1740c3b78a53925a1d841193090a600"
     }
   ],
+  "historical_successor_contracts": {
+    "SQ-0006": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0006.yaml",
+      "sha256": "1236fefeb2be7e70ea4b897f785049057cf659997eac4f00cbb72301e63acba1"
+    },
+    "SQ-0008": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0008.yaml",
+      "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471"
+    }
+  },
   "independent_origins": [
     {
       "canonicalizer_lineage": "direct-python-from-profile-specification",
@@ -948,6 +960,26 @@
     "makefile_integration": {
       "check_dependency": "check-sq0005-evidence",
       "command": "python3 scripts/serialization/check_evidence.py"
+    },
+    "shared_document_integrity": {
+      "docs/quality/dashboard.md": {
+        "projection": "sq0005_dashboard_v1",
+        "projection_sha256": "9cc632798dce605f7bf6c3e7db9d413421488c3d8e1860593b690355f5ca71b4"
+      },
+      "docs/spec/canonicalization.md": {
+        "headings": [
+          "Scope",
+          "Exact byte rules",
+          "Limits",
+          "Generic data-free digest frame",
+          "CDDL",
+          "Reproduce the evidence",
+          "Update and rollback",
+          "Trust boundary and nonclaims"
+        ],
+        "projection": "markdown_preamble_and_sections_v1",
+        "projection_sha256": "61df59f157035bf7fef9e88e5a29db7c8b875ad7d415a99bbbc1443e78956ec2"
+      }
     },
     "sq0005": {
       "backlog_status": "DONE",
@@ -995,7 +1027,7 @@
     {
       "path": "conformance/prototypes/evidence/evidence-spec.json",
       "role": "semantic fixtures, binary vectors, differential results, and retained failures",
-      "sha256": "c2c5a57e0968530e8f56ddf7cf023339620e2ec604a29620293c7e14d930acef"
+      "sha256": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976"
     },
     {
       "path": "conformance/prototypes/fixtures/semantic-v1/atoms-and-widths.json",
@@ -1670,12 +1702,12 @@
     {
       "path": "scripts/serialization/build_evidence_manifest.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "eb69311f2114e6c01f3cb45a7b9ac4ae376df55c13a90ca794ae99aed5809eb6"
+      "sha256": "9ea824f9d36b68e919e296ad0de7ae7e1c66df8c1cc6f981099ca226f5674b00"
     },
     {
       "path": "scripts/serialization/check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "aa783b12b14a6670c4c5235d3cb5232c2e17b097113f5e3731e140d1bea04762"
+      "sha256": "6014a2ccc1ead8b5b054f74e07c58ed7b058d962b2f05983a44af774180ecd9e"
     },
     {
       "path": "scripts/serialization/check_yanked.py",
@@ -1705,7 +1737,7 @@
     {
       "path": "scripts/serialization/tests/test_check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "bd1cc3528b7d825bee5dabe8caa039c5c5c21aadfb6d7120e5070a06017ef734"
+      "sha256": "ba77e99fc09ddce102276bf4fc47c08f8a3cf9ff7a374f9913388174525d959d"
     },
     {
       "path": "source-audits/encoding/README.md",

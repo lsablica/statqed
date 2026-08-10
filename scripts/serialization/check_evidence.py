@@ -53,6 +53,19 @@ EXPECTED_HISTORICAL_MANIFEST = {
     "sha256": "0512a79a42cc6c6b70e5c139044841827b3ac3103968892fe6f135f02436a233",
     "subjects_sha256": "59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105",
 }
+EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS = {
+    "SQ-0006": {
+        "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+        "path": "work/contracts/SQ-0006.yaml",
+        "sha256": "1236fefeb2be7e70ea4b897f785049057cf659997eac4f00cbb72301e63acba1",
+    },
+    "SQ-0008": {
+        "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+        "path": "work/contracts/SQ-0008.yaml",
+        "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
+    },
+}
+EXPECTED_REVIEW_RECORD = "work/reviews/SQ-0005-evidence-lifecycle.md"
 EXPECTED_BASELINE = {
     "commit": "8875d8f6fa8e3b45e706ea567d45448927a02efa",
     "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
@@ -74,6 +87,22 @@ EXPECTED_MAKEFILE_INTEGRATION = {
     "command": "python3 scripts/serialization/check_evidence.py",
 }
 ALLOWED_SUCCESSOR_STATUSES = ("READY", "IN_PROGRESS", "IN_REVIEW", "DONE")
+EXPECTED_SHARED_DOCUMENT_POLICIES = {
+    "docs/quality/dashboard.md": {"projection": "sq0005_dashboard_v1"},
+    "docs/spec/canonicalization.md": {
+        "headings": [
+            "Scope",
+            "Exact byte rules",
+            "Limits",
+            "Generic data-free digest frame",
+            "CDDL",
+            "Reproduce the evidence",
+            "Update and rollback",
+            "Trust boundary and nonclaims",
+        ],
+        "projection": "markdown_preamble_and_sections_v1",
+    },
+}
 
 
 class EvidenceError(RuntimeError):
@@ -116,6 +145,84 @@ def semantic_projection_sha256(
         raise EvidenceError("SQ-0008 contract lacks the projected status field")
     projection = {key: item for key, item in value.items() if key not in omitted_fields}
     return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def markdown_sections_projection_sha256(value: bytes, headings: list[str]) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise EvidenceError(f"invalid UTF-8 shared document: {error}") from error
+    lines = text.splitlines(keepends=True)
+    heading_rows = [
+        (index, line[3:].rstrip("\r\n"))
+        for index, line in enumerate(lines)
+        if line.startswith("## ")
+    ]
+    if len({name for _, name in heading_rows}) != len(heading_rows):
+        raise EvidenceError("shared Markdown document has duplicate level-two headings")
+    positions = {name: index for index, name in heading_rows}
+    if any(name not in positions for name in headings):
+        raise EvidenceError("shared Markdown document lacks a protected heading")
+    first_heading = min(index for index, _ in heading_rows)
+    all_indices = [index for index, _ in heading_rows]
+    sections: dict[str, str] = {}
+    for name in headings:
+        start = positions[name]
+        end = next((index for index in all_indices if index > start), len(lines))
+        sections[name] = "".join(lines[start:end])
+    projection = {"preamble": "".join(lines[:first_heading]), "sections": sections}
+    return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def sq0005_dashboard_projection_sha256(value: bytes) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise EvidenceError(f"invalid UTF-8 quality dashboard: {error}") from error
+    rows = [
+        line
+        for line in text.splitlines(keepends=True)
+        if line.startswith("| Deterministic encoding profile |")
+    ]
+    if len(rows) != 1:
+        raise EvidenceError("quality dashboard lacks one encoding-profile row")
+    begin = "SQ-0005 adds one Experimental deterministic"
+    end = "does not define logical-data identity."
+    if text.count(begin) != 1 or text.count(end) != 1:
+        raise EvidenceError("quality dashboard lacks one SQ-0005 evidence statement")
+    evidence_start = text.index(begin)
+    evidence_end = text.index(end, evidence_start) + len(end)
+    nonblank = [line for line in text.splitlines(keepends=True) if line.strip()]
+    if len(nonblank) < 2:
+        raise EvidenceError("quality dashboard preamble is incomplete")
+    projection = {
+        "heading": nonblank[0],
+        "status": nonblank[1],
+        "encoding_profile_row": rows[0],
+        "sq0005_evidence": text[evidence_start:evidence_end],
+    }
+    return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def shared_document_projection_sha256(
+    value: bytes, policy: dict[str, Any]
+) -> str:
+    policy_without_hash = {
+        key: item for key, item in policy.items() if key != "projection_sha256"
+    }
+    projection = policy_without_hash.get("projection")
+    if projection == "markdown_preamble_and_sections_v1":
+        headings = policy_without_hash.get("headings")
+        if not isinstance(headings, list) or not all(
+            isinstance(item, str) for item in headings
+        ):
+            raise EvidenceError("invalid shared Markdown heading policy")
+        return markdown_sections_projection_sha256(value, headings)
+    if projection == "sq0005_dashboard_v1" and sorted(policy_without_hash) == [
+        "projection"
+    ]:
+        return sq0005_dashboard_projection_sha256(value)
+    raise EvidenceError(f"unsupported shared-document projection: {projection}")
 
 
 def checked_relative(value: str) -> PurePosixPath:
@@ -326,6 +433,8 @@ def verify_lineage(root: Path, manifest: dict[str, Any]) -> None:
 
 
 def verify_review(root: Path, manifest_path: str, manifest: dict[str, Any]) -> None:
+    if manifest.get("review_record") != EXPECTED_REVIEW_RECORD:
+        raise EvidenceError("active SQ-0005 lifecycle review path changed")
     review_path = require_file(root, manifest["review_record"])
     review = review_path.read_text(encoding="utf-8")
     bindings = extract_marked_json(review, REVIEW_BEGIN, REVIEW_END)
@@ -349,6 +458,11 @@ def verify_historical_completion(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("historical SQ-0005 review changed")
     if manifest.get("historical_manifest") != EXPECTED_HISTORICAL_MANIFEST:
         raise EvidenceError("historical SQ-0005 manifest binding changed")
+    if (
+        manifest.get("historical_successor_contracts")
+        != EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS
+    ):
+        raise EvidenceError("historical successor contract bindings changed")
     if manifest.get("baseline") != EXPECTED_BASELINE:
         raise EvidenceError("historical SQ-0005 baseline changed")
 
@@ -427,15 +541,60 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("ADR-0004 live status is not Accepted")
 
     makefile = (root / "Makefile").read_text(encoding="utf-8")
+    if any(
+        re.match(r"^\s*(?:-?include|sinclude)(?:\s|$)", line)
+        or re.match(r"^\s*(?:override\s+)?SHELL\s*[:?+]?=", line)
+        for line in makefile.splitlines()
+    ):
+        raise EvidenceError("SQ-0005 Makefile indirection is prohibited")
     check_lines = [line for line in makefile.splitlines() if line.startswith("check:")]
     if len(check_lines) != 1 or "check-sq0005-evidence" not in check_lines[0].split()[1:]:
         raise EvidenceError("make check no longer depends on SQ-0005 evidence")
-    required_target = (
-        "check-sq0005-evidence:\n"
-        "\tpython3 scripts/serialization/check_evidence.py"
-    )
-    if required_target not in makefile:
+    make_lines = makefile.splitlines()
+    target_indices = [
+        index
+        for index, line in enumerate(make_lines)
+        if re.match(r"^check-sq0005-evidence\s*:{1,2}(?:\s|$)", line)
+    ]
+    if len(target_indices) != 1:
+        raise EvidenceError("SQ-0005 evidence Makefile target is not unique")
+    target_index = target_indices[0]
+    if make_lines[target_index] != "check-sq0005-evidence:":
         raise EvidenceError("SQ-0005 evidence Makefile target changed")
+    recipes: list[str] = []
+    for line in make_lines[target_index + 1 :]:
+        if line.startswith("\t"):
+            recipes.append(line)
+            continue
+        if not line.strip() or line.lstrip().startswith("#"):
+            if recipes:
+                break
+            continue
+        break
+    if recipes != ["\tpython3 scripts/serialization/check_evidence.py"]:
+        raise EvidenceError("SQ-0005 evidence Makefile recipe changed")
+
+    shared_documents = policy.get("shared_document_integrity")
+    if not isinstance(shared_documents, dict) or sorted(shared_documents) != sorted(
+        EXPECTED_SHARED_DOCUMENT_POLICIES
+    ):
+        raise EvidenceError("shared SQ-0005 document policy changed")
+    for path, expected_policy in sorted(EXPECTED_SHARED_DOCUMENT_POLICIES.items()):
+        observed_policy = shared_documents[path]
+        if not isinstance(observed_policy, dict):
+            raise EvidenceError(f"missing shared document policy: {path}")
+        policy_without_hash = {
+            key: item
+            for key, item in observed_policy.items()
+            if key != "projection_sha256"
+        }
+        if policy_without_hash != expected_policy:
+            raise EvidenceError(f"shared document projection policy changed: {path}")
+        observed_hash = shared_document_projection_sha256(
+            require_file(root, path).read_bytes(), observed_policy
+        )
+        if observed_hash != observed_policy.get("projection_sha256"):
+            raise EvidenceError(f"shared SQ-0005 document projection changed: {path}")
 
     integrity = policy.get("successor_contract_integrity")
     if not isinstance(integrity, dict) or sorted(integrity) != ["SQ-0008"]:

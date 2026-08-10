@@ -59,6 +59,18 @@
     "sha256": "0512a79a42cc6c6b70e5c139044841827b3ac3103968892fe6f135f02436a233",
     "subjects_sha256": "59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105"
   },
+  "historical_successor_contracts": {
+    "SQ-0006": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0006.yaml",
+      "sha256": "1236fefeb2be7e70ea4b897f785049057cf659997eac4f00cbb72301e63acba1"
+    },
+    "SQ-0008": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0008.yaml",
+      "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471"
+    }
+  },
   "live_invariants": {
     "decisions": {
       "adr0004": "Accepted",
@@ -74,6 +86,24 @@
     "makefile_integration": {
       "check_dependency": "check-sq0005-evidence",
       "command": "python3 scripts/serialization/check_evidence.py"
+    },
+    "shared_document_integrity": {
+      "docs/quality/dashboard.md": {
+        "projection": "sq0005_dashboard_v1"
+      },
+      "docs/spec/canonicalization.md": {
+        "headings": [
+          "Scope",
+          "Exact byte rules",
+          "Limits",
+          "Generic data-free digest frame",
+          "CDDL",
+          "Reproduce the evidence",
+          "Update and rollback",
+          "Trust boundary and nonclaims"
+        ],
+        "projection": "markdown_preamble_and_sections_v1"
+      }
     },
     "successor_contract_integrity": {
       "SQ-0008": {
