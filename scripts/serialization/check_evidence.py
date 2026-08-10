@@ -586,15 +586,15 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
     rules: list[tuple[int, list[str], str, list[str]]] = []
     for index, line in enumerate(make_lines):
         stripped = line.strip()
-        if line.startswith("\t") and line.rstrip().endswith("\\"):
-            raise EvidenceError("SQ-0005 Makefile recipe continuations are prohibited")
+        if "\\" in line:
+            raise EvidenceError("SQ-0005 Makefile escapes and continuations are prohibited")
         if not stripped or stripped.startswith("#") or line.startswith("\t"):
             continue
         if "#" in line:
             raise EvidenceError("SQ-0005 Makefile inline comments are prohibited")
         if ";" in line:
             raise EvidenceError("SQ-0005 Makefile inline recipes are prohibited")
-        if line.rstrip().endswith("\\") or "$" in line:
+        if "$" in line:
             raise EvidenceError("SQ-0005 Makefile dynamic syntax is prohibited")
         if re.match(
             r"^\s*(?:(?:override|export|private|unexport)\s+)?"

@@ -62,7 +62,7 @@ reviewed commits jointly enforce the lifecycle boundary.
 
 ## Regression evidence
 
-The original 12 evidence-corruption tests remain present. Forty-four
+The original 12 evidence-corruption tests remain present. Forty-five
 additional lifecycle-model tests cover the frozen completion snapshot and
 historical successor contracts; SQ-0006 READY,
 IN_PROGRESS, IN_REVIEW, and DONE; SQ-0008 status-only evolution; SQ-0005
@@ -72,9 +72,9 @@ SQ-0008 semantic drift; production-path drift; scientific-subject drift; and
 the distinction between local evidence invariants and global ledger checks.
 They also cover active-review redirection; plain, grouped, multi-target,
 indented, and variable-expanded Makefile shadowing; assignments, inline
-comments/inline recipes, recipes separated by blank lines, recipe
-continuations that swallow a following rule, target- and pattern-specific
-assignments, phony, and special-target bypasses;
+comments/inline recipes, recipes separated by blank lines, recipe or comment
+escapes/continuations that swallow a following rule, target- and
+pattern-specific assignments, phony, and special-target bypasses;
 shared-document content, HTML, fence, and rendering-context corruption; and
 permitted successor-owned documentation additions.
 
@@ -109,7 +109,7 @@ the final metadata review are complete.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "e9cf4d9601db740937c2af727a31249eae0c229335418dfa726ea016380e0ee9",
+  "conformance/prototypes/evidence/evidence-manifest.json": "e3e2727e58d5ca63024d7162a9e4ef7f7f6c6eed84fbb5fabe7859576e4ceef9",
   "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -131,9 +131,9 @@ the final metadata review are complete.
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
   "scripts/serialization/build_evidence_manifest.py": "46104e94b860f9f70aaab906228f1df53144e3db8335bd8f25d873f669565945",
-  "scripts/serialization/check_evidence.py": "c7ac804630b26a559f8d77538194cc087e4ec2cdf726d39f29ef27f90101cfef",
+  "scripts/serialization/check_evidence.py": "e8d395f37479f74dab4c13df4d4fefbbfd5db0949eba283f9df602094b439271",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "50eb99bc9248c40c090ebcc913a73ad2cceaf7424eef42e40b3121ddc66708bd",
+  "scripts/serialization/tests/test_check_evidence.py": "fdaa6176db2a34ab12bd8af87c5bfe157f6e3ed6e7eebfdd9cd2bf2c192d02ed",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }
