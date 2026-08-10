@@ -1,11 +1,11 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0006", "SQ-0008"],
-  "in_progress": [],
+  "ready": ["SQ-0008"],
+  "in_progress": ["SQ-0006"],
   "blocked_count": 53,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005"],
-  "last_integrated_commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+  "last_integrated_commit": "d9afd96460afb3c5902a93f134044168bc4e4df3",
   "last_updated": "2026-08-10",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
@@ -28,6 +28,8 @@
     "The decision-aware calculation makes SQ-0006 and SQ-0008 READY with 53 blocked tasks and no active task. Both remain unstarted in this execution.",
     "PR #11 merged reviewed head c6e90b118b691a819d617bb6d411c96382ea197c into main by normal merge commit 62707add05fcebb7cabbb3d4cff3cd97b22dfa4c. Main guardrails 31327728104, serialization prototypes 31327728110, Rust reference workspace 31327728156, and Lean proof backend 31327728117 passed at that exact merge commit.",
     "The integrated state keeps RFC-0001 and matching ADR-0004 Accepted, keeps RFC-0006 byte-identical and Draft under SQ-0027, and records SQ-0006 and SQ-0008 READY with SQ-0008 unstarted, 53 blocked tasks, and no active task. The SQ-0005 prototypes remain Experimental and have no production canonicalizer authority.",
-    "PR #12 merged the final SQ-0005 post-merge record as 6c0451fffa8b875bf8a275473a3033bddb8a34da. Final main workflows passed: repository guardrails 31328703742, Serialization prototypes 31328703728, Rust reference workspace 31328703727, and Lean proof backend 31328703736. SQ-0001 through SQ-0005 remain DONE; SQ-0006 and SQ-0008 remain READY; no task is active; RFC-0006 remains unchanged and Draft."
+    "PR #12 merged the final SQ-0005 post-merge record as 6c0451fffa8b875bf8a275473a3033bddb8a34da. Final main workflows passed: repository guardrails 31328703742, Serialization prototypes 31328703728, Rust reference workspace 31328703727, and Lean proof backend 31328703736. SQ-0001 through SQ-0005 remain DONE; SQ-0006 and SQ-0008 remain READY; no task is active; RFC-0006 remains unchanged and Draft.",
+    "PR #14 merged the independently reviewed SQ-0005 evidence-lifecycle repair normally as d9afd96460afb3c5902a93f134044168bc4e4df3. Main guardrails 31363497400, Serialization prototypes 31363497348, Rust reference workspace 31363497374, and Lean proof backend 31363497357 passed; a fresh isolated SQ-0006 IN_PROGRESS simulation passed without regenerating the frozen SQ-0005 historical snapshot.",
+    "SQ-0006 was claimed from d9afd96460afb3c5902a93f134044168bc4e4df3 on 2026-08-10T08:57:10+02:00 in isolated worktree /tmp/statqed-sq0006-schema-v0 on branch agent/SQ-0006-schema-v0. SQ-0008 remains READY and unstarted; RFC-0006 remains unchanged, Draft, and owned by SQ-0027."
   ]
 }
