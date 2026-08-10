@@ -586,6 +586,8 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
     rules: list[tuple[int, list[str], str, list[str]]] = []
     for index, line in enumerate(make_lines):
         stripped = line.strip()
+        if line.startswith("\t") and line.rstrip().endswith("\\"):
+            raise EvidenceError("SQ-0005 Makefile recipe continuations are prohibited")
         if not stripped or stripped.startswith("#") or line.startswith("\t"):
             continue
         if "#" in line:

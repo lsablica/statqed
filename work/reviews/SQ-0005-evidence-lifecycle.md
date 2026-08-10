@@ -62,7 +62,7 @@ reviewed commits jointly enforce the lifecycle boundary.
 
 ## Regression evidence
 
-The original 12 evidence-corruption tests remain present. Forty-three
+The original 12 evidence-corruption tests remain present. Forty-four
 additional lifecycle-model tests cover the frozen completion snapshot and
 historical successor contracts; SQ-0006 READY,
 IN_PROGRESS, IN_REVIEW, and DONE; SQ-0008 status-only evolution; SQ-0005
@@ -72,24 +72,35 @@ SQ-0008 semantic drift; production-path drift; scientific-subject drift; and
 the distinction between local evidence invariants and global ledger checks.
 They also cover active-review redirection; plain, grouped, multi-target,
 indented, and variable-expanded Makefile shadowing; assignments, inline
-comments/inline recipes, recipes separated by blank lines, target- and
-pattern-specific assignments, phony, and special-target bypasses;
+comments/inline recipes, recipes separated by blank lines, recipe
+continuations that swallow a following rule, target- and pattern-specific
+assignments, phony, and special-target bypasses;
 shared-document content, HTML, fence, and rendering-context corruption; and
 permitted successor-owned documentation additions.
 
-Exact local and hosted command dispositions are added to this record only
-after the content-addressed candidate passes them. The SQ-0006 preclaim gate
-must remain unresolved until that review and hosted CI are complete.
+The content-addressed implementation candidate is
+`c9f411c2e7ab4c14fa685f16aca64a65ed2d632b`. Its clean-checkout local gates
+passed: `make check`; `make list-work` (`DONE=5`, `READY=2`, `BLOCKED=53`, no
+active task); `git diff --check`; the permanent verifier (158 historical
+subjects, 155 live subjects, 203 negative fixtures); conformance (273 cases,
+zero failures, 69 joint goldens, 20 deliberate mutations); all 55 unit tests;
+and byte-identical manifest regeneration. Hosted exact-head evidence remains
+required. The SQ-0006 preclaim gate must remain unresolved until that CI and
+the final metadata review are complete.
 
 ## Independent review dispositions
 
-- Evidence-model semantics: PENDING exact candidate review.
-- Verifier implementation: PENDING exact candidate review.
-- Corruption and lifecycle regression tests: PENDING exact candidate review.
-- Manifest reproducibility and historical preservation: PENDING exact
-  candidate review.
+- Evidence-model semantics: APPROVE content candidate `c9f411c2` — independent
+  semantic/conformance review.
+- Verifier implementation: APPROVE content candidate `c9f411c2` — independent
+  semantic and integration review.
+- Corruption and lifecycle regression tests: PENDING final adversarial
+  disposition for `c9f411c2`.
+- Manifest reproducibility and historical preservation: APPROVE content
+  candidate `c9f411c2` — independent integration review.
 - SQ-0006 preclaim-gate resolution: PENDING hosted exact-head checks.
-- Integration scope: PENDING exact candidate review.
+- Integration scope: APPROVE content candidate `c9f411c2`; final metadata and
+  hosted disposition PENDING.
 
 ## Bound subjects
 
@@ -98,7 +109,7 @@ must remain unresolved until that review and hosted CI are complete.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "a3fd40876b28f622a22b924da5222840b49f1a7f858cc06c04226be49994be17",
+  "conformance/prototypes/evidence/evidence-manifest.json": "e9cf4d9601db740937c2af727a31249eae0c229335418dfa726ea016380e0ee9",
   "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -120,9 +131,9 @@ must remain unresolved until that review and hosted CI are complete.
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
   "scripts/serialization/build_evidence_manifest.py": "46104e94b860f9f70aaab906228f1df53144e3db8335bd8f25d873f669565945",
-  "scripts/serialization/check_evidence.py": "347b34ad167dd878849f21528b44f95b201521596f35986d369c2e5d7c511aea",
+  "scripts/serialization/check_evidence.py": "c7ac804630b26a559f8d77538194cc087e4ec2cdf726d39f29ef27f90101cfef",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "2e04cc764263f272af823d6fadbe44f8e1180a3ff16353f07de59f76e8c754e5",
+  "scripts/serialization/tests/test_check_evidence.py": "50eb99bc9248c40c090ebcc913a73ad2cceaf7424eef42e40b3121ddc66708bd",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }
@@ -131,13 +142,13 @@ must remain unresolved until that review and hosted CI are complete.
 
 ## Seven integration questions
 
-1. Preserve immutable SQ-0005 historical evidence: PENDING.
+1. Preserve immutable SQ-0005 historical evidence: YES.
 2. Accept legitimate SQ-0006 lifecycle evolution without regeneration:
-   PENDING.
-3. Reject SQ-0005 regression: PENDING.
-4. Preserve RFC-0006 exactly: PENDING.
-5. Preserve SQ-0008 semantics while allowing status-only evolution: PENDING.
-6. Leave actual SQ-0006 READY: PENDING.
-7. Avoid general weakening of evidence validation: PENDING.
+   YES.
+3. Reject SQ-0005 regression: YES.
+4. Preserve RFC-0006 exactly: YES.
+5. Preserve SQ-0008 semantics while allowing status-only evolution: YES.
+6. Leave actual SQ-0006 READY: YES.
+7. Avoid general weakening of evidence validation: YES.
 
 Final disposition: PENDING

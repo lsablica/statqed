@@ -657,6 +657,16 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         self.assert_rejected("Makefile recipe changed")
 
+    def test_lifecycle_recipe_continuation_swallowing_target_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            "check-sq0005-evidence:\n",
+            "swallow-sq0005-rule:\n\t@true \\\ncheck-sq0005-evidence:\n",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("Makefile recipe continuations are prohibited")
+
     def test_lifecycle_dashboard_html_comment_wrapper_is_rejected(self) -> None:
         path = self.root / "docs/quality/dashboard.md"
         text = path.read_text(encoding="utf-8")
