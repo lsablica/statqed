@@ -85,8 +85,13 @@ active task); `git diff --check`; the permanent verifier (158 historical
 subjects, 155 live subjects, 203 negative fixtures); conformance (273 cases,
 zero failures, 69 joint goldens, 20 deliberate mutations); all 57 unit tests;
 and byte-identical manifest regeneration. Hosted exact-head evidence remains
-required. The SQ-0006 preclaim gate must remain unresolved until that CI and
-the final metadata review are complete.
+required for any later PR-head change. At PR head
+`924e6f1e494307656540a114738b23d807dee84e`, repository guardrails run
+`31362690928`, Serialization prototypes run `31362690918`, exact-head
+serialization dispatch `31362719153`, Rust reference workspace run
+`31362690945`, and Lean proof backend run `31362690889` all succeeded. The
+SQ-0006 preclaim record may therefore be changed from unresolved to resolved
+without claiming SQ-0006; the final metadata head must repeat the same gates.
 
 ## Independent review dispositions
 
@@ -102,9 +107,12 @@ the final metadata review are complete.
   retained Makefile bypass mutations, and shared-document wrapper mutations.
 - Manifest reproducibility and historical preservation: APPROVE content
   candidate `01b86c24` — independent integration review.
-- SQ-0006 preclaim-gate resolution: PENDING hosted exact-head checks.
+- SQ-0006 preclaim-gate resolution: APPROVE at hosted head `924e6f1e`; SQ-0006
+  remained READY, all five hosted runs succeeded, and the historical snapshot
+  was not regenerated.
 - Integration scope: APPROVE content candidate `01b86c24`; final metadata and
-  hosted disposition PENDING.
+  preclaim-record update must receive exact-head hosted and independent
+  integration disposition before merge.
 
 ## Bound subjects
 
@@ -155,4 +163,4 @@ the final metadata review are complete.
 6. Leave actual SQ-0006 READY: YES.
 7. Avoid general weakening of evidence validation: YES.
 
-Final disposition: APPROVE_CONTENT_PENDING_HOSTED
+Final disposition: APPROVE_HOSTED_PRECLAIM_GATE_PENDING_FINAL_HEAD
