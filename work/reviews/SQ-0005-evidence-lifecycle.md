@@ -79,27 +79,31 @@ shared-document content, HTML, fence, and rendering-context corruption; and
 permitted successor-owned documentation additions.
 
 The content-addressed implementation candidate is
-`c9f411c2e7ab4c14fa685f16aca64a65ed2d632b`. Its clean-checkout local gates
+`01b86c245df355ea917927d1d919793c94190c24`. Its clean-checkout local gates
 passed: `make check`; `make list-work` (`DONE=5`, `READY=2`, `BLOCKED=53`, no
 active task); `git diff --check`; the permanent verifier (158 historical
 subjects, 155 live subjects, 203 negative fixtures); conformance (273 cases,
-zero failures, 69 joint goldens, 20 deliberate mutations); all 55 unit tests;
+zero failures, 69 joint goldens, 20 deliberate mutations); all 57 unit tests;
 and byte-identical manifest regeneration. Hosted exact-head evidence remains
 required. The SQ-0006 preclaim gate must remain unresolved until that CI and
 the final metadata review are complete.
 
 ## Independent review dispositions
 
-- Evidence-model semantics: APPROVE content candidate `c9f411c2` — independent
-  semantic/conformance review.
-- Verifier implementation: APPROVE content candidate `c9f411c2` — independent
-  semantic and integration review.
-- Corruption and lifecycle regression tests: PENDING final adversarial
-  disposition for `c9f411c2`.
+- Evidence-model semantics: APPROVE content candidate `01b86c24` — independent
+  conformance and integration review; the conformance reviewer reproduced the
+  frozen v1 manifest and subject-map hashes, every successor lifecycle case,
+  and the unchanged RFC-0006 boundary in a detached clean checkout.
+- Verifier implementation: APPROVE content candidate `01b86c24` — independent
+  integration and adversarial mutation review.
+- Corruption and lifecycle regression tests: APPROVE content candidate
+  `01b86c24` — independent adversarial mutation review reproduced all 57 tests,
+  the four SQ-0006 lifecycle simulations, the SQ-0008 status-only simulation,
+  retained Makefile bypass mutations, and shared-document wrapper mutations.
 - Manifest reproducibility and historical preservation: APPROVE content
-  candidate `c9f411c2` — independent integration review.
+  candidate `01b86c24` — independent integration review.
 - SQ-0006 preclaim-gate resolution: PENDING hosted exact-head checks.
-- Integration scope: APPROVE content candidate `c9f411c2`; final metadata and
+- Integration scope: APPROVE content candidate `01b86c24`; final metadata and
   hosted disposition PENDING.
 
 ## Bound subjects
@@ -151,4 +155,4 @@ the final metadata review are complete.
 6. Leave actual SQ-0006 READY: YES.
 7. Avoid general weakening of evidence validation: YES.
 
-Final disposition: PENDING
+Final disposition: APPROVE_CONTENT_PENDING_HOSTED
