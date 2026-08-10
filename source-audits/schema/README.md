@@ -19,7 +19,7 @@ The current published base is RFC 8610 plus its sole Verified erratum, EID 6526,
 
 ## Validator disposition
 
-The selected candidate is crates.io `cddl` 0.10.6 from source commit `a42a702cf977179236523e5559c81e7bbd5dfa7e`:
+The selected candidate is crates.io `cddl` 0.10.6 from source commit `a42a702cf977179236523e5559c81e7bbd5dfa7e`. Hosted acquisition uses the official static archive URL because the crates.io API download endpoint returned HTTP 403 on the first reviewed PR run; the unchanged archive SHA-256 is verified before extraction:
 
 - crate SHA-256: `69f7305ff73327bd9ce5e5cdd81223dd91b4969e260ea6cdb8f1da94390be191`
 - packaged lockfile SHA-256: `193467cae8f59b079960f6678cc7a0951f9391a7854fbe636489d30cdfddcb93`

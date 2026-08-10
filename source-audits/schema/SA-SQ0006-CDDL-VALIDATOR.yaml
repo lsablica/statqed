@@ -20,9 +20,10 @@ source_records:
   - work: crates.io cddl package record and crate archive
     version: 0.10.6; published 2026-06-29T21:43:50Z; yanked false
     locator: https://crates.io/crates/cddl/0.10.6
-    persistent_id: https://crates.io/api/v1/crates/cddl/0.10.6/download
+    persistent_id: https://static.crates.io/crates/cddl/cddl-0.10.6.crate
     exact_anchors:
       - crates.io sparse-index record for cddl 0.10.6
+      - Official crates.io static archive URL used by hosted CI after the API download endpoint returned HTTP 403
       - cddl-0.10.6.crate .cargo_vcs_info.json
       - cddl-0.10.6.crate Cargo.toml.orig
       - cddl-0.10.6.crate Cargo.lock

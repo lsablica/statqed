@@ -72,7 +72,7 @@ jobs:
           mkdir -p "$tool_root" "$cargo_home"
           curl --fail --location --proto '=https' --tlsv1.2 \
             --output "$tool_root/cddl-0.10.6.crate" \
-            'https://crates.io/api/v1/crates/cddl/0.10.6/download'
+            'https://static.crates.io/crates/cddl/cddl-0.10.6.crate'
           echo '69f7305ff73327bd9ce5e5cdd81223dd91b4969e260ea6cdb8f1da94390be191  '"$tool_root/cddl-0.10.6.crate" | sha256sum --check --strict
           mkdir -p "$tool_root/source"
           tar -xzf "$tool_root/cddl-0.10.6.crate" -C "$tool_root/source"

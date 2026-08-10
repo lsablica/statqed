@@ -1,14 +1,14 @@
 {
   "evidence_manifest_version": "statqed.sq0006-evidence.v1",
   "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
-  "scientific_subject_digest": "138e4b16dac749875fc587c376c3926d263c68c81f59e1fdbed7e40379ce3b7f",
-  "subject_count": 48,
-  "subject_digest": "6dcf852bcc4cd7ae8bdad6c56c3204e65b8371c4843a334c1873d724548c305c",
+  "scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+  "subject_count": 49,
+  "subject_digest": "eb693ce03ac97f1039a6cd122e4793f998222c3e8f5ec99d76f94a054534dcc4",
   "subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
-      "sha256": "f6ab94d784fa51ba977774c35f41f8608906039252f8ba8d7f03cc5ad60e3775",
-      "size_bytes": 8060
+      "sha256": "c6463dccbc1a51d64a5946a37f33cca4be1dd174c77659d038ec3b34195828bb",
+      "size_bytes": 8062
     },
     {
       "path": "conformance/golden/v0/manifest.json",
@@ -84,6 +84,11 @@
       "path": "conformance/schema-v0/failures/cddl-offline-missing-abnf_to_pest.json",
       "sha256": "3249468956f1ac8cd77daba2adc399dfd6698a95bb428fb7f0ee35680b61a608",
       "size_bytes": 497
+    },
+    {
+      "path": "conformance/schema-v0/failures/hosted-crates-io-api-403.json",
+      "sha256": "65f62505a3913e1afbe1687d82dbf7aea4a96adea444b0dcabdcff5f148d165b",
+      "size_bytes": 750
     },
     {
       "path": "conformance/schema-v0/mutations.json",
@@ -207,13 +212,13 @@
     },
     {
       "path": "source-audits/schema/README.md",
-      "sha256": "29d8f5ce168fdc866366d32acb74835e62699fb1c14ecb64f0100a16b8219a7b",
-      "size_bytes": 4076
+      "sha256": "5b95fdefe64639dab4453d271f2d4ca08d1a3499a47dce3b0b23d43b30b02192",
+      "size_bytes": 4285
     },
     {
       "path": "source-audits/schema/SA-SQ0006-CDDL-VALIDATOR.yaml",
-      "sha256": "9c46424184cdd937ff7011ac34de7dedb9d33e5e887182ef8a21a0026de4d544",
-      "size_bytes": 17933
+      "sha256": "c7cba8fb610cf851d8bfb5242b274b686b45b90488fbb7f541f51108bceed38c",
+      "size_bytes": 18049
     },
     {
       "path": "source-audits/schema/SA-SQ0006-CDDL.yaml",
@@ -242,8 +247,8 @@
     },
     {
       "path": "work/reviews/SQ-0006.md",
-      "sha256": "51bfff982452d61c34b567fd76161251aa0a679ba2762fe530f25a2d80f167d8",
-      "size_bytes": 10910
+      "sha256": "873259825df06ba486d1adf976c79fde913bc249d6edc4faf69c332f1214c566",
+      "size_bytes": 11318
     }
   ]
 }

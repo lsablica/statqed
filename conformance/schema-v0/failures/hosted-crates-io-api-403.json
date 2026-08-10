@@ -1,0 +1,17 @@
+{
+  "classification": "environment",
+  "commit": "1d420a49bd85498e1aec85c252ed8f5cdcd13766",
+  "event": "pull_request",
+  "failure": "HTTP 403 from https://crates.io/api/v1/crates/cddl/0.10.6/download before archive bytes were returned",
+  "job_id": 93397943029,
+  "resolution": "Use the official https://static.crates.io/crates/cddl/cddl-0.10.6.crate distribution URL and retain the same required SHA-256 69f7305ff73327bd9ce5e5cdd81223dd91b4969e260ea6cdb8f1da94390be191.",
+  "run_id": 31370432183,
+  "runner": {
+    "architecture": "X64",
+    "image_os": "ubuntu24",
+    "image_version": "20260720.247.2",
+    "operating_system": "Ubuntu 24.04.4 LTS"
+  },
+  "stage": "Acquire and verify exact CDDL source and lock",
+  "status": "retained_failure"
+}

@@ -322,6 +322,7 @@ git diff --check
 - Exact closed CDDL rejects many malformed objects before schema semantics. The evidence therefore records five independent layer results and follows RFC-0001 precedence rather than relabeling a CDDL mismatch as a field-specific schema failure.
 - `cddl` 0.10.6 accepts duplicate map members and rejects some below-i64 CDDL integer literals even while its generic `int` accepts the corresponding CBOR value. Duplicate validity and RFC-0001 integer range remain outside CDDL authority; both limitations are retained.
 - The SQ-0005 dashboard projection intentionally protects its historical paragraph. SQ-0006 evidence is appended without rewriting that paragraph, keeping the permanent predecessor verifier green while adding evidence-supported Experimental status.
+- The first SQ-0006 hosted schema run `31370432183` received HTTP 403 from the crates.io API download endpoint before executing schema code. The failure is retained; CI now uses the official static crates.io archive URL and verifies the same immutable package SHA-256 before extraction.
 
 ## Decision Log
 
