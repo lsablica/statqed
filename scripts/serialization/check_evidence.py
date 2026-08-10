@@ -25,6 +25,84 @@ REVIEW_BEGIN = "<!-- SQ-0005-REVIEW-SUBJECTS-BEGIN -->"
 REVIEW_END = "<!-- SQ-0005-REVIEW-SUBJECTS-END -->"
 SCOPE_BEGIN = "<!-- SQ-0005-NORMATIVE-SCOPE-BEGIN -->"
 SCOPE_END = "<!-- SQ-0005-NORMATIVE-SCOPE-END -->"
+EXPECTED_HISTORICAL_COMPLETION_STATE = {
+    "blocked_count": 53,
+    "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005"],
+    "in_progress": [],
+    "ready": ["SQ-0006", "SQ-0008"],
+    "schemas_v0_present": False,
+    "statuses": {
+        "adr0004": "Accepted",
+        "backlog_sq0005": "DONE",
+        "backlog_sq0006": "READY",
+        "backlog_sq0008": "READY",
+        "contract_sq0005": "DONE",
+        "contract_sq0006": "READY",
+        "contract_sq0008": "READY",
+        "rfc0001": "Accepted",
+    },
+}
+EXPECTED_HISTORICAL_REVIEW = {
+    "path": "work/reviews/SQ-0005.md",
+    "sha256": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7",
+}
+EXPECTED_HISTORICAL_MANIFEST = {
+    "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+    "path": "conformance/prototypes/evidence/evidence-manifest.json",
+    "schema": "statqed.sq0005-evidence.v1",
+    "sha256": "0512a79a42cc6c6b70e5c139044841827b3ac3103968892fe6f135f02436a233",
+    "subjects_sha256": "59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105",
+}
+EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS = {
+    "SQ-0006": {
+        "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+        "path": "work/contracts/SQ-0006.yaml",
+        "sha256": "1236fefeb2be7e70ea4b897f785049057cf659997eac4f00cbb72301e63acba1",
+    },
+    "SQ-0008": {
+        "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+        "path": "work/contracts/SQ-0008.yaml",
+        "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
+    },
+}
+EXPECTED_REVIEW_RECORD = "work/reviews/SQ-0005-evidence-lifecycle.md"
+EXPECTED_BASELINE = {
+    "commit": "8875d8f6fa8e3b45e706ea567d45448927a02efa",
+    "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
+    "sq0008_contract_sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
+}
+EXPECTED_LIVE_DECISIONS = {
+    "adr0004": "Accepted",
+    "rfc0001": "Accepted",
+    "rfc0006": "Draft",
+    "rfc0006_owner": "SQ-0027",
+}
+EXPECTED_LIVE_SQ0005 = {
+    "backlog_status": "DONE",
+    "contract_status": "DONE",
+    "ledger_bucket": "done",
+}
+EXPECTED_MAKEFILE_INTEGRATION = {
+    "check_dependency": "check-sq0005-evidence",
+    "command": "python3 scripts/serialization/check_evidence.py",
+}
+ALLOWED_SUCCESSOR_STATUSES = ("READY", "IN_PROGRESS", "IN_REVIEW", "DONE")
+EXPECTED_SHARED_DOCUMENT_POLICIES = {
+    "docs/quality/dashboard.md": {"projection": "sq0005_dashboard_v1"},
+    "docs/spec/canonicalization.md": {
+        "headings": [
+            "Scope",
+            "Exact byte rules",
+            "Limits",
+            "Generic data-free digest frame",
+            "CDDL",
+            "Reproduce the evidence",
+            "Update and rollback",
+            "Trust boundary and nonclaims",
+        ],
+        "projection": "markdown_preamble_and_sections_v1",
+    },
+}
 
 
 class EvidenceError(RuntimeError):
@@ -45,6 +123,147 @@ def load_json(path: Path) -> Any:
             return json.load(stream)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise EvidenceError(f"cannot read JSON {path}: {error}") from error
+
+
+def canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def semantic_projection_sha256(
+    value: dict[str, Any], omitted_fields: list[str]
+) -> str:
+    if omitted_fields != ["status"]:
+        raise EvidenceError(
+            "SQ-0008 lifecycle projection must omit exactly the top-level status field"
+        )
+    if "status" not in value:
+        raise EvidenceError("SQ-0008 contract lacks the projected status field")
+    projection = {key: item for key, item in value.items() if key not in omitted_fields}
+    return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def markdown_sections_projection_sha256(value: bytes, headings: list[str]) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise EvidenceError(f"invalid UTF-8 shared document: {error}") from error
+    if any(token in text for token in ("<", ">", "~~")):
+        raise EvidenceError("shared Markdown document uses prohibited wrapping markup")
+    lines = text.splitlines(keepends=True)
+    heading_rows: list[tuple[int, str]] = []
+    fence_character: str | None = None
+    fence_width = 0
+    for index, line in enumerate(lines):
+        candidate = line.lstrip(" ") if len(line) - len(line.lstrip(" ")) <= 3 else line
+        token_match = re.match(r"(`{3,}|~{3,})", candidate)
+        if fence_character is None and token_match is not None:
+            token = token_match.group(1)
+            fence_character = token[0]
+            fence_width = len(token)
+            continue
+        if fence_character is not None:
+            if re.fullmatch(
+                re.escape(fence_character) + "{" + str(fence_width) + r",}\s*",
+                candidate.rstrip("\r\n"),
+            ):
+                fence_character = None
+                fence_width = 0
+            continue
+        if line.startswith("## "):
+            heading_rows.append((index, line[3:].rstrip("\r\n")))
+    if fence_character is not None:
+        raise EvidenceError("shared Markdown document has an unclosed code fence")
+    if len({name for _, name in heading_rows}) != len(heading_rows):
+        raise EvidenceError("shared Markdown document has duplicate level-two headings")
+    positions = {name: index for index, name in heading_rows}
+    if any(name not in positions for name in headings):
+        raise EvidenceError("shared Markdown document lacks a protected heading")
+    first_heading = min(index for index, _ in heading_rows)
+    all_indices = [index for index, _ in heading_rows]
+    sections: dict[str, str] = {}
+    for name in headings:
+        start = positions[name]
+        end = next((index for index in all_indices if index > start), len(lines))
+        sections[name] = "".join(lines[start:end])
+    projection = {"preamble": "".join(lines[:first_heading]), "sections": sections}
+    return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def sq0005_dashboard_projection_sha256(value: bytes) -> str:
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise EvidenceError(f"invalid UTF-8 quality dashboard: {error}") from error
+    if any(token in text for token in ("<", ">", "```", "~~~", "~~")):
+        raise EvidenceError("quality dashboard uses prohibited wrapping markup")
+    rows = [
+        line
+        for line in text.splitlines(keepends=True)
+        if line.startswith("| Deterministic encoding profile |")
+    ]
+    if len(rows) != 1:
+        raise EvidenceError("quality dashboard lacks one encoding-profile row")
+    begin = "SQ-0005 adds one Experimental deterministic"
+    end = "does not define logical-data identity."
+    if text.count(begin) != 1 or text.count(end) != 1:
+        raise EvidenceError("quality dashboard lacks one SQ-0005 evidence statement")
+    evidence_start = text.index(begin)
+    lines = text.splitlines(keepends=True)
+    offsets: list[int] = []
+    offset = 0
+    for line in lines:
+        offsets.append(offset)
+        offset += len(line)
+    containing = next(
+        index
+        for index, line_offset in enumerate(offsets)
+        if line_offset <= evidence_start < line_offset + len(lines[index])
+    )
+    paragraph_start = containing
+    while paragraph_start > 0 and lines[paragraph_start - 1].strip():
+        paragraph_start -= 1
+    paragraph_end = containing + 1
+    while paragraph_end < len(lines) and lines[paragraph_end].strip():
+        paragraph_end += 1
+    paragraph = "".join(lines[paragraph_start:paragraph_end])
+    if begin not in paragraph or end not in paragraph:
+        raise EvidenceError("SQ-0005 evidence statement crosses a paragraph boundary")
+    nonblank = [line for line in text.splitlines(keepends=True) if line.strip()]
+    if len(nonblank) < 2:
+        raise EvidenceError("quality dashboard preamble is incomplete")
+    projection = {
+        "heading": nonblank[0],
+        "status": nonblank[1],
+        "encoding_profile_row": rows[0],
+        "sq0005_evidence_paragraph": paragraph,
+    }
+    return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
+
+
+def shared_document_projection_sha256(
+    value: bytes, policy: dict[str, Any]
+) -> str:
+    policy_without_hash = {
+        key: item for key, item in policy.items() if key != "projection_sha256"
+    }
+    projection = policy_without_hash.get("projection")
+    if projection == "markdown_preamble_and_sections_v1":
+        headings = policy_without_hash.get("headings")
+        if not isinstance(headings, list) or not all(
+            isinstance(item, str) for item in headings
+        ):
+            raise EvidenceError("invalid shared Markdown heading policy")
+        return markdown_sections_projection_sha256(value, headings)
+    if projection == "sq0005_dashboard_v1" and sorted(policy_without_hash) == [
+        "projection"
+    ]:
+        return sq0005_dashboard_projection_sha256(value)
+    raise EvidenceError(f"unsupported shared-document projection: {projection}")
 
 
 def checked_relative(value: str) -> PurePosixPath:
@@ -103,13 +322,33 @@ def header_status(path: Path) -> str:
     raise EvidenceError(f"missing status header: {path}")
 
 
-def verify_subjects(root: Path, manifest: dict[str, Any]) -> dict[str, str]:
-    subjects = manifest.get("subjects")
+def checked_subject_list(manifest: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    subjects = manifest.get(key)
     if not isinstance(subjects, list) or not subjects:
-        raise EvidenceError("manifest subjects must be a nonempty list")
+        raise EvidenceError(f"manifest {key} must be a nonempty list")
     paths = [item.get("path") for item in subjects if isinstance(item, dict)]
     if len(paths) != len(subjects) or paths != sorted(paths) or len(set(paths)) != len(paths):
-        raise EvidenceError("manifest subject paths must be unique and sorted")
+        raise EvidenceError(f"manifest {key} paths must be unique and sorted")
+    for item in subjects:
+        if not re.fullmatch(r"[0-9a-f]{64}", str(item.get("sha256", ""))):
+            raise EvidenceError(f"invalid subject SHA-256: {item.get('path')}")
+        if not isinstance(item.get("role"), str) or not item["role"]:
+            raise EvidenceError(f"missing subject role: {item.get('path')}")
+    return subjects
+
+
+def verify_historical_subjects(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    subjects = checked_subject_list(manifest, "historical_subjects")
+    observed = hashlib.sha256(canonical_json_bytes(subjects)).hexdigest()
+    if observed != EXPECTED_HISTORICAL_MANIFEST["subjects_sha256"]:
+        raise EvidenceError("historical SQ-0005 subject map changed")
+    if len(subjects) != 158:
+        raise EvidenceError("historical SQ-0005 subject count changed")
+    return subjects
+
+
+def verify_live_subjects(root: Path, manifest: dict[str, Any]) -> dict[str, str]:
+    subjects = checked_subject_list(manifest, "live_subjects")
     observed: dict[str, str] = {}
     for item in subjects:
         path_value = item["path"]
@@ -122,8 +361,6 @@ def verify_subjects(root: Path, manifest: dict[str, Any]) -> dict[str, str]:
         digest = sha256(path)
         if digest != item.get("sha256"):
             raise EvidenceError(f"subject SHA-256 mismatch: {path_value}")
-        if not isinstance(item.get("role"), str) or not item["role"]:
-            raise EvidenceError(f"missing subject role: {path_value}")
         observed[path_value] = digest
     return observed
 
@@ -140,6 +377,11 @@ def verify_coverage(root: Path, manifest: dict[str, Any], subjects: set[str]) ->
             for path in directory.rglob("*")
             if path.is_file()
             and not path.is_symlink()
+            and not any(
+                part in {"__pycache__", ".pytest_cache", "target", ".lake"}
+                for part in path.relative_to(root).parts
+            )
+            and path.suffix not in {".pyc", ".pyo"}
             and (not extensions or path.suffix in extensions)
             and path.relative_to(root).as_posix()
             != "conformance/prototypes/evidence/evidence-manifest.json"
@@ -232,6 +474,8 @@ def verify_lineage(root: Path, manifest: dict[str, Any]) -> None:
 
 
 def verify_review(root: Path, manifest_path: str, manifest: dict[str, Any]) -> None:
+    if manifest.get("review_record") != EXPECTED_REVIEW_RECORD:
+        raise EvidenceError("active SQ-0005 lifecycle review path changed")
     review_path = require_file(root, manifest["review_record"])
     review = review_path.read_text(encoding="utf-8")
     bindings = extract_marked_json(review, REVIEW_BEGIN, REVIEW_END)
@@ -245,8 +489,69 @@ def verify_review(root: Path, manifest_path: str, manifest: dict[str, Any]) -> N
         raise EvidenceError("review does not bind the evidence manifest")
 
 
-def verify_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
-    expected = manifest["expected_state"]
+def verify_historical_completion(root: Path, manifest: dict[str, Any]) -> None:
+    if manifest.get("historical_completion_state") != EXPECTED_HISTORICAL_COMPLETION_STATE:
+        raise EvidenceError("historical SQ-0005 completion snapshot changed")
+    if manifest.get("historical_review") != EXPECTED_HISTORICAL_REVIEW:
+        raise EvidenceError("historical SQ-0005 review binding changed")
+    review = require_file(root, EXPECTED_HISTORICAL_REVIEW["path"])
+    if sha256(review) != EXPECTED_HISTORICAL_REVIEW["sha256"]:
+        raise EvidenceError("historical SQ-0005 review changed")
+    if manifest.get("historical_manifest") != EXPECTED_HISTORICAL_MANIFEST:
+        raise EvidenceError("historical SQ-0005 manifest binding changed")
+    if (
+        manifest.get("historical_successor_contracts")
+        != EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS
+    ):
+        raise EvidenceError("historical successor contract bindings changed")
+    if manifest.get("baseline") != EXPECTED_BASELINE:
+        raise EvidenceError("historical SQ-0005 baseline changed")
+
+
+def ledger_membership(status: dict[str, Any], task_id: str, task_status: str) -> None:
+    buckets = {
+        "done": status.get("done", []),
+        "in_progress": status.get("in_progress", []),
+        "ready": status.get("ready", []),
+    }
+    for name, values in buckets.items():
+        if not isinstance(values, list) or len(values) != len(set(values)):
+            raise EvidenceError(f"work/status {name} bucket is not a unique list")
+    expected_bucket = {
+        "DONE": "done",
+        "IN_PROGRESS": "in_progress",
+        "IN_REVIEW": "in_progress",
+        "READY": "ready",
+    }[task_status]
+    present = [name for name, values in buckets.items() if task_id in values]
+    if present != [expected_bucket]:
+        raise EvidenceError(
+            f"{task_id} live ledger membership disagrees with {task_status}: {present}"
+        )
+
+
+def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
+    policy = manifest.get("live_invariants")
+    if not isinstance(policy, dict):
+        raise EvidenceError("missing SQ-0005 live invariant policy")
+    if policy.get("decisions") != EXPECTED_LIVE_DECISIONS:
+        raise EvidenceError("SQ-0005 live decision policy changed")
+    if policy.get("sq0005") != EXPECTED_LIVE_SQ0005:
+        raise EvidenceError("SQ-0005 live completion policy changed")
+    if policy.get("makefile_integration") != EXPECTED_MAKEFILE_INTEGRATION:
+        raise EvidenceError("SQ-0005 Makefile integration policy changed")
+    successor_policy = policy.get("successor_lifecycle")
+    if not isinstance(successor_policy, dict) or sorted(successor_policy) != [
+        "SQ-0006",
+        "SQ-0008",
+    ]:
+        raise EvidenceError("SQ-0005 successor lifecycle policy changed")
+    for task_id in sorted(successor_policy):
+        if successor_policy[task_id] != {
+            "allowed_statuses": list(ALLOWED_SUCCESSOR_STATUSES)
+        }:
+            raise EvidenceError(f"{task_id} allowed lifecycle policy changed")
+
     backlog = load_json(root / "work/backlog.yaml")
     status = load_json(root / "work/status.yaml")
     contract5 = load_json(root / "work/contracts/SQ-0005.yaml")
@@ -255,28 +560,156 @@ def verify_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
     backlog5 = task(backlog["tasks"], "SQ-0005")
     backlog6 = task(backlog["tasks"], "SQ-0006")
     backlog8 = task(backlog["tasks"], "SQ-0008")
-    checks = {
-        "contract_sq0005": contract5.get("status"),
-        "contract_sq0006": contract6.get("status"),
-        "contract_sq0008": contract8.get("status"),
-        "backlog_sq0005": backlog5.get("status"),
-        "backlog_sq0006": backlog6.get("status"),
-        "backlog_sq0008": backlog8.get("status"),
-        "rfc0001": header_status(root / "rfcs/0001-deterministic-encoding.md"),
-        "adr0004": header_status(
-            root / "docs/adr/0004-deterministic-cbor-cddl.md"
-        ),
-    }
-    if checks != expected["statuses"]:
-        raise EvidenceError(f"task/RFC/ADR status drift: {checks}")
-    if sorted(status.get("ready", [])) != sorted(expected["ready"]):
-        raise EvidenceError("work/status ready set drift")
-    if sorted(status.get("in_progress", [])) != sorted(expected["in_progress"]):
-        raise EvidenceError("work/status in-progress set drift")
-    if sorted(status.get("done", [])) != sorted(expected["done"]):
-        raise EvidenceError("work/status done set drift")
-    if status.get("blocked_count") != expected["blocked_count"]:
-        raise EvidenceError("work/status blocked count drift")
+    if contract5.get("status") != "DONE" or backlog5.get("status") != "DONE":
+        raise EvidenceError("SQ-0005 live status regressed from DONE")
+    ledger_membership(status, "SQ-0005", "DONE")
+
+    for task_id, contract, backlog_task in (
+        ("SQ-0006", contract6, backlog6),
+        ("SQ-0008", contract8, backlog8),
+    ):
+        contract_status = contract.get("status")
+        backlog_status = backlog_task.get("status")
+        if contract_status != backlog_status:
+            raise EvidenceError(f"{task_id} contract/backlog status disagreement")
+        if contract_status not in ALLOWED_SUCCESSOR_STATUSES:
+            raise EvidenceError(f"{task_id} has illegal lifecycle status: {contract_status}")
+        ledger_membership(status, task_id, contract_status)
+
+    if header_status(root / "rfcs/0001-deterministic-encoding.md") != "Accepted":
+        raise EvidenceError("RFC-0001 live status is not Accepted")
+    if header_status(root / "docs/adr/0004-deterministic-cbor-cddl.md") != "Accepted":
+        raise EvidenceError("ADR-0004 live status is not Accepted")
+
+    makefile = (root / "Makefile").read_text(encoding="utf-8")
+    make_lines = makefile.splitlines()
+    rules: list[tuple[int, list[str], str, list[str]]] = []
+    for index, line in enumerate(make_lines):
+        stripped = line.strip()
+        if "\\" in line:
+            raise EvidenceError("SQ-0005 Makefile escapes and continuations are prohibited")
+        if not stripped or stripped.startswith("#") or line.startswith("\t"):
+            continue
+        if "#" in line:
+            raise EvidenceError("SQ-0005 Makefile inline comments are prohibited")
+        if ";" in line:
+            raise EvidenceError("SQ-0005 Makefile inline recipes are prohibited")
+        if "$" in line:
+            raise EvidenceError("SQ-0005 Makefile dynamic syntax is prohibited")
+        if re.match(
+            r"^\s*(?:(?:override|export|private|unexport)\s+)?"
+            r"[A-Za-z_.][A-Za-z0-9_.-]*\s*(?:::=|:=|\+=|\?=|!=|=)",
+            line,
+        ):
+            raise EvidenceError("SQ-0005 Makefile assignments are prohibited")
+        if re.match(
+            r"^\s*(?:-?include|sinclude|define|endef|eval|ifeq|ifneq|ifdef|ifndef|else|endif)(?:\s|$)",
+            line,
+        ) or re.match(r"^\s*(?:override\s+)?SHELL\s*[:?+]?=", line):
+            raise EvidenceError("SQ-0005 Makefile indirection is prohibited")
+        match = re.match(
+            r"^\s*(?P<targets>[^:#]*?)\s*(?P<separator>::|&:|:)(?=\s|$)(?P<rest>.*)$",
+            line,
+        )
+        if match is None:
+            raise EvidenceError("SQ-0005 Makefile uses unsupported structural syntax")
+        targets = match.group("targets").split()
+        if not targets:
+            raise EvidenceError("SQ-0005 Makefile rule lacks a target")
+        special = [target for target in targets if target.startswith(".")]
+        if special and targets != [".PHONY"]:
+            raise EvidenceError("SQ-0005 Makefile special target is prohibited")
+        remainder = match.group("rest").strip()
+        if re.search(
+            r"(?:^|\s)[A-Za-z_.][A-Za-z0-9_.-]*\s*"
+            r"(?:::=|:=|\+=|\?=|!=|=)",
+            remainder,
+        ):
+            raise EvidenceError(
+                "SQ-0005 Makefile target-specific assignments are prohibited"
+            )
+        rules.append(
+            (
+                index,
+                targets,
+                match.group("separator"),
+                remainder.split(),
+            )
+        )
+
+    check_rules = [rule for rule in rules if "check" in rule[1]]
+    if (
+        len(check_rules) != 1
+        or check_rules[0][1] != ["check"]
+        or check_rules[0][2] != ":"
+        or check_rules[0][3].count("check-sq0005-evidence") != 1
+    ):
+        raise EvidenceError("make check no longer depends exactly on SQ-0005 evidence")
+
+    protected_rules = [
+        rule for rule in rules if "check-sq0005-evidence" in rule[1]
+    ]
+    if len(protected_rules) != 1:
+        raise EvidenceError("SQ-0005 evidence Makefile target is not unique")
+    target_index, targets, separator, prerequisites = protected_rules[0]
+    if (
+        targets != ["check-sq0005-evidence"]
+        or separator != ":"
+        or prerequisites
+        or make_lines[target_index] != "check-sq0005-evidence:"
+    ):
+        raise EvidenceError("SQ-0005 evidence Makefile target changed")
+    phony_rules = [rule for rule in rules if rule[1] == [".PHONY"]]
+    if (
+        len(phony_rules) != 1
+        or phony_rules[0][2] != ":"
+        or phony_rules[0][3].count("check-sq0005-evidence") != 1
+    ):
+        raise EvidenceError("SQ-0005 evidence target is not uniquely phony")
+    recipes: list[str] = []
+    for line in make_lines[target_index + 1 :]:
+        if line.startswith("\t"):
+            recipes.append(line)
+            continue
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        break
+    if recipes != ["\tpython3 scripts/serialization/check_evidence.py"]:
+        raise EvidenceError("SQ-0005 evidence Makefile recipe changed")
+
+    shared_documents = policy.get("shared_document_integrity")
+    if not isinstance(shared_documents, dict) or sorted(shared_documents) != sorted(
+        EXPECTED_SHARED_DOCUMENT_POLICIES
+    ):
+        raise EvidenceError("shared SQ-0005 document policy changed")
+    for path, expected_policy in sorted(EXPECTED_SHARED_DOCUMENT_POLICIES.items()):
+        observed_policy = shared_documents[path]
+        if not isinstance(observed_policy, dict):
+            raise EvidenceError(f"missing shared document policy: {path}")
+        policy_without_hash = {
+            key: item
+            for key, item in observed_policy.items()
+            if key != "projection_sha256"
+        }
+        if policy_without_hash != expected_policy:
+            raise EvidenceError(f"shared document projection policy changed: {path}")
+        observed_hash = shared_document_projection_sha256(
+            require_file(root, path).read_bytes(), observed_policy
+        )
+        if observed_hash != observed_policy.get("projection_sha256"):
+            raise EvidenceError(f"shared SQ-0005 document projection changed: {path}")
+
+    integrity = policy.get("successor_contract_integrity")
+    if not isinstance(integrity, dict) or sorted(integrity) != ["SQ-0008"]:
+        raise EvidenceError("successor contract integrity policy changed")
+    sq0008_integrity = integrity["SQ-0008"]
+    if not isinstance(sq0008_integrity, dict):
+        raise EvidenceError("missing SQ-0008 contract integrity projection")
+    omitted_fields = sq0008_integrity.get("omitted_fields")
+    observed_projection = semantic_projection_sha256(contract8, omitted_fields)
+    if observed_projection != sq0008_integrity.get("projection_sha256"):
+        raise EvidenceError("SQ-0008 non-lifecycle contract projection changed")
+
     rfc = root / "rfcs/0001-deterministic-encoding.md"
     adr = root / "docs/adr/0004-deterministic-cbor-cddl.md"
     if marked_scope(rfc) != marked_scope(adr):
@@ -296,9 +729,6 @@ def verify_rfc6_and_protected(root: Path, manifest: dict[str, Any]) -> None:
     }
     if owners.get("RFC-0006") != "SQ-0027":
         raise EvidenceError("RFC-0006 ownership drift")
-    sq0008 = require_file(root, "work/contracts/SQ-0008.yaml")
-    if sha256(sq0008) != baseline["sq0008_contract_sha256"]:
-        raise EvidenceError("SQ-0008 contract changed")
     protected = manifest.get("protected_files", [])
     protected_paths = [item.get("path") for item in protected]
     if protected_paths != sorted(protected_paths) or len(set(protected_paths)) != len(
@@ -334,21 +764,19 @@ def verify_rfc6_and_protected(root: Path, manifest: dict[str, Any]) -> None:
             + " missing="
             + ",".join(missing)
         )
-    if (root / "schemas/v0").exists():
-        raise EvidenceError("schemas/v0 was created during SQ-0005")
-
-
 def verify(root: Path, manifest_value: str) -> dict[str, Any]:
     manifest_path = require_file(root, manifest_value)
     manifest = load_json(manifest_path)
-    if manifest.get("schema") != "statqed.sq0005-evidence.v1":
+    if manifest.get("schema") != "statqed.sq0005-evidence.v2":
         raise EvidenceError("unsupported evidence manifest schema")
-    subjects = verify_subjects(root, manifest)
-    verify_coverage(root, manifest, set(subjects))
+    verify_historical_completion(root, manifest)
+    historical_subjects = verify_historical_subjects(manifest)
+    live_subjects = verify_live_subjects(root, manifest)
+    verify_coverage(root, manifest, set(live_subjects))
     verify_fixture_coverage(root, manifest)
     verify_failures(root, manifest)
     verify_lineage(root, manifest)
-    verify_status_and_scope(root, manifest)
+    verify_live_status_and_scope(root, manifest)
     verify_rfc6_and_protected(root, manifest)
     verify_review(root, manifest_value, manifest)
     return {
@@ -356,7 +784,8 @@ def verify(root: Path, manifest_value: str) -> dict[str, Any]:
         "negative_fixture_count": len(manifest["negative_fixture_ids"]),
         "protected_file_count": len(manifest["protected_files"]),
         "status": "verified",
-        "subject_count": len(subjects),
+        "historical_subject_count": len(historical_subjects),
+        "live_subject_count": len(live_subjects),
     }
 
 
@@ -380,7 +809,8 @@ def main() -> int:
     else:
         print(
             "SQ-0005 serialization evidence verified: "
-            f"{result['subject_count']} subjects, "
+            f"{result['historical_subject_count']} historical subjects, "
+            f"{result['live_subject_count']} live subjects, "
             f"{result['negative_fixture_count']} negative fixtures"
         )
     return 0

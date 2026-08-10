@@ -16,7 +16,7 @@
     "RFC-0006 remains Draft, read-only, and owned by SQ-0027"
   ],
   "preclaim_gates": [
-    "A separately reviewed SQ-0005 evidence-lifecycle maintenance change must allow legitimate SQ-0006 READY, IN_PROGRESS, IN_REVIEW, and DONE successor transitions without regenerating, weakening, or rewriting the historical SQ-0005 evidence snapshot. At the 2026-08-10 planning-repair base, scripts/serialization/check_evidence.py still hard-codes SQ-0006 READY and the exact global ready/in-progress/done sets, so SQ-0006 must not be claimed until this gate is resolved."
+    "RESOLVED 2026-08-10 on maintenance/SQ-0005-evidence-lifecycle at reviewed maintenance head 924e6f1e494307656540a114738b23d807dee84e: supplemental review work/reviews/SQ-0005-evidence-lifecycle.md approved evidence-spec statqed.sq0005-evidence-spec.v2 and manifest statqed.sq0005-evidence.v2; all 57 lifecycle/evidence regression tests passed (12 retained corruption tests plus 45 added tests); hosted PR guardrails 31362690928, Serialization prototypes 31362690918, exact-head serialization dispatch 31362719153, Rust reference workspace 31362690945, and Lean proof backend 31362690889 succeeded. SQ-0006 remained READY while the gate was repaired. The historical SQ-0005 snapshot was not regenerated to match successor state."
   ],
   "allowed_paths": [
     "work/contracts/SQ-0006.yaml",

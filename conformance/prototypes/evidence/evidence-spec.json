@@ -22,7 +22,7 @@
       "path": "source-audits/encoding"
     }
   ],
-  "expected_state": {
+  "historical_completion_state": {
     "blocked_count": 53,
     "done": [
       "SQ-0001",
@@ -32,6 +32,7 @@
       "SQ-0005"
     ],
     "in_progress": [],
+    "schemas_v0_present": false,
     "ready": [
       "SQ-0006",
       "SQ-0008"
@@ -47,6 +48,89 @@
       "rfc0001": "Accepted"
     }
   },
+  "historical_review": {
+    "path": "work/reviews/SQ-0005.md",
+    "sha256": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
+  },
+  "historical_manifest": {
+    "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+    "path": "conformance/prototypes/evidence/evidence-manifest.json",
+    "schema": "statqed.sq0005-evidence.v1",
+    "sha256": "0512a79a42cc6c6b70e5c139044841827b3ac3103968892fe6f135f02436a233",
+    "subjects_sha256": "59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105"
+  },
+  "historical_successor_contracts": {
+    "SQ-0006": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0006.yaml",
+      "sha256": "1236fefeb2be7e70ea4b897f785049057cf659997eac4f00cbb72301e63acba1"
+    },
+    "SQ-0008": {
+      "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
+      "path": "work/contracts/SQ-0008.yaml",
+      "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471"
+    }
+  },
+  "live_invariants": {
+    "decisions": {
+      "adr0004": "Accepted",
+      "rfc0001": "Accepted",
+      "rfc0006": "Draft",
+      "rfc0006_owner": "SQ-0027"
+    },
+    "sq0005": {
+      "backlog_status": "DONE",
+      "contract_status": "DONE",
+      "ledger_bucket": "done"
+    },
+    "makefile_integration": {
+      "check_dependency": "check-sq0005-evidence",
+      "command": "python3 scripts/serialization/check_evidence.py"
+    },
+    "shared_document_integrity": {
+      "docs/quality/dashboard.md": {
+        "projection": "sq0005_dashboard_v1"
+      },
+      "docs/spec/canonicalization.md": {
+        "headings": [
+          "Scope",
+          "Exact byte rules",
+          "Limits",
+          "Generic data-free digest frame",
+          "CDDL",
+          "Reproduce the evidence",
+          "Update and rollback",
+          "Trust boundary and nonclaims"
+        ],
+        "projection": "markdown_preamble_and_sections_v1"
+      }
+    },
+    "successor_contract_integrity": {
+      "SQ-0008": {
+        "omitted_fields": [
+          "status"
+        ]
+      }
+    },
+    "successor_lifecycle": {
+      "SQ-0006": {
+        "allowed_statuses": [
+          "READY",
+          "IN_PROGRESS",
+          "IN_REVIEW",
+          "DONE"
+        ]
+      },
+      "SQ-0008": {
+        "allowed_statuses": [
+          "READY",
+          "IN_PROGRESS",
+          "IN_REVIEW",
+          "DONE"
+        ]
+      }
+    }
+  },
   "protected_prefixes": [
     "backend",
     "frontends",
@@ -55,11 +139,12 @@
   "retained_failure_roots": [
     "conformance/prototypes/results/failures"
   ],
-  "review_record": "work/reviews/SQ-0005.md",
+  "review_record": "work/reviews/SQ-0005-evidence-lifecycle.md",
   "review_subject_paths": [
     ".github/workflows/serialization-prototypes.yml",
     "ARCHITECTURE.md",
     "conformance/prototypes/evidence/evidence-manifest.json",
+    "conformance/prototypes/evidence/evidence-spec.json",
     "conformance/prototypes/fixtures/semantic-v1/catalog.json",
     "conformance/prototypes/fixtures/semantic-v1/digest-framing.json",
     "conformance/prototypes/generated-v1/manifest.json",
@@ -80,11 +165,14 @@
     "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json",
     "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json",
     "scripts/serialization/check_evidence.py",
+    "scripts/serialization/build_evidence_manifest.py",
     "scripts/serialization/run_conformance.py",
-    "source-audits/encoding/manifest.json"
+    "scripts/serialization/tests/test_check_evidence.py",
+    "source-audits/encoding/manifest.json",
+    "work/reviews/SQ-0005.md"
   ],
-  "schema": "statqed.sq0005-evidence-spec.v1",
-  "subject_files": [
+  "schema": "statqed.sq0005-evidence-spec.v2",
+  "live_subject_files": [
     {
       "path": "ARCHITECTURE.md",
       "role": "current architecture source-of-truth binding for the Accepted encoding profile"
@@ -94,27 +182,15 @@
       "role": "least-privilege hosted reproduction"
     },
     {
-      "path": "Makefile",
-      "role": "permanent repository verification entry point"
-    },
-    {
       "path": "docs/adr/0004-deterministic-cbor-cddl.md",
       "role": "matching architecture decision"
-    },
-    {
-      "path": "docs/quality/dashboard.md",
-      "role": "evidence-scoped maturity statement"
-    },
-    {
-      "path": "docs/spec/canonicalization.md",
-      "role": "implementation-facing profile specification"
     },
     {
       "path": "rfcs/0001-deterministic-encoding.md",
       "role": "normative decision"
     }
   ],
-  "subject_roots": [
+  "live_subject_roots": [
     {
       "path": "conformance/prototypes",
       "role": "semantic fixtures, binary vectors, differential results, and retained failures"
