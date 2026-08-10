@@ -1,0 +1,5 @@
+; StatQED foundation_structural v0 atoms.
+schema-version-v0 = 0
+fixture-kind-v0 = "foundation_structural"
+probability-context-v0 = "not_applicable"
+features-v0 = []

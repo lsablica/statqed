@@ -1,0 +1,20 @@
+{
+  "compiled_output": "schemas/v0/compiled/foundation-structural.cddl",
+  "compiled_sha256": "65fc99f02fffd87b3011d003e0793dcfae7cb38afdeba217bcfd5b23a2819471",
+  "compiled_size_bytes": 724,
+  "entry_rule": "foundation-structural-v0",
+  "generator": "python3 scripts/schema/compile_schema_v0.py",
+  "schema_id": "statqed.foundation-structural.v0",
+  "schema_version": 0,
+  "source_order": [
+    "schemas/v0/source/foundation-structural.cddl",
+    "schemas/v0/source/atoms.cddl",
+    "schemas/v0/source/identifiers.cddl"
+  ],
+  "source_sha256": {
+    "schemas/v0/source/atoms.cddl": "e0fa76d677806814408a61cfefcc213800eac49b043ba2427b949f82400c98e1",
+    "schemas/v0/source/foundation-structural.cddl": "de814b428afa3e77cebd948f5425abe26cabbf4e6f8e16f229fc5205b749a5cd",
+    "schemas/v0/source/identifiers.cddl": "bf8b0d6e631ddd4608d6b7472c499edd3eb8292a6004985f23343fe8187abd23"
+  },
+  "syntax_authority": "RFC 8610 as updated by RFC 9682"
+}

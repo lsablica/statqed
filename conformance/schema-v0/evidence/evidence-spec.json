@@ -1,0 +1,70 @@
+{
+  "evidence_spec_version": "statqed.sq0006-evidence-spec.v1",
+  "accepted_decisions": {
+    "adr_0004_status": "Accepted",
+    "normative_scope_sha256": "6e6bc1e17486ef1e3542053145a57ed413cf811b13956a028f43d15c1651503b",
+    "rfc_0001_status": "Accepted"
+  },
+  "adr_0011": {
+    "sha256": "736894d1081d7c0d8b64d78202af199b2b7b829bcdb8c74b7ecadd71cf2ae62e",
+    "status": "Accepted"
+  },
+  "document_projections": [
+    {
+      "heading": "Experimental data-free foundation fixture",
+      "kind": "section",
+      "path": "docs/spec/ir.md",
+      "sha256": "e15abbfc1b05497f196970db978c514a24c48339ef195b0ed306c38c9a430dd1"
+    },
+    {
+      "heading": "Foundation structural v0 fixture",
+      "kind": "section",
+      "path": "docs/spec/canonicalization.md",
+      "sha256": "de7c36f741a768307332017752dbf084cfca83ec4a5cf11a899ee63b1ffc6ba0"
+    },
+    {
+      "heading": "Foundation structural v0",
+      "kind": "section",
+      "path": "docs/implementation/schema-development.md",
+      "sha256": "f140c56ab3cacd356fec26e2fb78642b34b378f356c6c84265bdb495f2483ea3"
+    },
+    {
+      "kind": "dashboard",
+      "path": "docs/quality/dashboard.md",
+      "sha256": "3b7db17469ef9b5818dbb8a9094da6cd60e9d8daf86aec8bb41e39e937dc48d3"
+    }
+  ],
+  "historical_protected_baselines": {
+    "backend_tree_sha256": "3220fb1ba0569fd9d6a5121e560a3f628118f7a9f585bc8b59f765d68e9a7732",
+    "frontends_tree_sha256": "44044532dd80d2eb025724bb78cc7b98ee78c3316eb7781bc6677e3432aadd68",
+    "lean_tree_sha256": "af51f724c450ef0fe8b38fff94c6f73f03776fb0f4c0d1663bfcd4e2cf11c726",
+    "rfc_0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
+    "schemas_prototypes_tree_sha256": "e18a529776af5c4c6543551064d7715f5b1f5120919c81999cf1dd12b93df519"
+  },
+  "live_contract_projections": {
+    "SQ-0007_non_status_sha256": "60cb7493c9f4828ba8b8c4583698f084f589103deadcc9b5d7bb9dc05e7389fb",
+    "SQ-0008_non_status_sha256": "c5b7f222b914f2dab8fc2c8592979d20150ddb0d8c4700669c5bf923f977f9e4",
+    "SQ-0011_non_status_sha256": "63b2dd821a27d6732aa910a608fea139b3bc76d3a2e006a0cf198c01fe406654",
+    "SQ-0013_non_status_sha256": "b36645159632f2cf055d32c378e5240e49690af2393cf05223ec68cf51664f82",
+    "SQ-0014_non_status_sha256": "2a2b688e94b574a478d563782eba913c83f1fcd36193ffd14cc305e57be9f21b",
+    "SQ-0015_non_status_sha256": "f22cfb53af999a8272205468a185844755609934b24b1f0f1dd61d61523b6988",
+    "SQ-0027_non_status_sha256": "79bc1e7376d8aabf5abfe9555b87bd2200e52f6fe6f721ae60833309dd812d87"
+  },
+  "rfc_0006": {
+    "owner": "SQ-0027",
+    "status": "Draft"
+  },
+  "subject_patterns": [
+    "schemas/v0/**/*",
+    "schemas/fixtures/v0/**/*",
+    "conformance/golden/v0/**/*",
+    "conformance/schema-v0/*.json",
+    "conformance/schema-v0/failures/*.json",
+    "conformance/schema-v0/evidence/evidence-spec.json",
+    "scripts/schema/*.py",
+    "scripts/schema/tests/*.py",
+    "source-audits/schema/**/*",
+    ".github/workflows/schema-v0.yml",
+    "work/reviews/SQ-0006.md"
+  ]
+}

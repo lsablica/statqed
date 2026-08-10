@@ -1,0 +1,9 @@
+{
+  "classification": "environment_unavailable",
+  "command": "cargo +1.97.1 install cddl --version 0.10.6 --locked --offline --root /tmp/statqed-sq0006-cddl-0.10.6",
+  "component": "cddl 0.10.6",
+  "exit_status": 101,
+  "failure_id": "cddl-offline-missing-abnf_to_pest",
+  "reason": "The initial ambient cache lacked abnf_to_pest; offline installation failed closed rather than being reported as successful testing.",
+  "stderr_excerpt": "error: no matching package named `abnf_to_pest` found"
+}

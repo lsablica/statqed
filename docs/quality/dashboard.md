@@ -7,6 +7,7 @@ Status: **Draft**.
 | Lean proof foundation | 0 | 1 | 0 | 0 |
 | Rust reference foundation | 0 | 1 | 0 | 0 |
 | Deterministic encoding profile | 0 | 1 | 0 | 0 |
+| Data-free foundation fixture schema | 0 | 1 | 0 | 0 |
 | Core ontology | 1 | 0 | 0 | 0 |
 | IR/artifact schemas | 1 | 0 | 0 | 0 |
 | Public statistical theorems | 0 | 0 | 0 | 0 |
@@ -34,3 +35,12 @@ does not define logical-data identity. These foundations add no ontology
 interface, schema v0, public statistical theorem, sound certificate checker,
 method pack, frontend conformance path, or end-to-end artifact. No statistical
 analysis is currently verified by this repository.
+
+SQ-0006 adds one Experimental data-free fixture schema: a closed six-field
+published-syntax CDDL shape, independent field semantics, five accepted
+semantic-first fixtures, 85 malformed/adversarial negatives, three detected
+deliberate divergences, canonical bytes and conditional fixture digests agreed
+by two frozen implementations plus a direct standards recipe, and permanent
+static evidence verification. It is not the general IR, a production
+canonicalizer, an artifact schema, a logical-data commitment, or statistical
+validation. It is neither Candidate nor Stable.

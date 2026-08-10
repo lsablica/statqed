@@ -28,3 +28,18 @@ The IR is a typed, language-neutral graph of analysis semantics. It is not sourc
 - lossless round trip through the normative encoding.
 
 Dialect details are added through versioned RFCs and CDDL schemas.
+
+## Experimental data-free foundation fixture
+
+SQ-0006 defines only `statqed.foundation-structural.v0`, a closed
+`foundation_structural` fixture with exactly `schema_id`, `schema_version`,
+`fixture_kind`, `analysis_id`, `probability_context`, and `features`.
+`probability_context` is exactly `not_applicable` and `features` is exactly
+empty. Every other field is absent and rejected, rather than represented by a
+null or empty placeholder.
+
+This fixture is a structural bootstrap witness, not the top-level envelope
+listed above. It defines no data, experiment, estimand, procedure, claim,
+evidence, provenance, theorem, artifact, certificate, or public probability
+context. RFC-0002 and RFC-0004 still block the public statistical ontology;
+RFC-0006 still blocks logical-data semantics.

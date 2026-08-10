@@ -99,6 +99,27 @@ does not prove preferred encoding, map order, duplicate semantics, Unicode
 policy, semantic normalization, digest identity, provenance, proof validity,
 or statistical validity. Module/import Internet-Draft syntax is not normative.
 
+## Foundation structural v0 fixture
+
+The Experimental `statqed.foundation-structural.v0` fixture uses RFC 8610 as
+updated by RFC 9682. Its three source fragments are concatenated byte-for-byte
+in manifest order, with the closed six-field rule first. `analysis_id` is
+structurally text; the independent semantic validator owns the exact ASCII
+grammar and byte bound.
+
+Verify it separately with:
+
+```bash
+python3 scripts/schema/compile_schema_v0.py --check
+python3 scripts/schema/run_schema_v0.py --verify --cddl-bin /exact/path/to/cddl-0.10.6
+python3 scripts/schema/check_schema_v0.py
+```
+
+The fixture digest uses purpose `statqed.fixture.golden`, algorithm `sha-256`,
+profile `statqed.cbor-core.v1`, object class
+`statqed.foundation-structural.v0`, and framing `statqed.digest-lp.v1`. It is
+not the canonical logical-data digest and makes no data-binding claim.
+
 ## Reproduce the evidence
 
 From the repository root:

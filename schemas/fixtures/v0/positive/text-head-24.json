@@ -1,0 +1,16 @@
+{
+  "fixture_id": "positive.text-head-24",
+  "expected_cbor_recipe": "direct-rfc8949-core-det-v1",
+  "purpose": "accepted 24-byte analysis identifier across the 23/24 text-head boundary",
+  "typed_value": {
+    "type": "map",
+    "entries": [
+      {"key": {"type": "text", "value": "schema_id"}, "value": {"type": "text", "value": "statqed.foundation-structural.v0"}},
+      {"key": {"type": "text", "value": "schema_version"}, "value": {"type": "integer", "value": "0"}},
+      {"key": {"type": "text", "value": "fixture_kind"}, "value": {"type": "text", "value": "foundation_structural"}},
+      {"key": {"type": "text", "value": "analysis_id"}, "value": {"type": "text", "value": "foundation.example-0001x"}},
+      {"key": {"type": "text", "value": "probability_context"}, "value": {"type": "text", "value": "not_applicable"}},
+      {"key": {"type": "text", "value": "features"}, "value": {"type": "array", "items": []}}
+    ]
+  }
+}
