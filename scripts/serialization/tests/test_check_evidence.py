@@ -518,6 +518,87 @@ class EvidenceCorruptionTests(unittest.TestCase):
         )
         self.assert_rejected("Makefile target is not unique")
 
+    def test_lifecycle_grouped_makefile_target_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\ncheck-sq0005-evidence &:\n\t@true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile target is not unique")
+
+    def test_lifecycle_multitarget_makefile_override_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\nother check-sq0005-evidence:\n\t@true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile target is not unique")
+
+    def test_lifecycle_indented_makefile_override_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\n check-sq0005-evidence:\n\t@true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile target is not unique")
+
+    def test_lifecycle_variable_makefile_override_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\nprotected_target := check-sq0005-evidence\n"
+            + "$(protected_target):\n\t@true\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile uses unsupported structural syntax")
+
+    def test_lifecycle_missing_makefile_phony_membership_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            " check-sq0005-evidence", "", 1
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("evidence target is not uniquely phony")
+
+    def test_lifecycle_makefile_ignore_special_target_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + "\n.IGNORE: check-sq0005-evidence\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile special target is prohibited")
+
+    def test_lifecycle_dashboard_html_comment_wrapper_is_rejected(self) -> None:
+        path = self.root / "docs/quality/dashboard.md"
+        text = path.read_text(encoding="utf-8")
+        begin = text.index("SQ-0005 adds one Experimental deterministic")
+        marker = "does not define logical-data identity."
+        end = text.index(marker, begin) + len(marker)
+        path.write_text(text[:begin] + "<!-- " + text[begin:end] + " -->" + text[end:], encoding="utf-8")
+        self.assert_rejected("quality dashboard uses prohibited wrapping markup")
+
+    def test_lifecycle_dashboard_strikethrough_wrapper_is_rejected(self) -> None:
+        path = self.root / "docs/quality/dashboard.md"
+        text = path.read_text(encoding="utf-8")
+        begin = text.index("SQ-0005 adds one Experimental deterministic")
+        marker = "does not define logical-data identity."
+        end = text.index(marker, begin) + len(marker)
+        path.write_text(text[:begin] + "~~" + text[begin:end] + "~~" + text[end:], encoding="utf-8")
+        self.assert_rejected("quality dashboard uses prohibited wrapping markup")
+
+    def test_lifecycle_dashboard_link_wrapper_is_rejected(self) -> None:
+        path = self.root / "docs/quality/dashboard.md"
+        text = path.read_text(encoding="utf-8")
+        begin = text.index("SQ-0005 adds one Experimental deterministic")
+        marker = "does not define logical-data identity."
+        end = text.index(marker, begin) + len(marker)
+        path.write_text(text[:begin] + "[" + text[begin:end] + "](https://example.invalid)" + text[end:], encoding="utf-8")
+        self.assert_rejected("shared SQ-0005 document projection changed")
+
     def test_lifecycle_active_review_redirection_is_rejected(self) -> None:
         manifest = self.manifest()
         original = self.root / manifest["review_record"]

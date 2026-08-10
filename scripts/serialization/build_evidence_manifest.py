@@ -92,6 +92,8 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
         text = value.decode("utf-8")
     except UnicodeDecodeError as error:
         raise RuntimeError(f"invalid UTF-8 quality dashboard: {error}") from error
+    if any(token in text for token in ("<", ">", "```", "~~~", "~~")):
+        raise RuntimeError("quality dashboard uses prohibited wrapping markup")
     rows = [
         line
         for line in text.splitlines(keepends=True)
@@ -104,7 +106,26 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
     if text.count(begin) != 1 or text.count(end) != 1:
         raise RuntimeError("quality dashboard lacks one SQ-0005 evidence statement")
     evidence_start = text.index(begin)
-    evidence_end = text.index(end, evidence_start) + len(end)
+    lines = text.splitlines(keepends=True)
+    offsets: list[int] = []
+    offset = 0
+    for line in lines:
+        offsets.append(offset)
+        offset += len(line)
+    containing = next(
+        index
+        for index, line_offset in enumerate(offsets)
+        if line_offset <= evidence_start < line_offset + len(lines[index])
+    )
+    paragraph_start = containing
+    while paragraph_start > 0 and lines[paragraph_start - 1].strip():
+        paragraph_start -= 1
+    paragraph_end = containing + 1
+    while paragraph_end < len(lines) and lines[paragraph_end].strip():
+        paragraph_end += 1
+    paragraph = "".join(lines[paragraph_start:paragraph_end])
+    if begin not in paragraph or end not in paragraph:
+        raise RuntimeError("SQ-0005 evidence statement crosses a paragraph boundary")
     nonblank = [line for line in text.splitlines(keepends=True) if line.strip()]
     if len(nonblank) < 2:
         raise RuntimeError("quality dashboard preamble is incomplete")
@@ -112,7 +133,7 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
         "heading": nonblank[0],
         "status": nonblank[1],
         "encoding_profile_row": rows[0],
-        "sq0005_evidence": text[evidence_start:evidence_end],
+        "sq0005_evidence_paragraph": paragraph,
     }
     return sha256_bytes(canonical_json_bytes(projection))
 

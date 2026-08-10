@@ -964,7 +964,7 @@
     "shared_document_integrity": {
       "docs/quality/dashboard.md": {
         "projection": "sq0005_dashboard_v1",
-        "projection_sha256": "9cc632798dce605f7bf6c3e7db9d413421488c3d8e1860593b690355f5ca71b4"
+        "projection_sha256": "45899d04a4d42bbc4c0c774afedc6ab833c9353e2610c8958d51d93d2fdad234"
       },
       "docs/spec/canonicalization.md": {
         "headings": [
@@ -1702,12 +1702,12 @@
     {
       "path": "scripts/serialization/build_evidence_manifest.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "9ea824f9d36b68e919e296ad0de7ae7e1c66df8c1cc6f981099ca226f5674b00"
+      "sha256": "3a0f29acabbdec759526f50f53394a77c47df035cd90495c81e60c677b04be09"
     },
     {
       "path": "scripts/serialization/check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "6014a2ccc1ead8b5b054f74e07c58ed7b058d962b2f05983a44af774180ecd9e"
+      "sha256": "49bc8d736cc131e28d03e60d386c3c04740f94c4cecb574f4614d625ad5ac7e0"
     },
     {
       "path": "scripts/serialization/check_yanked.py",
@@ -1737,7 +1737,7 @@
     {
       "path": "scripts/serialization/tests/test_check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "ba77e99fc09ddce102276bf4fc47c08f8a3cf9ff7a374f9913388174525d959d"
+      "sha256": "54250597f8feb33a4e4afd271f2b819015dbc2583eab4a27623d77d277d96faa"
     },
     {
       "path": "source-audits/encoding/README.md",

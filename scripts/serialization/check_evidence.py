@@ -179,6 +179,8 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
         text = value.decode("utf-8")
     except UnicodeDecodeError as error:
         raise EvidenceError(f"invalid UTF-8 quality dashboard: {error}") from error
+    if any(token in text for token in ("<", ">", "```", "~~~", "~~")):
+        raise EvidenceError("quality dashboard uses prohibited wrapping markup")
     rows = [
         line
         for line in text.splitlines(keepends=True)
@@ -191,7 +193,26 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
     if text.count(begin) != 1 or text.count(end) != 1:
         raise EvidenceError("quality dashboard lacks one SQ-0005 evidence statement")
     evidence_start = text.index(begin)
-    evidence_end = text.index(end, evidence_start) + len(end)
+    lines = text.splitlines(keepends=True)
+    offsets: list[int] = []
+    offset = 0
+    for line in lines:
+        offsets.append(offset)
+        offset += len(line)
+    containing = next(
+        index
+        for index, line_offset in enumerate(offsets)
+        if line_offset <= evidence_start < line_offset + len(lines[index])
+    )
+    paragraph_start = containing
+    while paragraph_start > 0 and lines[paragraph_start - 1].strip():
+        paragraph_start -= 1
+    paragraph_end = containing + 1
+    while paragraph_end < len(lines) and lines[paragraph_end].strip():
+        paragraph_end += 1
+    paragraph = "".join(lines[paragraph_start:paragraph_end])
+    if begin not in paragraph or end not in paragraph:
+        raise EvidenceError("SQ-0005 evidence statement crosses a paragraph boundary")
     nonblank = [line for line in text.splitlines(keepends=True) if line.strip()]
     if len(nonblank) < 2:
         raise EvidenceError("quality dashboard preamble is incomplete")
@@ -199,7 +220,7 @@ def sq0005_dashboard_projection_sha256(value: bytes) -> str:
         "heading": nonblank[0],
         "status": nonblank[1],
         "encoding_profile_row": rows[0],
-        "sq0005_evidence": text[evidence_start:evidence_end],
+        "sq0005_evidence_paragraph": paragraph,
     }
     return hashlib.sha256(canonical_json_bytes(projection)).hexdigest()
 
@@ -541,26 +562,69 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("ADR-0004 live status is not Accepted")
 
     makefile = (root / "Makefile").read_text(encoding="utf-8")
-    if any(
-        re.match(r"^\s*(?:-?include|sinclude)(?:\s|$)", line)
-        or re.match(r"^\s*(?:override\s+)?SHELL\s*[:?+]?=", line)
-        for line in makefile.splitlines()
-    ):
-        raise EvidenceError("SQ-0005 Makefile indirection is prohibited")
-    check_lines = [line for line in makefile.splitlines() if line.startswith("check:")]
-    if len(check_lines) != 1 or "check-sq0005-evidence" not in check_lines[0].split()[1:]:
-        raise EvidenceError("make check no longer depends on SQ-0005 evidence")
     make_lines = makefile.splitlines()
-    target_indices = [
-        index
-        for index, line in enumerate(make_lines)
-        if re.match(r"^check-sq0005-evidence\s*:{1,2}(?:\s|$)", line)
+    rules: list[tuple[int, list[str], str, list[str]]] = []
+    for index, line in enumerate(make_lines):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or line.startswith("\t"):
+            continue
+        if line.rstrip().endswith("\\") or "$" in line:
+            raise EvidenceError("SQ-0005 Makefile dynamic syntax is prohibited")
+        if re.match(
+            r"^\s*(?:-?include|sinclude|define|endef|eval|ifeq|ifneq|ifdef|ifndef|else|endif)(?:\s|$)",
+            line,
+        ) or re.match(r"^\s*(?:override\s+)?SHELL\s*[:?+]?=", line):
+            raise EvidenceError("SQ-0005 Makefile indirection is prohibited")
+        match = re.match(
+            r"^\s*(?P<targets>[^:#]*?)\s*(?P<separator>::|&:|:)(?=\s|$)(?P<rest>.*)$",
+            line,
+        )
+        if match is None:
+            raise EvidenceError("SQ-0005 Makefile uses unsupported structural syntax")
+        targets = match.group("targets").split()
+        if not targets:
+            raise EvidenceError("SQ-0005 Makefile rule lacks a target")
+        special = [target for target in targets if target.startswith(".")]
+        if special and targets != [".PHONY"]:
+            raise EvidenceError("SQ-0005 Makefile special target is prohibited")
+        rules.append(
+            (
+                index,
+                targets,
+                match.group("separator"),
+                match.group("rest").strip().split(),
+            )
+        )
+
+    check_rules = [rule for rule in rules if "check" in rule[1]]
+    if (
+        len(check_rules) != 1
+        or check_rules[0][1] != ["check"]
+        or check_rules[0][2] != ":"
+        or check_rules[0][3].count("check-sq0005-evidence") != 1
+    ):
+        raise EvidenceError("make check no longer depends exactly on SQ-0005 evidence")
+
+    protected_rules = [
+        rule for rule in rules if "check-sq0005-evidence" in rule[1]
     ]
-    if len(target_indices) != 1:
+    if len(protected_rules) != 1:
         raise EvidenceError("SQ-0005 evidence Makefile target is not unique")
-    target_index = target_indices[0]
-    if make_lines[target_index] != "check-sq0005-evidence:":
+    target_index, targets, separator, prerequisites = protected_rules[0]
+    if (
+        targets != ["check-sq0005-evidence"]
+        or separator != ":"
+        or prerequisites
+        or make_lines[target_index] != "check-sq0005-evidence:"
+    ):
         raise EvidenceError("SQ-0005 evidence Makefile target changed")
+    phony_rules = [rule for rule in rules if rule[1] == [".PHONY"]]
+    if (
+        len(phony_rules) != 1
+        or phony_rules[0][2] != ":"
+        or phony_rules[0][3].count("check-sq0005-evidence") != 1
+    ):
+        raise EvidenceError("SQ-0005 evidence target is not uniquely phony")
     recipes: list[str] = []
     for line in make_lines[target_index + 1 :]:
         if line.startswith("\t"):
