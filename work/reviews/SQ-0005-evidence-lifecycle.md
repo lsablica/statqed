@@ -78,6 +78,25 @@ pattern-specific assignments, phony, and special-target bypasses;
 shared-document content, HTML, fence, and rendering-context corruption; and
 permitted successor-owned documentation additions.
 
+### Successor-implementation test-harness follow-up
+
+SQ-0006 PR #15 exposed two latent assumptions in the lifecycle regression
+tests without invalidating the v2 verifier itself. Serialization run
+`31370902362`, job `93399416462`, at exact head
+`37f19fd858864cc4fda42ab115e2458b4896182b` showed that the simulated
+successor schema-path test tried to create an already existing `schemas/v0`
+directory, and that the blank-line Makefile mutation depended on `list-work`
+immediately following the SQ-0005 target. Both assumptions were true at the
+preclaim snapshot and false after legitimate SQ-0006 implementation.
+
+The follow-up makes the schema-path simulation idempotent and writes a new
+successor-owned marker rather than overwriting a live schema file. It also
+anchors the Makefile mutation to the protected verifier recipe itself and
+asserts that the mutation was inserted, independent of later make targets.
+These are test-harness corrections only: the evidence specification,
+verifier, historical snapshot, scientific subjects, production-path
+protection, RFC-0006 baseline, and SQ-0008 contract remain unchanged.
+
 The content-addressed implementation candidate is
 `01b86c245df355ea917927d1d919793c94190c24`. Its clean-checkout local gates
 passed: `make check`; `make list-work` (`DONE=5`, `READY=2`, `BLOCKED=53`, no
@@ -121,7 +140,7 @@ without claiming SQ-0006; the final metadata head must repeat the same gates.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "e3e2727e58d5ca63024d7162a9e4ef7f7f6c6eed84fbb5fabe7859576e4ceef9",
+  "conformance/prototypes/evidence/evidence-manifest.json": "fa52699ff08ddbaad8f84f9d82a9ffb46cb1eee80e5c44d49f3bbc315dd94154",
   "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -145,7 +164,7 @@ without claiming SQ-0006; the final metadata head must repeat the same gates.
   "scripts/serialization/build_evidence_manifest.py": "46104e94b860f9f70aaab906228f1df53144e3db8335bd8f25d873f669565945",
   "scripts/serialization/check_evidence.py": "e8d395f37479f74dab4c13df4d4fefbbfd5db0949eba283f9df602094b439271",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "fdaa6176db2a34ab12bd8af87c5bfe157f6e3ed6e7eebfdd9cd2bf2c192d02ed",
+  "scripts/serialization/tests/test_check_evidence.py": "2a001fbac9e164c5a2e985fa6eacea2f5d6412239c6461bc01a713c91dfb1c4f",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }

@@ -367,8 +367,8 @@ class EvidenceCorruptionTests(unittest.TestCase):
 
     def test_lifecycle_sq0006_in_progress_verifies_with_schema_path(self) -> None:
         self.transition_sq0006("IN_PROGRESS")
-        schema = self.root / "schemas/v0/README.md"
-        schema.parent.mkdir(parents=True)
+        schema = self.root / "schemas/v0/lifecycle-simulation.md"
+        schema.parent.mkdir(parents=True, exist_ok=True)
         schema.write_text("# simulated successor-owned schema\n", encoding="utf-8")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
@@ -648,12 +648,13 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_lifecycle_recipe_after_blank_is_rejected(self) -> None:
         path = self.root / "Makefile"
         text = path.read_text(encoding="utf-8").replace(
-            "\tpython3 scripts/serialization/check_evidence.py\n\nlist-work:",
+            "\tpython3 scripts/serialization/check_evidence.py",
             "\tpython3 scripts/serialization/check_evidence.py\n\n"
             "\t@echo corruption >> "
-            "docs/research/serialization/profile-candidate.md\n\nlist-work:",
+            "docs/research/serialization/profile-candidate.md",
             1,
         )
+        self.assertIn("@echo corruption", text)
         path.write_text(text, encoding="utf-8")
         self.assert_rejected("Makefile recipe changed")
 
