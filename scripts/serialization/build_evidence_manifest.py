@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -28,6 +29,35 @@ def sha256(path: Path) -> str:
 def load_json(path: Path) -> Any:
     with path.open(encoding="utf-8") as stream:
         return json.load(stream)
+
+
+def canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def parsed_json_bytes(value: bytes, label: str) -> Any:
+    try:
+        return json.loads(value.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"invalid JSON-compatible YAML for {label}: {error}") from error
+
+
+def semantic_projection_sha256(
+    value: dict[str, Any], omitted_fields: list[str]
+) -> str:
+    if omitted_fields != ["status"]:
+        raise RuntimeError(
+            "SQ-0008 lifecycle projection must omit exactly the top-level status field"
+        )
+    if "status" not in value:
+        raise RuntimeError("SQ-0008 contract lacks the projected status field")
+    projection = {key: item for key, item in value.items() if key not in omitted_fields}
+    return sha256_bytes(canonical_json_bytes(projection))
 
 
 def relative(value: str) -> PurePosixPath:
@@ -58,18 +88,34 @@ def eligible(path: Path) -> bool:
 
 def subject_paths(spec: dict[str, Any]) -> dict[str, str]:
     subjects: dict[str, str] = {}
-    for item in spec["subject_roots"]:
+    for item in spec["live_subject_roots"]:
         root = repository_path(item["path"])
         if not root.is_dir():
             raise RuntimeError(f"missing subject root: {item['path']}")
         for path in sorted(root.rglob("*")):
             if eligible(path):
                 subjects[path.relative_to(REPOSITORY).as_posix()] = item["role"]
-    for item in spec["subject_files"]:
+    for item in spec["live_subject_files"]:
         path = repository_path(item["path"])
         if not eligible(path):
             raise RuntimeError(f"missing subject file: {item['path']}")
         subjects[item["path"]] = item["role"]
+    return subjects
+
+
+def historical_subjects(spec: dict[str, Any]) -> list[dict[str, str]]:
+    binding = spec["historical_manifest"]
+    blob = run_git(["show", f"{binding['commit']}:{binding['path']}"])
+    if sha256_bytes(blob) != binding["sha256"]:
+        raise RuntimeError("historical SQ-0005 manifest hash mismatch")
+    manifest = parsed_json_bytes(blob, "historical SQ-0005 evidence manifest")
+    if manifest.get("schema") != binding["schema"]:
+        raise RuntimeError("historical SQ-0005 manifest schema mismatch")
+    subjects = manifest.get("subjects")
+    if not isinstance(subjects, list) or not subjects:
+        raise RuntimeError("historical SQ-0005 manifest lacks subjects")
+    if sha256_bytes(canonical_json_bytes(subjects)) != binding["subjects_sha256"]:
+        raise RuntimeError("historical SQ-0005 subject map mismatch")
     return subjects
 
 
@@ -131,9 +177,10 @@ def retained_failures(spec: dict[str, Any]) -> list[str]:
 
 def build() -> dict[str, Any]:
     spec = load_json(SPEC)
-    if spec.get("schema") != "statqed.sq0005-evidence-spec.v1":
+    if spec.get("schema") != "statqed.sq0005-evidence-spec.v2":
         raise RuntimeError("unsupported evidence-spec schema")
-    subjects = subject_paths(spec)
+    live_subjects = subject_paths(spec)
+    frozen_subjects = historical_subjects(spec)
     accepted, negative = fixture_ids()
     lineage = load_json(REPOSITORY / "schemas/prototypes/lineage.json")
     origins = [
@@ -146,6 +193,16 @@ def build() -> dict[str, Any]:
     ]
     origins.sort(key=lambda item: item["id"])
     base = spec["baseline_commit"]
+    baseline_sq0008 = parsed_json_bytes(
+        run_git(["show", f"{base}:work/contracts/SQ-0008.yaml"]),
+        "baseline SQ-0008 contract",
+    )
+    live_invariants = copy.deepcopy(spec["live_invariants"])
+    sq0008_integrity = live_invariants["successor_contract_integrity"]["SQ-0008"]
+    sq0008_integrity["projection_sha256"] = semantic_projection_sha256(
+        baseline_sq0008,
+        sq0008_integrity["omitted_fields"],
+    )
     return {
         "accepted_fixture_ids": accepted,
         "baseline": {
@@ -158,18 +215,26 @@ def build() -> dict[str, Any]:
             ),
         },
         "coverage_roots": spec["coverage_roots"],
-        "expected_state": spec["expected_state"],
+        "historical_completion_state": spec["historical_completion_state"],
+        "historical_manifest": spec["historical_manifest"],
+        "historical_review": spec["historical_review"],
+        "historical_subjects": frozen_subjects,
         "independent_origins": origins,
+        "live_invariants": live_invariants,
         "negative_fixture_ids": negative,
         "protected_files": protected_files(base, spec["protected_prefixes"]),
         "protected_prefixes": spec["protected_prefixes"],
         "retained_failures": retained_failures(spec),
         "review_record": spec["review_record"],
         "review_subject_paths": sorted(spec["review_subject_paths"]),
-        "schema": "statqed.sq0005-evidence.v1",
-        "subjects": [
-            {"path": path, "role": subjects[path], "sha256": sha256(repository_path(path))}
-            for path in sorted(subjects)
+        "schema": "statqed.sq0005-evidence.v2",
+        "live_subjects": [
+            {
+                "path": path,
+                "role": live_subjects[path],
+                "sha256": sha256(repository_path(path)),
+            }
+            for path in sorted(live_subjects)
         ],
     }
 
