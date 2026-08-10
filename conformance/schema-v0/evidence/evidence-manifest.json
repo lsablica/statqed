@@ -3,7 +3,7 @@
   "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
   "scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
   "subject_count": 49,
-  "subject_digest": "eb693ce03ac97f1039a6cd122e4793f998222c3e8f5ec99d76f94a054534dcc4",
+  "subject_digest": "07f1836bad91a20d644af3f70c5f62638f3019089c4f14beff05ba5b32551ca8",
   "subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -247,8 +247,8 @@
     },
     {
       "path": "work/reviews/SQ-0006.md",
-      "sha256": "873259825df06ba486d1adf976c79fde913bc249d6edc4faf69c332f1214c566",
-      "size_bytes": 11318
+      "sha256": "e50bd0a30e883a5878a351bcd97750b23549b68739959024a8b267a58787ec15",
+      "size_bytes": 11456
     }
   ]
 }
