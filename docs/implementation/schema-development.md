@@ -54,11 +54,16 @@ creating it and binds rustc commit
 
 The schema harness bounds JSON oracle and CDDL validation calls to 30 seconds,
 the CDDL version check to 10 seconds, and the offline Rust prototype build to
-180 seconds. On directly tested Linux it additionally limits child address
-space to 2 GiB, CPU time to 240 seconds, file output to 16 MiB, and retained
-stdout/stderr diagnostics to 65,536 bytes. A timeout is `operational.timeout`;
-diagnostic overflow is `resource.diagnostic_bytes`. These are harness limits,
-not general platform support claims.
+180 seconds. On directly tested Linux, parser/oracle probes additionally limit
+child address space to 2 GiB and file output to 16 MiB; every child has a
+240-second CPU ceiling and retained stdout/stderr diagnostics are limited to
+65,536 bytes. The Cargo build deliberately omits the address-space and
+individual-file ceilings because clean-target reproduction showed that the
+exact linker graph can exceed 2 GiB of virtual address space even though it
+finishes in seconds; Cargo remains bounded by timeout, CPU, diagnostic output,
+an exact offline graph, and a disposable target directory. A timeout is
+`operational.timeout`; diagnostic overflow is `resource.diagnostic_bytes`.
+These are harness limits, not general platform support claims.
 
 The Python semantic validator uses only the standard library and consumes
 typed map-entry sequences so duplicates remain observable. The frozen SQ-0005

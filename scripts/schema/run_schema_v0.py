@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from functools import partial
 import hashlib
 import json
 import os
@@ -47,13 +48,15 @@ CDDL_VERSION = "cddl 0.10.6"
 DIAGNOSTIC_LIMIT = 65_536
 
 
-def _resource_limits() -> None:
+def _resource_limits(address_space_limit: int | None, file_size_limit: int | None) -> None:
     """Bound untrusted probe subprocesses on POSIX hosts."""
     if platform.system() != "Linux" or resource is None:
         return
-    resource.setrlimit(resource.RLIMIT_AS, (2 * 1024**3, 2 * 1024**3))
+    if address_space_limit is not None:
+        resource.setrlimit(resource.RLIMIT_AS, (address_space_limit, address_space_limit))
     resource.setrlimit(resource.RLIMIT_CPU, (240, 240))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (16 * 1024**2, 16 * 1024**2))
+    if file_size_limit is not None:
+        resource.setrlimit(resource.RLIMIT_FSIZE, (file_size_limit, file_size_limit))
 
 
 def bounded_run(
@@ -62,6 +65,8 @@ def bounded_run(
     input_data: bytes | None = None,
     env: dict[str, str] | None = None,
     timeout: int,
+    address_space_limit: int | None = 2 * 1024**3,
+    file_size_limit: int | None = 16 * 1024**2,
 ) -> subprocess.CompletedProcess[bytes]:
     """Run a probe with bounded time, memory, file output, and diagnostics."""
     with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
@@ -74,7 +79,10 @@ def bounded_run(
                 env=env,
                 check=False,
                 timeout=timeout,
-                preexec_fn=_resource_limits if os.name == "posix" else None,
+                preexec_fn=(
+                    partial(_resource_limits, address_space_limit, file_size_limit)
+                    if os.name == "posix" else None
+                ),
             )
         except subprocess.TimeoutExpired as error:
             raise RuntimeError(f"operational.timeout: {command[0]}") from error
@@ -176,6 +184,8 @@ def build_rust_binary(target: Path) -> Path:
         ],
         env=env,
         timeout=180,
+        address_space_limit=None,
+        file_size_limit=None,
     )
     if completed.returncode:
         raise RuntimeError(completed.stderr.decode("utf-8", "replace"))

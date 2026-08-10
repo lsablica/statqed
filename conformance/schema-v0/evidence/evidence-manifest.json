@@ -1,9 +1,9 @@
 {
   "evidence_manifest_version": "statqed.sq0006-evidence.v1",
-  "evidence_spec_sha256": "59365186e1f6d94e290f67dd6074a33d27677795f64fa727e926884d768d5284",
-  "scientific_subject_digest": "fc1709797609ee698540244be52a8b10de438b427575bf471c65ec56ea4f0c44",
+  "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
+  "scientific_subject_digest": "a9110f81f816f8f7f9412d297d9835b2923f3325b0a066ccbd0100a746fd81fd",
   "subject_count": 46,
-  "subject_digest": "7ee2befdcf29b45fd745ed815efd1c055b03574b23d20335820bc25a0118793b",
+  "subject_digest": "b95b702f7c69a7ecfc9e735c65c253a11db3b1a28c3d101a5e6f4784e065e83b",
   "subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -72,7 +72,7 @@
     },
     {
       "path": "conformance/schema-v0/evidence/evidence-spec.json",
-      "sha256": "59365186e1f6d94e290f67dd6074a33d27677795f64fa727e926884d768d5284",
+      "sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
       "size_bytes": 3104
     },
     {
@@ -187,8 +187,8 @@
     },
     {
       "path": "scripts/schema/run_schema_v0.py",
-      "sha256": "9f81a98331811c986a574ea60b97ed10ed53b163d2512054c8282af5e32739f4",
-      "size_bytes": 40064
+      "sha256": "6d7284aab7ea46c802d0f9339c4e1de54a6306ee0e3b07b2387fe3c5c3213623",
+      "size_bytes": 40530
     },
     {
       "path": "scripts/schema/semantic_validator.py",
