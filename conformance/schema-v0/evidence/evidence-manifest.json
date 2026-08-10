@@ -1,9 +1,9 @@
 {
   "evidence_manifest_version": "statqed.sq0006-evidence.v1",
-  "evidence_spec_sha256": "e126244753e55c9ef2a7a5c095f61566584cf7385b4a95f10c2dfa06af98b661",
-  "scientific_subject_digest": "7565fadf396a4c6845be57d69c563a062f9b29c6c705cb8e7b0766713bbe2fe7",
+  "evidence_spec_sha256": "59365186e1f6d94e290f67dd6074a33d27677795f64fa727e926884d768d5284",
+  "scientific_subject_digest": "fc1709797609ee698540244be52a8b10de438b427575bf471c65ec56ea4f0c44",
   "subject_count": 46,
-  "subject_digest": "08e7ff1eed3c6116dabb4012242bba260d52cdd3a3bc5dd9a543a9ef6c4be3c7",
+  "subject_digest": "7ee2befdcf29b45fd745ed815efd1c055b03574b23d20335820bc25a0118793b",
   "subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -72,8 +72,8 @@
     },
     {
       "path": "conformance/schema-v0/evidence/evidence-spec.json",
-      "sha256": "e126244753e55c9ef2a7a5c095f61566584cf7385b4a95f10c2dfa06af98b661",
-      "size_bytes": 3003
+      "sha256": "59365186e1f6d94e290f67dd6074a33d27677795f64fa727e926884d768d5284",
+      "size_bytes": 3104
     },
     {
       "path": "conformance/schema-v0/failures/cddl-i64-literal-parser-limit.json",
@@ -177,8 +177,8 @@
     },
     {
       "path": "scripts/schema/check_schema_v0.py",
-      "sha256": "2035dfc4fe7cb8a9db85b4914b2810c076c986235b20b749179f86ca0c76b3aa",
-      "size_bytes": 14922
+      "sha256": "3b8ecb8bddc56253989bceea5eadf1c251a9e0a441e37497b07b1499f1ea3f2a",
+      "size_bytes": 15118
     },
     {
       "path": "scripts/schema/compile_schema_v0.py",

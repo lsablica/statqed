@@ -181,6 +181,9 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
             raise EvidenceError("SQ-0006 appears in multiple live ledger sets")
 
     projections = spec["live_contract_projections"]
+    _, sq6_projection = contract_projection(root, "SQ-0006")
+    if sq6_projection != projections["SQ-0006_non_status_sha256"]:
+        raise EvidenceError("SQ-0006 non-lifecycle contract drift")
     for task in ("SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015", "SQ-0027"):
         contract_state, projection = contract_projection(root, task)
         if projection != projections[f"{task}_non_status_sha256"]:

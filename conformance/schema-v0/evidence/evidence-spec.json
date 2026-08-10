@@ -42,6 +42,7 @@
     "schemas_prototypes_tree_sha256": "e18a529776af5c4c6543551064d7715f5b1f5120919c81999cf1dd12b93df519"
   },
   "live_contract_projections": {
+    "SQ-0006_non_status_sha256": "520f2cffa4e18b9ddfdef9c9f0d5114fbefd128d6349110fefc6b8d423396cf0",
     "SQ-0007_non_status_sha256": "60cb7493c9f4828ba8b8c4583698f084f589103deadcc9b5d7bb9dc05e7389fb",
     "SQ-0008_non_status_sha256": "c5b7f222b914f2dab8fc2c8592979d20150ddb0d8c4700669c5bf923f977f9e4",
     "SQ-0011_non_status_sha256": "63b2dd821a27d6732aa910a608fea139b3bc76d3a2e006a0cf198c01fe406654",
