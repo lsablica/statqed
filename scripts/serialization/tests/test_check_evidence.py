@@ -484,6 +484,22 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         self.assert_rejected("shared SQ-0005 document projection changed")
 
+    def test_lifecycle_canonicalization_html_wrapper_is_rejected(self) -> None:
+        path = self.root / "docs/spec/canonicalization.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "## Scope", "## Wrapper\n\n<!--\n\n## Scope", 1
+        )
+        path.write_text(text + "\n-->\n", encoding="utf-8")
+        self.assert_rejected("shared Markdown document uses prohibited wrapping markup")
+
+    def test_lifecycle_canonicalization_fence_wrapper_is_rejected(self) -> None:
+        path = self.root / "docs/spec/canonicalization.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "## Scope", "## Wrapper\n\n```\n## Scope", 1
+        )
+        path.write_text(text + "\n```\n", encoding="utf-8")
+        self.assert_rejected("shared Markdown document")
+
     def test_lifecycle_dashboard_sq0005_claim_change_is_rejected(self) -> None:
         path = self.root / "docs/quality/dashboard.md"
         text = path.read_text(encoding="utf-8").replace(

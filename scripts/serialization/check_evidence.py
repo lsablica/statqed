@@ -152,12 +152,32 @@ def markdown_sections_projection_sha256(value: bytes, headings: list[str]) -> st
         text = value.decode("utf-8")
     except UnicodeDecodeError as error:
         raise EvidenceError(f"invalid UTF-8 shared document: {error}") from error
+    if any(token in text for token in ("<", ">", "~~")):
+        raise EvidenceError("shared Markdown document uses prohibited wrapping markup")
     lines = text.splitlines(keepends=True)
-    heading_rows = [
-        (index, line[3:].rstrip("\r\n"))
-        for index, line in enumerate(lines)
-        if line.startswith("## ")
-    ]
+    heading_rows: list[tuple[int, str]] = []
+    fence_character: str | None = None
+    fence_width = 0
+    for index, line in enumerate(lines):
+        candidate = line.lstrip(" ") if len(line) - len(line.lstrip(" ")) <= 3 else line
+        token_match = re.match(r"(`{3,}|~{3,})", candidate)
+        if fence_character is None and token_match is not None:
+            token = token_match.group(1)
+            fence_character = token[0]
+            fence_width = len(token)
+            continue
+        if fence_character is not None:
+            if re.fullmatch(
+                re.escape(fence_character) + "{" + str(fence_width) + r",}\s*",
+                candidate.rstrip("\r\n"),
+            ):
+                fence_character = None
+                fence_width = 0
+            continue
+        if line.startswith("## "):
+            heading_rows.append((index, line[3:].rstrip("\r\n")))
+    if fence_character is not None:
+        raise EvidenceError("shared Markdown document has an unclosed code fence")
     if len({name for _, name in heading_rows}) != len(heading_rows):
         raise EvidenceError("shared Markdown document has duplicate level-two headings")
     positions = {name: index for index, name in heading_rows}
