@@ -553,7 +553,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
             + "$(protected_target):\n\t@true\n",
             encoding="utf-8",
         )
-        self.assert_rejected("Makefile uses unsupported structural syntax")
+        self.assert_rejected("Makefile assignments are prohibited")
 
     def test_lifecycle_missing_makefile_phony_membership_is_rejected(self) -> None:
         path = self.root / "Makefile"
@@ -571,6 +571,44 @@ class EvidenceCorruptionTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.assert_rejected("Makefile special target is prohibited")
+
+    def test_lifecycle_makeflags_ignore_errors_assignment_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        path.write_text(
+            path.read_text(encoding="utf-8") + "\nMAKEFLAGS := -i\n",
+            encoding="utf-8",
+        )
+        self.assert_rejected("Makefile assignments are prohibited")
+
+    def test_lifecycle_phony_inline_comment_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            ".PHONY: check check-repo check-sq0002-evidence check-sq0005-evidence",
+            ".PHONY: check check-repo check-sq0002-evidence # check-sq0005-evidence",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("Makefile inline comments are prohibited")
+
+    def test_lifecycle_check_dependency_inline_comment_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            "check: check-repo check-sq0002-evidence check-sq0005-evidence",
+            "check: check-repo check-sq0002-evidence # check-sq0005-evidence",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("Makefile inline comments are prohibited")
+
+    def test_lifecycle_check_inline_recipe_is_rejected(self) -> None:
+        path = self.root / "Makefile"
+        text = path.read_text(encoding="utf-8").replace(
+            "check: check-repo check-sq0002-evidence check-sq0005-evidence",
+            "check: check-repo check-sq0002-evidence ; @echo check-sq0005-evidence",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_rejected("Makefile inline recipes are prohibited")
 
     def test_lifecycle_dashboard_html_comment_wrapper_is_rejected(self) -> None:
         path = self.root / "docs/quality/dashboard.md"

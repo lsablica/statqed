@@ -568,8 +568,18 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         stripped = line.strip()
         if not stripped or stripped.startswith("#") or line.startswith("\t"):
             continue
+        if "#" in line:
+            raise EvidenceError("SQ-0005 Makefile inline comments are prohibited")
+        if ";" in line:
+            raise EvidenceError("SQ-0005 Makefile inline recipes are prohibited")
         if line.rstrip().endswith("\\") or "$" in line:
             raise EvidenceError("SQ-0005 Makefile dynamic syntax is prohibited")
+        if re.match(
+            r"^\s*(?:(?:override|export|private|unexport)\s+)?"
+            r"[A-Za-z_.][A-Za-z0-9_.-]*\s*(?:::=|:=|\+=|\?=|!=|=)",
+            line,
+        ):
+            raise EvidenceError("SQ-0005 Makefile assignments are prohibited")
         if re.match(
             r"^\s*(?:-?include|sinclude|define|endef|eval|ifeq|ifneq|ifdef|ifndef|else|endif)(?:\s|$)",
             line,
