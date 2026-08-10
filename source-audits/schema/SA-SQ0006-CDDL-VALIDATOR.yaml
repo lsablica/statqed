@@ -57,13 +57,47 @@ source_records:
     license: MIT; copyright 2019 Andrew Weiss; retain the copyright and permission notices in copies or substantial portions
     license_sha256: 44d5a4a93719a655de46ea2cc80689c477f3f624d713eb6708c3f97c7cfeddc4
   - work: OSV querybatch API
-    version: Exact direct package-version batch query executed 2026-08-10
+    version: Exact single package-version query executed 2026-08-10
     locator: https://api.osv.dev/v1/querybatch
     persistent_id: https://google.github.io/osv.dev/post-v1-querybatch/
-    status: The fourth result, for ecosystem crates.io, package cddl, version 0.10.6, was empty
+    status: The only result, for ecosystem crates.io, package cddl, version 0.10.6, was empty
     exact_anchors:
-      - Batch response was {"results":[{},{},{},{}]}; cddl 0.10.6 was query index four.
+      - source-audits/schema/osv-cddl-0.10.6-request.json
+      - source-audits/schema/osv-cddl-0.10.6-response.json
+      - Request SHA-256 a50334e1f5e81eadab1e6e1eee6b82ff938618098bd18118e84041a76c3726b5
+      - Response SHA-256 1794cd796870ec1057c6635f938ae5f7da02544dbf868e3a3fb330112d04f366
     limitation: This is a direct-package point-in-time observation, not a transitive dependency scan or security guarantee.
+  - work: cargo-audit release asset and source
+    version: cargo-audit 0.22.2; release published 2026-06-05T12:38:04Z
+    locator: https://github.com/RustSec/rustsec/releases/tag/cargo-audit/v0.22.2
+    persistent_id: https://github.com/RustSec/rustsec/releases/download/cargo-audit/v0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz
+    exact_anchors:
+      - Annotated verified tag object 78bd4d48923d207898e94827cbd79d73903a85fa at 2026-06-05T12:34:03Z
+      - Source commit 281452c35cf0870969042374110f099a411bc185
+      - https://github.com/RustSec/rustsec/tree/281452c35cf0870969042374110f099a411bc185/cargo-audit
+      - Release asset archive SHA-256 ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39
+      - Extracted executable SHA-256 473b9a71e5cb5bde22f69c32f749c9b83931287d92dc36b91cb04f6705640ef2
+      - Extracted cargo-audit --version output cargo-audit 0.22.2
+    license: Apache-2.0 OR MIT
+    license_anchors:
+      - https://github.com/RustSec/rustsec/blob/281452c35cf0870969042374110f099a411bc185/LICENSE-APACHE
+      - https://github.com/RustSec/rustsec/blob/281452c35cf0870969042374110f099a411bc185/LICENSE-MIT
+      - LICENSE-APACHE SHA-256 a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2
+      - LICENSE-MIT SHA-256 29662666b44dff84977b46e05642cdef910bc3a93a17b5fd86e632bafa59cf21
+  - work: RustSec advisory database
+    version: commit 309ad29d8fe448bf986019e05d47b9e0e29a2218
+    locator: https://github.com/RustSec/advisory-db/commit/309ad29d8fe448bf986019e05d47b9e0e29a2218
+    persistent_id: https://codeload.github.com/RustSec/advisory-db/tar.gz/309ad29d8fe448bf986019e05d47b9e0e29a2218
+    exact_anchors:
+      - Archive SHA-256 a5036fadecadb3e382f852b0d698460e931c85eb5e12e63447cc95875fe80256
+      - Commit timestamp 2026-08-09T12:34:06Z
+      - https://github.com/RustSec/advisory-db/blob/309ad29d8fe448bf986019e05d47b9e0e29a2218/LICENSE.txt
+      - LICENSE.txt SHA-256 b342fe896e158b8c5a83e707446113f3a149fa0104d834afa78cd2a48eaf1906
+    license: CC0-1.0 for native database code/data, with identified GHSA-derived content under CC-BY-4.0
+    license_anchors:
+      - CC0-1.0.txt SHA-256 a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499
+      - CC-BY-4.0.txt SHA-256 28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5
+    limitation: The hash-bound database is a point-in-time input; zero matched findings are not a security guarantee.
   - work: SQ-0002 handoff and SQ-0005 prototype source audit
     version: Repository evidence retained before SQ-0006
     locator: work/handoffs/SQ-0002.md, Recommended pins and support floors and validation summary; source-audits/encoding/SA-SQ0005-PROTOTYPES.yaml, cddl records
@@ -124,10 +158,10 @@ hypotheses:
     notes: A build feature is an implementation capability, not a standards decision.
   - name: direct_osv_empty_result_is_security_clearance
     class: strengthening_unjustified
-    source_anchor: OSV querybatch response index four, 2026-08-10
+    source_anchor: Exact retained OSV single-query request and response for crates.io:cddl:0.10.6, 2026-08-10
     notes: The result is point-in-time and direct-package only; it neither scans the 154-package install graph nor proves absence of vulnerabilities.
   - name: retained_transitive_advisory_scan
-    class: retained_point_in_time_observation
+    class: formalization_obligation
     source_anchor: SQ-0006 security review requirement
     notes: cargo-audit 0.22.2 against RustSec commit 309ad29d8fe448bf986019e05d47b9e0e29a2218 and the exact 154-package lock reported zero vulnerabilities and warnings across 1,197 loaded advisories; executable, archives, lock, result, and limitations are hash-bound in cddl-advisory-observation.json and this remains a point-in-time observation rather than a security guarantee.
   - name: linux_x86_64_result_generalizes_to_all_platforms

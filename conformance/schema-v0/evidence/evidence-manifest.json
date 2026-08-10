@@ -1,9 +1,9 @@
 {
   "evidence_manifest_version": "statqed.sq0006-evidence.v1",
   "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
-  "scientific_subject_digest": "a9110f81f816f8f7f9412d297d9835b2923f3325b0a066ccbd0100a746fd81fd",
-  "subject_count": 46,
-  "subject_digest": "b95b702f7c69a7ecfc9e735c65c253a11db3b1a28c3d101a5e6f4784e065e83b",
+  "scientific_subject_digest": "138e4b16dac749875fc587c376c3926d263c68c81f59e1fdbed7e40379ce3b7f",
+  "subject_count": 48,
+  "subject_digest": "c638be6d7eb769189b04d42ccee7f0d27ef7e40627ab99ce7683fafa129aa88c",
   "subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -172,8 +172,8 @@
     },
     {
       "path": "scripts/schema/check_cddl_advisory.py",
-      "sha256": "69c63ed1e851c286873e29e1249e43428fb3e1e84345ea4fdc6305853638ac8b",
-      "size_bytes": 2519
+      "sha256": "c22dbdbe532acb860e813055291be839702253029ce95623436f2deffc9d8515",
+      "size_bytes": 3087
     },
     {
       "path": "scripts/schema/check_schema_v0.py",
@@ -207,13 +207,13 @@
     },
     {
       "path": "source-audits/schema/README.md",
-      "sha256": "3683d34ac8876bd47293ca4f88522f285d885116bb398791d505d7fc15670b7b",
-      "size_bytes": 3982
+      "sha256": "29d8f5ce168fdc866366d32acb74835e62699fb1c14ecb64f0100a16b8219a7b",
+      "size_bytes": 4076
     },
     {
       "path": "source-audits/schema/SA-SQ0006-CDDL-VALIDATOR.yaml",
-      "sha256": "d232df836cc9534005f2a1e5c50aabe5568b040c1d618c3e04104f4d229530e6",
-      "size_bytes": 15259
+      "sha256": "9c46424184cdd937ff7011ac34de7dedb9d33e5e887182ef8a21a0026de4d544",
+      "size_bytes": 17933
     },
     {
       "path": "source-audits/schema/SA-SQ0006-CDDL.yaml",
@@ -222,13 +222,23 @@
     },
     {
       "path": "source-audits/schema/cddl-advisory-observation.json",
-      "sha256": "5f3bf4093e29c46e1ef512a8483686375e38cafc6d153723c47c845db7666518",
-      "size_bytes": 1132
+      "sha256": "ed05b6aca65175781c36b90ed4036ee29576cb8813182c7316e59bb3279097be",
+      "size_bytes": 1635
     },
     {
       "path": "source-audits/schema/cddl-dependency-inventory.json",
       "sha256": "e08005b87eabe4922b0693ce3a34c6a33dda5c111fbfe4f1426be60346184814",
       "size_bytes": 67032
+    },
+    {
+      "path": "source-audits/schema/osv-cddl-0.10.6-request.json",
+      "sha256": "a50334e1f5e81eadab1e6e1eee6b82ff938618098bd18118e84041a76c3726b5",
+      "size_bytes": 146
+    },
+    {
+      "path": "source-audits/schema/osv-cddl-0.10.6-response.json",
+      "sha256": "1794cd796870ec1057c6635f938ae5f7da02544dbf868e3a3fb330112d04f366",
+      "size_bytes": 30
     },
     {
       "path": "work/reviews/SQ-0006.md",

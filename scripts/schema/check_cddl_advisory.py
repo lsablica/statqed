@@ -13,6 +13,15 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 OBSERVATION = ROOT / "source-audits/schema/cddl-advisory-observation.json"
 
+EXPECTED_IDENTITIES = {
+    "cargo_audit_version": "0.22.2",
+    "cargo_audit_source_commit": "281452c35cf0870969042374110f099a411bc185",
+    "cargo_audit_tag_object": "78bd4d48923d207898e94827cbd79d73903a85fa",
+    "cargo_audit_license": "Apache-2.0 OR MIT",
+    "advisory_database_commit": "309ad29d8fe448bf986019e05d47b9e0e29a2218",
+    "advisory_database_license": "CC0-1.0; identified GHSA-derived content CC-BY-4.0",
+}
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -37,6 +46,9 @@ def main() -> int:
         timeout=10,
     ).stdout.strip()
     checks = {
+        "source and license identities": all(
+            expected.get(key) == value for key, value in EXPECTED_IDENTITIES.items()
+        ),
         "cargo-audit version": version == f"cargo-audit {expected['cargo_audit_version']}",
         "cargo-audit executable": sha256(args.cargo_audit) == expected["cargo_audit_executable_sha256"],
         "cargo-audit archive": sha256(args.cargo_audit_archive) == expected["cargo_audit_archive_sha256"],
