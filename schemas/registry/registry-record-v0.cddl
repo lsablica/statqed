@@ -1,0 +1,20 @@
+; Experimental test-only SQ-0007 record. Published RFC 8610 syntax only.
+registry-record-v0 = {
+  "schema": "statqed.registry-record.v0",
+  "id": "statqed.test-only.foundation.true.v0",
+  "version": "0.0.1",
+  "declaration": "StatQED.Registry.Tests.testOnlyTrue",
+  "normalizer": "statqed.lean-expr.v0",
+  "closure": "statqed.lean-environment-closure.v0",
+  "proposition_digest": digest-hex,
+  "environment_digest": digest-hex,
+  "proof_build_digest": digest-hex,
+  "axiom_report_digest": digest-hex,
+  "maturity": "Experimental",
+  "exposure": "test_only",
+  "source_anchor": tstr,
+  "attribution": tstr,
+  "nonclaims": [3*3 tstr]
+}
+
+digest-hex = tstr .size 64

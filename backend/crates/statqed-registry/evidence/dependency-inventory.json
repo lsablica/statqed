@@ -1,0 +1,13 @@
+{
+  "schema": "statqed.registry-rust-dependency-inventory.v0",
+  "package": {
+    "name": "statqed-registry",
+    "version": "0.1.0",
+    "license": "MIT",
+    "publish": false
+  },
+  "dependencies": [],
+  "build_scripts": [],
+  "native_dependencies": [],
+  "claim": "The exact Cargo.lock contains only the local package and no registry packages."
+}

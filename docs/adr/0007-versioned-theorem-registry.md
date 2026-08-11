@@ -6,24 +6,72 @@
 
 ## Context
 
-Artifacts need stable, citable formal references, but theorem names or surface statement hashes do not identify exact meaning across environments.
+Theorem names, pretty-printed statements, or one undifferentiated hash cannot
+identify formal meaning, proof trust, governed authorization, and compatibility
+across environments.
 
 ## Candidate decision
 
-Use a versioned theorem registry that distinguishes governed semantic ID/version, canonical elaborated proposition and environment lock, statement digest, proof/build lock, actual axiom report, canonical registry record, independently selected registry authorization root/policy with historical/revocation status, source/semantic/formal reviews, and checked compatibility paths.
+<!-- SQ-0007-NORMATIVE-SCOPE-BEGIN -->
+The v0 theorem-registry decision keeps eleven layers distinct: governed ID and
+semantic version; canonical elaborated proposition bytes; a meaning-bearing
+environment closure; proposition digest; canonical registry record and digest;
+verifier-selected authorization root/policy; proof/build lock; live transitive
+axiom observation; directional compatibility-proof lock; and reviewed
+annotations. The versioned `statqed.lean-expr.v0` grammar preserves structural
+Lean expression and universe constructors, de Bruijn indices, binder
+information, names, literals, projections, and argument order; erases metadata,
+binder display names, and `letE.nondep`; performs no reduction or unfolding;
+and fails closed on unsupported or unscoped terms and finite resource limits.
+The versioned environment closure starts from proposition constants and
+projection type names, includes declaration-kind-specific meaning-bearing
+types and definition/recursor bodies, groups inductive families atomically,
+sorts and deduplicates deterministically, and fails closed on missing names,
+unexpected cycles, width, depth, and work limits. Proposition and environment
+digests remain separate; full semantic identity is the tuple of governed ID,
+version, normalizer, proposition digest, and environment digest. Canonical
+record, proof/build, authorization snapshot, and compatibility locks use
+separate SHA-256 domains through `statqed.digest-lp.v1`. Authorization policy
+and permitted/current/historical/forbidden/revoked roots are selected locally
+by the verifier; candidate or artifact bytes cannot grant authority. The
+proof/build lock separately binds exact Lean/Lake/Mathlib/project material,
+the proof subject, same-kernel checks, live axiom observation, and the empty v0
+allowed-axiom policy. Compatibility is directional and requires a locked,
+kernel-checked `T_new -> T_old`; metadata alone never authorizes substitution.
+The only v0 entry is `statqed.test-only.foundation.true.v0` for
+`StatQED.Registry.Tests.testOnlyTrue : True`, maturity Experimental and exposure
+test-only. It is not a public/statistical theorem, source-fidelity result,
+non-vacuity witness, artifact-byte binding, logical-data identity, certificate,
+checker-soundness proof, provenance truth, or interpretation approval. Digest
+matches are conditional integrity evidence, not mathematical equality,
+authorization, truth, provenance, collision-freedom, or statistical validity.
+<!-- SQ-0007-NORMATIVE-SCOPE-END -->
 
 ## Consequences
 
-Proof refactors may preserve semantic proposition identity only in the same locked meaning environment; they create new proof/build locks and axiom reports. Meaning changes create new versions. Metadata-only implication/equivalence never authorizes substitution.
+Proof-only refactors can preserve semantic identity but create new proof/build
+locks.  Meaning changes require a new theorem version.  The verifier, never an
+artifact, selects authorization state.  Compatibility is useful-direction
+kernel evidence, not metadata.
 
-## Alternatives
+The only v0 record is Experimental, visibly test-only, and intentionally
+vacuous.  It establishes registry plumbing, not a public theorem or artifact
+verification.
 
-Name-only, semver-only, pretty-print-only, and proof-body-hash-as-semantic-ID schemes are rejected. The exact normalizer and environment closure remain prototype decisions.
+## Alternatives rejected
+
+Name-only, semver-only, pretty-print-only, one-digest-for-all, complete-import
+hashing as semantic identity, proof-body-as-meaning, artifact-selected roots,
+and metadata-only compatibility are rejected.
 
 ## Validation and evidence
 
-RFC-0005 and SQ-0007 require environment/definition mutations, forbidden-axiom mutations, whole-registry replacement and forged-governance metadata, root mismatch/revocation/resource cases, wrong-direction implications, canonical-record binding, independent normalization/oracle evidence, and offline resolution.
+RFC-0005 and the SQ-0007 content-addressed evidence define exact grammar,
+closure, frames, locks, authorization policy, resources, errors, independent
+observations, hostile mutations, supply-chain state, and trust nonclaims.
 
 ## Review
 
-This ADR remains Proposed until RFC-0005 is Accepted. No theorem registry or statement-lock interface is frozen by SQ-0001.
+This ADR remains Proposed until RFC-0005 receives exact-subject independent
+approval.  If accepted, only the status/disposition prose changes; the marked
+scope must remain byte-identical to the Accepted RFC scope.

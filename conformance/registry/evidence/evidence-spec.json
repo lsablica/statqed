@@ -1,0 +1,65 @@
+{
+  "schema": "statqed.sq0007-evidence-spec.v1",
+  "launch_base": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+  "predecessor_bindings": {
+    "sq0005_manifest_sha256": "1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845",
+    "sq0006_manifest_sha256": "5c6b3081846ba8ec2bc1ac17bf7d9014ee4d8f2dedb9e7d625a1226d2957b752",
+    "sq0006_scientific_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+    "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429"
+  },
+  "live_invariants": {
+    "task": "SQ-0007",
+    "allowed_statuses": ["IN_PROGRESS", "IN_REVIEW", "BLOCKED", "DONE"],
+    "rfc": "RFC-0005",
+    "adr": "ADR-0007",
+    "rfc0006_owner": "SQ-0027"
+  },
+  "historical_completion_state": {
+    "meaning": "Populated by the final DONE transition; it is historical evidence, not a permanent global-ledger equality requirement.",
+    "done_contains": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005", "SQ-0006", "SQ-0007"],
+    "active": [],
+    "ready": null,
+    "blocked_count": null
+  },
+  "subject_patterns": [
+    "rfcs/0005-theorem-identity-and-compatibility.md",
+    "docs/adr/0007-versioned-theorem-registry.md",
+    "theorem-registry/**",
+    "schemas/registry/**",
+    "lean/StatQED/Registry/**",
+    "backend/crates/statqed-registry/**",
+    "scripts/registry/**",
+    "conformance/registry/fixtures/**",
+    "conformance/registry/golden/**",
+    "conformance/registry/results/**",
+    "source-audits/registry/**",
+    "docs/design/theorem-registry.md",
+    "docs/spec/theorem-lock.md",
+    "docs/implementation/theorem-registry.md",
+    ".github/workflows/theorem-registry.yml",
+    "Makefile"
+  ],
+  "scientific_subject_patterns": [
+    "rfcs/0005-theorem-identity-and-compatibility.md",
+    "docs/adr/0007-versioned-theorem-registry.md",
+    "theorem-registry/spec/**",
+    "theorem-registry/records/**",
+    "theorem-registry/policy/**",
+    "theorem-registry/locks/**",
+    "theorem-registry/evidence/**",
+    "schemas/registry/**",
+    "lean/StatQED/Registry/**",
+    "backend/crates/statqed-registry/Cargo.toml",
+    "backend/crates/statqed-registry/Cargo.lock",
+    "backend/crates/statqed-registry/rust-toolchain.toml",
+    "backend/crates/statqed-registry/src/**",
+    "backend/crates/statqed-registry/tests/**",
+    "backend/crates/statqed-registry/evidence/**",
+    "conformance/registry/fixtures/**",
+    "conformance/registry/golden/**",
+    "conformance/registry/results/**",
+    "source-audits/registry/**"
+  ],
+  "ignored_components": ["__pycache__", "target", ".lake", ".pytest_cache"],
+  "review_path": "work/reviews/SQ-0007.md"
+}

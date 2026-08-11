@@ -1,0 +1,14 @@
+{
+  "schema": "statqed.registry-rust-supply-chain.v0",
+  "observed_at": "2026-08-11",
+  "development_rust": "1.97.1 (8bab26f4f 2026-07-14)",
+  "floor_rust": "1.85.1 (4eb161250 2025-03-15)",
+  "third_party_dependencies": 0,
+  "advisory_database_required_for_graph": false,
+  "advisory_observation": "No third-party crate appears in the exact graph; an advisory database lookup has no package to match. This is not a security guarantee.",
+  "yanked_observation": "No crates.io package appears in the exact graph; yanked state is not applicable to the local unpublished package.",
+  "limitations": [
+    "The Rust standard library and compiler remain operational dependencies outside Cargo.lock.",
+    "A zero-dependency graph does not establish implementation correctness or cryptographic soundness."
+  ]
+}

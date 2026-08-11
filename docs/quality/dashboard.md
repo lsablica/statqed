@@ -8,6 +8,7 @@ Status: **Draft**.
 | Rust reference foundation | 0 | 1 | 0 | 0 |
 | Deterministic encoding profile | 0 | 1 | 0 | 0 |
 | Data-free foundation fixture schema | 0 | 1 | 0 | 0 |
+| Test-only theorem registry and lock | 0 | 1 | 0 | 0 |
 | Core ontology | 1 | 0 | 0 | 0 |
 | IR/artifact schemas | 1 | 0 | 0 | 0 |
 | Public statistical theorems | 0 | 0 | 0 | 0 |
@@ -44,3 +45,12 @@ by two frozen implementations plus a direct standards recipe, and permanent
 static evidence verification. It is not the general IR, a production
 canonicalizer, an artifact schema, a logical-data commitment, or statistical
 validation. It is neither Candidate nor Stable.
+
+SQ-0007 adds one Experimental, deliberately vacuous theorem-registry fixture:
+one test-only `True` record with separately versioned proposition, environment,
+record, authorization, proof/build, axiom, and directional-compatibility
+evidence; independent normalization observations; a bounded std-only offline
+resolver; adversarial mutations; and permanent evidence verification. It is
+not a public/statistical theorem, non-vacuity witness, source-fidelity result,
+artifact verifier, logical-data identity, certificate, or Candidate/Stable
+registry.

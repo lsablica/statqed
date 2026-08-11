@@ -1,0 +1,91 @@
+audit_id: SA-SQ0007-PRIMARY
+subject: theorem identity, environment closure, replay, axiom observation, hashing, and offline resolution
+retrieved_at: 2026-08-11
+status: reviewed candidate source baseline
+lean:
+  release: v4.32.2
+  commit: f3b06c705e6c85f5314019d5d3baab0fec5b580c
+  license: Apache-2.0
+  repository: https://github.com/leanprover/lean4/commit/f3b06c705e6c85f5314019d5d3baab0fec5b580c
+  sources:
+    - path: src/Lean/Expr.lean
+      anchors: ["18-23 Literal", "46-80 BinderInfo", "290-469 Expr", "787-820 equal/eqv", "1077-1083 metadata"]
+      consequence: cover or reject every constructor; neither pretty printing nor cached hashes are canonical bytes
+    - path: src/Lean/Level.lean
+      anchors: ["89-107 constructors", "379-408 normalize/isEquiv"]
+      consequence: isEquiv is explicitly incomplete; v0 preserves the raw versioned level tree and makes no completeness claim
+    - path: src/Lean/Declaration.lean
+      anchors: ["16-45 reducibility", "94-193 records", "428-514 ConstantInfo"]
+      consequence: closure payloads are selected by declaration kind; proof bodies remain separate
+    - path: src/Lean/Environment.lean
+      anchors: ["32-79 checking", "107-176 header", "1835-1858 module serialization", "2243-2388 imports/trust"]
+      consequence: olean and the whole import DAG are build inputs, not stable language-neutral semantic bytes
+    - path: src/Lean/Util/CollectAxioms.lean
+      anchors: ["29-74 recursive collector and missing constants", "86-154 imported extension/public API"]
+      consequence: require declaration presence before collection and independently traverse closure; the result is an observation
+    - path: src/Lean/Replay.lean
+      anchors: ["13-27 purpose", "74-140 replay", "176-189 skipped unsafe/partial"]
+      consequence: fresh replay is same-kernel corruption evidence and skipped categories must be rejected separately
+    - path: src/LeanChecker.lean
+      anchors: ["12-38 modes", "56-69 external-verifier disclaimer"]
+      consequence: never call leanchecker an independent or external verifier
+  ambiguities_resolved_for_v0:
+    expression_identity: conservative structural protocol after metadata/binder-name/nondep erasure; no claim of complete definitional equality
+    binder_info: retained as a reviewed public-interface identity lock even though the kernel ignores it
+    universe_identity: versioned raw constructor tree; Level.isEquiv is not used or described as complete
+    unfolding: none
+    literal_projection: constructor tags retained
+    closure: kind-specific transitive payload, inductive families atomic, missing names fail closed
+    axiom_policy: empty allowed imported set for the test-only record
+mathlib:
+  commit: 905b95818eb32af7874a58b427f50c1711a5e96c
+  license: Apache-2.0
+  repository: https://github.com/leanprover-community/mathlib4/commit/905b95818eb32af7874a58b427f50c1711a5e96c
+  anchors: [lean-toolchain, lake-manifest.json, lakefile.lean]
+  consequence: exact commit and full Lake manifest are proof/build-lock material
+cryptography:
+  - title: FIPS 180-4 Secure Hash Standard
+    version: August 2015, Update 1
+    persistent_id: https://doi.org/10.6028/NIST.FIPS.180-4
+    sections: ["4.1.2", "4.2.2", "5.1.1", "5.2.1", "5.3.3", "6.2"]
+    license: United States government standard
+    consequence: exact SHA-256 function and 32-octet output only; no semantic equality, authorization, provenance, or collision-freedom claim
+  - title: RFC 9162 Certificate Transparency Version 2.0
+    version: December 2021, Experimental
+    persistent_id: https://doi.org/10.17487/RFC9162
+    sections: ["2.1.1"]
+    license: IETF Trust Legal Provisions
+    consequence: nearby domain-tag evidence only; StatQED keeps its accepted typed length framing
+rust:
+  development:
+    version: 1.97.1
+    rustc_commit: 8bab26f4f68e0e26f0bb7960be334d5b520ea452
+    cargo_commit: c980f4866141969fab6254a680546a277789d6f0
+  floor: 1.85.1
+  license: MIT OR Apache-2.0
+  sources:
+    - https://github.com/rust-lang/cargo/blob/c980f4866141969fab6254a680546a277789d6f0/src/doc/src/reference/resolver.md
+    - https://github.com/rust-lang/cargo/blob/c980f4866141969fab6254a680546a277789d6f0/src/doc/src/reference/rust-version.md
+    - https://github.com/rust-lang/cargo/blob/c980f4866141969fab6254a680546a277789d6f0/src/doc/src/commands/cargo-fetch.md
+  consequence: lock plus locked/offline execution is operational reproducibility, not semantic or MSRV proof
+source_hypotheses:
+  - statement: metadata and binder display names may be erased
+    class: source_implicit_justified
+    anchor: Lean/Expr.lean and kernel metadata handling
+  - statement: BinderInfo is retained
+    class: reviewed_interface_strengthening
+    limitation: it deliberately overdistinguishes some kernel-equivalent propositions
+  - statement: raw level syntax is complete universe meaning
+    class: explicitly_not_claimed
+  - statement: collectAxioms alone is fail-closed evidence
+    class: explicitly_rejected
+  - statement: fresh replay is an independent external verifier
+    class: explicitly_rejected
+  - statement: digest equality proves theorem equality or truth
+    class: explicitly_rejected
+attribution:
+  lean_mathlib: reproduced pinned implementation behavior
+  sha256: specialized cryptographic primitive
+  registry_protocol: original StatQED project definition
+nonvacuity:
+  test_only_true: exercises a nonempty pipeline only; it is not scientific or theorem non-vacuity evidence
