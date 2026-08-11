@@ -239,6 +239,13 @@ class EvidenceCorruptionTests(unittest.TestCase):
             status = json.loads(status_path.read_text(encoding="utf-8"))
             status["blocked_count"] = 48
             canonical_write(status_path, status)
+        else:
+            for task_id in SUCCESSORS_AFTER_SQ0006:
+                self.set_task_status(task_id, "BLOCKED")
+            status_path = self.root / "work/status.yaml"
+            status = json.loads(status_path.read_text(encoding="utf-8"))
+            status["blocked_count"] = 53
+            canonical_write(status_path, status)
 
     def mutate_status_header(self, relative: str, replacement: str) -> None:
         path = self.root / relative
@@ -374,6 +381,18 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_in_review_verifies(self) -> None:
+        self.transition_sq0006("IN_REVIEW")
+        self.assert_verified(repository=True)
+        self.assert_frozen_evidence_unchanged()
+
+    def test_lifecycle_sq0006_done_then_in_progress_verifies(self) -> None:
+        self.transition_sq0006("DONE")
+        self.transition_sq0006("IN_PROGRESS")
+        self.assert_verified(repository=True)
+        self.assert_frozen_evidence_unchanged()
+
+    def test_lifecycle_sq0006_done_then_in_review_verifies(self) -> None:
+        self.transition_sq0006("DONE")
         self.transition_sq0006("IN_REVIEW")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
