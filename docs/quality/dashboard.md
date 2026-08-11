@@ -46,11 +46,13 @@ static evidence verification. It is not the general IR, a production
 canonicalizer, an artifact schema, a logical-data commitment, or statistical
 validation. It is neither Candidate nor Stable.
 
-SQ-0007 adds one Experimental, deliberately vacuous theorem-registry fixture:
-one test-only `True` record with separately versioned proposition, environment,
-record, authorization, proof/build, axiom, and directional-compatibility
-evidence; independent normalization observations; a bounded std-only offline
-resolver; adversarial mutations; and permanent evidence verification. It is
-not a public/statistical theorem, non-vacuity witness, source-fidelity result,
+The blocked SQ-0007 branch retains one partial Experimental, deliberately
+vacuous theorem-registry fixture: one test-only `True` record with separately
+versioned proposition, environment, record, authorization, proof/build, axiom,
+and directional-compatibility evidence; independent normalization observations;
+a bounded std-only offline resolver; adversarial mutations; and a partial
+evidence verifier. It is not integrated or accepted because predecessor
+path-ownership and complete global axiom-report gates fail closed. It is not a
+public/statistical theorem, non-vacuity witness, source-fidelity result,
 artifact verifier, logical-data identity, certificate, or Candidate/Stable
 registry.

@@ -111,7 +111,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
 
     def test_task_status_regression(self):
         path = "work/contracts/SQ-0007.yaml"
-        errors = self.mutate(path, lambda target: target.write_text(target.read_text().replace('"status": "BLOCKED"', '"status": "READY"')))
+        errors = self.mutate(path, lambda target: target.write_text(target.read_text().replace('"status": "IN_REVIEW"', '"status": "READY"')))
         self.assertIn("evidence.task_status_illegal", errors)
 
     def test_contract_backlog_disagreement(self):

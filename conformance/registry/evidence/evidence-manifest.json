@@ -6,10 +6,13 @@
     "sq0006_manifest_sha256": "5c6b3081846ba8ec2bc1ac17bf7d9014ee4d8f2dedb9e7d625a1226d2957b752",
     "sq0006_scientific_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0"
   },
-  "review_projection": null,
+  "review_projection": {
+    "path": "work/reviews/SQ-0007.md",
+    "projection_sha256": "7c3714c93ff4e476574428f868a5faaf0c91345c1c35da58ba9a9d12b2d17516"
+  },
   "schema": "statqed.sq0007-evidence.v1",
   "scientific_subject_count": 62,
-  "scientific_subject_digest": "a04a1e56fd1a4beae03e479368df25d62a67696c6379cf9389d8e2659e664c26",
+  "scientific_subject_digest": "8e1d38d279f6f625691c0bc033c84040db09f738d65e8cf1310a8a7d1b14022f",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -17,9 +20,9 @@
       "sha256": "c7b87301f5b05be4424cb5cdea7ad87913e4a61af7be4b177dd539f4d7d0e11c"
     },
     {
-      "bytes": 508,
+      "bytes": 507,
       "path": "backend/crates/statqed-registry/Cargo.toml",
-      "sha256": "d04046c15a4ba409165cbdf57e00c9eddaf74c270270d5e912eef770c457bc92"
+      "sha256": "7e8fc49726a3c84c41ef2d58d6ae7263e6c7f5edb61287244d3af94d2cb3a647"
     },
     {
       "bytes": 1998,
@@ -27,9 +30,9 @@
       "sha256": "4027dd422730cf2b77b9fd35e4ada6c93b8f17d73b3c0753937ce99073e1600c"
     },
     {
-      "bytes": 351,
+      "bytes": 350,
       "path": "backend/crates/statqed-registry/evidence/dependency-inventory.json",
-      "sha256": "9dfd998dd59a958f8d40698fe25f71f9faed33378d19fba7de26d17b38d92b9b"
+      "sha256": "83dcab7824d613a68f056a50973c68a4c886eb8afa13e9f2f1f4d5776051d550"
     },
     {
       "bytes": 805,
@@ -37,9 +40,9 @@
       "sha256": "8c357baecb581a322048476751de2f6cf1feeeec21fdc95219c781ec620ffb90"
     },
     {
-      "bytes": 87,
+      "bytes": 86,
       "path": "backend/crates/statqed-registry/rust-toolchain.toml",
-      "sha256": "7c2f0a64d6cb4c7b9fb3dc70adbcdb8727a1396367605a09e29bee276044dc23"
+      "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
       "bytes": 23171,
@@ -323,7 +326,7 @@
     }
   ],
   "subject_count": 84,
-  "subject_digest": "fb765d305b9c817da52d94f6cb794a5153553584fa7ee3184e85257a616b1b96",
+  "subject_digest": "fc6e2c0f3a1eac57fdb3790394843d798587620281964fb9d5451739367513af",
   "subjects": [
     {
       "bytes": 6457,
@@ -341,14 +344,14 @@
       "sha256": "c7b87301f5b05be4424cb5cdea7ad87913e4a61af7be4b177dd539f4d7d0e11c"
     },
     {
-      "bytes": 508,
+      "bytes": 507,
       "path": "backend/crates/statqed-registry/Cargo.toml",
-      "sha256": "d04046c15a4ba409165cbdf57e00c9eddaf74c270270d5e912eef770c457bc92"
+      "sha256": "7e8fc49726a3c84c41ef2d58d6ae7263e6c7f5edb61287244d3af94d2cb3a647"
     },
     {
-      "bytes": 1455,
+      "bytes": 1454,
       "path": "backend/crates/statqed-registry/README.md",
-      "sha256": "41a702454e3184ed434a2b86310a51808c7c957fdef58524cc27d3dffae75252"
+      "sha256": "2cecaf5ef69286972d1fa47f8704aaa2cc500d961b1af5f50cbf51047dbc14bb"
     },
     {
       "bytes": 1998,
@@ -356,9 +359,9 @@
       "sha256": "4027dd422730cf2b77b9fd35e4ada6c93b8f17d73b3c0753937ce99073e1600c"
     },
     {
-      "bytes": 351,
+      "bytes": 350,
       "path": "backend/crates/statqed-registry/evidence/dependency-inventory.json",
-      "sha256": "9dfd998dd59a958f8d40698fe25f71f9faed33378d19fba7de26d17b38d92b9b"
+      "sha256": "83dcab7824d613a68f056a50973c68a4c886eb8afa13e9f2f1f4d5776051d550"
     },
     {
       "bytes": 805,
@@ -366,9 +369,9 @@
       "sha256": "8c357baecb581a322048476751de2f6cf1feeeec21fdc95219c781ec620ffb90"
     },
     {
-      "bytes": 87,
+      "bytes": 86,
       "path": "backend/crates/statqed-registry/rust-toolchain.toml",
-      "sha256": "7c2f0a64d6cb4c7b9fb3dc70adbcdb8727a1396367605a09e29bee276044dc23"
+      "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
       "bytes": 23171,
@@ -571,9 +574,9 @@
       "sha256": "13f8cc0bfea4ce3d9d81badc9f5a92fd0bb1b9839a259f4e6867282563898c40"
     },
     {
-      "bytes": 7860,
+      "bytes": 7825,
       "path": "scripts/registry/check_evidence.py",
-      "sha256": "9cc387c253fc9c37c71e01fc1f4bc790206947b132690719d95b05edfb5ff1e9"
+      "sha256": "af644262e3a02c7e835a060755d590e9fca893d920eac6eb6d29d1e80540093f"
     },
     {
       "bytes": 820,
@@ -601,9 +604,9 @@
       "sha256": "5c91d6a0728d553ad2284dbf48c234c1681bdc83d9972bcde145c07e29b37a4d"
     },
     {
-      "bytes": 5975,
+      "bytes": 5977,
       "path": "scripts/registry/tests/test_check_evidence.py",
-      "sha256": "88c9b3699ec5383eca3e5396b5b76043ea0fa43fee3566389206e894910c9df1"
+      "sha256": "78f1885f85c315cc9b2a4555323f9c85c561783d5eec3316a270133770ec56d5"
     },
     {
       "bytes": 9420,

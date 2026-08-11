@@ -114,8 +114,7 @@ def verify(root: Path = ROOT) -> list[str]:
             errors.append("evidence.task_contract_backlog_disagreement")
         represented = (
             "DONE" if "SQ-0007" in status["done"] else
-            "IN_PROGRESS" if "SQ-0007" in status["in_progress"] else
-            "IN_REVIEW" if "SQ-0007" in status.get("in_review", []) else
+            current if current in {"IN_PROGRESS", "IN_REVIEW"} and "SQ-0007" in status["in_progress"] else
             "BLOCKED" if current == "BLOCKED" and "SQ-0007" not in status["ready"] else
             "READY" if "SQ-0007" in status["ready"] else "MISSING"
         )
