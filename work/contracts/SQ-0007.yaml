@@ -1,7 +1,7 @@
 {
   "id": "SQ-0007",
   "title": "Create theorem registry and lock v0",
-  "status": "READY",
+  "status": "IN_PROGRESS",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Plan 0001 / Milestone C",
   "objective": "After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separately versioned semantic-proposition, meaning-bearing-environment, canonical-registry-record, verifier-selected-authorization, proof/build, axiom-report, and directional-compatibility evidence, with a deterministic bounded offline resolver and without any public-theorem, source-fidelity, artifact-verification, or non-vacuity claim.",

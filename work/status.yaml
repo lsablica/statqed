@@ -1,8 +1,8 @@
 {
   "project_maturity": "Draft",
   "current_plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
-  "ready": ["SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
-  "in_progress": [],
+  "ready": ["SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
+  "in_progress": ["SQ-0007"],
   "blocked_count": 48,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005", "SQ-0006"],
   "last_integrated_commit": "e4bd2f0e739aaf480170d16a3424b40af1e9cf5b",
@@ -37,6 +37,7 @@
     "PR #17 finalized successor-safe SQ-0005 lifecycle simulations at reviewed head f68c4bf27501790e063d27d02e8c3cddf445f6c4 and merged normally as aac98bae3ecb27cba8cea895bc64454a890cde7a. Main guardrails 31467325605, Serialization prototypes 31467325622, Rust reference workspace 31467325597, and Lean proof backend 31467325585 passed; all 59 predecessor tests passed before the verified main commit entered the SQ-0006 branch ancestry.",
     "PR #15 merged exact reviewed head b569f24e95a2465f71a16affa344d57164a23b27 normally as e4bd2f0e739aaf480170d16a3424b40af1e9cf5b. Main guardrails 31489194387, Serialization prototypes 31489194324, Schema v0 31489194383, Rust reference workspace 31489194316, and Lean proof backend 31489194370 passed; exact-merge Schema v0 dispatch 31489484813 and Serialization prototypes dispatch 31489483135 also passed.",
     "The integrated SQ-0006 evidence manifest remains eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb and its scientific-subject digest remains 4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0. SQ-0001 through SQ-0006 are DONE; SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015 are READY; no task is active; 48 tasks are blocked. RFC-0006 remains unchanged, Draft, and owned by SQ-0027.",
-    "Before any successor is claimed, a separate independently reviewed evidence-lifecycle/planning maintenance must decouple legitimate successor-contract expansion from the permanent SQ-0006 non-status contract projections. This is a planning boundary, not a schema defect; no successor was claimed during SQ-0006 integration."
+    "Before any successor is claimed, a separate independently reviewed evidence-lifecycle/planning maintenance must decouple legitimate successor-contract expansion from the permanent SQ-0006 non-status contract projections. This is a planning boundary, not a schema defect; no successor was claimed during SQ-0006 integration.",
+    "SQ-0007 was claimed from 6148589f10ee58a8cba58f959aec25c6f5207e8d on 2026-08-11T21:56:01+02:00 in isolated worktree /tmp/statqed-sq0007-theorem-registry on branch agent/SQ-0007-theorem-registry. The reviewed pre-claim contract SHA-256 is 2be5ff48bd9d6d17d6b62de6ca0a536f90288ab453ce06819f692b92d8efe0ef. Assigned distinct source/Lean-internals, theorem-semantics, Lean-extractor, independent-normalization, Rust-resolver, cryptographic, authorization/security, compatibility/counterexample, CI/reproducibility, and integration roles. The direct launch platform is Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86_64. SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015 remain READY and unstarted."
   ]
 }
