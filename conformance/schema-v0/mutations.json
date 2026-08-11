@@ -1,0 +1,22 @@
+{
+  "mutation_version": "statqed.schema-v0-mutations.v1",
+  "mutations": [
+    {
+      "detected": true,
+      "id": "mutation.semantic_unknown_drop",
+      "reason": "test-only mutant strips an unknown field before the real validator"
+    },
+    {
+      "detected": true,
+      "id": "mutation.encoder_changed_golden",
+      "reason": "changed accepted golden differs from direct recipe and both prototypes"
+    },
+    {
+      "detected": true,
+      "id": "mutation.decoder_duplicate_collapse",
+      "python_decoder_code": "validity.map_duplicate",
+      "reason": "last-wins collapse would accept while both RFC-0001 decoders reject duplicate raw bytes",
+      "rust_decoder_code": "validity.map_duplicate"
+    }
+  ]
+}

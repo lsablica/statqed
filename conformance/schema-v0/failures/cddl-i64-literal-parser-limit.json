@@ -1,0 +1,9 @@
+{
+  "classification": "validator_limitation",
+  "component": "cddl 0.10.6",
+  "failure_id": "cddl-i64-literal-parser-limit",
+  "observation": "The parser rejects a CDDL negative integer literal below i64, including -9223372036854775809, although the generic rule `v = int` validates raw CBOR 3bffffffffffffffff (-2^64).",
+  "policy": "SQ-0006 does not spell RFC-0001's generic signed range in CDDL. The preceding RFC-0001 profile owns that range, and this fixture's only integer is literal zero.",
+  "result": "RETAINED_LIMITATION",
+  "tool_version": "cddl 0.10.6"
+}

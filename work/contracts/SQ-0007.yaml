@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0007","title":"Create theorem registry and lock v0","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separate semantic/environment/registry/proof/axiom locks and a deterministic offline resolver without being presented as a public theorem or non-vacuity witness.",
+  "id":"SQ-0007","title":"Create theorem registry and lock v0","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separate semantic/environment/registry/proof/axiom locks and a deterministic offline resolver without being presented as a public theorem or non-vacuity witness.",
   "dependencies":["SQ-0003","SQ-0006"],
   "allowed_paths":["theorem-registry/**","schemas/registry/**","lean/StatQED/Registry/**","backend/crates/statqed-registry/**","docs/design/theorem-registry.md","docs/spec/theorem-lock.md","rfcs/0005-theorem-identity-and-compatibility.md","docs/adr/0007-versioned-theorem-registry.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["lean/StatQED/Experiment/**","methods/**","frontends/**"],

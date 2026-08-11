@@ -1,0 +1,181 @@
+name: Schema v0
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_RUSTC_DEV_COMMIT: 8bab26f4f68e0e26f0bb7960be334d5b520ea452
+  EXPECTED_CARGO_DEV_COMMIT: c980f4866141969fab6254a680546a277789d6f0
+
+concurrency:
+  group: schema-v0-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
+jobs:
+  schema-v0:
+    name: Schema v0 evidence and conformance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.13"
+
+      - name: Record observed runner metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 -VV
+          git rev-parse HEAD
+          # Direct evidence only for this observed mutable hosted runner.
+
+      - name: Install exact Rust development toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.97.1 --profile minimal
+          rustc_dev="$(rustc +1.97.1 -Vv)"
+          cargo_dev="$(cargo +1.97.1 -Vv)"
+          printf '%s\n%s\n' "$rustc_dev" "$cargo_dev"
+          [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
+          [[ "$cargo_dev" == *"commit-hash: $EXPECTED_CARGO_DEV_COMMIT"* ]]
+
+      - name: Acquire and verify exact CDDL source and lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_root="$RUNNER_TEMP/statqed-sq0006-tools"
+          cargo_home="$RUNNER_TEMP/statqed-sq0006-cargo-home"
+          test ! -e "$tool_root"
+          test ! -e "$cargo_home"
+          mkdir -p "$tool_root" "$cargo_home"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$tool_root/cddl-0.10.6.crate" \
+            'https://static.crates.io/crates/cddl/cddl-0.10.6.crate'
+          echo '69f7305ff73327bd9ce5e5cdd81223dd91b4969e260ea6cdb8f1da94390be191  '"$tool_root/cddl-0.10.6.crate" | sha256sum --check --strict
+          mkdir -p "$tool_root/source"
+          tar -xzf "$tool_root/cddl-0.10.6.crate" -C "$tool_root/source"
+          echo '193467cae8f59b079960f6678cc7a0951f9391a7854fbe636489d30cdfddcb93  '"$tool_root/source/cddl-0.10.6/Cargo.lock" | sha256sum --check --strict
+          CARGO_HOME="$cargo_home" cargo +1.97.1 fetch --locked \
+            --manifest-path "$tool_root/source/cddl-0.10.6/Cargo.toml"
+          CARGO_HOME="$cargo_home" CARGO_NET_OFFLINE=true cargo +1.97.1 install \
+            --path "$tool_root/source/cddl-0.10.6" --locked --offline \
+            --root "$tool_root/install"
+          "$tool_root/install/bin/cddl" --version | grep -Fx 'cddl 0.10.6'
+          echo "STATQED_CDDL_BIN=$tool_root/install/bin/cddl" >> "$GITHUB_ENV"
+          echo "STATQED_CDDL_SOURCE=$tool_root/source/cddl-0.10.6" >> "$GITHUB_ENV"
+          echo "STATQED_CDDL_CARGO_HOME=$cargo_home" >> "$GITHUB_ENV"
+
+      - name: Acquire frozen Rust prototype graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          prototype_home="$RUNNER_TEMP/statqed-sq0006-prototype-cargo-home"
+          prototype_target="$RUNNER_TEMP/statqed-sq0006-prototype-target"
+          test ! -e "$prototype_home"
+          test ! -e "$prototype_target"
+          mkdir -p "$prototype_home" "$prototype_target"
+          CARGO_HOME="$prototype_home" cargo +1.97.1 fetch --locked \
+            --manifest-path schemas/prototypes/rust-cbor/Cargo.toml
+          echo "CARGO_HOME=$prototype_home" >> "$GITHUB_ENV"
+          echo "STATQED_SCHEMA_RUST_TARGET=$prototype_target" >> "$GITHUB_ENV"
+
+      - name: Run repository and static evidence gates
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          make check
+          make list-work
+          git diff --check
+          python3 scripts/schema/check_schema_v0.py
+          python3 scripts/schema/build_evidence_manifest.py --check
+
+      - name: Compile schema and run unit/corruption tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 scripts/schema/compile_schema_v0.py --check
+          "$STATQED_CDDL_BIN" --ci compile-cddl \
+            --cddl schemas/v0/compiled/foundation-structural.cddl
+          python3 -m unittest discover -s scripts/schema/tests -p 'test_*.py' -v
+
+      - name: Reproduce independent vectors, negatives, resources, and mutations
+        env:
+          CARGO_NET_OFFLINE: "true"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 scripts/schema/run_schema_v0.py --verify \
+            --cddl-bin "$STATQED_CDDL_BIN" \
+            --rust-target-dir "$STATQED_SCHEMA_RUST_TARGET"
+
+      - name: Reproduce cddl dependency and license inventory
+        env:
+          CARGO_NET_OFFLINE: "true"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 scripts/schema/cddl_inventory.py --check \
+            --cargo-home "$STATQED_CDDL_CARGO_HOME" \
+            --manifest-path "$STATQED_CDDL_SOURCE/Cargo.toml"
+
+      - name: Reproduce hash-bound point-in-time advisory observation
+        shell: bash
+        run: |
+          set -euo pipefail
+          security_root="$RUNNER_TEMP/statqed-sq0006-security"
+          test ! -e "$security_root"
+          mkdir -p "$security_root"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/cargo-audit.tgz" \
+            'https://github.com/rustsec/rustsec/releases/download/cargo-audit%2Fv0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz'
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$security_root/rustsec.tar.gz" \
+            'https://codeload.github.com/RustSec/advisory-db/tar.gz/309ad29d8fe448bf986019e05d47b9e0e29a2218'
+          echo 'ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39  '"$security_root/cargo-audit.tgz" | sha256sum --check --strict
+          echo 'a5036fadecadb3e382f852b0d698460e931c85eb5e12e63447cc95875fe80256  '"$security_root/rustsec.tar.gz" | sha256sum --check --strict
+          tar -xzf "$security_root/cargo-audit.tgz" -C "$security_root"
+          tar -xzf "$security_root/rustsec.tar.gz" -C "$security_root"
+          "$security_root/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2/cargo-audit" audit \
+            --file "$STATQED_CDDL_SOURCE/Cargo.lock" \
+            --db "$security_root/advisory-db-309ad29d8fe448bf986019e05d47b9e0e29a2218" \
+            --no-fetch --stale --no-yanked --json > "$security_root/report.json"
+          python3 scripts/schema/check_cddl_advisory.py \
+            --report "$security_root/report.json" \
+            --cargo-audit "$security_root/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2/cargo-audit" \
+            --cargo-audit-archive "$security_root/cargo-audit.tgz" \
+            --database-archive "$security_root/rustsec.tar.gz" \
+            --cargo-lock "$STATQED_CDDL_SOURCE/Cargo.lock"
+
+      - name: Confirm byte-identical regeneration and clean tree
+        env:
+          CARGO_NET_OFFLINE: "true"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 scripts/schema/compile_schema_v0.py
+          python3 scripts/schema/run_schema_v0.py \
+            --cddl-bin "$STATQED_CDDL_BIN" \
+            --rust-target-dir "$STATQED_SCHEMA_RUST_TARGET"
+          python3 scripts/schema/build_evidence_manifest.py
+          git diff --exit-code
+          git diff --check
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"

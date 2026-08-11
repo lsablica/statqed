@@ -1,0 +1,271 @@
+audit_id: SA-SQ0006-CDDL-VALIDATOR
+subject: cddl 0.10.6 provenance, license, toolchain, feature surface, and advisory evidence
+source:
+  work: anweiss/cddl
+  version: crates.io cddl 0.10.6; source commit a42a702cf977179236523e5559c81e7bbd5dfa7e
+  locator: https://github.com/anweiss/cddl/tree/a42a702cf977179236523e5559c81e7bbd5dfa7e
+  persistent_id: https://crates.io/crates/cddl/0.10.6
+controlled_statement: >-
+  cddl 0.10.6 is a candidate untrusted development and CI validator for
+  compiling the SQ-0006 standalone schema and checking explicit CBOR files.
+  The package declares Rust 1.88.0 as its minimum supported Rust version and
+  ships a lockfile. It must be installed at the exact version with --locked,
+  isolated from StatQED's Rust 1.85.1 support-floor build, and invoked with
+  --ci and an explicit --cbor file. Its default executable includes support
+  for published extensions and active drafts; that support does not authorize
+  those syntaxes in a normative schema. Tool success establishes only the
+  cddl_shape stage.
+retrieved_at: '2026-08-10'
+source_records:
+  - work: crates.io cddl package record and crate archive
+    version: 0.10.6; published 2026-06-29T21:43:50Z; yanked false
+    locator: https://crates.io/crates/cddl/0.10.6
+    persistent_id: https://static.crates.io/crates/cddl/cddl-0.10.6.crate
+    exact_anchors:
+      - crates.io sparse-index record for cddl 0.10.6
+      - Official crates.io static archive URL used by hosted CI after the API download endpoint returned HTTP 403
+      - cddl-0.10.6.crate .cargo_vcs_info.json
+      - cddl-0.10.6.crate Cargo.toml.orig
+      - cddl-0.10.6.crate Cargo.lock
+    archive_sha256: 69f7305ff73327bd9ce5e5cdd81223dd91b4969e260ea6cdb8f1da94390be191
+    archive_size_bytes: 153655
+    cargo_toml_orig_sha256: b9f80d6583b1526b8a0068e28951e2b032741d2496bacfa051aa087259f31369
+    cargo_lock_sha256: 193467cae8f59b079960f6678cc7a0951f9391a7854fbe636489d30cdfddcb93
+    cargo_lock_package_count: 154
+    source_commit: a42a702cf977179236523e5559c81e7bbd5dfa7e
+  - work: cddl README at the packaged source commit
+    version: commit a42a702cf977179236523e5559c81e7bbd5dfa7e
+    locator: https://github.com/anweiss/cddl/blob/a42a702cf977179236523e5559c81e7bbd5dfa7e/README.md
+    persistent_id: https://github.com/anweiss/cddl/commit/a42a702cf977179236523e5559c81e7bbd5dfa7e
+    exact_anchors:
+      - Lines 7-20, supported RFCs, draft revisions, and MSRV 1.88.0
+      - Lines 56-117, installation and CLI usage
+      - Lines 166-204, feature descriptions and defaults
+  - work: cddl CLI implementation at the packaged source commit
+    version: commit a42a702cf977179236523e5559c81e7bbd5dfa7e
+    locator: https://github.com/anweiss/cddl/blob/a42a702cf977179236523e5559c81e7bbd5dfa7e/src/bin/cli.rs
+    persistent_id: https://github.com/anweiss/cddl/commit/a42a702cf977179236523e5559c81e7bbd5dfa7e
+    exact_anchors:
+      - Lines 27-35, --ci option
+      - Lines 38-51, compile-cddl subcommand
+      - Lines 53-96, validate arguments
+      - Lines 121-132, schema file handling and parse call
+      - Lines 217-248, explicit CBOR file reading and validation
+  - work: cddl LICENSE
+    version: Packaged with cddl 0.10.6
+    locator: https://github.com/anweiss/cddl/blob/a42a702cf977179236523e5559c81e7bbd5dfa7e/LICENSE
+    persistent_id: https://github.com/anweiss/cddl/commit/a42a702cf977179236523e5559c81e7bbd5dfa7e
+    license: MIT; copyright 2019 Andrew Weiss; retain the copyright and permission notices in copies or substantial portions
+    license_sha256: 44d5a4a93719a655de46ea2cc80689c477f3f624d713eb6708c3f97c7cfeddc4
+  - work: OSV querybatch API
+    version: Exact single package-version query executed 2026-08-10
+    locator: https://api.osv.dev/v1/querybatch
+    persistent_id: https://google.github.io/osv.dev/post-v1-querybatch/
+    status: The only result, for ecosystem crates.io, package cddl, version 0.10.6, was empty
+    exact_anchors:
+      - source-audits/schema/osv-cddl-0.10.6-request.json
+      - source-audits/schema/osv-cddl-0.10.6-response.json
+      - Request SHA-256 a50334e1f5e81eadab1e6e1eee6b82ff938618098bd18118e84041a76c3726b5
+      - Response SHA-256 1794cd796870ec1057c6635f938ae5f7da02544dbf868e3a3fb330112d04f366
+    limitation: This is a direct-package point-in-time observation, not a transitive dependency scan or security guarantee.
+  - work: cargo-audit release asset and source
+    version: cargo-audit 0.22.2; release published 2026-06-05T12:38:04Z
+    locator: https://github.com/RustSec/rustsec/releases/tag/cargo-audit/v0.22.2
+    persistent_id: https://github.com/RustSec/rustsec/releases/download/cargo-audit/v0.22.2/cargo-audit-x86_64-unknown-linux-gnu-v0.22.2.tgz
+    exact_anchors:
+      - Annotated verified tag object 78bd4d48923d207898e94827cbd79d73903a85fa at 2026-06-05T12:34:03Z
+      - Source commit 281452c35cf0870969042374110f099a411bc185
+      - https://github.com/RustSec/rustsec/tree/281452c35cf0870969042374110f099a411bc185/cargo-audit
+      - Release asset archive SHA-256 ab28a1bdb54db4d5d8ad5981cf1f959410370b3d28250dbd35f6a44248620e39
+      - Extracted executable SHA-256 473b9a71e5cb5bde22f69c32f749c9b83931287d92dc36b91cb04f6705640ef2
+      - Extracted cargo-audit --version output cargo-audit 0.22.2
+    license: Apache-2.0 OR MIT
+    license_anchors:
+      - https://github.com/RustSec/rustsec/blob/281452c35cf0870969042374110f099a411bc185/LICENSE-APACHE
+      - https://github.com/RustSec/rustsec/blob/281452c35cf0870969042374110f099a411bc185/LICENSE-MIT
+      - LICENSE-APACHE SHA-256 a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2
+      - LICENSE-MIT SHA-256 29662666b44dff84977b46e05642cdef910bc3a93a17b5fd86e632bafa59cf21
+  - work: RustSec advisory database
+    version: commit 309ad29d8fe448bf986019e05d47b9e0e29a2218
+    locator: https://github.com/RustSec/advisory-db/commit/309ad29d8fe448bf986019e05d47b9e0e29a2218
+    persistent_id: https://codeload.github.com/RustSec/advisory-db/tar.gz/309ad29d8fe448bf986019e05d47b9e0e29a2218
+    exact_anchors:
+      - Archive SHA-256 a5036fadecadb3e382f852b0d698460e931c85eb5e12e63447cc95875fe80256
+      - Commit timestamp 2026-08-09T12:34:06Z
+      - https://github.com/RustSec/advisory-db/blob/309ad29d8fe448bf986019e05d47b9e0e29a2218/LICENSE.txt
+      - LICENSE.txt SHA-256 b342fe896e158b8c5a83e707446113f3a149fa0104d834afa78cd2a48eaf1906
+    license: CC0-1.0 for native database code/data, with identified GHSA-derived content under CC-BY-4.0
+    license_anchors:
+      - CC0-1.0.txt SHA-256 a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499
+      - CC-BY-4.0.txt SHA-256 28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5
+    limitation: The hash-bound database is a point-in-time input; zero matched findings are not a security guarantee.
+  - work: SQ-0002 handoff and SQ-0005 prototype source audit
+    version: Repository evidence retained before SQ-0006
+    locator: work/handoffs/SQ-0002.md, Recommended pins and support floors and validation summary; source-audits/encoding/SA-SQ0005-PROTOTYPES.yaml, cddl records
+    persistent_id: repository-local
+    status: Rust 1.85.1 failed; Rust and Cargo 1.97.1 on Ubuntu 24.04 x86_64 installed cddl 0.10.6 --locked and executed its CLI successfully
+hypotheses:
+  - name: selected_version_identity
+    class: source_explicit
+    source_anchor: crates.io sparse-index cddl 0.10.6 record and packaged .cargo_vcs_info.json
+    notes: Exact archive checksum, publication state, source commit, and packaged lockfile are recorded above.
+  - name: declared_minimum_supported_rust_version
+    class: source_explicit
+    source_anchor: cddl 0.10.6 Cargo.toml.orig rust-version and README lines 7-20
+    notes: The declared minimum supported Rust version is 1.88.0.
+  - name: cli_compile_and_explicit_cbor_paths
+    class: source_explicit
+    source_anchor: cddl 0.10.6 src/bin/cli.rs lines 38-96 and 121-248
+    notes: compile-cddl parses a schema; validate with --cbor reads a CBOR file and calls CBOR validation.
+  - name: ci_mode_changes_missing_file_behavior
+    class: source_explicit
+    source_anchor: cddl 0.10.6 src/bin/cli.rs lines 27-35 and 121-132
+    notes: --ci makes a missing schema file fail instead of entering interactive behavior.
+  - name: default_features_include_extensions_and_drafts
+    class: source_explicit
+    source_anchor: cddl 0.10.6 Cargo.toml.orig features; README lines 7-20 and 166-204
+    notes: Defaults include additional-controls and freezer, while the CLI requires csv-validate; README identifies freezer-17 and CSV-08 as drafts.
+  - name: maintenance_badge_is_self_reported
+    class: source_implicit_justified
+    source_anchor: cddl 0.10.6 Cargo.toml.orig badges.maintenance status actively-developed
+    notes: Record it as project metadata, not as an availability, response-time, or future-maintenance guarantee.
+  - name: exact_locked_install
+    class: formalization_obligation
+    source_anchor: crates.io cddl 0.10.6 record and packaged Cargo.lock
+    notes: Use cargo install cddl --version 0.10.6 --locked and verify the archive checksum in a controlled acquisition workflow.
+  - name: isolated_rust_toolchain
+    class: formalization_obligation
+    source_anchor: cddl declared Rust 1.88.0; SQ-0002 toolchain evidence; StatQED Rust 1.85.1 support floor
+    notes: The validator cannot be built under the project support floor; run it in a separately pinned dev/CI toolchain.
+  - name: explicit_noninteractive_invocation
+    class: strengthening_justified
+    source_anchor: cddl 0.10.6 src/bin/cli.rs lines 27-96 and 121-248
+    notes: Use --ci and explicit --cddl/--cbor paths to avoid interactive behavior and stdin's UTF-8-based JSON/CBOR auto-detection.
+  - name: validator_defines_normative_grammar
+    class: strengthening_unjustified
+    source_anchor: RFC 8610 as updated by RFC 9682; cddl README lines 7-20
+    notes: The RFCs and reviewed schema define the language; implementation acceptance does not promote extension or draft syntax.
+  - name: build_under_rust_1_85_1
+    class: strengthening_unjustified
+    source_anchor: cddl 0.10.6 rust-version 1.88.0 and SQ-0002 failed-floor evidence
+    notes: Raising or misreporting compatibility to simplify integration is not supported; isolate the tool instead.
+  - name: cddl_acceptance_establishes_all_fixture_semantics
+    class: strengthening_unjustified
+    source_anchor: RFC 8610 Sections 2.2.3, 3.5.3, and 4.2; SQ-0006 contract
+    notes: It establishes only cddl_shape and cannot replace deterministic-profile or semantic stages.
+  - name: enabled_draft_features_authorize_draft_schema_syntax
+    class: strengthening_unjustified
+    source_anchor: cddl README lines 7-20 and 166-204; draft status boilerplate
+    notes: A build feature is an implementation capability, not a standards decision.
+  - name: direct_osv_empty_result_is_security_clearance
+    class: strengthening_unjustified
+    source_anchor: Exact retained OSV single-query request and response for crates.io:cddl:0.10.6, 2026-08-10
+    notes: The result is point-in-time and direct-package only; it neither scans the 154-package install graph nor proves absence of vulnerabilities.
+  - name: retained_transitive_advisory_scan
+    class: formalization_obligation
+    source_anchor: SQ-0006 security review requirement
+    notes: cargo-audit 0.22.2 against RustSec commit 309ad29d8fe448bf986019e05d47b9e0e29a2218 and the exact 154-package lock reported zero vulnerabilities and warnings across 1,197 loaded advisories; executable, archives, lock, result, and limitations are hash-bound in cddl-advisory-observation.json and this remains a point-in-time observation rather than a security guarantee.
+  - name: linux_x86_64_result_generalizes_to_all_platforms
+    class: strengthening_unjustified
+    source_anchor: SQ-0002 Ubuntu 24.04 x86_64 prototype evidence
+    notes: Current execution evidence is platform-specific; add supported-platform runs before making a broader claim.
+  - name: randomness_assumption
+    class: not_applicable
+    source_anchor: Deterministic schema compiler and validator invocation
+    notes: No stochastic algorithm is part of this tool selection claim.
+variants:
+  - name: Exact default-feature installation
+    locator: cddl 0.10.6 Cargo.toml.orig default features
+    conflict: It builds the supported CLI but includes parsers and controls beyond the SQ-0006 normative syntax.
+    disposition: Candidate operational build; enforce a published-syntax schema allowlist and never infer normativity from feature availability.
+  - name: Reduced features without ast-span
+    locator: Local offline feature-ablation run, 2026-08-10
+    conflict: std,json,cbor,csv-validate alone failed with 18 compile errors; adding additional-controls failed with 10; adding freezer still failed with 10.
+    disposition: Rejected as non-building for cddl 0.10.6.
+  - name: Reduced features with ast-span, additional-controls, and freezer
+    locator: Local offline feature-ablation run, 2026-08-10
+    conflict: std,json,cbor,csv-validate,additional-controls,freezer,ast-span built successfully but still compiles draft CSV/freezer support and is not materially draft-free.
+    disposition: Not selected as a normative distinction; exact default installation has the clearer published lockfile evidence.
+  - name: Rust 1.85.1 project support floor
+    locator: SQ-0002 retained failure evidence
+    conflict: Below cddl 0.10.6's declared Rust 1.88.0 minimum and fails dependency selection.
+    disposition: Do not build cddl in the support-floor job.
+  - name: Rust 1.97.1 Ubuntu prototype
+    locator: SQ-0002 retained success evidence
+    conflict: Demonstrates one successful environment, not all Rust versions at or above the declared minimum.
+    disposition: Accepted prototype witness; pin the actual CI toolchain independently.
+  - name: stdin validation
+    locator: cddl 0.10.6 src/bin/cli.rs validate implementation
+    conflict: Valid UTF-8 input can be auto-selected as JSON rather than CBOR.
+    disposition: Reject for normative CBOR tests; use an explicit --cbor file.
+  - name: direct OSV package query
+    locator: OSV API result, 2026-08-10
+    conflict: Does not cover the transitive installation graph.
+    disposition: Retain as limited currentness evidence, not as a substitute for a RustSec graph scan.
+concept_mapping:
+  - source_concept: compile-cddl
+    statqed_concept: schema source syntax check
+    obligation: Fail noninteractively and preserve the exact source and tool versions.
+  - source_concept: validate --cbor
+    statqed_concept: untrusted cddl_shape producer
+    obligation: Run only after raw-profile validation and before independent semantic validation.
+  - source_concept: Cargo rust-version
+    statqed_concept: dev/CI toolchain lower bound
+    obligation: Do not silently raise StatQED's public Rust support floor.
+  - source_concept: Cargo feature support
+    statqed_concept: implementation attack surface
+    obligation: A schema-source allowlist, not compiled feature presence, controls normative syntax.
+quantifiers:
+  - statement: Every normative validation run uses cddl 0.10.6 from the recorded archive lineage and explicit noninteractive file arguments.
+    source_status: Project reproducibility obligation; not guaranteed by Cargo without pinning and acquisition checks.
+  - statement: Every cddl success is reported only as cddl_shape and is composed with independent earlier and later checks.
+    source_status: Project trust obligation grounded in RFC 8610 scope.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: compiler_success
+    value: cddl --ci compile-cddl --cddl schemas/v0/compiled/foundation-structural.cddl
+    purpose: Shows that the selected executable can parse the reviewed schema source.
+  - name: explicit_cbor_validation
+    value: cddl --ci validate --cddl schemas/v0/compiled/foundation-structural.cddl --cbor VALID_FIXTURE
+    purpose: Exercises the CBOR path without stdin auto-detection.
+  - name: toolchain_floor_failure
+    value: cddl 0.10.6 installation under Rust 1.85.1 exits 101 because the package and selected dependencies require Rust 1.88.0.
+    purpose: Refutes integration into the public support-floor build.
+  - name: draft_feature_non_authority
+    value: A schema containing a freezer-only control may be parsed by the executable.
+    purpose: It must still fail StatQED's normative source-policy review because tool capability is not standards authority.
+strengthenings:
+  - name: exact_version_locked_install
+    class: strengthening_justified
+    reason: Fixes source and dependency resolution for a reproducible untrusted tool.
+    approval_required: toolchain and security review
+  - name: ci_and_explicit_files
+    class: strengthening_justified
+    reason: Makes failure behavior and CBOR input selection unambiguous.
+    approval_required: conformance review
+  - name: published_syntax_allowlist
+    class: strengthening_justified
+    reason: The executable includes active-draft support that the normative schema is not authorized to use.
+    approval_required: schema review
+weakenings:
+  - name: broader_platform_claim
+    class: candidate_for_weakening
+    reason: Add exact tested environments rather than extrapolating from the retained Ubuntu x86_64 prototype.
+    approval_required: toolchain review with retained evidence
+attribution:
+  - element: Version, source commit, feature, MSRV, CLI, and license facts
+    classification: reproduced
+    source_anchor: cddl 0.10.6 package archive and source commit
+  - element: Exact archive and file digests
+    classification: reproduced
+    source_anchor: Locally hashed official crates.io archive, 2026-08-10
+  - element: Isolated dev/CI toolchain disposition
+    classification: specialized
+    source_anchor: cddl MSRV, SQ-0002 evidence, and StatQED support-floor policy
+  - element: cddl_shape-only trust label and source-syntax allowlist
+    classification: original
+    source_anchor: RFC 8610 scope and SQ-0006 trust contract
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''

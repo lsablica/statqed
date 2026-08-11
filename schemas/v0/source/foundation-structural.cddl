@@ -1,0 +1,10 @@
+; Closed, data-free ADR-0011 fixture. RFC 8610 map groups are closed unless
+; an occurrence accepting additional members is present.
+foundation-structural-v0 = {
+  "schema_id": "statqed.foundation-structural.v0",
+  "schema_version": schema-version-v0,
+  "fixture_kind": fixture-kind-v0,
+  "analysis_id": analysis-id-v0,
+  "probability_context": probability-context-v0,
+  "features": features-v0
+}

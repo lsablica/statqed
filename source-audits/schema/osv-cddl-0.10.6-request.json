@@ -1,0 +1,11 @@
+{
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "crates.io",
+        "name": "cddl"
+      },
+      "version": "0.10.6"
+    }
+  ]
+}

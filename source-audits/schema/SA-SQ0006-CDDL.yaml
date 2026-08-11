@@ -1,0 +1,253 @@
+audit_id: SA-SQ0006-CDDL
+subject: Published CDDL basis and exact six-field foundation structural schema boundary
+source:
+  work: RFC 8610, Concise Data Definition Language (CDDL)
+  version: RFC 8610, June 2019, as updated by RFC 9682, November 2024
+  locator: https://www.rfc-editor.org/rfc/rfc8610.html, Sections 2.1, 2.2.3-2.2.4, 3.1-3.5, 4.2, and 5; current grammar at RFC 9682 Appendix A
+  persistent_id: https://doi.org/10.17487/RFC8610
+controlled_statement: >-
+  A standalone CDDL root map containing exactly the six explicitly named
+  SQ-0006 entries, with no occurrence markers and no wildcard entry, requires
+  those entries and leaves an unknown entry uncovered. Literal values constrain
+  four fields, and [] constrains features to an empty array. analysis_id: tstr
+  constrains only the data-model type; the StatQED ASCII grammar and byte-length
+  bound remain semantic-validation obligations. CDDL does not establish
+  deterministic CBOR bytes, map order, duplicate-key policy, provenance,
+  digest validity, statistical validity, or artifact validity.
+retrieved_at: '2026-08-10'
+source_records:
+  - work: RFC 8610
+    version: June 2019; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc8610.html
+    persistent_id: https://doi.org/10.17487/RFC8610
+    status: Standards Track; updated by RFC 9682
+    exact_anchors:
+      - Section 2.1, paragraphs 1-3, map matching and uncovered pairs
+      - Section 2.2.3, representation types do not constrain serialization variants
+      - Section 2.2.4, first rule is the root and must be a type
+      - Section 3.1, string literals are exact and case-sensitive
+      - Section 3.2, absent occurrence indicator means exactly one
+      - Sections 3.4 and 3.5, array and map syntax
+      - Section 3.5.1, map keys and single-value types
+      - Section 3.5.3, map matching has no serialization-order implication
+      - Section 4.2, automated checking and application enforcement
+      - Section 5, security considerations and need for further defenses
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components use the Simplified BSD License notice stated in the RFC
+  - work: RFC 8610 errata record
+    version: Current record retrieved 2026-08-10
+    locator: https://www.rfc-editor.org/errata/rfc8610
+    persistent_id: https://www.rfc-editor.org/errata/rfc8610
+    status: Five records; one Verified and four Held for Document Update
+    exact_anchors:
+      - EID 6526, Verified, Editorial, Appendix G.2; verified 2021-04-12
+      - EID 6278, Held for Document Update, Technical, Appendix B
+      - EID 6527, Held for Document Update, Technical, Appendix B
+      - EID 6543, Held for Document Update, Technical, Appendix B
+      - EID 6575, Held for Document Update, Technical, Section 2.2.3
+    disposition: Apply Verified EID 6526; do not elevate Held records; use RFC 9682 where its published update resolves the underlying issue.
+  - work: RFC 9682, Updates to the CDDL Grammar
+    version: November 2024; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9682.html
+    persistent_id: https://doi.org/10.17487/RFC9682
+    status: Standards Track; explicitly updates RFC 8610
+    exact_anchors:
+      - Section 1, Appendix A replaces RFC 8610 Appendix B
+      - Section 2, errata-driven clarifications and changes
+      - Section 3.1, empty data models
+      - Section 3.2, non-literal tag numbers and simple values
+      - Section 4, mixed-version implementation risk
+      - Appendix A, current collected ABNF
+    license: IETF Trust Legal Provisions in effect at publication; extracted Code Components use the Revised BSD License notice stated in the RFC
+  - work: IANA CDDL registry
+    version: Last updated 2025-03-06; retrieved 2026-08-10
+    locator: https://www.iana.org/assignments/cddl/cddl.xhtml
+    persistent_id: https://www.iana.org/assignments/cddl/
+    status: Official registry of CDDL control operators
+    exact_anchors:
+      - CDDL Control Operators table, RFC 8610 entries
+      - CDDL Control Operators table, RFC 9165 entries
+      - CDDL Control Operators table, RFC 9741 entries
+  - work: RFC 9165, Additional Control Operators for CDDL
+    version: December 2021; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9165.html, Sections 2-5
+    persistent_id: https://doi.org/10.17487/RFC9165
+    status: Published optional extension; does not update RFC 8610
+  - work: RFC 9741, Additional Control Operators for Conversion and Processing of Text
+    version: March 2025; Proposed Standard
+    locator: https://www.rfc-editor.org/rfc/rfc9741.html, Sections 2-5
+    persistent_id: https://doi.org/10.17487/RFC9741
+    status: Published optional extension; does not update RFC 8610
+  - work: CDDL Module Structure
+    version: draft-ietf-cbor-cddl-modules-06; 1 March 2026; expires 2 September 2026
+    locator: https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cddl-modules-06
+    persistent_id: https://datatracker.ietf.org/doc/draft-ietf-cbor-cddl-modules/
+    status: Active Internet-Draft; Work in Progress; not an RFC
+    exact_anchors:
+      - Status of This Memo
+      - Sections 2.3-2.6, directives, import, and include
+  - work: CDDL Freezer
+    version: draft-bormann-cbor-cddl-freezer-17; current revision retrieved 2026-08-10
+    locator: https://datatracker.ietf.org/doc/html/draft-bormann-cbor-cddl-freezer-17
+    persistent_id: https://datatracker.ietf.org/doc/draft-bormann-cbor-cddl-freezer/
+    status: Internet-Draft; Work in Progress; not an RFC
+hypotheses:
+  - name: standalone_root_is_first_rule
+    class: source_explicit
+    source_anchor: RFC 8610 Section 2.2.4
+    notes: The six-field map rule must be first and must be a type.
+  - name: explicit_map_without_wildcard_is_closed
+    class: source_explicit
+    source_anchor: RFC 8610 Section 2.1, paragraphs 1-3
+    notes: A map fails to match if a pair is not covered by the group specification.
+  - name: all_six_entries_are_required_once
+    class: source_explicit
+    source_anchor: RFC 8610 Section 3.2
+    notes: With no occurrence marker, each entry has occurrence exactly one.
+  - name: literal_fields_match_exact_values
+    class: source_explicit
+    source_anchor: RFC 8610 Sections 3.1 and 3.5.1
+    notes: schema_id, schema_version, fixture_kind, and probability_context use exact single-value types; text matching is case-sensitive.
+  - name: features_empty_array_is_exact
+    class: source_explicit
+    source_anchor: RFC 8610 Section 3.4
+    notes: An array with no group entries is the exact empty-array shape.
+  - name: cddl_map_order_is_not_serialization_order
+    class: source_explicit
+    source_anchor: RFC 8610 Section 3.5.3
+    notes: Map matching does not prescribe encoded entry order.
+  - name: representation_types_do_not_fix_serialization
+    class: source_explicit
+    source_anchor: RFC 8610 Section 2.2.3
+    notes: Data-model constraints cannot select a CBOR representation variant.
+  - name: current_collected_grammar_is_rfc_9682
+    class: source_explicit
+    source_anchor: RFC 9682 Section 1 and Appendix A
+    notes: Appendix A replaces RFC 8610 Appendix B.
+  - name: only_verified_erratum_is_applied_directly
+    class: source_implicit_justified
+    source_anchor: RFC Editor RFC 8610 errata record and RFC 9682 Section 2
+    notes: EID 6526 is Verified; the four Held records are recorded but not silently made normative.
+  - name: analysis_id_ascii_and_byte_length
+    class: formalization_obligation
+    source_anchor: SQ-0006 contract; RFC 8610 Sections 3.1 and 3.8
+    notes: Base tstr does not establish [a-z0-9][a-z0-9._:-]{0,127}; enforce the ASCII grammar and 1-128 encoded-byte bound in the independent semantic validator.
+  - name: deterministic_profile_precedes_cddl
+    class: formalization_obligation
+    source_anchor: RFC 8610 Sections 2.2.3 and 3.5.3; RFC-0001
+    notes: Raw framing, definite lengths, preferred encodings, duplicate-key rejection, UTF-8 policy, and deterministic map ordering are checked before CDDL.
+  - name: cddl_success_is_only_cddl_shape
+    class: formalization_obligation
+    source_anchor: RFC 8610 Sections 4.2 and 5; SQ-0006 contract
+    notes: Preserve the guarantee label cddl_shape and run independent semantic validation afterward.
+  - name: use_published_standalone_subset
+    class: strengthening_justified
+    source_anchor: RFC 8610 as updated by RFC 9682; SQ-0006 contract
+    notes: The normative file needs only base literal, map, array, and tstr syntax; this reduces unsupported syntax without altering the six-field contract.
+  - name: encode_analysis_id_with_controls_in_structural_schema
+    class: strengthening_unjustified
+    source_anchor: RFC 8610 Section 3.8; SQ-0006 contract
+    notes: Moving the project ASCII and byte-length semantics into optional controls would change the reviewed layer boundary and add control-engine portability questions merely for convenience.
+  - name: permit_module_or_import_directives
+    class: strengthening_unjustified
+    source_anchor: draft-ietf-cbor-cddl-modules-06, Status of This Memo
+    notes: Implementation support cannot elevate active draft syntax into a normative published-syntax schema.
+  - name: exclude_optional_rfc_9165_and_rfc_9741_controls
+    class: candidate_for_weakening
+    source_anchor: RFC 9165 Sections 2-4; RFC 9741 Sections 2-3
+    notes: These published extensions are unnecessary for this exact structural map and may be reconsidered only for a reviewed need.
+  - name: probability_or_randomness_assumption
+    class: not_applicable
+    source_anchor: SQ-0006 closed data-free fixture contract
+    notes: The fixture contains no stochastic object and probability_context is the literal not_applicable.
+variants:
+  - name: RFC 8610 original collected ABNF
+    locator: RFC 8610 Appendix B
+    conflict: It has been replaced by RFC 9682 Appendix A.
+    disposition: Historical lineage only; do not copy as the current grammar.
+  - name: RFC 8610 as updated by RFC 9682
+    locator: RFC 9682 Appendix A
+    conflict: New grammar features may be rejected by older implementations.
+    disposition: Normative grammar basis, while this schema stays inside the tested simple common subset.
+  - name: closed six-entry map
+    locator: RFC 8610 Sections 2.1 and 3.5
+    conflict: A wildcard entry would cover otherwise unknown pairs and change fail-closed behavior.
+    disposition: Use six named entries with no wildcard or occurrence relaxation.
+  - name: open map with wildcard
+    locator: RFC 8610 Section 3.5 examples using key/value wildcard entries
+    conflict: It accepts extension fields prohibited by the frozen SQ-0006 contract.
+    disposition: Rejected.
+  - name: base tstr analysis identifier
+    locator: RFC 8610 Sections 2.1 and 3.1
+    conflict: It intentionally admits text that the independent StatQED semantic validator must reject.
+    disposition: Selected for structural CDDL; retain ASCII and byte-length checks in semantic validation.
+  - name: control-constrained analysis identifier
+    locator: RFC 8610 Section 3.8
+    conflict: It relocates semantics into the CDDL layer and introduces control-implementation variation.
+    disposition: Rejected for SQ-0006; not needed to establish structural shape.
+  - name: module or freezer syntax
+    locator: draft-ietf-cbor-cddl-modules-06 and draft-bormann-cbor-cddl-freezer-17
+    conflict: Both are Work in Progress and can change.
+    disposition: Normatively prohibited even if a selected tool happens to implement them.
+concept_mapping:
+  - source_concept: CDDL root map match
+    statqed_concept: cddl_shape for the six-field foundation fixture
+    obligation: Keep raw-profile and semantic stages independently observable.
+  - source_concept: uncovered map pair
+    statqed_concept: unknown_field structural rejection
+    obligation: Omit wildcard entries and retain a negative unknown-field fixture.
+  - source_concept: tstr
+    statqed_concept: structurally text-valued analysis_id
+    obligation: Do not infer the StatQED ASCII identifier predicate from tstr.
+  - source_concept: CDDL single-value type
+    statqed_concept: frozen fixture literals
+    obligation: Preserve exact case and integer value.
+quantifiers:
+  - statement: Every candidate byte sequence is checked by the RFC-0001 raw/profile stage before CDDL, and by semantic validation after CDDL.
+    source_status: Project composition obligation; not supplied by RFC 8610.
+  - statement: Every map accepted at the CDDL stage has exactly the six covered field entries at the data-model layer.
+    source_status: Follows from RFC 8610 map matching and exact-one occurrence under the stated schema construction.
+randomness_scopes: []
+nonvacuity_witnesses:
+  - name: unknown_field_rejection
+    value: A valid six-field map plus an entry named extension.
+    purpose: Must fail the closed CDDL map because the extra pair is uncovered.
+  - name: reordered_map_shape_acceptance
+    value: The same six data-model pairs presented in a different map order.
+    purpose: Still matches CDDL, demonstrating that deterministic byte order is a separate earlier check.
+  - name: semantic_only_identifier_rejection
+    value: A six-field map with analysis_id equal to Uppercase.
+    purpose: 'Matches analysis_id: tstr but must fail the independent StatQED identifier predicate.'
+  - name: nonempty_features_rejection
+    value: A six-field map with features equal to ["x"].
+    purpose: Must fail the exact [] structural constraint.
+strengthenings:
+  - name: published_standalone_syntax_only
+    class: strengthening_justified
+    reason: The frozen schema needs no extension or draft feature, and excluding them preserves a stable reviewable source.
+    approval_required: schema and conformance review
+  - name: explicit_stage_separation
+    class: strengthening_justified
+    reason: RFC 8610 itself does not establish serialization or application semantics; the contract requires independently reported stages.
+    approval_required: schema and trust review
+weakenings:
+  - name: later_published_control_with_demonstrated_need
+    class: candidate_for_weakening
+    reason: A future schema may need a registered control after conformance testing and semantic review; SQ-0006 does not.
+    approval_required: new schema version and independent review
+attribution:
+  - element: CDDL map, literal, occurrence, and root semantics
+    classification: reproduced
+    source_anchor: RFC 8610 Sections 2.1, 2.2.4, and 3.1-3.5
+  - element: Current collected CDDL grammar
+    classification: corrected
+    source_anchor: RFC 9682 Appendix A replacing RFC 8610 Appendix B
+  - element: Six-field closed foundation specialization
+    classification: specialized
+    source_anchor: SQ-0006 contract and ADR-0011
+  - element: Raw-profile/CDDL/semantic guarantee separation
+    classification: original
+    source_anchor: RFC-0001, ADR-0004, and SQ-0006 contract
+review:
+  status: DRAFT
+  reviewers: []
+  statement_hash: ''

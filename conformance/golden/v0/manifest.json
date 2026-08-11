@@ -1,0 +1,54 @@
+{
+  "digest_identifiers": {
+    "algorithm": "sha-256",
+    "framing": "statqed.digest-lp.v1",
+    "object_class_schema": "statqed.foundation-structural.v0",
+    "profile": "statqed.cbor-core.v1",
+    "purpose": "statqed.fixture.golden"
+  },
+  "entries": [
+    {
+      "cbor_path": "conformance/golden/v0/positive-maximum.cbor",
+      "cbor_sha256": "f7d807f69be6b4ef8f0c06120bd5100dc72927eba44c825f79fd75f0ecce1e33",
+      "digest_hex": "c96f02279dac2b364fe0874606013d49507dbf04393acf65d059b2186a2d158e",
+      "fixture_id": "positive.maximum",
+      "frame_path": "conformance/golden/v0/positive-maximum.frame",
+      "frame_sha256": "c96f02279dac2b364fe0874606013d49507dbf04393acf65d059b2186a2d158e"
+    },
+    {
+      "cbor_path": "conformance/golden/v0/positive-minimum.cbor",
+      "cbor_sha256": "8fa5806b05e6c5ef4df565ef21a1db53a4cb4650181bce38482d929ca8012226",
+      "digest_hex": "b3fecf807b69ff05bfbfec6287ed29b65bb7da345883eddeff92b27e373a20e4",
+      "fixture_id": "positive.minimum",
+      "frame_path": "conformance/golden/v0/positive-minimum.frame",
+      "frame_sha256": "b3fecf807b69ff05bfbfec6287ed29b65bb7da345883eddeff92b27e373a20e4"
+    },
+    {
+      "cbor_path": "conformance/golden/v0/positive-producer-order.cbor",
+      "cbor_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "fixture_id": "positive.producer-order",
+      "frame_path": "conformance/golden/v0/positive-producer-order.frame",
+      "frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "cbor_path": "conformance/golden/v0/positive-representative.cbor",
+      "cbor_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "fixture_id": "positive.representative",
+      "frame_path": "conformance/golden/v0/positive-representative.frame",
+      "frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "cbor_path": "conformance/golden/v0/positive-text-head-24.cbor",
+      "cbor_sha256": "6c2a9bed71ded2acae01ccc82150882a46ba267147dad885f04bd3085e0e0321",
+      "digest_hex": "9a7132f07944c771a536161106e24c10975de20a324f4e18e4523c8796e2d7b0",
+      "fixture_id": "positive.text-head-24",
+      "frame_path": "conformance/golden/v0/positive-text-head-24.frame",
+      "frame_sha256": "9a7132f07944c771a536161106e24c10975de20a324f4e18e4523c8796e2d7b0"
+    }
+  ],
+  "manifest_version": "statqed.schema-v0-goldens.v1",
+  "schema_id": "statqed.foundation-structural.v0",
+  "schema_version": 0
+}

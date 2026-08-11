@@ -1,0 +1,3377 @@
+{
+  "inherited_sq0005_resource_evidence": {
+    "cases": [
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-INPUT-BYTES-1048576",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.input_bytes",
+        "id": "RESOURCE-INPUT-BYTES-1048577",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-OUTPUT-BYTES-1048576",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.output_bytes",
+        "id": "RESOURCE-OUTPUT-BYTES-1048577",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-DEPTH-32",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.depth",
+        "id": "RESOURCE-DEPTH-33",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-MAP-ENTRIES-1024",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.map_entries",
+        "id": "RESOURCE-MAP-ENTRIES-1025",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-ARRAY-ITEMS-1024",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.array_items",
+        "id": "RESOURCE-ARRAY-ITEMS-1025",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-TEXT-STRING-65536-BYTES",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.string_bytes",
+        "id": "RESOURCE-TEXT-STRING-65537-BYTES",
+        "result_class": "resource"
+      },
+      {
+        "accepted": true,
+        "code": "accepted",
+        "id": "RESOURCE-DIAGNOSTIC-BYTES-4096",
+        "result_class": "accepted"
+      },
+      {
+        "accepted": false,
+        "code": "resource.diagnostic_bytes",
+        "id": "RESOURCE-DIAGNOSTIC-BYTES-4097",
+        "result_class": "resource"
+      },
+      {
+        "accepted": false,
+        "code": "differential.resource_guard",
+        "id": "MUTANT-DECODER-ALLOCATES-DECLARED-STRING",
+        "result_class": "differential_detection"
+      },
+      {
+        "accepted": false,
+        "code": "operational.timeout",
+        "id": "OPERATIONAL-TIMEOUT-OVER",
+        "result_class": "operational_failure"
+      }
+    ],
+    "interpretation": "Re-executed by the permanent SQ-0005 conformance gate; SQ-0006 adds fixture-specific input/depth negatives and accepted payload/frame size observations without duplicating the generic profile corpus.",
+    "source": "conformance/prototypes/generated-v1/results.json",
+    "source_sha256": "4e48d962644cec0f83b868ba13bcc62f3bc8cee4dca748fed10e3ad911195274"
+  },
+  "layer_order": [
+    "profile_decode",
+    "deterministic_bytes",
+    "cddl_shape",
+    "schema_semantics",
+    "fixture_digest"
+  ],
+  "negative_count": 85,
+  "positive_count": 5,
+  "resource_observation": {
+    "maximum_accepted_frame_bytes": 423,
+    "maximum_accepted_payload_bytes": 283,
+    "rfc0001_input_limit_bytes": 1048576
+  },
+  "result_version": "statqed.schema-v0-results.v1",
+  "results": [
+    {
+      "canonical_cbor_hex": "a66866656174757265738069736368656d615f69647820737461747165642e666f756e646174696f6e2d7374727563747572616c2e76306b616e616c797369735f69647880617a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a6c666978747572655f6b696e6475666f756e646174696f6e5f7374727563747572616c6e736368656d615f76657273696f6e007370726f626162696c6974795f636f6e746578746e6e6f745f6170706c696361626c65",
+      "canonical_cbor_sha256": "f7d807f69be6b4ef8f0c06120bd5100dc72927eba44c825f79fd75f0ecce1e33",
+      "classification": "accepted",
+      "digest_hex": "c96f02279dac2b364fe0874606013d49507dbf04393acf65d059b2186a2d158e",
+      "frame_sha256": "c96f02279dac2b364fe0874606013d49507dbf04393acf65d059b2186a2d158e",
+      "id": "positive.maximum",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "accepted",
+        "status": "accepted"
+      },
+      "python_digest_verify_code": "accepted",
+      "python_encode_output_sha256": "0b5c6a542f42c28dd2c2f2eece70606477fa83c0c76318de4381a64f9e7fdab8",
+      "rust_digest_verify_code": "accepted",
+      "rust_encode_output_sha256": "bd3f6e8b3553e11b72c9ad3c13bb0f930ee3c0aa9bac23144a41397c29a50a39"
+    },
+    {
+      "canonical_cbor_hex": "a66866656174757265738069736368656d615f69647820737461747165642e666f756e646174696f6e2d7374727563747572616c2e76306b616e616c797369735f696461616c666978747572655f6b696e6475666f756e646174696f6e5f7374727563747572616c6e736368656d615f76657273696f6e007370726f626162696c6974795f636f6e746578746e6e6f745f6170706c696361626c65",
+      "canonical_cbor_sha256": "8fa5806b05e6c5ef4df565ef21a1db53a4cb4650181bce38482d929ca8012226",
+      "classification": "accepted",
+      "digest_hex": "b3fecf807b69ff05bfbfec6287ed29b65bb7da345883eddeff92b27e373a20e4",
+      "frame_sha256": "b3fecf807b69ff05bfbfec6287ed29b65bb7da345883eddeff92b27e373a20e4",
+      "id": "positive.minimum",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "accepted",
+        "status": "accepted"
+      },
+      "python_digest_verify_code": "accepted",
+      "python_encode_output_sha256": "62c1b964059d190d40a20f17758ec50921ccb01310e489e8a6874a8f9e29980c",
+      "rust_digest_verify_code": "accepted",
+      "rust_encode_output_sha256": "a11321d74ed733234be2e53cd142ed502dba1169b8a5f6f55feec0a2cec5225a"
+    },
+    {
+      "canonical_cbor_hex": "a66866656174757265738069736368656d615f69647820737461747165642e666f756e646174696f6e2d7374727563747572616c2e76306b616e616c797369735f696477666f756e646174696f6e2e6578616d706c652d303030316c666978747572655f6b696e6475666f756e646174696f6e5f7374727563747572616c6e736368656d615f76657273696f6e007370726f626162696c6974795f636f6e746578746e6e6f745f6170706c696361626c65",
+      "canonical_cbor_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "accepted",
+      "digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "id": "positive.producer-order",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "accepted",
+        "status": "accepted"
+      },
+      "python_digest_verify_code": "accepted",
+      "python_encode_output_sha256": "8e75c3db9877b2d3f15697254eaebf7dc52b2699a78161870b41cf2f7f4c21b6",
+      "rust_digest_verify_code": "accepted",
+      "rust_encode_output_sha256": "a43d7f368325c5dd6a0b34f34183b1d6c448350695b189df23e5297e1e33f06b"
+    },
+    {
+      "canonical_cbor_hex": "a66866656174757265738069736368656d615f69647820737461747165642e666f756e646174696f6e2d7374727563747572616c2e76306b616e616c797369735f696477666f756e646174696f6e2e6578616d706c652d303030316c666978747572655f6b696e6475666f756e646174696f6e5f7374727563747572616c6e736368656d615f76657273696f6e007370726f626162696c6974795f636f6e746578746e6e6f745f6170706c696361626c65",
+      "canonical_cbor_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "accepted",
+      "digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "id": "positive.representative",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "accepted",
+        "status": "accepted"
+      },
+      "python_digest_verify_code": "accepted",
+      "python_encode_output_sha256": "8e75c3db9877b2d3f15697254eaebf7dc52b2699a78161870b41cf2f7f4c21b6",
+      "rust_digest_verify_code": "accepted",
+      "rust_encode_output_sha256": "a43d7f368325c5dd6a0b34f34183b1d6c448350695b189df23e5297e1e33f06b"
+    },
+    {
+      "canonical_cbor_hex": "a66866656174757265738069736368656d615f69647820737461747165642e666f756e646174696f6e2d7374727563747572616c2e76306b616e616c797369735f69647818666f756e646174696f6e2e6578616d706c652d30303031786c666978747572655f6b696e6475666f756e646174696f6e5f7374727563747572616c6e736368656d615f76657273696f6e007370726f626162696c6974795f636f6e746578746e6e6f745f6170706c696361626c65",
+      "canonical_cbor_sha256": "6c2a9bed71ded2acae01ccc82150882a46ba267147dad885f04bd3085e0e0321",
+      "classification": "accepted",
+      "digest_hex": "9a7132f07944c771a536161106e24c10975de20a324f4e18e4523c8796e2d7b0",
+      "frame_sha256": "9a7132f07944c771a536161106e24c10975de20a324f4e18e4523c8796e2d7b0",
+      "id": "positive.text-head-24",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "accepted",
+        "status": "accepted"
+      },
+      "python_digest_verify_code": "accepted",
+      "python_encode_output_sha256": "d759b2a75312100dfd2953f6b33368e72e9e738c9e7ac3754bb5d5482f704eb5",
+      "rust_digest_verify_code": "accepted",
+      "rust_encode_output_sha256": "3e0922ddcf70242e4c164fb9fc891815af8d0ab3749d795e4b78d98e01daf5a4"
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.schema_id",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "01e01429e572cc7573d8e2a842e0a5e59ef42d2afadb97aedf1384e66cc83a49",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "c9d0690fc4cc8fb1a2aee4fb4d170ac1d119178c238dff0712a275a171f11412"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.schema_version",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "96354063755285f7c36cfd98d980e61cd5e42177111e9f9bf206286a96f81c9c",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "7f068ac2d426cc4effe5a721f827006eaf99025ceab56388be1accbd85375145"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.fixture_kind",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "6bd8d6ad57b4fee6ff03b4b4d796ea3d565470c2aedce41ecb60c3b550b9e927",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "4eae58ec9a3fc728b130f3cf9804902d4cb8460d9dcfc0761ebed7f63012ebdb"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.analysis_id",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f38d9e312d3fc902ba8ee9a8924fd938394e93278538cafae850ae88e0eb2a46",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "5a4d4056e62cba9a55503420d8ae7edf69a5e78d37342642fe3b4f0e8cc886bb"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.probability_context",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f76a669177e6a585652ac39c780bd586143fcfa1645567db29283c019e9564c0",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "efb796e8f6ae51c622ee33eeae9d1a19f62f157ad62cf45b8e9061350428f263"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "missing.features",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "686ab27c99ddde98cc8835a55c04275237ac681bd3488924e2f49bfa331f6a6d",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "996ae15a1fc22fc4eedae80e114f461fb2020ad8471c5cb85935f77add9a506b"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.missing_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.arbitrary",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "5124f9d744d0c8df040c777f333af03ae8ffdb9625419177702fb001e66836f1",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "de13534ad1645e35fe120e9e37533cd4a54a4f3912f0267d51dd40d0ebf2d45c"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.data",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "472420c69d5e28abbc7f39c21aca6423529f9810cf0d2acad4b99b215e884959",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "40422953808c4ebc566b8e4299c23bb253d941685c84b2a52f7f49b277e9deb0"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.table",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "b3941357a6d80333363050b35e480efebbf352ee0aec814eb043e9f8563e3288",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "d9b8caaa114244030caf91b9175ffc787619ce8043d6fbdf6fa26e9c95d85ddb"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.design",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "6640dde2562f47cc4df98f0fc0c0ab39db527a04e37d8def7dc9b6d6b841e80b",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "20a04588c5d367495ed92cccb8c49fba23f204de587e15535003558159e74986"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.model",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "a5521b4053643198ff55f85727e792acd02d59d223aabf9839acfd67754fc2a6",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "359504723edb0646508eb5e4d47307bd2b7909d7323ec61d450f6706e83c8c4e"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.experiment",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "d63c5f29630642007effd20d4552327b05c55777e8dd648898207046a9687eba",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "6eea87d1325912be8e63f45a41271906d8118b583a35f6149161a0306db17a89"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.estimand",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "41746076ffe3fd4f9e8a6be3ace6e8301e9630335a4c8c7c97d13dd954dab165",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "b70dccd728dee3d378908e8743ffc37929c6574703ee75c3b2a50ceb48f9a7b1"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.procedure",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "59f966888616203bd7c44b13b10e7545bf082a78d35be406214241105de4420f",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "bf8012cced7a2e16fabf908ee71e112913b182fecd3aed180d8ad6094ca99830"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.claim",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "54d794e8358a3619396402cb1fb5b75503867ec0700d709e62379fb7ae50e514",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "27de5a8e507c690736f41d5ecdc392348c005e5aa8ef47a1de17be24162157d9"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.numerical_obligation",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "8533cc95c9b42f3ac4ed935d2099564ffb009a5e53c7d219349b4361185885b7",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "e1ecf5935acf60ca10cefd09256ea18b7f82ed821a03bfef5f6d2282ca5cda51"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.external_assumption",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "9b5e067d0cf8d9645e3b6f9822a8e70ba49a259019845282fe8b994747aad219",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "08f04c08b5b6bd03fce1eec3f38ca6115356c01aba49a4c305124d7ba9cd3243"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.diagnostic",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "20ba05a1bcc33b2c75c1757aa0a038e6a2d26c746622d3f5e875383507ddb964",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "59331fa9f7cf6db832bcfb9f3cf95247ead4da479ad90338c4604deed4ca8dfc"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.extension",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "c9c6156dcb7c6cfc896d1f9fb39ba3b811c804e44510611637009737e220e1ec",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "f05324494fd4a818348f2448bab1d10300ff33bacd432f02fe14e28854042f35"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.provenance",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "9f9b54fb95c30390c7b13fac96a9eb56920eb5573cbb65c5dcf20e437937612c",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "5d76ae422b2df0b27becd04f26e854f40ecf65eba8125dc9d717b435219e2e49"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.theorem",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f68c44a49029b53e24d487776129abcfc323b8dfc0c0a1fb6855ffca2bee3e20",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "630bd7fa1b3ebe7075fc894588d216adfec944ab5a8065a61c6dfdc20de8e2de"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.theorem_lock",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "1063befcb49ee4d33a1e8bd1587d941e4e67ef3894005712961cf7cec6041563",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "64097d3650077aeab45a7a2a3e6c0a859669a8997374856b871a43d661f1ee64"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.assurance_graph",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "1beb18c469e644414538444b1295c80937f95a85c6df2645e1ef7af18ddf352c",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "b369d0820287a8fe380a3434cf778c4b878cb3dfc08dff55fcf2e271fb615553"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.artifact",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "b31e3cd49b450188b3d7f87e8aaf4b65f717b8df66ca5dc4b4364675ba40bc63",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "e2d6adfc8e6a0dbc319e824158f7d3bac40e29e476ce340e2e39162d6860fa3c"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.certificate",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "fdae9a364c501269bbedee00a0ac95557a942121e30dbd3d7aee7963b8a153f2",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "7a7c412018f746e78beea637df2d0105fdc6156c1c12917845dd502969028e12"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "duplicate.schema_id",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "validity.map_duplicate",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "validity.map_duplicate",
+        "status": "rejected"
+      },
+      "raw_sha256": "f874d077731a72751691f8cc13c8efcacc1dd766d44f4fcd1d53c16988d98664",
+      "rust_code": "validity.map_duplicate"
+    },
+    {
+      "classification": "rejected",
+      "id": "duplicate.nonpreferred_equivalent_key",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "validity.map_duplicate",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "validity.map_duplicate",
+        "status": "rejected"
+      },
+      "python_code": "validity.map_duplicate",
+      "python_result_class": "validity",
+      "raw_bytes": 222,
+      "raw_sha256": "1b70f441c53a560ccaa36a5c51e8b0380d46aab40fcebc138095564ba8ee3812",
+      "rust_code": "validity.map_duplicate",
+      "rust_result_class": "validity"
+    },
+    {
+      "classification": "rejected",
+      "id": "literal.schema_id",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "7b52c6dcee43801c5facde03787c643bc32ddf3c4cccc37d889d229382b121ad",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "90bc46ceeaf17838a10577e5657ae5c05c9f730e1fffc68ba6c36c33f3a5afa4"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.literal_mismatch",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "version.one",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "36b04d15a4f06269d433a492f81fae5d1f3d98c2edad20f15ecee51f6db635e8",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "1a4f1d72b7d6a324bda2cc357ce449e017b5615598c429c1fffabc535ca6777b"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.version_unsupported",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "version.correlated_v1_pair",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "850ba989fcb8a72a7f9909ea3d1f4cf19635206eb08d1bebece128f03540c3dd",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "039a22ba374da148cbaa2ffce6df6ed5b02b8edb08156bfb84a1052ca6443853"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.literal_mismatch",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "kind.wrong",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "0b52328ed74f4e02893401ab61b7c4948c0c5860a1bc908ebf539896be52fc54",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "a607278c5f2341d489bd0332bc28785e3323091decd38732745cec200a2bfb56"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.fixture_kind",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "probability.wrong",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "fe2308d783737aa93a143d1dbff1149583415c5df559d5b541227835c9aa5a6d",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "2e7182d10569283a361f73925ee54cd5f1df12953eb4236c4a19af2666f3c301"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.probability_context",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "features.nonempty_null",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "087ccca6d6e91a280e62b066dd0a553033f8d66bf80ec6edbe088cc513317dbb",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "ba3e99637b72be71d45e0a36a744e59f282ae6b35412ff509b6ecee0a6364215"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.feature_unsupported",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "features.nonempty_text",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "db0004190564f1f04898a613c2d8f2ea60b8638a66fa39930872d430a1d73311",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "5b592a7930c87b36210bb0fa7d8024f2ab7010593268c605c5ea1c081e2ade0e"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.feature_unsupported",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.empty",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "3db40c241fbe50e8837e334058d37cc173367760bbe340802de86f815f5c5343",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "f9f25ca07809e595b388087e72743cf702bbff9928a80c1c5a2e3f878e10644e"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_length",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_length",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.over_128",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "b3e7cb88e0ba12dcdaa2a57fc4679ab81c6aaf2de8445b3424fe71afb36867c8",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "f93dad8e66c3b6f8969b4732d408c3fdbcbba1cee88218cea873efb4f2c074e3"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_length",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_length",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.uppercase",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "3b7e1e8c9bbf37ef2691c7ad04da67128103602fc8e2f4ae67eae9582f7d7e14",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "4061bab73fe32609d8d6ec1fc63e3b0670695beadada2e178d1a96f8afd793a2"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_syntax",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_syntax",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.unicode",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "29dd3ddfa1d4567c9c7124e8f21eb7de11302b6477e4db746287a2a5d80f5aa7",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "8f687e9b16dcba9d189df7d3400ea80f9fb74cd0254970b23dbc8e6c558eb072"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_syntax",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_syntax",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.punctuation",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f59b8c9c3fbe41457c22bde76204bfd1633a43968cf6b082f023931893d540ea",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "20f5a4bb582687c0cff04aada8bbdc26f981afd80d1997146e1aca3ce93de5f1"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_syntax",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_syntax",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "identifier.leading_punctuation",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "53a6dda629950a56d8219f8d97081a0044786ae3fc304b08e73a58b490b9b7dd",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "2ed4a46ddcb8be08fe68573cce6c674fdb7e4e1719b2abc4a79ea2e1cb8194d2"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_syntax",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_syntax",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.schema_id",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "175ed84f7987d840e32d5152424ede8d55bb331bc80e95ed696d85a2c2b857d5",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "ac2a538ed37ed2c55f93df01346faf7269f2ed9cbd561707cccdd8a307728abe"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.schema_version",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "a552c632f87a330b6b96c586c4fadffc5b466f0728a281669da7a0615aaafbf5",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "e288a73588c41729fcfdaf1a5b5f0eda81aeca662239e2051e6bf1a2cdb270aa"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.fixture_kind",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "62ec56ed82f1717367341f64ede0023fae45d94246e795e29926e75b431227f4",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "70814efc85a7ecfc495d985f7c2f9f95b997bc199e1fe71dc379b4104ee6b355"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.analysis_id",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f3f64098f9c9be3920350e2024c02bdbd05f4883957d0ec80f7c98bc5144c41d",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "8a30fd0825055ae2d54ea76e56a897b727361dc28d48d180d6aba86b208e0680"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.probability_context",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "dbd419e220ed9af19107a83948f10e94364723af67990afe9108df09d9b3ac0a",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "eea790bc96a52a82a700450c3915148115bfc0bd9b117025c42c140c729cec13"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "type.features",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "4d199aa96050e6b1b4c9d675fb0d3d839f1744cbaf48413ea0a046fb7619f5f3",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "dcbe3d8e3324721843ce7eed1dd620bc1e9aad74b3aa37f6b86787a0e837f820"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.field_type",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.nonpreferred_map_head",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "profile.non_preferred_head",
+          "status": "rejected"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "profile.non_preferred_head",
+        "status": "rejected"
+      },
+      "python_code": "profile.non_preferred_head",
+      "python_result_class": "deterministic_profile",
+      "raw_bytes": 178,
+      "raw_sha256": "998d4186500c34de2cd55225e2c5d9ece2c5ee58015813f28f1c6928dfb57b86",
+      "rust_code": "profile.non_preferred_head",
+      "rust_result_class": "deterministic_profile"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.wrong_map_order",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "profile.map_order",
+          "status": "rejected"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "profile.map_order",
+        "status": "rejected"
+      },
+      "python_code": "profile.map_order",
+      "python_result_class": "deterministic_profile",
+      "raw_bytes": 177,
+      "raw_sha256": "4c8bc03cacccfe8f391a233a6840fdff5f70128cafac30a3739c106ba19dcbb8",
+      "rust_code": "profile.map_order",
+      "rust_result_class": "deterministic_profile"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.indefinite_map",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "profile.indefinite",
+          "status": "rejected"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "profile.indefinite",
+        "status": "rejected"
+      },
+      "python_code": "profile.indefinite",
+      "python_result_class": "deterministic_profile",
+      "raw_bytes": 178,
+      "raw_sha256": "d8d7b124ac049287acfe9db18f44824e1efeac74baded104abe619e770b0220e",
+      "rust_code": "profile.indefinite",
+      "rust_result_class": "deterministic_profile"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.indefinite_array",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "profile.indefinite",
+          "status": "rejected"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "profile.indefinite",
+        "status": "rejected"
+      },
+      "python_code": "profile.indefinite",
+      "python_result_class": "deterministic_profile",
+      "raw_bytes": 178,
+      "raw_sha256": "97b34590caf9e50d116afccbce4e4b10e359443c49cfc69b01f89f96587d13c2",
+      "rust_code": "profile.indefinite",
+      "rust_result_class": "deterministic_profile"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.indefinite_text",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "profile.indefinite",
+          "status": "rejected"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "profile.indefinite",
+        "status": "rejected"
+      },
+      "python_code": "profile.indefinite",
+      "python_result_class": "deterministic_profile",
+      "raw_bytes": 179,
+      "raw_sha256": "81ceace50bce8222ef6195bf80f0b66f84a3d066dc17eb106083e74e13414ec6",
+      "rust_code": "profile.indefinite",
+      "rust_result_class": "deterministic_profile"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.invalid_utf8",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "validity.invalid_utf8",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "validity.invalid_utf8",
+        "status": "rejected"
+      },
+      "python_code": "validity.invalid_utf8",
+      "python_result_class": "validity",
+      "raw_bytes": 155,
+      "raw_sha256": "af536c3cc359c4f794da0c9095a6fb8545e6434b781e0427304bcc541c8a4ca3",
+      "rust_code": "validity.invalid_utf8",
+      "rust_result_class": "validity"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.trailing",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "expected.trailing_bytes",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "expected.trailing_bytes",
+        "status": "rejected"
+      },
+      "python_code": "expected.trailing_bytes",
+      "python_result_class": "expectedness",
+      "raw_bytes": 178,
+      "raw_sha256": "b2d4bb8ed6c30c56e05ed9f6d8f1136caf5d4249ea8f5e19e2d3f4a5c8580d12",
+      "rust_code": "expected.trailing_bytes",
+      "rust_result_class": "expectedness"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.truncated",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "wellformed.truncated",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "wellformed.truncated",
+        "status": "rejected"
+      },
+      "python_code": "wellformed.truncated",
+      "python_result_class": "well_formedness",
+      "raw_bytes": 176,
+      "raw_sha256": "23bef732f1d767ce7e9681e8e8661d37b209582ca231be8db23f2f04d80db05a",
+      "rust_code": "wellformed.map_pair_missing",
+      "rust_result_class": "well_formedness"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.reserved_additional",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "wellformed.reserved_additional",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "wellformed.reserved_additional",
+        "status": "rejected"
+      },
+      "python_code": "wellformed.reserved_additional",
+      "python_result_class": "well_formedness",
+      "raw_bytes": 1,
+      "raw_sha256": "bd4fc42a21f1f860a1030e6eba23d53ecab71bd19297ab6c074381d4ecee0018",
+      "rust_code": "wellformed.reserved_additional",
+      "rust_result_class": "well_formedness"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.wrong_profile",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "expected.profile_id",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "expected.profile_id",
+        "status": "rejected"
+      },
+      "python_code": "expected.profile_id",
+      "python_result_class": "expectedness",
+      "raw_bytes": 177,
+      "raw_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "rust_code": "expected.profile_id",
+      "rust_result_class": "expectedness"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.wrong_purpose",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.purpose",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.purpose",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.wrong_schema",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.object_class_schema",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.object_class_schema",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.wrong_framing",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.framing",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.framing",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.wrong_profile",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.profile",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.profile",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.wrong_algorithm",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.algorithm",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.algorithm",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.changed_payload",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.mismatch",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.mismatch",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b3fecf807b69ff05bfbfec6287ed29b65bb7da345883eddeff92b27e373a20e4"
+    },
+    {
+      "canonical_payload_sha256": "bc9192253fa06c0b7b39714dd6838cee836687082c0a8aa117edb9bb8f378031",
+      "classification": "rejected",
+      "id": "digest.changed_digest",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "digest.mismatch",
+          "status": "rejected"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "accepted",
+          "status": "accepted"
+        }
+      },
+      "primary": {
+        "code": "digest.mismatch",
+        "status": "rejected"
+      },
+      "python_result_class": "digest_verification",
+      "rust_result_class": "digest_verification",
+      "tested_digest_hex": "b5186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd",
+      "tested_frame_sha256": "b4186cb7816372d815f1c046e80902e496874dbcf041dd486f677eb874563bfd"
+    },
+    {
+      "classification": "rejected",
+      "id": "digest.empty_payload",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "wellformed.truncated",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "wellformed.truncated",
+        "status": "rejected"
+      },
+      "standalone_digest_observation": {
+        "code": "digest.payload",
+        "digest_hex": "ab56e59ce4e7937787770660388f30e54331c2bb771c9ef8d41b1d08218cf18f",
+        "frame_sha256": "ab56e59ce4e7937787770660388f30e54331c2bb771c9ef8d41b1d08218cf18f",
+        "rust_code": "digest.payload",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "digest.schema_invalid_match",
+      "layers": {
+        "cddl_shape": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.identifier_syntax",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "schema.identifier_syntax",
+        "status": "rejected"
+      },
+      "standalone_digest_observation": {
+        "code": "accepted",
+        "digest_hex": "587b4c621d3684ee0f1b5287c87971f2d220be02cfdf182dd5801974c2b9fd28",
+        "frame_sha256": "587b4c621d3684ee0f1b5287c87971f2d220be02cfdf182dd5801974c2b9fd28",
+        "rust_code": "accepted",
+        "status": "accepted"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.data",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "843b7a3f69aab90dba65917ee3af5ece6438878da3f9fa989727143fe8dd7e2c",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "50018317db39a1d6fe6d9b68fa4164c43d1ea72c6c9951d776f5c12e72f2c03b"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.table",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "3ea189094c95ad53ee4f62ffb0e13f332af736b3d1ba2a3688697cd5658cb95f",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "149e691f4c6c02e05baf4369ad1531f934b4df13e426f79c0912f5438298ac14"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.design",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "c17577d43554f8d3947912ef0bc5d9e9a027cce4080e865ddb102b9e40e38d1a",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "7b75f1ad16465c80fa9e20d96d7fb8df20f127655a572a787b6c50458c149766"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.model",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "32506e04a55b556cabe3b0e1fa6e312e2b8ce2a918ef50c71f640b4dde1f72ed",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "fe222555c951c1716f4d9f20b65ab9b91a7fec2bd4b9af701abe479ca96a7d24"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.experiment",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "01bd3d554eb787832df678a65a71c237db7d860057d2113e23be04c76ceb00ad",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "41014fe2e243478136f587072cbd6e3a74348cf5be0f36405cb45f38be7b40cf"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.estimand",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "789e8f380bb55a28163e09e2729f51b19a6c1f264dd7d707a2aa19a93add9fbb",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "e612860b13aaf5fdfd134c9158d25a7484bea04b82195a4969d867c3ba2979a0"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.procedure",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "b3f622631fd4a574102aa5c1cb70e04ab5ffa94e037a38d12732d00a7b987cab",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "2eaf427a4f8e298760408c087eca352573dda4e63b12f9e24a1690c0df6fdf77"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.claim",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "05cc3ae6aee7a1993cdae3d25fe6f17dbe52b93c0e24fa68be3773f730825da3",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "6bbfd63312afd11e628cec2fc1469dac45470be377c581ca7f3525e222f80b7a"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.numerical_obligation",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "2c909b89363ae09c7e5d408d98899788f775dea1153ec564ee09dde8abe7f0c7",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "7304f976ec7a474a2d45c486b30b243ac15143dc189ea7d1bdfb1e2db81ab539"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.external_assumption",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "a739e6205d78a709f204727824c579f0b832ab73a38357b64e398558f64827a3",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "41e928ea7279fca81181c7f39085be7ac64203de5666ee64096e3e649f491c2f"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.diagnostic",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "f413a6ee5b05ef1b6f3c9d2b4fa28133dc3ba063023b50593327fafa386749a7",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "087a224ae875da73778f0a91728a9c08ae506553edeeafc27472293c6eba4667"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.extension",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "faef65e4ea152af388d1d613ba033a4e596d65858608dda51f2d5ea959f9c789",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "6c53754ac8ecf3a94200cf77ce3734137b4f8b1687d8253408a1a00d93a3c08c"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.provenance",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "58f7515461251d19cd410caa910edb0c34334d415a5eeaf145c43fad67518d22",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "4f3acbd163245dc3e24cb89ea96e770c1403ebc9dbc3430fe5474e11a687a494"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.theorem",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "fe3c006f88934adf288b43e3fffc543937532f1b91eef654d76d569e37845281",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "18b5e0665b0e21f20a89b033421ba1ff72882aec82467befb4eb066e555806b9"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.theorem_lock",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "7d75153cbb2336b12a0f6dc3d0733a12d164d2ec96bc1a6b9469dd3cd5753fb6",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "1c2f9258eebb0c21a6d49048fecaaa0f7d5de1510905880bfb622f7ab0a269e3"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.assurance_graph",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "335682aec979e0d8b4b326382603e0c2bb7b62dff5ffd74165a899296d7ecb11",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "7cd1ccdf61c7a9c2dcb247d6d2cb9a3aa32b493d579ad64b3206f195cc63d60c"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.artifact",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "11093e8dda909230bcc556573dccb51b2e249dbcadb43064e39e7372893e7f6d",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "46e2ba47dba32fdfc05957c6854a00862b85ab9e86a2889f2c8a84bff2cd4a07"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "unknown.null_presence.certificate",
+      "implementation_outputs": {
+        "python_decode_code": "accepted",
+        "python_encode_sha256": "32da54af96b5cbf1e88ec280ab309764f1a22e38b980e19416bed2df4fd86972",
+        "rust_decode_code": "accepted",
+        "rust_encode_sha256": "8ddc07ae2d807a4524a1864d54056843f1f3efed989399be22d5b0c7b35bf17e"
+      },
+      "layers": {
+        "cddl_shape": {
+          "code": "shape.cddl_mismatch",
+          "status": "rejected"
+        },
+        "deterministic_bytes": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "accepted",
+          "status": "accepted"
+        },
+        "schema_semantics": {
+          "code": "schema.unknown_field",
+          "status": "rejected"
+        }
+      },
+      "primary": {
+        "code": "shape.cddl_mismatch",
+        "status": "rejected"
+      }
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.resource_input",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "resource.input_bytes",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "resource.input_bytes",
+        "status": "rejected"
+      },
+      "python_code": "resource.input_bytes",
+      "python_result_class": "resource",
+      "raw_bytes": 1048577,
+      "raw_sha256": "2cb74edba754a81d121c9db6833704a8e7d417e5b13d1a19f4a52f007d644264",
+      "rust_code": "resource.input_bytes",
+      "rust_result_class": "resource"
+    },
+    {
+      "classification": "rejected",
+      "id": "raw.resource_depth",
+      "layers": {
+        "cddl_shape": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "deterministic_bytes": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "fixture_digest": {
+          "code": "not_reached",
+          "status": "not_reached"
+        },
+        "profile_decode": {
+          "code": "resource.depth",
+          "status": "rejected"
+        },
+        "schema_semantics": {
+          "code": "not_reached",
+          "status": "not_reached"
+        }
+      },
+      "primary": {
+        "code": "resource.depth",
+        "status": "rejected"
+      },
+      "python_code": "resource.depth",
+      "python_result_class": "resource",
+      "raw_bytes": 34,
+      "raw_sha256": "bf6a7a85ec8d62a9d79c308d678214baf057d236909f134b73035ac94c909452",
+      "rust_code": "resource.depth",
+      "rust_result_class": "resource"
+    }
+  ],
+  "retained_limitations": [
+    {
+      "cddl_status": "accepted",
+      "id": "cddl-0.10.6-duplicate-map-members",
+      "observation": "pinned CDDL accepts duplicate members; both RFC-0001 decoders reject first",
+      "raw_sha256": "f874d077731a72751691f8cc13c8efcacc1dd766d44f4fcd1d53c16988d98664"
+    },
+    {
+      "id": "schema-fixed-text-keys-do-not-discriminate-order-algorithms",
+      "observation": "all six key encodings sort identically under core and length-first order; SQ-0005 generic discriminator remains bound"
+    }
+  ],
+  "schema_id": "statqed.foundation-structural.v0",
+  "schema_version": 0
+}
