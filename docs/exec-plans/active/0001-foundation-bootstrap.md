@@ -274,6 +274,7 @@ git diff --check
 - [ ] SQ-0008 core Lean types/RFC ownership — independently READY and unstarted, with RFC-0002/RFC-0004 still Draft for that task to resolve.
 - [x] SQ-0006 schema v0 — DONE 2026-08-10 from `d9afd96460afb3c5902a93f134044168bc4e4df3` at 2026-08-10T08:57:10+02:00 on `agent/SQ-0006-schema-v0` in `/tmp/statqed-sq0006-schema-v0`; synchronized through normal branch merge `b857e8941c1f64a0baf459f7a2a85f83647fad49` with verified maintenance main `aac98bae3ecb27cba8cea895bc64454a890cde7a`. Direct environment Ubuntu 24.04.4 LTS, Linux 7.0.0-28-generic, x86-64. Assigned distinct schema/CDDL source curator, field-semantics architect, schema engineer, independent semantic-validator engineer, golden/conformance reviewer, malformed/security reviewer, versioning reviewer, CI/reproducibility reviewer, and independent integrator. RFC-0006 remained read-only under SQ-0027 and SQ-0008 remained READY/unstarted.
 - [x] SQ-0006 implementation evidence — `5093a3d7afca0e98ec47a67de1364a378f97741a` freezes five accepted semantic fixtures, 85 retained negatives, three detected deliberate divergences, exact `cddl` 0.10.6 shape checks, two read-only SQ-0005 comparisons plus a direct standards recipe, a 154-package lock-bound license inventory, and permanent static corruption checks. Distinct source, semantic, formal/schema, conformance, adversarial, versioning, CI/reproducibility, and integration reviewers approved exact review head `542c6c516e17bba883691ce1d00972ef1d3077ea`; guardrails `31372523046`, Serialization prototypes `31372523061`, Schema v0 `31372523282`, Rust `31372523049`, and Lean `31372523110` passed before the atomic DONE transition.
+- [x] SQ-0006 protected integration — final reviewed head `b569f24e95a2465f71a16affa344d57164a23b27` merged normally through PR #15 as `e4bd2f0e739aaf480170d16a3424b40af1e9cf5b` on 2026-08-11. Main guardrails `31489194387`, Serialization prototypes `31489194324`, Schema v0 `31489194383`, Rust `31489194316`, and Lean `31489194370` passed; exact-merge Schema v0 dispatch `31489484813` and Serialization prototypes dispatch `31489483135` independently reproduced the bound counts and byte-identical regeneration. The checked READY set is SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015; no successor was claimed.
 - [ ] SQ-0007 and SQ-0009 through SQ-0020.
 
 ## Surprises & Discoveries
@@ -325,6 +326,7 @@ git diff --check
 - The first SQ-0006 hosted schema run `31370432183` received HTTP 403 from the crates.io API download endpoint before executing schema code. The failure is retained; CI now uses the official static crates.io archive URL and verifies the same immutable package SHA-256 before extraction.
 - The first green schema head exposed two latent SQ-0005 lifecycle-test assumptions: a successor-owned path was treated as necessarily absent, and a Makefile mutation anchor assumed no intervening successor target. Separately reviewed PR #16 made those tests successor-safe without weakening the verifier or changing any schema, profile, fixture, golden, or production subject.
 - The SQ-0006 DONE candidate exposed one further predecessor simulation-only omission: moving SQ-0006 backward from DONE did not re-block its dependent successors. Three-file PR #17 added two regressions, retained all earlier coverage, and passed 59 tests without changing schema, profile, fixture, golden, RFC, ADR, production, or SQ-0008 subjects.
+- Post-merge planning exposed a distinct successor-contract lifecycle boundary: SQ-0006 evidence correctly preserves non-status successor-contract semantics, but the existing SQ-0007 contract still needs expansion before implementation and direct expansion would fail that permanent projection. A separate reviewed evidence-lifecycle/planning maintenance is required before any successor is claimed; this is not a schema defect.
 
 ## Decision Log
 
@@ -375,6 +377,8 @@ git diff --check
 - 2026-08-10: Selected `statqed.fixture.golden` framing for data-free fixture bytes only. This creates neither a schema resolver nor the RFC-0006 logical-data digest.
 - 2026-08-10: Independent integration approved exact hosted-green head `542c6c516e17bba883691ce1d00972ef1d3077ea`; SQ-0006 became DONE. The shared calculation made SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015 READY with 48 blocked tasks and no active task. No successor was claimed, and RFC-0006 remained unchanged Draft under SQ-0027.
 - 2026-08-11: Independently approved three-file predecessor lifecycle PR #17 merged normally as `aac98bae3ecb27cba8cea895bc64454a890cde7a`; its four main workflows passed before merge commit `b857e8941c1f64a0baf459f7a2a85f83647fad49` brought that verified main into the SQ-0006 branch. The correction changed no SQ-0006 scientific subject or successor task state.
+- 2026-08-11: External authorization merged exact reviewed PR #15 head `b569f24e95a2465f71a16affa344d57164a23b27` normally as `e4bd2f0e739aaf480170d16a3424b40af1e9cf5b`. Five normal main workflows and exact-merge Schema/Serialization dispatches passed without changing evidence manifest `eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb`, scientific digest `4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0`, or RFC-0006.
+- 2026-08-11: Recorded SQ-0007 as the expected next scientific task only after a separate successor-contract lifecycle/planning maintenance. SQ-0008 and every other READY successor remain unstarted; no successor contract is expanded by the SQ-0006 post-merge record.
 
 ## Outcomes & Retrospective
 
@@ -390,6 +394,14 @@ semantic, formal/schema, conformance, adversarial, versioning,
 CI/reproducibility, and integration review. It does not define the general IR,
 logical data, an artifact envelope, theorem identity, a certificate, a
 production canonicalizer, provenance truth, or statistical validity.
+
+PR #15 preserved that exact reviewed subject through normal merge
+`e4bd2f0e739aaf480170d16a3424b40af1e9cf5b`. Seven main runs reproduced the
+permanent predecessor, serialization, schema, mutation, and regeneration
+gates. The ledger now exposes six READY successors and no active task, but
+successor execution is paused for separately reviewed contract-lifecycle
+planning maintenance. SQ-0006 remains DONE; no scientific or normative subject
+changed at that maintenance boundary.
 
 ### SQ-0001
 

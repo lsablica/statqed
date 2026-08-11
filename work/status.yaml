@@ -5,7 +5,7 @@
   "in_progress": [],
   "blocked_count": 48,
   "done": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005", "SQ-0006"],
-  "last_integrated_commit": "aac98bae3ecb27cba8cea895bc64454a890cde7a",
+  "last_integrated_commit": "e4bd2f0e739aaf480170d16a3424b40af1e9cf5b",
   "last_updated": "2026-08-11",
   "notes": [
     "SQ-0001 completed independent constitutional review and merged in commit 8d2720e0fcdafd784b86641a05cab67e1dd9a76e.",
@@ -34,6 +34,9 @@
     "SQ-0006 entered IN_REVIEW after source, semantic, formal/schema, conformance, adversarial, versioning, and CI/reproducibility approval of the frozen 5093a3d7afca0e98ec47a67de1364a378f97741a candidate and its unchanged scientific subject. SQ-0008 remained READY and unstarted.",
     "PR #16 merged the successor-safe SQ-0005 lifecycle test correction normally as 03196ed5b718fa832cd80e41e60cf3916ffff38f. Main guardrails 31372098769, Serialization prototypes 31372098945, Rust reference workspace 31372098867, and Lean proof backend 31372098753 passed; a fresh isolated SQ-0006 IN_PROGRESS simulation also passed.",
     "Independent integration approved exact SQ-0006 review head 542c6c516e17bba883691ce1d00972ef1d3077ea after guardrails 31372523046, Serialization prototypes 31372523061, Schema v0 31372523282, Rust reference workspace 31372523049, and Lean proof backend 31372523110 passed. SQ-0006 is DONE; the shared calculation makes SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015 READY with 48 blocked tasks and no active task. No successor was claimed; RFC-0006 remains unchanged and Draft under SQ-0027.",
-    "PR #17 finalized successor-safe SQ-0005 lifecycle simulations at reviewed head f68c4bf27501790e063d27d02e8c3cddf445f6c4 and merged normally as aac98bae3ecb27cba8cea895bc64454a890cde7a. Main guardrails 31467325605, Serialization prototypes 31467325622, Rust reference workspace 31467325597, and Lean proof backend 31467325585 passed; all 59 predecessor tests passed before the verified main commit entered the SQ-0006 branch ancestry."
+    "PR #17 finalized successor-safe SQ-0005 lifecycle simulations at reviewed head f68c4bf27501790e063d27d02e8c3cddf445f6c4 and merged normally as aac98bae3ecb27cba8cea895bc64454a890cde7a. Main guardrails 31467325605, Serialization prototypes 31467325622, Rust reference workspace 31467325597, and Lean proof backend 31467325585 passed; all 59 predecessor tests passed before the verified main commit entered the SQ-0006 branch ancestry.",
+    "PR #15 merged exact reviewed head b569f24e95a2465f71a16affa344d57164a23b27 normally as e4bd2f0e739aaf480170d16a3424b40af1e9cf5b. Main guardrails 31489194387, Serialization prototypes 31489194324, Schema v0 31489194383, Rust reference workspace 31489194316, and Lean proof backend 31489194370 passed; exact-merge Schema v0 dispatch 31489484813 and Serialization prototypes dispatch 31489483135 also passed.",
+    "The integrated SQ-0006 evidence manifest remains eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb and its scientific-subject digest remains 4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0. SQ-0001 through SQ-0006 are DONE; SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015 are READY; no task is active; 48 tasks are blocked. RFC-0006 remains unchanged, Draft, and owned by SQ-0027.",
+    "Before any successor is claimed, a separate independently reviewed evidence-lifecycle/planning maintenance must decouple legitimate successor-contract expansion from the permanent SQ-0006 non-status contract projections. This is a planning boundary, not a schema defect; no successor was claimed during SQ-0006 integration."
   ]
 }

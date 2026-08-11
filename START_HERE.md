@@ -33,13 +33,15 @@ If the guardrail output, backlog, status ledger, contract, or plan disagree,
 stop. Repair the planning state through an independently reviewed planning
 change before implementation.
 
-At the reviewed post-SQ-0005 state, **SQ-0006 and SQ-0008 are both READY**.
-The recommended next isolated execution is **SQ-0006: Define schema v0 and
-golden vectors**. SQ-0008 remains independently READY and unstarted; do not
-combine schema and ontology work in one branch. RFC-0001 and ADR-0004 are
-Accepted for the bounded data-free encoding profile. RFC-0006 remains Draft
-under SQ-0027 ownership, and the SQ-0005 prototypes have no production
-canonicalizer authority.
+At the reviewed post-SQ-0006 state, **SQ-0007, SQ-0008, SQ-0011, SQ-0013,
+SQ-0014, and SQ-0015 are READY**, no task is active, and SQ-0008 remains
+unstarted. The next scientific task is expected to be SQ-0007, but no
+successor may be claimed yet. A separate independently reviewed
+successor-contract lifecycle/planning maintenance must first resolve the
+boundary described below. RFC-0001 and ADR-0004 remain Accepted for the
+bounded data-free encoding profile. RFC-0006 remains Draft under SQ-0027
+ownership. The SQ-0005 prototypes and SQ-0006 schema evidence have no
+production canonicalizer authority.
 
 ## Copy-paste manager contract
 
@@ -73,9 +75,11 @@ Read, in order:
 17. agents/protocols/handoff.md
 18. the nearest nested AGENTS.md before changing any scoped file.
 
-Execute exactly one dependency-ready task in one isolated branch or worktree.
-At the current reviewed state, select SQ-0006 and follow
-work/contracts/SQ-0006.yaml. Leave SQ-0008 READY and unstarted.
+Do not claim a dependency-ready implementation task at the current reviewed
+state. First execute one isolated, independently reviewed planning maintenance
+that makes successor contracts evolvable without weakening or regenerating
+the immutable SQ-0006 scientific evidence. Leave all six READY tasks READY and
+unstarted, including SQ-0008.
 
 Non-negotiable constraints:
 - Treat public statistical meanings, normative encodings, and theorem
@@ -101,7 +105,7 @@ Non-negotiable constraints:
 - Never claim functionality represented only by a plan, Draft RFC, prototype,
   lock resolution, digest match, or unexecuted command.
 
-For the selected task:
+For an implementation task after that maintenance is merged:
 1. Confirm dependency and decision-prerequisite evidence.
 2. Update the task contract and ledger atomically from READY to IN_PROGRESS.
 3. Create one isolated branch or worktree.
@@ -118,105 +122,66 @@ For the selected task:
 11. Merge only after independent integration approval.
 12. Recompute the next READY set after merge.
 
-Do not attempt the full roadmap or combine SQ-0006 and SQ-0008 in one branch.
+Do not attempt the full roadmap, combine successors, or begin SQ-0007 before
+the successor-contract lifecycle/planning maintenance is reviewed and merged.
 ```
 
-## Current manager action: SQ-0006
+## Current manager action: successor planning maintenance
 
-SQ-0005 accepted the bounded data-free `statqed.cbor-core.v1` encoding profile
-and generic `statqed.digest-lp.v1` framing after independent differential and
-adversarial review. Its Rust and Python implementations remain Experimental
-prototypes without production canonicalizer authority. SQ-0006 must now define
-only the versioned data-free schema and reviewed golden vectors for ADR-0011's
-`foundation_structural` fixture.
+SQ-0006 is merged and DONE. It established only the Experimental, closed,
+data-free `statqed.foundation-structural.v0` fixture schema, its independently
+compared canonical bytes, and conditional fixture digests. It did not create a
+general statistical IR, logical-data identity, artifact envelope, theorem
+registry, production canonicalizer, certificate, or statistical-validity
+claim.
 
-Read:
+The permanent SQ-0006 evidence currently binds non-status semantic
+projections of the successor contracts for SQ-0007, SQ-0008, SQ-0011, SQ-0013,
+SQ-0014, and SQ-0015. The existing SQ-0007 contract is not detailed enough for
+implementation, but expanding it directly would fail the permanent SQ-0006
+evidence checker. This is an evidence-lifecycle and planning-boundary issue,
+not a schema defect.
 
-```text
-work/contracts/SQ-0006.yaml
-work/handoffs/SQ-0005.md
-work/reviews/SQ-0005.md
-rfcs/0001-deterministic-encoding.md
-rfcs/0006-canonical-logical-data-digest.md
-docs/adr/0004-deterministic-cbor-cddl.md
-docs/adr/0011-foundation-toy-slice.md
-docs/spec/canonicalization.md
-schemas/AGENTS.md
-conformance/AGENTS.md
-```
+Before any successor is claimed, use a separate maintenance branch with
+independent evidence-model and integration review to preserve the immutable
+SQ-0006 completion subject while allowing reviewed successor-contract
+planning evolution. Do not expand a successor contract, change its status, or
+regenerate SQ-0006 scientific evidence as part of launching a successor.
 
-### Decision ownership
+The checked READY set is:
 
-- RFC-0001 and ADR-0004 are Accepted and govern the bounded data-free encoding
-  profile used by SQ-0006. SQ-0006 may not silently amend that profile.
-- RFC-0006 is owned by SQ-0027 and remains Draft. SQ-0006 must not define a
-  logical table, physical-to-logical lowering, canonical logical-data digest,
-  or privacy property for data commitments.
-- Artifact-envelope semantics remain outside schema v0 and belong to the later
-  RFC-0008/SQ-0010 decision path.
+- SQ-0007 — expected next scientific task after maintenance;
+- SQ-0008 — independently READY and unstarted;
+- SQ-0011;
+- SQ-0013;
+- SQ-0014; and
+- SQ-0015.
 
-### Required schema boundary
-
-The task must use published CDDL syntax for versioned numeric/common/toy files.
-Draft CDDL module/import syntax may be explored only at an exact pinned revision
-and labeled Experimental; it cannot become a normative dependency.
-
-The schema and fixture review must explicitly cover:
-
-- exact ADR-0011 field names and their semantic prose;
-- data-free numeric, identifier, and extension shapes allowed by RFC-0001;
-- explicit feature and unknown-critical behavior;
-- minimal and maximal valid fixtures;
-- malformed, numeric, Unicode, and unknown-critical negative fixtures;
-- stable error classes and schema-version/migration policy; and
-- independent semantic review before canonical bytes or digests are accepted.
-
-### Independent evidence
-
-Every accepted field and example needs semantic review independent of the
-encoder that emits its bytes. Golden output must agree across independently
-reviewed semantics and implementations; it must never be accepted merely by
-copying the SQ-0005 Rust prototype's output.
-
-### Scope prohibitions
-
-SQ-0006 must not:
-
-- treat an SQ-0005 prototype as production authority;
-- implement a logical table or RFC-0006 data-lowering/digest decision;
-- implement an artifact envelope, theorem registry, certificate, frontend, or
-  statistical type;
-- treat CDDL validation as canonical-byte or semantic proof;
-- treat a digest equality as collision-free identity proof;
-- modify the Lean or production Rust foundations; or
-- begin SQ-0008 or any successor after a readiness-only transition.
+RFC-0001 and ADR-0004 remain Accepted. RFC-0006 remains unchanged, Draft, and
+owned by SQ-0027. No maintenance may use this planning boundary to change any
+of those decisions or the reviewed schema-v0 subject.
 
 ## Expected execution pattern
 
 ```text
 manager
-  ├─ schema/source curator
-  ├─ ontology and field-semantics reviewer
-  ├─ schema and fixture engineer
-  ├─ independent conformance/vector reviewer
-  ├─ adversarial malformed/extension reviewer
+  ├─ evidence-lifecycle reviewer
+  ├─ successor-contract planning reviewer
+  ├─ adversarial regression reviewer
   └─ independent integration reviewer
 ```
 
-The schema author must not be the sole semantic, conformance, security, or
-integration reviewer.
+The maintenance author must not be the sole evidence, planning, adversarial,
+or integration reviewer.
 
 ## Branch and worktree policy
 
 Use one task per isolated branch or worktree:
 
-```text
-agent/SQ-0006-schema-v0
-agent/SQ-0008-core-ontology
-```
-
-The default branch remains green. SQ-0006 and SQ-0008 remain separate, and
-golden bytes do not gain authority without the reviewed schema semantics.
+Use one isolated branch for the successor-contract lifecycle/planning
+maintenance. Create no successor implementation branch until that maintenance
+is integrated and the full checked ledger remains green. Golden bytes and the
+Experimental schema retain only their reviewed structural authority.
 
 ## What “foundation complete” means
 
