@@ -1,12 +1,406 @@
 {
-  "id":"SQ-0007","title":"Create theorem registry and lock v0","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separate semantic/environment/registry/proof/axiom locks and a deterministic offline resolver without being presented as a public theorem or non-vacuity witness.",
-  "dependencies":["SQ-0003","SQ-0006"],
-  "allowed_paths":["theorem-registry/**","schemas/registry/**","lean/StatQED/Registry/**","backend/crates/statqed-registry/**","docs/design/theorem-registry.md","docs/spec/theorem-lock.md","rfcs/0005-theorem-identity-and-compatibility.md","docs/adr/0007-versioned-theorem-registry.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
-  "forbidden_paths":["lean/StatQED/Experiment/**","methods/**","frontends/**"],
-  "public_changes":["theorem ID and statement normalization v0"],
-  "steps":["Accept RFC-0005 exact normalizer, bounded meaning-bearing dependency/environment closure, canonical registry record, verifier-selected authorization root/policy, digest/domain profile, proof/build lock, revocation/history rules, and axiom policy","Define the test-only, definitionally trivial `True` conformance record and controlled metadata; prohibit public-theorem or non-vacuity claims for it","Canonicalize the elaborated proposition and environment independently","Implement lock schema and deterministic offline Rust resolver","Reject name/digest/metadata-only, artifact-supplied-root, revoked-root, and wrong-direction substitutions","Add checked compatibility toy examples"],
-  "tests":["Proof-body refactor preserves semantic identity only in the same environment but changes proof/build lock and axiom report","Referenced-definition/environment/statement changes alter the appropriate lock","Forbidden-axiom mutation fails with unchanged proposition","Bytes/content claiming `False` cannot be accepted through the `True` record; this fixture is not generalized beyond the exact path","Whole-registry replacement and forged ID/review/maturity metadata fail","Root mismatch and revoked/historical-root policy cases","Closure cycle/width/depth/work-budget failures deterministic","Missing/wrong registry/environment/proof lock fails","Wrong-direction or metadata-only compatibility fails","resolver deterministic, bounded, and offline"],
-  "reviewers":{"semantic_source":["source curator"],"formal_conformance":["lean reviewer","conformance reviewer"],"adversarial":["counterexample reviewer","security reviewer"],"integrator":["integration-reviewer"]},
-  "acceptance":["RFC-0005 is Accepted","ID/version/canonical-proposition/environment/registry/proof/axiom semantics documented","Statement digest is not treated as equality or source-fidelity proof","Resolver cannot silently substitute meaning","Toy lock resolves offline"],
-  "commands":["cd lean && lake build","cd backend && cargo test --workspace","make check"],"handoff_outputs":["Toy registry entry","canonical proposition/environment/registry/proof/axiom vectors","lock fixture"]
+  "id": "SQ-0007",
+  "title": "Create theorem registry and lock v0",
+  "status": "READY",
+  "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
+  "milestone": "Plan 0001 / Milestone C",
+  "objective": "After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separately versioned semantic-proposition, meaning-bearing-environment, canonical-registry-record, verifier-selected-authorization, proof/build, axiom-report, and directional-compatibility evidence, with a deterministic bounded offline resolver and without any public-theorem, source-fidelity, artifact-verification, or non-vacuity claim.",
+  "dependencies": [
+    "SQ-0003",
+    "SQ-0006"
+  ],
+  "dependency_evidence": [
+    "SQ-0003 is DONE and pins Lean `leanprover/lean4:v4.32.2`, Lean source `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Lake `5.0.0-src+f3b06c7`, and Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c` with an actual environment-derived axiom-report path.",
+    "SQ-0006 is DONE and supplies only the closed data-free ADR-0011 `foundation_structural` fixture; its schema evidence does not define theorem identity or authorization.",
+    "ADR-0011 is Accepted and permits only a visibly test-only proposition `True` for the first registry path.",
+    "RFC-0005 remains Draft and is owned by SQ-0007; its acceptance is a completion gate, not a readiness prerequisite for its owner task."
+  ],
+  "decision_ownership": {
+    "owned": [
+      "RFC-0005 — theorem identity, proof trust, registry authorization, and directional compatibility"
+    ],
+    "conditional_adr": "ADR-0007 may become Accepted only after RFC-0005 is Accepted and the ADR's marked decision scope exactly matches the accepted RFC consequence.",
+    "read_only": [
+      "RFC-0001 and ADR-0004 accepted deterministic-encoding scope",
+      "ADR-0011 data-free foundation slice",
+      "RFC-0006 canonical logical-data digest, Draft and owned by SQ-0027"
+    ],
+    "completion_rule": "SQ-0007 cannot become DONE while RFC-0005 remains Draft. Insufficient or contradictory evidence leaves the task IN_REVIEW or explicitly BLOCKED; it never licenses an improvised identity rule."
+  },
+  "allowed_paths": [
+    "work/contracts/SQ-0007.yaml",
+    "work/contracts/SQ-0012.yaml",
+    "work/contracts/SQ-0019.yaml",
+    "theorem-registry/**",
+    "schemas/registry/**",
+    "lean/StatQED/Registry/**",
+    "backend/crates/statqed-registry/**",
+    "scripts/registry/**",
+    "conformance/registry/**",
+    "source-audits/registry/**",
+    ".github/workflows/theorem-registry.yml",
+    "docs/design/theorem-registry.md",
+    "docs/spec/theorem-lock.md",
+    "docs/implementation/theorem-registry.md",
+    "docs/quality/dashboard.md",
+    "rfcs/0005-theorem-identity-and-compatibility.md",
+    "docs/adr/0007-versioned-theorem-registry.md",
+    "Makefile",
+    "docs/exec-plans/active/0001-foundation-bootstrap.md",
+    "work/backlog.yaml",
+    "work/status.yaml",
+    "work/reviews/SQ-0007.md",
+    "work/reviews/SQ-0007-planning.md",
+    "work/handoffs/SQ-0007.md"
+  ],
+  "allowed_path_constraints": [
+    "SQ-0012 and SQ-0019 contracts may receive status-only readiness changes after SQ-0007 becomes DONE and only if the shared dependency and decision-aware calculation makes them eligible.",
+    "The Rust registry implementation is an explicitly standalone Cargo workspace rooted at `backend/crates/statqed-registry/`, with its own `[workspace]` boundary, resolver/edition/MSRV declarations, `Cargo.lock`, toolchain pin, evidence, and tests. It is not a member of the parent `backend/` workspace; this task may not edit the parent workspace or any pre-existing backend crate.",
+    "The Lean implementation and its tests/reports are confined to `lean/StatQED/Registry/**`; this task may not modify other Lean namespaces or the frozen SQ-0003 project/toolchain files.",
+    "Generated files must be changed only through a documented deterministic generator whose command and tool identity are retained."
+  ],
+  "forbidden_paths": [
+    "rfcs/0006-canonical-logical-data-digest.md",
+    "rfcs/0001-deterministic-encoding.md",
+    "docs/adr/0004-deterministic-cbor-cddl.md",
+    "schemas/prototypes/**",
+    "schemas/v0/**",
+    "schemas/fixtures/v0/**",
+    "conformance/golden/v0/**",
+    "lean/lean-toolchain",
+    "lean/lakefile.toml",
+    "lean/lake-manifest.json",
+    "lean/StatQED/Assurance/**",
+    "lean/StatQED/Guarantee/**",
+    "lean/StatQED/Experiment/**",
+    "backend/Cargo.toml",
+    "backend/Cargo.lock",
+    "backend/rust-toolchain.toml",
+    "backend/crates/statqed-core/**",
+    "backend/crates/statqed-cli/**",
+    "frontends/**",
+    "methods/**",
+    "generated/**",
+    "docs/spec/artifact.md"
+  ],
+  "forbidden_interfaces": [
+    "assurance or guarantee ontology owned by SQ-0008",
+    "general backend canonicalization, schema validation, or artifact parsing owned by SQ-0011 and later tasks",
+    "artifact envelope, artifact-supplied trust root, or artifact-byte-to-proposition authority",
+    "logical-table, Arrow-lowering, real-data identity, or RFC-0006 digest semantics",
+    "frontend, method-pack, statistical theorem, theorem-pack, or public statistical ontology interfaces",
+    "certificate or checker-soundness claims",
+    "name-only, semver-only, pretty-print-only, digest-only, or metadata-only theorem substitution"
+  ],
+  "public_changes": [
+    "Accepted RFC-0005 theorem-identity, environment-closure, registry-authorization, proof/build-lock, axiom, and directional-compatibility semantics",
+    "matching Accepted ADR-0007 decision scope",
+    "versioned test-only theorem-registry record and offline resolver interfaces",
+    "stable registry error taxonomy and explicit resource limits"
+  ],
+  "accepted_decisions": [
+    "Use the exact reviewed SQ-0003 Lean/Mathlib/Lake pair without substitution.",
+    "Use the Accepted RFC-0001 profile and framing primitives only where RFC-0005 explicitly binds registry material; do not reinterpret RFC-0001 as theorem authority.",
+    "Use ADR-0011's `True` proposition only as a test-only conformance record that is neither public, statistical, nor a non-vacuity witness.",
+    "Keep kernel derivability, semantic/source review, registry authorization, proof/build trust, cryptographic integrity, and external premises separate."
+  ],
+  "sources": [
+    "rfcs/0005-theorem-identity-and-compatibility.md — owned Draft decision input",
+    "docs/adr/0007-versioned-theorem-registry.md — Proposed consequence of RFC-0005",
+    "docs/adr/0011-foundation-toy-slice.md — Accepted source and nonclaim boundary for the test-only `True` record",
+    "rfcs/0006-canonical-logical-data-digest.md — read-only Draft boundary owned by SQ-0027",
+    "work/handoffs/SQ-0003.md and work/reviews/SQ-0003.md — exact proof-environment, axiom-report, trust-mutation, and limitation evidence",
+    "work/handoffs/SQ-0006.md and work/reviews/SQ-0006.md — exact data-free fixture and predecessor-evidence boundary",
+    "Lean v4.32.2 source commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c` and official Lean reference material",
+    "Mathlib commit `905b95818eb32af7874a58b427f50c1711a5e96c` and its exact Lake manifest/environment",
+    "official specification for every selected cryptographic hash and framing primitive",
+    "official Rust, Cargo, crates.io, RustSec, license, and dependency documentation for any introduced registry-resolver graph",
+    "docs/design/trust-model.md, docs/design/theorem-registry.md, and docs/spec/theorem-lock.md",
+    "agents/protocols/source-lineage.md, semantic-audit.md, task-contract.md, merge-gates.md, and handoff.md"
+  ],
+  "source_requirements": [
+    "Audit current primary sources and exact pinned implementation behavior before freezing RFC-0005; record immutable locators, retrieval dates, relevant sections, licenses, maintenance state, advisories, unresolved interpretations, and source-to-design consequences.",
+    "Inspect Lean v4.32.2 source commit `f3b06c705e6c85f5314019d5d3baab0fec5b580c` for the exact declaration, environment, expression, serialization/export, transparency, and `Lean.collectAxioms` behavior used by the implementation.",
+    "Inspect Mathlib commit `905b95818eb32af7874a58b427f50c1711a5e96c` and its exact dependency/environment material rather than inferring compatibility from a release label.",
+    "Research universe levels, implicit arguments, binder information, constants, reducibility/transparency, typeclass/environment dependencies, theorem and opaque declaration handling, and any metadata/macro erasure against the pinned Lean implementation.",
+    "Use an official cryptographic hash specification for every selected algorithm and state the conditional collision/second-preimage assumptions and domain framing.",
+    "Record official documentation, exact source revisions, lockfiles, license expressions, yanked/advisory observations, and platform evidence for every Rust or other dependency introduced."
+  ],
+  "assumptions": [
+    "No proposed normalizer, dependency closure, digest, registry record, authorization policy, or compatibility relation is normative until RFC-0005 is Accepted after independent review.",
+    "Pretty-printed Lean text is diagnostic only and cannot define normative theorem identity.",
+    "Hash equality is conditional integrity evidence; it is not mathematical equality, source fidelity, authorization, proof, or collision-freedom.",
+    "An artifact-supplied registry snapshot or root is untrusted until it resolves under verifier-selected policy state.",
+    "An observed imported Lean/Mathlib axiom baseline is not permission to add a project axiom.",
+    "The `True` record is intentionally vacuous as a compilation/conformance fixture and cannot satisfy any public theorem or statistical non-vacuity requirement.",
+    "Runtimes, compilers, build tools, generators, network services, registries, CI, and agents remain untrusted evidence producers unless a named verification mode explicitly places them in its operational TCB."
+  ],
+  "toolchain_policy": {
+    "lean": "exact `leanprover/lean4:v4.32.2`, source `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Lake `5.0.0-src+f3b06c7`",
+    "mathlib": "exact commit `905b95818eb32af7874a58b427f50c1711a5e96c`",
+    "rust_development": "Rust 1.97.1; any registry-crate dependency acquisition is isolated, lock-bound, license-inventoried, and advisory-audited",
+    "rust_floor": "Rust 1.85.1 is used only with the exact acquired graph under `--locked --offline` if the isolated registry crate claims the project MSRV",
+    "pin_change": "Any Lean/Mathlib/Rust pin change is a separately reviewed planning decision with retained failure evidence; it is not an implementation convenience."
+  },
+  "identity_layers": [
+    "governed theorem identifier and semantic version",
+    "canonical elaborated proposition",
+    "meaning-bearing environment and dependency closure",
+    "statement digest",
+    "canonical registry record",
+    "registry-record digest",
+    "verifier-selected authorization root and policy",
+    "proof/build lock",
+    "actual transitive axiom report",
+    "compatibility-proof lock",
+    "source, semantic, formal, review, and interpretation annotations"
+  ],
+  "normalization_requirements": [
+    "Define one precisely versioned, language-neutral byte grammar for the elaborated proposition and independently review every included and excluded Lean detail.",
+    "Specify all expression constructors, universe levels, de Bruijn/local-binder identity, binder information, constant names, literal representations, projections, metadata/macro erasure, reducible definitions, theorem declarations, opaque definitions, and intentionally excluded implementation detail.",
+    "Specify transparency/reducibility choices and exactly when unfolding occurs; environment-dependent elaboration cannot be hidden behind surface syntax.",
+    "Record deterministic failure classes for unsupported or ill-scoped expressions and bound expression depth, node count, string length, and output size.",
+    "Produce examples/nonexamples and mutation vectors for universes, binder info, implicit arguments, constants, projections, literals, typeclass resolution, and metadata erasure before accepting golden bytes.",
+    "Never use pretty-printed Lean text as normative bytes or as the independent oracle."
+  ],
+  "closure_requirements": [
+    "Define the exact root set and which constant references from normalized proposition material enter the meaning-bearing closure.",
+    "Explicitly distinguish referenced definition values, theorem proposition types, theorem bodies, opaque definitions, axioms, constructors, recursors, projections, instances, and toolchain/environment identities.",
+    "Define recursive traversal, duplicate elimination, cycle detection, stable sorting, missing-reference behavior, and deterministic width/depth/total-work budgets.",
+    "Select and independently justify the smallest closure that still detects meaning drift; cost cannot justify name-only or digest-only substitution.",
+    "Mutate referenced definitions, imports, universe/binder material, typeclass/environment dependencies, and absent dependencies to demonstrate the selected closure's sensitivity and stated exclusions."
+  ],
+  "registry_record_requirements": {
+    "scope": "Only the ADR-0011 test-only `True` conformance declaration is registered in v0.",
+    "identifier": "Use a visibly test-only stable identifier whose syntax and maximum length are versioned; it must not resemble a public statistical theorem ID.",
+    "mechanically_extracted": [
+      "fully qualified Lean declaration name",
+      "canonical proposition and normalizer version",
+      "meaning-bearing closure and environment identifiers",
+      "statement/environment digests",
+      "proof/build identity",
+      "actual transitive axiom observation"
+    ],
+    "governed_metadata": [
+      "stable test-only ID and semantic version",
+      "registry schema/version",
+      "authorization root/policy references",
+      "historical and revocation status"
+    ],
+    "reviewed_annotations": [
+      "test-only classification",
+      "source anchors to ADR-0011 and the exact Lean declaration/environment subject",
+      "original-source attribution, or an explicit independently reviewed `not_applicable` rationale for the definitionally trivial `True` proposition",
+      "source/semantic/formal review subjects",
+      "maturity status",
+      "explicit nonclaims and limitations"
+    ],
+    "rule": "Mechanically extracted fields, governed metadata, reviewed annotations, authorization state, and proof/build evidence remain distinguishable in bytes, review, and output."
+  },
+  "authorization_requirements": [
+    "The verifier selects the authorization root and policy from trusted local configuration; the candidate record or artifact cannot choose or replace it.",
+    "Define canonical snapshot/root material, policy version, historical-permitted, historical-forbidden, revoked, unknown, and unsupported states with deterministic offline resolution.",
+    "Reject a whole-registry replacement, forged stable ID, forged review/maturity metadata, wrong or unknown root, revoked root, forbidden historical root, policy-version mismatch, and artifact-supplied replacement root.",
+    "Internal hash consistency never grants governed identity, review status, maturity, or authorization."
+  ],
+  "proof_and_axiom_requirements": [
+    "Define a separate proof/build lock binding the exact Lean toolchain, exact Mathlib/project environment material, declaration/proof subject, actual axiom report, and proof/build identity.",
+    "Generate the axiom observation from the live Lean environment with `Lean.collectAxioms` or an exact pinned equivalent; do not hand-write the observed list.",
+    "A proof refactor may preserve theorem semantic identity only if proposition and meaning-bearing environment identities remain unchanged, but it must change the proof/build lock whenever the proof subject changes.",
+    "Reject `sorry`, `admit`, `sorryAx`, project-defined axioms, bodyless project assumptions, and prohibited native/unsafe trust shortcuts even if proposition identity is unchanged.",
+    "Keep ordinary imported Lean/Mathlib axioms visible and distinguish them from prohibited project-defined assumptions; a baseline observation grants no permission to add axioms."
+  ],
+  "compatibility_requirements": [
+    "Compatibility is directional: substituting new theorem material for an old required proposition needs a kernel-checked implication in the useful direction `T_new -> T_old`, with complete propositions and explicit instantiation mapping.",
+    "Test the correct direction, reversed direction, proposition equality with environment mismatch, changed assumptions, changed referenced definitions, proof-only refactor, and metadata claims of implication/equivalence without a proof.",
+    "Bind the compatibility declaration, exact proposition/environment, proof/build lock, direction, and actual axiom report in a separate compatibility-proof lock.",
+    "Compatibility evidence supports disclosed substitution under policy; it does not merge semantic identities or transfer source/semantic review automatically."
+  ],
+  "digest_domains": [
+    "proposition semantic-identity digest",
+    "meaning-bearing environment-closure digest",
+    "canonical registry-record digest",
+    "proof/build-lock digest",
+    "authorization-root or registry-snapshot digest",
+    "compatibility-proof digest"
+  ],
+  "digest_policy": [
+    "Every digest class has a distinct explicit purpose/domain identifier, algorithm identifier, format/version identifier, typed component identifiers, and unambiguous length framing.",
+    "Test cross-domain replay, purpose/algorithm/version substitution, truncation, concatenation ambiguity, component reordering, empty components, unsupported algorithm fallback, and policy downgrade.",
+    "No digest is reused as a silent stand-in for another identity layer."
+  ],
+  "error_codes": [
+    "registry.malformed_record",
+    "registry.version_unsupported",
+    "registry.normalization_failure",
+    "registry.closure_cycle",
+    "registry.closure_budget",
+    "registry.missing_dependency",
+    "registry.proposition_mismatch",
+    "registry.environment_mismatch",
+    "registry.statement_digest_mismatch",
+    "registry.record_digest_mismatch",
+    "registry.authorization_root_mismatch",
+    "registry.authorization_root_unknown",
+    "registry.authorization_root_revoked",
+    "registry.authorization_policy_unsupported",
+    "registry.proof_build_lock_mismatch",
+    "registry.forbidden_axiom",
+    "registry.compatibility_missing",
+    "registry.compatibility_wrong_direction",
+    "registry.resource_limit",
+    "registry.operational_failure"
+  ],
+  "resource_policy": [
+    "Before RFC-0005 acceptance, set and justify exact finite limits for registry entries, closure width, closure depth, total expression/dependency nodes, total work, identifier/string bytes, record/input bytes, generated output bytes, axiom entries, compatibility edges, and diagnostic bytes.",
+    "Test zero, boundary, one-over, aggregate, cycle, shared-subgraph, repeated-reference, and adversarial amplification cases for every relevant limit.",
+    "The offline resolver has no network fallback, no ambient registry credentials, deterministic ordering, bounded diagnostics, and stable failure ownership."
+  ],
+  "implementation_independence": [
+    "Primary observation: Lean-side extraction directly from the exact pinned environment.",
+    "Independent observation: a separate Rust, Python, or other direct parser/canonicalizer over an explicitly exported typed representation, implemented without calling the Lean normalizer and without sharing its canonicalization code.",
+    "Document every shared primitive, generator, source revision, dependency, toolchain, license, advisory observation, platform, and known limitation.",
+    "Generate semantic fixtures before golden bytes; neither implementation's output becomes truth merely because the programs agree.",
+    "Add deliberately incorrect normalizer, resolver, and compatibility implementations and require the harness to detect them."
+  ],
+  "steps": [
+    "Claim SQ-0007 atomically on an isolated branch only after a fresh ledger/evidence preflight; preserve every other READY task and commit the claim separately.",
+    "Assign distinct primary-source, theorem-semantics, Lean/formal, independent-normalization, cryptographic, authorization/security, compatibility/counterexample, CI/reproducibility, and integration reviewers with non-overlapping ownership.",
+    "Audit the exact pinned Lean/Mathlib implementation and all cryptographic/dependency primary sources under `source-audits/registry/**`; retain ambiguous or contradictory evidence.",
+    "Write language-neutral examples, nonexamples, identity layers, normalizer grammar, meaning-bearing closure, registry record, authorization policy, proof/build lock, axiom policy, compatibility direction, errors, and resource limits before accepted vectors.",
+    "Prototype the Lean-side extractor and independent observation without treating either implementation as authority.",
+    "Revise RFC-0005 from evidence; keep it Draft and mark the task IN_REVIEW or BLOCKED if any normative validation item remains unresolved.",
+    "After exact-subject independent approval, accept RFC-0005 and update ADR-0007 to matching Accepted scope; do not accept either document on build agreement alone.",
+    "Implement only the versioned test-only registry record, exact lock layers, verifier-selected authorization policy, and bounded offline resolver.",
+    "Generate canonical semantic, environment, registry, authorization, proof/build, axiom, and compatibility fixtures with two independent observations.",
+    "Implement stable machine-readable result classes without timestamps, host paths, random identifiers, locale-dependent text, raw dependency debug output, or artifact-verification language.",
+    "Build the complete malformed, substitution, authorization, axiom, resource, compatibility, and deliberate-divergence corpus before approving golden changes.",
+    "Create a deterministic permanent evidence manifest and `scripts/registry/` verifier; integrate it into `make check` with corruption tests.",
+    "Create the exact-pinned least-privilege theorem-registry CI workflow and reproduce clean generation, Lean extraction, Rust/offline resolution if used, trust checks, evidence checks, and a clean tree.",
+    "Complete distinct specialist reviews and a clean independent integration review over exact hashes and hosted workflow IDs.",
+    "Only after RFC-0005 acceptance and all gates, atomically mark SQ-0007 DONE, recompute readiness, update status/plan/dashboard/review/handoff, and apply status-only changes to eligible SQ-0012/SQ-0019 contracts; claim no successor."
+  ],
+  "tests": [
+    "Exact Lean/Mathlib/toolchain identity and clean environment extraction",
+    "Normalizer vectors for every supported expression constructor, universe, binder kind, literal, projection, constant, and transparency rule",
+    "Universe-level, implicit-argument, binder-info, constant-name, literal, projection, metadata, and typeclass/environment mutations",
+    "Referenced-definition, import/environment, opaque/theorem/axiom classification, missing-dependency, and closure-order mutations",
+    "Closure cycle, width, depth, total-node, work-budget, duplicate, shared-subgraph, and diagnostic-amplification boundaries",
+    "Semantic proposition identity preserved under proof-only refactor in the same environment while proof/build lock changes",
+    "Proposition or meaning-bearing environment change alters the appropriate identity and lock",
+    "Actual transitive axiom observation for every named project declaration",
+    "`sorry`, `admit`, `sorryAx`, project axiom, bodyless project assumption, and prohibited native/unsafe trust-shortcut rejection",
+    "Test-only `True` record resolves offline under the correct verifier-selected root and policy",
+    "Bytes or content claiming `False` cannot resolve through the `True` record; this exact mutation is not generalized into artifact verification",
+    "Whole-registry replacement, forged stable ID, forged review/maturity metadata, wrong root, unknown root, revoked root, historical allowed/forbidden roots, policy mismatch, and artifact-supplied replacement-root rejection",
+    "Statement, environment, registry-record, proof/build, authorization-root, and compatibility digest cross-domain substitutions",
+    "Digest framing purpose, algorithm, format, component order, length, truncation, concatenation, empty-field, and downgrade mutations",
+    "Correct-direction checked compatibility succeeds only under the named policy",
+    "Reversed-direction, metadata-only implication/equivalence, proposition-equal/environment-different, changed-assumption, changed-definition, missing-proof, and substituted-proof-lock compatibility rejection",
+    "Registry entry, closure, expression, identifier/string, input/output, axiom, compatibility-edge, and diagnostic resource boundaries",
+    "Malformed records, unsupported versions, invalid encodings, duplicates, unknown fields/features, trailing input, and stable owning-stage error codes",
+    "Primary and independent observations agree on all accepted fixtures and disagreeing outputs remain retained as failures",
+    "Deliberately incorrect normalizer, resolver, duplicate handler, authorization selector, and compatibility-direction implementation are detected",
+    "Evidence corruption rejects proposition, environment, registry metadata, root/revocation, proof body, axiom, compatibility, source, lock, result, golden, review, and status drift",
+    "Clean deterministic regeneration is byte-identical and leaves no untracked generated state",
+    "RFC-0006 remains byte-identical, Draft, and owned by SQ-0027",
+    "No public statistical theorem, non-vacuity, source-fidelity, artifact-level verification, logical-data, certificate, or general kernel-verification claim enters the reviewed subject"
+  ],
+  "evidence_requirements": [
+    "A permanent standard-library-preferred verifier under `scripts/registry/` binds source audits, RFC/ADR scope, semantic fixtures, normalized expressions, closure vectors, registry records, roots/policies, proof/build locks, actual axiom reports, compatibility proofs, implementation lineage, retained failures, resource results, dependency locks, licenses/advisories, review subjects, workflow, task state, and RFC-0006 baseline.",
+    "Corruption tests remove or mutate every evidence class, including a stale review binding, and fail closed without rewriting historical evidence.",
+    "The evidence manifest distinguishes immutable completion subjects from live task lifecycle state so later reviewed successor work does not retroactively rewrite SQ-0007 science.",
+    "High-value scientific subjects and the evidence schema/version receive exact SHA-256 bindings in the review and handoff without recursive self-hashing."
+  ],
+  "ci_requirements": [
+    "Create `.github/workflows/theorem-registry.yml` with `contents: read`, no persisted credentials, exact action commits, timeouts, concurrency, clean homes, runner metadata, and no write or release token.",
+    "Run repository guardrails, exact Lean toolchain and trust scan, live axiom extraction, normalizer/closure vectors, independent oracle, deterministic offline resolver, malformed/adversarial corpus, compatibility directions, evidence corruption tests, clean regeneration, and clean-tree checks.",
+    "If Rust is used, acquire only with Rust 1.97.1 into an isolated credential-free Cargo home and test the exact lock offline; do not let Rust 1.85.1 acquire or regenerate a lock.",
+    "Hosted evidence claims only the observed runner/platform. Skips require documented path-selection logic; exact-subject manual dispatches must cover any required expensive path."
+  ],
+  "reviewers": {
+    "semantic_source": [
+      "primary-source and pinned-Lean-internals reviewer",
+      "theorem-semantics reviewer"
+    ],
+    "formal_conformance": [
+      "Lean/formal reviewer",
+      "independent normalization and conformance reviewer",
+      "cryptographic framing reviewer"
+    ],
+    "adversarial": [
+      "registry security and authorization reviewer",
+      "compatibility and counterexample reviewer"
+    ],
+    "ci_reproducibility": [
+      "CI, dependency, license, advisory, and reproducibility reviewer"
+    ],
+    "integrator": [
+      "independent integration reviewer"
+    ]
+  },
+  "review_independence": [
+    "The normalizer/profile author cannot be the sole Lean, conformance, cryptographic, authorization/security, compatibility, or integration reviewer.",
+    "Every disposition names the exact content-addressed subject and records findings, corrections, retained failures, limitations, commands, and hosted evidence.",
+    "RFC-0005 and ADR-0007 acceptance requires all decision reviewers to approve the same exact marked scope."
+  ],
+  "status_transition_policy": {
+    "claim": "READY -> IN_PROGRESS must atomically update this contract, backlog, status, and active-plan Progress on a separate commit; all evidence gates must still pass and every other READY task remains unclaimed.",
+    "review": "IN_PROGRESS -> IN_REVIEW occurs only after implementation/evidence subjects are frozen enough for exact-hash specialist review; no acceptance is inferred from this state.",
+    "blocked": "Any unresolved normalizer, closure, authorization, axiom, compatibility, source, trust, reproducibility, or RFC-0005 decision records a minimal blocker and leaves RFC-0005 Draft.",
+    "completion": "IN_REVIEW -> DONE occurs only after RFC-0005 and matching ADR-0007 are Accepted, every local/hosted/review gate passes, and the independent integrator approves the exact head.",
+    "successors": "Recompute readiness through shared repository logic. Change only status fields in SQ-0012 or SQ-0019 if they become eligible, and do not claim or implement any successor during SQ-0007 completion."
+  },
+  "acceptance": [
+    "RFC-0005 is Accepted from current primary-source and prototype evidence; ADR-0007 is Accepted with exactly matching decision scope.",
+    "The eleven identity, trust, authorization, compatibility, and annotation layers remain explicit and no digest silently represents them all.",
+    "The exact versioned normalizer and bounded meaning-bearing closure are language-neutral, independently observed, fully specified, resource-bounded, and mutation-tested.",
+    "The only v0 entry is the ADR-0011 test-only `True` conformance record with visibly test-only identity and exhaustive nonclaims.",
+    "Registry records distinguish extracted fields, governed metadata, reviewed annotations, authorization state, and proof/build evidence.",
+    "Verifier-selected root/policy resolution is deterministic and offline; artifact-supplied or internally self-consistent replacement state grants no authority.",
+    "Proof/build locks bind the exact environment, proof subject, and actual axiom report, and all forbidden project trust mutations fail.",
+    "Compatibility is kernel-checked in the useful direction and metadata-only, reversed, missing, or environment-mismatched substitution fails.",
+    "All digest domains are separated, explicitly framed, and reported with cryptographic nonclaims.",
+    "Every stable error and resource limit has boundary, malformed, amplification, and deterministic-output evidence.",
+    "The permanent evidence verifier, corruption suite, independent implementation evidence, and clean regeneration pass locally and in pinned least-privilege CI.",
+    "RFC-0006 is byte-identical, Draft, and owned by SQ-0027; no logical-data semantics or real-data domain entered the task.",
+    "No public statistical theorem, source-fidelity, artifact-level verification, theorem-hash-as-equality, certificate, or non-vacuity claim is made.",
+    "The task ledger, review, handoff, dashboard, active plan, RFC/ADR state, and computed successor readiness agree, with no successor claimed."
+  ],
+  "commands": [
+    "make check",
+    "make list-work",
+    "git diff --check",
+    "cd lean && lake build",
+    "cd lean && lake env lean --trust=0 StatQED/Registry/Tests/Smoke.lean",
+    "cd lean && lake env lean --trust=0 StatQED/Registry/Tools/AxiomReport.lean",
+    "python3 scripts/registry/check_axiom_report.py --check theorem-registry/evidence/axioms.json",
+    "cd lean && lake env leanchecker --fresh StatQED.Registry.Tests.Smoke",
+    "python3 scripts/check_lean_trust.py",
+    "python3 scripts/check_lean_trust.py --run-mutations",
+    "python3 scripts/registry/check_evidence.py",
+    "python3 scripts/registry/run_conformance.py --verify",
+    "python3 -m unittest discover -s scripts/registry/tests -p 'test_*.py' -v",
+    "cd backend/crates/statqed-registry && cargo +1.97.1 fmt --check",
+    "cd backend/crates/statqed-registry && cargo +1.97.1 clippy --all-targets --all-features --locked -- -D warnings",
+    "cd backend/crates/statqed-registry && cargo +1.97.1 test --all-features --locked",
+    "cd backend/crates/statqed-registry && cargo +1.85.1 test --all-features --locked --offline",
+    "python3 scripts/registry/dependency_inventory.py --check",
+    "python3 scripts/registry/check_advisories.py --check",
+    "python3 scripts/registry/check_yanked.py --check",
+    "python3 scripts/registry/build_evidence_manifest.py --check",
+    "git status --short"
+  ],
+  "handoff_outputs": [
+    "Accepted RFC-0005 and matching Accepted ADR-0007 with exact decision-scope hash",
+    "primary-source and pinned-toolchain audit",
+    "versioned normalizer grammar and meaning-bearing closure specification",
+    "test-only registry record, schema, roots/policies, and stable error/resource contract",
+    "canonical proposition/environment/record/authorization/proof/axiom/compatibility vectors",
+    "primary and independent implementation lineage, source, lock, license, advisory, platform, and failure evidence",
+    "permanent evidence manifest/verifier and corruption/mutation corpus",
+    "exact local command transcripts and hosted workflow IDs",
+    "distinct source, semantic, formal, conformance, cryptographic, security, compatibility, CI, and integration review dispositions",
+    "final ledger/readiness calculation, TCB, nonclaims, limitations, update/rollback instructions, and cleanup boundary"
+  ]
 }

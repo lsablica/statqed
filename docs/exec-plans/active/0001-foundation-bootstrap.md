@@ -276,6 +276,8 @@ git diff --check
 - [x] SQ-0006 implementation evidence — `5093a3d7afca0e98ec47a67de1364a378f97741a` freezes five accepted semantic fixtures, 85 retained negatives, three detected deliberate divergences, exact `cddl` 0.10.6 shape checks, two read-only SQ-0005 comparisons plus a direct standards recipe, a 154-package lock-bound license inventory, and permanent static corruption checks. Distinct source, semantic, formal/schema, conformance, adversarial, versioning, CI/reproducibility, and integration reviewers approved exact review head `542c6c516e17bba883691ce1d00972ef1d3077ea`; guardrails `31372523046`, Serialization prototypes `31372523061`, Schema v0 `31372523282`, Rust `31372523049`, and Lean `31372523110` passed before the atomic DONE transition.
 - [x] SQ-0006 protected integration — final reviewed head `b569f24e95a2465f71a16affa344d57164a23b27` merged normally through PR #15 as `e4bd2f0e739aaf480170d16a3424b40af1e9cf5b` on 2026-08-11. Main guardrails `31489194387`, Serialization prototypes `31489194324`, Schema v0 `31489194383`, Rust `31489194316`, and Lean `31489194370` passed; exact-merge Schema v0 dispatch `31489484813` and Serialization prototypes dispatch `31489483135` independently reproduced the bound counts and byte-identical regeneration. The checked READY set is SQ-0007, SQ-0008, SQ-0011, SQ-0013, SQ-0014, and SQ-0015; no successor was claimed.
 - [x] SQ-0006 successor-evidence maintenance — the v2 evidence model retains the complete v1 completion manifest and original scientific digest as immutable history, permits independently reviewed READY-state contract planning without evidence regeneration, and replaces whole-tree gates with static path-granular ownership. The original 22 schema tests plus 29 lifecycle/path regressions pass; all six successor contracts remain byte-identical, READY, and unclaimed during the maintenance.
+- [x] SQ-0006 successor-evidence maintenance integration — exact reviewed head `272db072f574a085a8fa3a619f50673e7bcc31ce` merged normally through PR #19 as `f2baf677a71a30923d4d63ecf0667c51fb179795`. Five normal main workflows and exact-main Schema/Serialization dispatches passed; the replacement Serialization dispatch `31501154760` completed successfully after run `31500674505` remained stuck at parent-run state despite all three jobs succeeding. The historical scientific digest remains `4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0`.
+- [x] SQ-0007 executable planning contract — expanded and independently reviewed on `planning/SQ-0007-executable-contract` with explicit RFC-0005 ownership, eleven separate identity/trust layers, exact pinned-source research, versioned normalizer and bounded closure obligations, verifier-selected authorization, proof/build and axiom locks, directional compatibility, six digest domains, stable errors/resources, permanent evidence, pinned CI, distinct reviews, and exhaustive nonclaims. Hosted checks and a protected planning merge remain required before launch from main; SQ-0007 and every other successor remain READY and unclaimed.
 - [ ] SQ-0007 and SQ-0009 through SQ-0020.
 
 ## Surprises & Discoveries
@@ -330,6 +332,7 @@ git diff --check
 - Post-merge planning exposed a distinct successor-contract lifecycle boundary: SQ-0006 evidence correctly preserves non-status successor-contract semantics, but the existing SQ-0007 contract still needs expansion before implementation and direct expansion would fail that permanent projection. A separate reviewed evidence-lifecycle/planning maintenance is required before any successor is claimed; this is not a schema defect.
 - The original whole-tree contamination gate assigned all of `lean/`, `backend/`, or `frontends/` to one successor state. Static disjoint partitions are required instead: SQ-0007 can own only registry subtrees, SQ-0008 only assurance/guarantee subtrees, and each frontend task only its language subtree, while unowned remainder and `schemas/prototypes/**` stay frozen.
 - Hard-link shadow copies crossed filesystem boundaries and traversed user-owned `.codex/` state. The lifecycle suite now copies only Git-tracked files with metadata-preserving ordinary copies, making the tests filesystem-independent and keeping user-owned untracked content outside the test surface.
+- Expanding a successor contract is repository planning, not predecessor science: SQ-0006 evidence v2 accepted the reviewed SQ-0007 planning change without regenerating its historical manifest or scientific digest. The executable contract therefore owns future theorem-registry decisions while SQ-0006 continues to protect only its completed schema subject and static path boundary.
 
 ## Decision Log
 
@@ -384,6 +387,7 @@ git diff --check
 - 2026-08-11: Recorded SQ-0007 as the expected next scientific task only after a separate successor-contract lifecycle/planning maintenance. SQ-0008 and every other READY successor remain unstarted; no successor contract is expanded by the SQ-0006 post-merge record.
 - 2026-08-11: Separated immutable SQ-0006 completion history from live successor lifecycle. Evidence v2 nests and authenticates the complete v1 manifest, retains all six historical successor hashes, and treats later reviewed successor planning as repository-governance state rather than SQ-0006 scientific identity.
 - 2026-08-11: Selected a static path-ownership policy rather than trusting mutable successor `allowed_paths`: registry, assurance/guarantee, backend, and language-specific frontend partitions unfreeze only for their explicitly listed active owners; all unowned partitions remain at their historical baseline.
+- 2026-08-11: Expanded SQ-0007 planning without claiming it. RFC-0005 remains Draft and must be accepted from current pinned Lean/Mathlib and independent prototype evidence before SQ-0007 can become DONE; matching ADR-0007 remains Proposed, and RFC-0006 remains read-only under SQ-0027.
 
 ## Outcomes & Retrospective
 
@@ -405,7 +409,10 @@ PR #15 preserved that exact reviewed subject through normal merge
 permanent predecessor, serialization, schema, mutation, and regeneration
 gates. The ledger now exposes six READY successors and no active task, but
 successor execution remains paused until SQ-0007 receives a complete reviewed
-planning contract. The successor-evidence maintenance preserves the complete
+planning contract. The exact contract is now complete and independently
+reviewed; once its planning-only PR is green and merged, a future isolated
+execution may claim SQ-0007 only after a fresh preflight. The
+successor-evidence maintenance preserves the complete
 v1 completion manifest and historical scientific digest, adds 29 regressions,
 and gives future tasks only path-granular authority. SQ-0006 remains DONE; no
 scientific or normative subject changed at that maintenance boundary.
