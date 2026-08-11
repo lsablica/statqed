@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -12,7 +13,7 @@ import unittest
 SCRIPT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from check_schema_v0 import EvidenceError, verify
+from check_schema_v0 import EvidenceError, protected_files, protected_partition_digest, verify
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -22,12 +23,20 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def shadow(self):
         temporary = tempfile.TemporaryDirectory(prefix="statqed-sq0006-corrupt-")
         destination = Path(temporary.name) / "repo"
-        shutil.copytree(
-            ROOT,
-            destination,
-            copy_function=os.link,
-            ignore=shutil.ignore_patterns(".git", "target", "__pycache__", ".pytest_cache"),
-        )
+        destination.mkdir()
+        tracked = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "-z"],
+            check=True,
+            capture_output=True,
+        ).stdout.split(b"\0")
+        for raw in tracked:
+            if not raw:
+                continue
+            relative = Path(raw.decode())
+            source = ROOT / relative
+            target = destination / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
         return temporary, destination
 
     def mutate(self, root: Path, relative: str, transform):
@@ -37,12 +46,14 @@ class EvidenceCorruptionTests(unittest.TestCase):
         changed = transform(data)
         path.write_bytes(changed)
 
-    def assert_rejected(self, relative: str, transform):
+    def assert_rejected(self, relative: str, transform, reason: str | None = None):
         temporary, root = self.shadow()
         try:
             self.mutate(root, relative, transform)
-            with self.assertRaises(EvidenceError):
+            with self.assertRaises(EvidenceError) as caught:
                 verify(root)
+            if reason is not None:
+                self.assertIn(reason, str(caught.exception))
         finally:
             temporary.cleanup()
 
@@ -50,6 +61,45 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path = root / relative
         path.unlink()
         path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+    def set_task_state(self, root: Path, task_id: str, state: str):
+        contract = json.loads((root / f"work/contracts/{task_id}.yaml").read_text())
+        backlog = json.loads((root / "work/backlog.yaml").read_text())
+        status = json.loads((root / "work/status.yaml").read_text())
+        contract["status"] = state
+        next(task for task in backlog["tasks"] if task["id"] == task_id)["status"] = state
+        for key in ("ready", "in_progress", "done"):
+            status[key] = [item for item in status[key] if item != task_id]
+        if state == "READY":
+            status["ready"].append(task_id)
+        elif state in {"IN_PROGRESS", "IN_REVIEW"}:
+            status["in_progress"].append(task_id)
+        elif state == "DONE":
+            status["done"].append(task_id)
+        for key in ("ready", "in_progress", "done"):
+            status[key].sort()
+        status["blocked_count"] = sum(item["status"] == "BLOCKED" for item in backlog["tasks"])
+        self.write_json(root, f"work/contracts/{task_id}.yaml", contract)
+        self.write_json(root, "work/backlog.yaml", backlog)
+        self.write_json(root, "work/status.yaml", status)
+
+    def expand_contract(self, root: Path, task_id: str):
+        contract = json.loads((root / f"work/contracts/{task_id}.yaml").read_text())
+        contract["planning_review_probe"] = {"purpose": "non-status successor planning"}
+        self.write_json(root, f"work/contracts/{task_id}.yaml", contract)
+
+    def add_file(self, root: Path, relative: str):
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("lifecycle ownership probe\n", encoding="utf-8")
+
+    def rebuild_manifest(self, root: Path):
+        subprocess.run(
+            [sys.executable, "scripts/schema/build_evidence_manifest.py"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
 
     def test_changed_field_semantics(self):
         self.assert_rejected("schemas/v0/README.md", lambda data: data.replace(b"Opaque", b"Global", 1))
@@ -123,24 +173,367 @@ class EvidenceCorruptionTests(unittest.TestCase):
                     temporary.cleanup()
 
     def test_sq0006_lifecycle_states(self):
-        for state in ("IN_PROGRESS", "IN_REVIEW", "DONE"):
+        for state in ("IN_PROGRESS", "IN_REVIEW"):
             with self.subTest(state=state):
                 temporary, root = self.shadow()
                 try:
-                    contract = json.loads((root / "work/contracts/SQ-0006.yaml").read_text())
-                    backlog = json.loads((root / "work/backlog.yaml").read_text())
-                    status = json.loads((root / "work/status.yaml").read_text())
-                    contract["status"] = state
-                    next(task for task in backlog["tasks"] if task["id"] == "SQ-0006")["status"] = state
-                    status["in_progress"] = [item for item in status["in_progress"] if item != "SQ-0006"]
-                    status["done"] = [item for item in status["done"] if item != "SQ-0006"]
-                    status["in_progress" if state != "DONE" else "done"].append("SQ-0006")
-                    self.write_json(root, "work/contracts/SQ-0006.yaml", contract)
-                    self.write_json(root, "work/backlog.yaml", backlog)
-                    self.write_json(root, "work/status.yaml", status)
-                    verify(root)
+                    self.set_task_state(root, "SQ-0006", state)
+                    with self.assertRaisesRegex(EvidenceError, "SQ-0006 contract/backlog lifecycle mismatch"):
+                        verify(root)
                 finally:
                     temporary.cleanup()
+        temporary, root = self.shadow()
+        try:
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    # Phase-A successor-planning and path-ownership regression matrix.
+    def test_phase_a_01_sq0007_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0007")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_02_sq0008_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0008")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_03_sq0011_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0011")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_04_sq0013_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0013")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_05_sq0014_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0014")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_06_sq0015_ready_contract_expansion(self):
+        temporary, root = self.shadow()
+        try:
+            self.expand_contract(root, "SQ-0015")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_07_contract_expansion_preserves_historical_hashes(self):
+        temporary, root = self.shadow()
+        try:
+            before = json.loads((root / "conformance/schema-v0/evidence/evidence-spec.json").read_text())[
+                "historical_successor_contracts"
+            ]
+            for task in ("SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"):
+                self.expand_contract(root, task)
+            verify(root)
+            after = json.loads((root / "conformance/schema-v0/evidence/evidence-spec.json").read_text())[
+                "historical_successor_contracts"
+            ]
+            self.assertEqual(before, after)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_08_contract_expansion_needs_no_manifest_regeneration(self):
+        temporary, root = self.shadow()
+        try:
+            manifest_path = root / "conformance/schema-v0/evidence/evidence-manifest.json"
+            before = manifest_path.read_bytes()
+            historical = json.loads(before)["historical_scientific_subject_digest"]
+            self.expand_contract(root, "SQ-0007")
+            verify(root)
+            self.assertEqual(before, manifest_path.read_bytes())
+            self.assertEqual(
+                "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+                historical,
+            )
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_09_sq0006_semantic_contract_mutation_rejected(self):
+        self.assert_rejected(
+            "work/contracts/SQ-0006.yaml",
+            lambda data: data.replace(b'"objective":', b'"mutated_objective":', 1),
+            "SQ-0006 non-lifecycle contract drift",
+        )
+        temporary, root = self.shadow()
+        try:
+            self.add_file(root, "backend/unauthorized-baseline-redefinition.txt")
+            spec = json.loads((root / "conformance/schema-v0/evidence/evidence-spec.json").read_text())
+            policy = next(
+                item for item in spec["protected_path_policy"]["partitions"]
+                if item["id"] == "backend_remainder"
+            )
+            digest, count = protected_partition_digest(protected_files(root, "backend", ()), policy)
+            policy["baseline_sha256"] = digest
+            policy["baseline_file_count"] = count
+            self.write_json(root, "conformance/schema-v0/evidence/evidence-spec.json", spec)
+            self.rebuild_manifest(root)
+            with self.assertRaisesRegex(EvidenceError, "protected path policy drift"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_10_successor_contract_backlog_disagreement_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            contract = json.loads((root / "work/contracts/SQ-0007.yaml").read_text())
+            contract["status"] = "IN_PROGRESS"
+            self.write_json(root, "work/contracts/SQ-0007.yaml", contract)
+            with self.assertRaisesRegex(EvidenceError, "SQ-0007 contract/backlog lifecycle mismatch"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_11_illegal_successor_status_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0007", "UNREVIEWED")
+            with self.assertRaisesRegex(EvidenceError, "illegal backlog status: SQ-0007"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+        temporary, root = self.shadow()
+        try:
+            spec = json.loads((root / "conformance/schema-v0/evidence/evidence-spec.json").read_text())
+            spec["live_invariants"]["owner_authorizing_statuses"].append("READY")
+            self.write_json(root, "conformance/schema-v0/evidence/evidence-spec.json", spec)
+            self.rebuild_manifest(root)
+            with self.assertRaisesRegex(EvidenceError, "owner authorizing status policy drift"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_12_rfc0006_mutation_rejected(self):
+        self.assert_rejected(
+            "rfcs/0006-canonical-logical-data-digest.md",
+            lambda data: data + b"\nphase-a mutation\n",
+            "RFC-0006 historical baseline drift",
+        )
+
+    def test_phase_a_13_rfc_adr_scope_drift_rejected(self):
+        self.assert_rejected(
+            "docs/adr/0004-deterministic-cbor-cddl.md",
+            lambda data: data.replace(
+                b"\n`statqed.cbor-core.v1` application profile",
+                b"\n`statqed.cbor-core.v2` application profile",
+                1,
+            ),
+            "normative scope drift",
+        )
+
+    def test_phase_a_14_schema_prototype_and_golden_mutations_rejected(self):
+        mutations = (
+            ("schemas/v0/README.md", lambda data: data + b"\nmutation\n", "evidence subject mismatch"),
+            (
+                "schemas/prototypes/python-oracle/LINEAGE.md",
+                lambda data: data + b"\nmutation\n",
+                "schemas_prototypes",
+            ),
+            (
+                "conformance/golden/v0/positive-minimum.cbor",
+                lambda data: data[:-1] + bytes((data[-1] ^ 1,)),
+                "evidence subject mismatch",
+            ),
+        )
+        for relative, transform, reason in mutations:
+            with self.subTest(relative=relative):
+                self.assert_rejected(relative, transform, reason)
+
+    def test_phase_a_15_sq0007_ready_registry_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.add_file(root, "lean/StatQED/Registry/Probe.lean")
+            with self.assertRaisesRegex(EvidenceError, "lean_registry"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_16_sq0007_active_registry_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.add_file(root, "lean/StatQED/Registry/Probe.lean")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_17_sq0007_active_unrelated_lean_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.add_file(root, "lean/StatQED/Unowned/Probe.lean")
+            with self.assertRaisesRegex(EvidenceError, "lean_remainder"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_18_sq0007_active_backend_registry_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_19_sq0007_active_unrelated_backend_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.add_file(root, "backend/crates/unowned-probe/src/lib.rs")
+            with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0011", "IN_PROGRESS")
+            self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
+            self.add_file(root, "backend/crates/sq0011-probe/src/lib.rs")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_20_sq0008_active_assurance_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
+            self.add_file(root, "lean/StatQED/Assurance/Probe.lean")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_21_sq0008_active_registry_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
+            self.add_file(root, "lean/StatQED/Registry/Probe.lean")
+            with self.assertRaisesRegex(EvidenceError, "lean_registry"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.add_file(root, "lean/StatQED/Registry/Probe.lean")
+            verify(root)
+            status = json.loads((root / "work/status.yaml").read_text())
+            status["in_progress"].reverse()
+            self.write_json(root, "work/status.yaml", status)
+            with self.assertRaisesRegex(EvidenceError, "live ledger in_progress disagrees"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_22_sq0013_active_r_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0013", "IN_PROGRESS")
+            self.add_file(root, "frontends/r/R/probe.R")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_23_sq0013_active_python_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0013", "IN_PROGRESS")
+            self.add_file(root, "frontends/python/probe.py")
+            with self.assertRaisesRegex(EvidenceError, "frontend_python"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_24_sq0014_active_python_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0014", "IN_PROGRESS")
+            self.add_file(root, "frontends/python/probe.py")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_25_sq0014_active_julia_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0014", "IN_PROGRESS")
+            self.add_file(root, "frontends/julia/src/Probe.jl")
+            with self.assertRaisesRegex(EvidenceError, "frontend_julia"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_26_sq0015_active_julia_change_accepted(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0015", "IN_PROGRESS")
+            self.add_file(root, "frontends/julia/src/Probe.jl")
+            verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_27_sq0015_active_r_change_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.set_task_state(root, "SQ-0015", "IN_PROGRESS")
+            self.add_file(root, "frontends/r/R/probe.R")
+            with self.assertRaisesRegex(EvidenceError, "frontend_r"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_a_28_no_owner_active_new_protected_file_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            self.add_file(root, "backend/new-protected-file.txt")
+            with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+        for kind in ("symlink", "special", "regular"):
+            with self.subTest(ignored_kind=kind):
+                temporary, root = self.shadow()
+                try:
+                    target = root / "backend/target"
+                    if kind == "symlink":
+                        target.symlink_to(root / "lean", target_is_directory=True)
+                    elif kind == "special":
+                        target.mkdir()
+                        os.mkfifo(target / "probe.fifo")
+                    else:
+                        self.add_file(root, "backend/target/hidden-source.rs")
+                    with self.assertRaisesRegex(EvidenceError, "protected path"):
+                        verify(root)
+                finally:
+                    temporary.cleanup()
+
+    def test_phase_a_29_unowned_historical_baseline_mutation_rejected(self):
+        self.assert_rejected(
+            "lean/README.md",
+            lambda data: data + b"\nphase-a mutation\n",
+            "lean_remainder",
+        )
 
 
 if __name__ == "__main__":

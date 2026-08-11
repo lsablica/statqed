@@ -15,7 +15,104 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 SCOPE_BEGIN = "<!-- SQ-0005-NORMATIVE-SCOPE-BEGIN -->"
 SCOPE_END = "<!-- SQ-0005-NORMATIVE-SCOPE-END -->"
-ALLOWED_SUCCESSOR = {"BLOCKED", "READY", "IN_PROGRESS", "IN_REVIEW", "DONE"}
+EXPECTED_HISTORICAL_MANIFEST_SHA256 = "eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb"
+EXPECTED_HISTORICAL_SCIENTIFIC_SHA256 = "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0"
+EXPECTED_SUCCESSOR_HISTORY = {
+    "SQ-0007": (
+        "bddf4334bbef4391b6024010f6073bcec34c272d9e15809f54d6ee927de5c4e2",
+        "60cb7493c9f4828ba8b8c4583698f084f589103deadcc9b5d7bb9dc05e7389fb",
+    ),
+    "SQ-0008": (
+        "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
+        "c5b7f222b914f2dab8fc2c8592979d20150ddb0d8c4700669c5bf923f977f9e4",
+    ),
+    "SQ-0011": (
+        "a6dd037dc74e81c681161b79ac324fae8093bef5f8449a0322d93f45962a7b12",
+        "63b2dd821a27d6732aa910a608fea139b3bc76d3a2e006a0cf198c01fe406654",
+    ),
+    "SQ-0013": (
+        "8132e0887c5d5765b608944761946a046ee4ea2597e1e7eb90eea825780e9290",
+        "b36645159632f2cf055d32c378e5240e49690af2393cf05223ec68cf51664f82",
+    ),
+    "SQ-0014": (
+        "0faa9eac82339efb08d55e8cc633de29988366dfb599dd9f968e92d24c38468b",
+        "2a2b688e94b574a478d563782eba913c83f1fcd36193ffd14cc305e57be9f21b",
+    ),
+    "SQ-0015": (
+        "c17d1c85574980ead5a7224f213d3277d14e3c21e3145d1c74ef76ba4624227b",
+        "f22cfb53af999a8272205468a185844755609934b24b1f0f1dd61d61523b6988",
+    ),
+}
+EXPECTED_LEGAL_STATUSES = ("BLOCKED", "READY", "IN_PROGRESS", "IN_REVIEW", "DONE", "SUPERSEDED")
+EXPECTED_AUTHORIZING_STATUSES = ("IN_PROGRESS", "IN_REVIEW", "DONE")
+EXPECTED_LIFECYCLE_PATHS = (
+    "conformance/schema-v0/evidence/evidence-spec.json",
+    "scripts/schema/build_evidence_manifest.py",
+    "scripts/schema/check_schema_v0.py",
+    "scripts/schema/tests/test_check_schema_v0.py",
+)
+EXPECTED_PATH_PARTITIONS = {
+    "lean_registry": (
+        "lean", ("lean/StatQED/Registry",), (), ("SQ-0007",),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", 0,
+    ),
+    "lean_assurance": (
+        "lean", ("lean/StatQED/Assurance",), (), ("SQ-0008",),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", 0,
+    ),
+    "lean_guarantee": (
+        "lean", ("lean/StatQED/Guarantee",), (), ("SQ-0008",),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", 0,
+    ),
+    "lean_remainder": (
+        "lean",
+        (),
+        ("lean/StatQED/Registry", "lean/StatQED/Assurance", "lean/StatQED/Guarantee"),
+        (),
+        "486109764c763003b6021493cab5693e318a189619e1e7987a1999cd54ae019c", 55,
+    ),
+    "backend_registry": (
+        "backend",
+        ("backend/crates/statqed-registry",),
+        (),
+        ("SQ-0007", "SQ-0011"),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", 0,
+    ),
+    "backend_remainder": (
+        "backend", (), ("backend/crates/statqed-registry",), ("SQ-0011",),
+        "5f2891a03d785e9a4652f756681cf288e15e8914bccfafe27e3250802c8dbd42", 22,
+    ),
+    "frontend_r": (
+        "frontends", ("frontends/r",), (), ("SQ-0013",),
+        "d88fe7e954b179850bc926edee0db668e32cad8981f66697defd3b4693962e41", 2,
+    ),
+    "frontend_python": (
+        "frontends", ("frontends/python",), (), ("SQ-0014",),
+        "5568aa52ec47fea334d2e2ce97052edba5769e9118b5c6ac45e1da907cf60f4a", 2,
+    ),
+    "frontend_julia": (
+        "frontends", ("frontends/julia",), (), ("SQ-0015",),
+        "5f68e97ec97b290bb8264f25f25b151e6bb138f088f6518020f8a1bacfc3c317", 2,
+    ),
+    "frontends_remainder": (
+        "frontends",
+        (),
+        ("frontends/r", "frontends/python", "frontends/julia"),
+        (), "8265f27bb2b1ca9f890f09194d63fa1ac27841a9645c5b9e58f1301e8bc16983", 2,
+    ),
+    "schemas_prototypes": (
+        "schemas/prototypes", (), (), (),
+        "c766b55670d8722bb17ec42d1eea6ecf556926f6573886f7125d4be977a5dc29", 32,
+    ),
+}
+EXPECTED_IGNORED_PREFIXES = (
+    "lean/.lake",
+    "backend/target",
+    "schemas/prototypes/rust-cbor/target",
+    "schemas/prototypes/python-oracle/.pytest_cache",
+    "schemas/prototypes/python-oracle/statqed_oracle/__pycache__",
+    "schemas/prototypes/python-oracle/tests/__pycache__",
+)
 
 
 class EvidenceError(RuntimeError):
@@ -26,6 +123,10 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def canonical(value: Any) -> bytes:
+    return (json.dumps(value, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode()
+
+
 def load_json(root: Path, relative: str) -> Any:
     try:
         return json.loads((root / relative).read_text(encoding="utf-8"))
@@ -33,20 +134,65 @@ def load_json(root: Path, relative: str) -> Any:
         raise EvidenceError(f"invalid required JSON: {relative}") from error
 
 
-def tree_digest(root: Path, relative: str) -> str:
+def under_prefix(relative: str, prefix: str) -> bool:
+    return relative == prefix or relative.startswith(prefix + "/")
+
+
+def partition_matches(relative: str, policy: dict[str, Any]) -> bool:
+    includes = policy["include_prefixes"]
+    excludes = policy["exclude_prefixes"]
+    return (not includes or any(under_prefix(relative, prefix) for prefix in includes)) and not any(
+        under_prefix(relative, prefix) for prefix in excludes
+    )
+
+
+def tracked_paths(root: Path, relative: str) -> set[str] | None:
+    result = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z", "--", relative],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+    return {item.decode() for item in result.stdout.split(b"\0") if item}
+
+
+def protected_files(root: Path, relative: str, ignored: tuple[str, ...]) -> list[tuple[str, Path]]:
     base = root / relative
     if not base.is_dir():
         raise EvidenceError(f"missing protected tree: {relative}")
-    digest = hashlib.sha256()
-    files = []
+    tracked = tracked_paths(root, relative)
+    files: list[tuple[str, Path]] = []
     for path in base.rglob("*"):
-        if path.is_file() and not any(part in {"target", "__pycache__", ".pytest_cache"} for part in path.parts):
-            files.append(path)
-    for path in sorted(files):
-        digest.update(path.relative_to(root).as_posix().encode())
+        item = path.relative_to(root).as_posix()
+        if path.is_symlink():
+            raise EvidenceError(f"protected path symlink: {item}")
+        if path.is_dir():
+            continue
+        if not path.is_file():
+            raise EvidenceError(f"protected path special file: {item}")
+        if any(under_prefix(item, prefix) for prefix in ignored):
+            if tracked is None:
+                raise EvidenceError(f"unverifiable ignored protected path: {item}")
+            if item in tracked:
+                raise EvidenceError(f"tracked protected path under ignored cache: {item}")
+            continue
+        files.append((item, path))
+    return sorted(files)
+
+
+def protected_partition_digest(
+    files: list[tuple[str, Path]], policy: dict[str, Any]
+) -> tuple[str, int]:
+    digest = hashlib.sha256()
+    selected = [(relative, path) for relative, path in files if partition_matches(relative, policy)]
+    for relative, path in selected:
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(b"x" if path.stat().st_mode & 0o111 else b"-")
         digest.update(b"\0")
         digest.update(hashlib.sha256(path.read_bytes()).digest())
-    return digest.hexdigest()
+    return digest.hexdigest(), len(selected)
 
 
 def marked_scope(path: Path) -> str:
@@ -94,10 +240,10 @@ def document_projection(root: Path, policy: dict[str, str]) -> str:
     raise EvidenceError(f"unknown document projection: {policy['kind']}")
 
 
-def contract_projection(root: Path, task: str) -> tuple[str, str]:
+def contract_projection(root: Path, task: str, legal_statuses: set[str]) -> tuple[str, str]:
     document = load_json(root, f"work/contracts/{task}.yaml")
     status = document.get("status")
-    if status not in ALLOWED_SUCCESSOR:
+    if status not in legal_statuses:
         raise EvidenceError(f"illegal {task} status: {status}")
     projected = dict(document)
     projected.pop("status", None)
@@ -109,17 +255,91 @@ def task_map(backlog: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {task["id"]: task for task in backlog["tasks"]}
 
 
+def validate_historical_completion(
+    manifest: dict[str, Any], policy: dict[str, Any]
+) -> list[dict[str, Any]]:
+    historical = manifest.get("historical_completion")
+    if not isinstance(historical, dict):
+        raise EvidenceError("missing historical SQ-0006 completion manifest")
+    if sha256(canonical(historical)) != EXPECTED_HISTORICAL_MANIFEST_SHA256:
+        raise EvidenceError("historical SQ-0006 completion manifest drift")
+    expected_fields = {
+        "evidence_manifest_version": policy["evidence_manifest_version"],
+        "evidence_spec_sha256": policy["evidence_spec_sha256"],
+        "subject_count": policy["subject_count"],
+        "subject_digest": policy["subject_digest"],
+        "scientific_subject_digest": policy["scientific_subject_digest"],
+    }
+    for field, expected in expected_fields.items():
+        if historical.get(field) != expected:
+            raise EvidenceError(f"historical SQ-0006 {field} drift")
+    subjects = historical.get("subjects")
+    if not isinstance(subjects, list) or len(subjects) != historical.get("subject_count"):
+        raise EvidenceError("historical SQ-0006 subject count mismatch")
+    if sha256(canonical(subjects)) != historical.get("subject_digest"):
+        raise EvidenceError("historical SQ-0006 subject digest mismatch")
+    historical_scientific = [
+        item for item in subjects
+        if not item["path"].startswith("work/reviews/")
+        and not item["path"].startswith("docs/quality/")
+    ]
+    if sha256(canonical(historical_scientific)) != EXPECTED_HISTORICAL_SCIENTIFIC_SHA256:
+        raise EvidenceError("historical SQ-0006 scientific subject digest mismatch")
+    return subjects
+
+
+def validate_live_ledger(
+    backlog: dict[str, Any], status: dict[str, Any], tasks: dict[str, dict[str, Any]], legal: set[str]
+) -> None:
+    expected = {"done": [], "ready": [], "in_progress": []}
+    blocked_count = 0
+    for task_id, task in tasks.items():
+        state = task.get("status")
+        if state not in legal:
+            raise EvidenceError(f"illegal backlog status: {task_id}: {state}")
+        if state == "DONE":
+            expected["done"].append(task_id)
+        elif state == "READY":
+            expected["ready"].append(task_id)
+        elif state in {"IN_PROGRESS", "IN_REVIEW"}:
+            expected["in_progress"].append(task_id)
+        elif state == "BLOCKED":
+            blocked_count += 1
+    for key, expected_items in expected.items():
+        actual = status.get(key)
+        if not isinstance(actual, list) or actual != sorted(expected_items):
+            raise EvidenceError(f"live ledger {key} disagrees with backlog")
+        if len(actual) != len(set(actual)):
+            raise EvidenceError(f"duplicate live ledger entry: {key}")
+    represented = [item for key in expected for item in status.get(key, [])]
+    if len(represented) != len(set(represented)):
+        raise EvidenceError("task appears in multiple live ledger sets")
+    if status.get("blocked_count") != blocked_count:
+        raise EvidenceError("live ledger blocked count disagrees with backlog")
+
+
 def verify(root: Path = ROOT) -> dict[str, Any]:
     spec = load_json(root, "conformance/schema-v0/evidence/evidence-spec.json")
     manifest = load_json(root, "conformance/schema-v0/evidence/evidence-manifest.json")
-    if spec.get("evidence_spec_version") != "statqed.sq0006-evidence-spec.v1":
+    if spec.get("evidence_spec_version") != "statqed.sq0006-evidence-spec.v2":
         raise EvidenceError("unexpected SQ-0006 evidence spec version")
-    if manifest.get("evidence_manifest_version") != "statqed.sq0006-evidence.v1":
+    if manifest.get("evidence_manifest_version") != "statqed.sq0006-evidence.v2":
         raise EvidenceError("unexpected SQ-0006 evidence manifest version")
     if manifest.get("evidence_spec_sha256") != sha256((root / "conformance/schema-v0/evidence/evidence-spec.json").read_bytes()):
         raise EvidenceError("evidence spec hash mismatch")
-    subjects = manifest.get("subjects")
-    if not isinstance(subjects, list) or len(subjects) != manifest.get("subject_count"):
+    historical_policy = spec["historical_completion_manifest"]
+    if historical_policy.get("manifest_sha256") != EXPECTED_HISTORICAL_MANIFEST_SHA256:
+        raise EvidenceError("historical completion policy drift")
+    if historical_policy.get("scientific_subject_digest") != EXPECTED_HISTORICAL_SCIENTIFIC_SHA256:
+        raise EvidenceError("historical scientific policy drift")
+    historical_subjects = validate_historical_completion(manifest, historical_policy)
+    if manifest.get("historical_completion_manifest_sha256") != EXPECTED_HISTORICAL_MANIFEST_SHA256:
+        raise EvidenceError("historical completion binding drift")
+    if manifest.get("historical_scientific_subject_digest") != EXPECTED_HISTORICAL_SCIENTIFIC_SHA256:
+        raise EvidenceError("historical scientific binding drift")
+
+    subjects = manifest.get("live_subjects")
+    if not isinstance(subjects, list) or len(subjects) != manifest.get("live_subject_count"):
         raise EvidenceError("evidence subject count mismatch")
     seen = set()
     for subject in subjects:
@@ -139,16 +359,46 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
     if seen != expected_paths:
         raise EvidenceError("evidence subject set does not match specification")
     canonical_subjects = (json.dumps(subjects, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode()
-    if sha256(canonical_subjects) != manifest.get("subject_digest"):
+    if sha256(canonical_subjects) != manifest.get("live_subject_digest"):
         raise EvidenceError("evidence subject digest mismatch")
-    scientific = [
+
+    immutable_policy = spec["historical_immutable_scientific_subjects"]
+    if tuple(immutable_policy["excluded_lifecycle_paths"]) != EXPECTED_LIFECYCLE_PATHS:
+        raise EvidenceError("lifecycle-maintenance path policy drift")
+    excluded_lifecycle = set(EXPECTED_LIFECYCLE_PATHS)
+    historical_immutable = [
+        item for item in historical_subjects
+        if not item["path"].startswith("work/reviews/")
+        and not item["path"].startswith("docs/quality/")
+        and item["path"] not in excluded_lifecycle
+    ]
+    historical_immutable_digest = sha256(canonical(historical_immutable))
+    if (
+        immutable_policy["subject_count"] != len(historical_immutable)
+        or immutable_policy["subject_digest"] != historical_immutable_digest
+    ):
+        raise EvidenceError("historical immutable scientific policy drift")
+    immutable_scientific = [
         item for item in subjects
         if not item["path"].startswith("work/reviews/")
         and not item["path"].startswith("docs/quality/")
+        and item["path"] not in excluded_lifecycle
     ]
-    scientific_bytes = (json.dumps(scientific, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode()
-    if sha256(scientific_bytes) != manifest.get("scientific_subject_digest"):
-        raise EvidenceError("scientific subject digest mismatch")
+    if len(immutable_scientific) != immutable_policy["subject_count"]:
+        raise EvidenceError("immutable scientific subject count mismatch")
+    if immutable_scientific != historical_immutable:
+        raise EvidenceError("immutable scientific subjects differ from completion history")
+    if sha256(canonical(immutable_scientific)) != immutable_policy["subject_digest"]:
+        raise EvidenceError("immutable scientific subject digest mismatch")
+    if manifest.get("immutable_scientific_subject_count") != immutable_policy["subject_count"]:
+        raise EvidenceError("manifest immutable scientific subject count drift")
+    if manifest.get("immutable_scientific_subject_digest") != immutable_policy["subject_digest"]:
+        raise EvidenceError("manifest immutable scientific subject digest drift")
+    lifecycle_subjects = [item for item in subjects if item["path"] in excluded_lifecycle]
+    if {item["path"] for item in lifecycle_subjects} != excluded_lifecycle:
+        raise EvidenceError("lifecycle-maintenance subject set mismatch")
+    if sha256(canonical(lifecycle_subjects)) != manifest.get("lifecycle_subject_digest"):
+        raise EvidenceError("lifecycle-maintenance subject digest mismatch")
 
     decisions = spec["accepted_decisions"]
     rfc = root / "rfcs/0001-deterministic-encoding.md"
@@ -169,47 +419,88 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
     backlog = load_json(root, "work/backlog.yaml")
     status = load_json(root, "work/status.yaml")
     tasks = task_map(backlog)
-    sq6_contract = load_json(root, "work/contracts/SQ-0006.yaml")
-    sq6_state = sq6_contract.get("status")
-    if sq6_state not in {"IN_PROGRESS", "IN_REVIEW", "DONE"} or tasks["SQ-0006"]["status"] != sq6_state:
-        raise EvidenceError("SQ-0006 contract/backlog lifecycle mismatch")
-    expected_list = {"IN_PROGRESS": "in_progress", "IN_REVIEW": "in_progress", "DONE": "done"}[sq6_state]
-    if "SQ-0006" not in status.get(expected_list, []):
-        raise EvidenceError("SQ-0006 live ledger lifecycle mismatch")
-    for other in {"done", "in_progress", "in_review", "ready"} - {expected_list}:
-        if "SQ-0006" in status.get(other, []):
-            raise EvidenceError("SQ-0006 appears in multiple live ledger sets")
+    live_policy = spec["live_invariants"]
+    if tuple(live_policy["legal_task_statuses"]) != EXPECTED_LEGAL_STATUSES:
+        raise EvidenceError("legal task status policy drift")
+    if tuple(live_policy["owner_authorizing_statuses"]) != EXPECTED_AUTHORIZING_STATUSES:
+        raise EvidenceError("owner authorizing status policy drift")
+    legal_statuses = set(live_policy["legal_task_statuses"])
+    authorizing_statuses = set(live_policy["owner_authorizing_statuses"])
+    validate_live_ledger(backlog, status, tasks, legal_statuses)
 
-    projections = spec["live_contract_projections"]
-    _, sq6_projection = contract_projection(root, "SQ-0006")
-    if sq6_projection != projections["SQ-0006_non_status_sha256"]:
+    sq6_state, sq6_projection = contract_projection(root, "SQ-0006", legal_statuses)
+    if sq6_state != "DONE" or tasks["SQ-0006"]["status"] != "DONE":
+        raise EvidenceError("SQ-0006 contract/backlog lifecycle mismatch")
+    if "SQ-0006" not in status.get("done", []):
+        raise EvidenceError("SQ-0006 live ledger lifecycle mismatch")
+    if sq6_projection != live_policy["sq0006_non_status_sha256"]:
         raise EvidenceError("SQ-0006 non-lifecycle contract drift")
-    for task in ("SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015", "SQ-0027"):
-        contract_state, projection = contract_projection(root, task)
-        if projection != projections[f"{task}_non_status_sha256"]:
-            raise EvidenceError(f"{task} non-lifecycle contract drift")
+
+    historical_successors = spec["historical_successor_contracts"]
+    if set(historical_successors) != set(EXPECTED_SUCCESSOR_HISTORY):
+        raise EvidenceError("historical successor contract set drift")
+    for task, (file_hash, projection_hash) in EXPECTED_SUCCESSOR_HISTORY.items():
+        observed = historical_successors[task]
+        if observed != {
+            "status": "READY",
+            "file_sha256": file_hash,
+            "non_status_sha256": projection_hash,
+        }:
+            raise EvidenceError(f"historical {task} contract evidence drift")
+
+    successors = set(live_policy["successor_tasks"])
+    if successors != set(EXPECTED_SUCCESSOR_HISTORY):
+        raise EvidenceError("live successor task policy drift")
+    for task in sorted(successors | {"SQ-0027"}):
+        contract_state, _ = contract_projection(root, task, legal_statuses)
         if tasks[task]["status"] != contract_state:
             raise EvidenceError(f"{task} contract/backlog lifecycle mismatch")
 
     baseline = spec["historical_protected_baselines"]
-    if tree_digest(root, "schemas/prototypes") != baseline["schemas_prototypes_tree_sha256"]:
-        raise EvidenceError("schemas/prototypes contamination")
-    owner_roots = {
-        "SQ-0008": ("lean", "lean_tree_sha256"),
-        "SQ-0011": ("backend", "backend_tree_sha256"),
-    }
-    for owner, (relative, key) in owner_roots.items():
-        if tasks[owner]["status"] in {"BLOCKED", "READY"} and tree_digest(root, relative) != baseline[key]:
-            raise EvidenceError(f"protected {relative} contamination before {owner} claim")
-    frontend_owners = ("SQ-0013", "SQ-0014", "SQ-0015")
-    if all(tasks[owner]["status"] in {"BLOCKED", "READY"} for owner in frontend_owners):
-        if tree_digest(root, "frontends") != baseline["frontends_tree_sha256"]:
-            raise EvidenceError("protected frontends contamination before successor claim")
+    path_policy = spec["protected_path_policy"]
+    ignored_prefixes = tuple(path_policy["ignored_prefixes"])
+    if ignored_prefixes != EXPECTED_IGNORED_PREFIXES:
+        raise EvidenceError("protected path ignore policy drift")
+    partitions = path_policy["partitions"]
+    if {item.get("id") for item in partitions} != set(EXPECTED_PATH_PARTITIONS):
+        raise EvidenceError("protected path partition set drift")
+    files_by_root: dict[str, list[tuple[str, Path]]] = {}
+    policies_by_root: dict[str, list[dict[str, Any]]] = {}
+    for policy in partitions:
+        expected_root, includes, excludes, owners, expected_digest, expected_count = EXPECTED_PATH_PARTITIONS[
+            policy["id"]
+        ]
+        if (
+            policy.get("root") != expected_root
+            or tuple(policy.get("include_prefixes", [])) != includes
+            or tuple(policy.get("exclude_prefixes", [])) != excludes
+            or tuple(policy.get("owners", [])) != owners
+            or policy.get("baseline_sha256") != expected_digest
+            or policy.get("baseline_file_count") != expected_count
+        ):
+            raise EvidenceError(f"protected path policy drift: {policy['id']}")
+        if any(owner not in successors for owner in owners):
+            raise EvidenceError(f"unknown protected path owner: {policy['id']}")
+        policies_by_root.setdefault(expected_root, []).append(policy)
+        files_by_root.setdefault(expected_root, protected_files(root, expected_root, ignored_prefixes))
+    for relative, files in files_by_root.items():
+        for path, _ in files:
+            matching = [policy["id"] for policy in policies_by_root[relative] if partition_matches(path, policy)]
+            if len(matching) != 1:
+                raise EvidenceError(f"protected path ownership is not unique: {path}")
+    for policy in partitions:
+        digest, count = protected_partition_digest(files_by_root[policy["root"]], policy)
+        owners = policy["owners"]
+        owner_active = any(tasks[owner]["status"] in authorizing_statuses for owner in owners)
+        if not owner_active and (
+            digest != policy["baseline_sha256"] or count != policy["baseline_file_count"]
+        ):
+            raise EvidenceError(f"protected path contamination before owner claim: {policy['id']}")
 
     rfc6_owner = next(item["owner"] for item in backlog["decision_register"] if item["id"] == "RFC-0006")
     if rfc6_owner != spec["rfc_0006"]["owner"]:
         raise EvidenceError("RFC-0006 ownership drift")
-    if tasks["SQ-0027"]["status"] in {"BLOCKED", "READY"}:
+    if tasks["SQ-0027"]["status"] not in authorizing_statuses:
         rfc6 = root / "rfcs/0006-canonical-logical-data-digest.md"
         if sha256(rfc6.read_bytes()) != baseline["rfc_0006_sha256"]:
             raise EvidenceError("RFC-0006 historical baseline drift")
