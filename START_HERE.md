@@ -35,10 +35,12 @@ change before implementation.
 
 At the reviewed post-SQ-0006 state, **SQ-0007, SQ-0008, SQ-0011, SQ-0013,
 SQ-0014, and SQ-0015 are READY**, no task is active, and SQ-0008 remains
-unstarted. The next scientific task is expected to be SQ-0007, but no
-successor may be claimed yet. A separate independently reviewed
-successor-contract lifecycle/planning maintenance must first resolve the
-boundary described below. RFC-0001 and ADR-0004 remain Accepted for the
+unstarted. The permanent SQ-0006 verifier now preserves the exact completion
+manifest as historical evidence while allowing independently reviewed
+successor planning and path-granular task ownership. The next operation is a
+planning-only expansion of the still-READY SQ-0007 contract; do not claim
+SQ-0007 until that contract is independently reviewed and merged. RFC-0001 and
+ADR-0004 remain Accepted for the
 bounded data-free encoding profile. RFC-0006 remains Draft under SQ-0027
 ownership. The SQ-0005 prototypes and SQ-0006 schema evidence have no
 production canonicalizer authority.
@@ -76,10 +78,10 @@ Read, in order:
 18. the nearest nested AGENTS.md before changing any scoped file.
 
 Do not claim a dependency-ready implementation task at the current reviewed
-state. First execute one isolated, independently reviewed planning maintenance
-that makes successor contracts evolvable without weakening or regenerating
-the immutable SQ-0006 scientific evidence. Leave all six READY tasks READY and
-unstarted, including SQ-0008.
+state. First expand SQ-0007 into a complete executable contract on an isolated
+planning branch, obtain independent planning/formal/evidence/integration
+review, and merge that planning-only change. Leave all six READY tasks READY
+and unstarted, including SQ-0008.
 
 Non-negotiable constraints:
 - Treat public statistical meanings, normative encodings, and theorem
@@ -123,10 +125,10 @@ For an implementation task after that maintenance is merged:
 12. Recompute the next READY set after merge.
 
 Do not attempt the full roadmap, combine successors, or begin SQ-0007 before
-the successor-contract lifecycle/planning maintenance is reviewed and merged.
+its executable planning contract is reviewed and merged.
 ```
 
-## Current manager action: successor planning maintenance
+## Current manager action: expand SQ-0007 planning only
 
 SQ-0006 is merged and DONE. It established only the Experimental, closed,
 data-free `statqed.foundation-structural.v0` fixture schema, its independently
@@ -135,18 +137,19 @@ general statistical IR, logical-data identity, artifact envelope, theorem
 registry, production canonicalizer, certificate, or statistical-validity
 claim.
 
-The permanent SQ-0006 evidence currently binds non-status semantic
-projections of the successor contracts for SQ-0007, SQ-0008, SQ-0011, SQ-0013,
-SQ-0014, and SQ-0015. The existing SQ-0007 contract is not detailed enough for
-implementation, but expanding it directly would fail the permanent SQ-0006
-evidence checker. This is an evidence-lifecycle and planning-boundary issue,
-not a schema defect.
+The permanent SQ-0006 evidence uses an explicit v2 historical/live model. It
+retains the complete v1 completion manifest and every successor-contract hash
+observed at completion, but it no longer compares future reviewed planning
+prose with those historical values. Static path partitions keep unrelated
+Lean, Rust, frontend, prototype, schema, and golden subtrees frozen until an
+explicit owner is active. This maintenance changed no schema scientific
+subject and claimed no successor.
 
-Before any successor is claimed, use a separate maintenance branch with
-independent evidence-model and integration review to preserve the immutable
-SQ-0006 completion subject while allowing reviewed successor-contract
-planning evolution. Do not expand a successor contract, change its status, or
-regenerate SQ-0006 scientific evidence as part of launching a successor.
+Before SQ-0007 is claimed, expand only its contract on
+`planning/SQ-0007-executable-contract`. Keep its status READY, preserve the
+other five successor contracts and states, and require independent planning,
+formal/trust-boundary, evidence-lifecycle, and integration approval. Do not
+regenerate SQ-0006 evidence merely because SQ-0007 planning prose changes.
 
 The checked READY set is:
 
@@ -178,10 +181,10 @@ or integration reviewer.
 
 Use one task per isolated branch or worktree:
 
-Use one isolated branch for the successor-contract lifecycle/planning
-maintenance. Create no successor implementation branch until that maintenance
-is integrated and the full checked ledger remains green. Golden bytes and the
-Experimental schema retain only their reviewed structural authority.
+Use one isolated branch for the SQ-0007 planning contract. Create no successor
+implementation branch until that planning change is integrated and the full
+checked ledger remains green. Golden bytes and the Experimental schema retain
+only their reviewed structural authority.
 
 ## What “foundation complete” means
 

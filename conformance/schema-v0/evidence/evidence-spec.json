@@ -1,5 +1,68 @@
 {
-  "evidence_spec_version": "statqed.sq0006-evidence-spec.v1",
+  "evidence_spec_version": "statqed.sq0006-evidence-spec.v2",
+  "historical_completion_manifest": {
+    "evidence_manifest_version": "statqed.sq0006-evidence.v1",
+    "manifest_sha256": "eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb",
+    "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
+    "scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+    "subject_count": 49,
+    "subject_digest": "b3ef32b87b78e80c39e62f6efcc3090b93abc3b0cc089e62bc59b4c2b7241b15"
+  },
+  "historical_immutable_scientific_subjects": {
+    "excluded_lifecycle_paths": [
+      "conformance/schema-v0/evidence/evidence-spec.json",
+      "scripts/schema/build_evidence_manifest.py",
+      "scripts/schema/check_schema_v0.py",
+      "scripts/schema/tests/test_check_schema_v0.py"
+    ],
+    "subject_count": 44,
+    "subject_digest": "2f161fb15ef148030a16f2f154b44c42bef88d9a8ba7fad1f43c4d91604c7928"
+  },
+  "historical_successor_contracts": {
+    "SQ-0007": {
+      "status": "READY",
+      "file_sha256": "bddf4334bbef4391b6024010f6073bcec34c272d9e15809f54d6ee927de5c4e2",
+      "non_status_sha256": "60cb7493c9f4828ba8b8c4583698f084f589103deadcc9b5d7bb9dc05e7389fb"
+    },
+    "SQ-0008": {
+      "status": "READY",
+      "file_sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
+      "non_status_sha256": "c5b7f222b914f2dab8fc2c8592979d20150ddb0d8c4700669c5bf923f977f9e4"
+    },
+    "SQ-0011": {
+      "status": "READY",
+      "file_sha256": "a6dd037dc74e81c681161b79ac324fae8093bef5f8449a0322d93f45962a7b12",
+      "non_status_sha256": "63b2dd821a27d6732aa910a608fea139b3bc76d3a2e006a0cf198c01fe406654"
+    },
+    "SQ-0013": {
+      "status": "READY",
+      "file_sha256": "8132e0887c5d5765b608944761946a046ee4ea2597e1e7eb90eea825780e9290",
+      "non_status_sha256": "b36645159632f2cf055d32c378e5240e49690af2393cf05223ec68cf51664f82"
+    },
+    "SQ-0014": {
+      "status": "READY",
+      "file_sha256": "0faa9eac82339efb08d55e8cc633de29988366dfb599dd9f968e92d24c38468b",
+      "non_status_sha256": "2a2b688e94b574a478d563782eba913c83f1fcd36193ffd14cc305e57be9f21b"
+    },
+    "SQ-0015": {
+      "status": "READY",
+      "file_sha256": "c17d1c85574980ead5a7224f213d3277d14e3c21e3145d1c74ef76ba4624227b",
+      "non_status_sha256": "f22cfb53af999a8272205468a185844755609934b24b1f0f1dd61d61523b6988"
+    }
+  },
+  "live_invariants": {
+    "legal_task_statuses": [
+      "BLOCKED",
+      "READY",
+      "IN_PROGRESS",
+      "IN_REVIEW",
+      "DONE",
+      "SUPERSEDED"
+    ],
+    "owner_authorizing_statuses": ["IN_PROGRESS", "IN_REVIEW", "DONE"],
+    "successor_tasks": ["SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
+    "sq0006_non_status_sha256": "520f2cffa4e18b9ddfdef9c9f0d5114fbefd128d6349110fefc6b8d423396cf0"
+  },
   "accepted_decisions": {
     "adr_0004_status": "Accepted",
     "normative_scope_sha256": "6e6bc1e17486ef1e3542053145a57ed413cf811b13956a028f43d15c1651503b",
@@ -41,15 +104,116 @@
     "rfc_0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
     "schemas_prototypes_tree_sha256": "e18a529776af5c4c6543551064d7715f5b1f5120919c81999cf1dd12b93df519"
   },
-  "live_contract_projections": {
-    "SQ-0006_non_status_sha256": "520f2cffa4e18b9ddfdef9c9f0d5114fbefd128d6349110fefc6b8d423396cf0",
-    "SQ-0007_non_status_sha256": "60cb7493c9f4828ba8b8c4583698f084f589103deadcc9b5d7bb9dc05e7389fb",
-    "SQ-0008_non_status_sha256": "c5b7f222b914f2dab8fc2c8592979d20150ddb0d8c4700669c5bf923f977f9e4",
-    "SQ-0011_non_status_sha256": "63b2dd821a27d6732aa910a608fea139b3bc76d3a2e006a0cf198c01fe406654",
-    "SQ-0013_non_status_sha256": "b36645159632f2cf055d32c378e5240e49690af2393cf05223ec68cf51664f82",
-    "SQ-0014_non_status_sha256": "2a2b688e94b574a478d563782eba913c83f1fcd36193ffd14cc305e57be9f21b",
-    "SQ-0015_non_status_sha256": "f22cfb53af999a8272205468a185844755609934b24b1f0f1dd61d61523b6988",
-    "SQ-0027_non_status_sha256": "79bc1e7376d8aabf5abfe9555b87bd2200e52f6fe6f721ae60833309dd812d87"
+  "protected_path_policy": {
+    "ignored_prefixes": [
+      "lean/.lake",
+      "backend/target",
+      "schemas/prototypes/rust-cbor/target",
+      "schemas/prototypes/python-oracle/.pytest_cache",
+      "schemas/prototypes/python-oracle/statqed_oracle/__pycache__",
+      "schemas/prototypes/python-oracle/tests/__pycache__"
+    ],
+    "partitions": [
+      {
+        "id": "lean_registry",
+        "root": "lean",
+        "include_prefixes": ["lean/StatQED/Registry"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0007"],
+        "baseline_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "baseline_file_count": 0
+      },
+      {
+        "id": "lean_assurance",
+        "root": "lean",
+        "include_prefixes": ["lean/StatQED/Assurance"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0008"],
+        "baseline_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "baseline_file_count": 0
+      },
+      {
+        "id": "lean_guarantee",
+        "root": "lean",
+        "include_prefixes": ["lean/StatQED/Guarantee"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0008"],
+        "baseline_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "baseline_file_count": 0
+      },
+      {
+        "id": "lean_remainder",
+        "root": "lean",
+        "include_prefixes": [],
+        "exclude_prefixes": ["lean/StatQED/Registry", "lean/StatQED/Assurance", "lean/StatQED/Guarantee"],
+        "owners": [],
+        "baseline_sha256": "486109764c763003b6021493cab5693e318a189619e1e7987a1999cd54ae019c",
+        "baseline_file_count": 55
+      },
+      {
+        "id": "backend_registry",
+        "root": "backend",
+        "include_prefixes": ["backend/crates/statqed-registry"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0007", "SQ-0011"],
+        "baseline_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "baseline_file_count": 0
+      },
+      {
+        "id": "backend_remainder",
+        "root": "backend",
+        "include_prefixes": [],
+        "exclude_prefixes": ["backend/crates/statqed-registry"],
+        "owners": ["SQ-0011"],
+        "baseline_sha256": "5f2891a03d785e9a4652f756681cf288e15e8914bccfafe27e3250802c8dbd42",
+        "baseline_file_count": 22
+      },
+      {
+        "id": "frontend_r",
+        "root": "frontends",
+        "include_prefixes": ["frontends/r"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0013"],
+        "baseline_sha256": "d88fe7e954b179850bc926edee0db668e32cad8981f66697defd3b4693962e41",
+        "baseline_file_count": 2
+      },
+      {
+        "id": "frontend_python",
+        "root": "frontends",
+        "include_prefixes": ["frontends/python"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0014"],
+        "baseline_sha256": "5568aa52ec47fea334d2e2ce97052edba5769e9118b5c6ac45e1da907cf60f4a",
+        "baseline_file_count": 2
+      },
+      {
+        "id": "frontend_julia",
+        "root": "frontends",
+        "include_prefixes": ["frontends/julia"],
+        "exclude_prefixes": [],
+        "owners": ["SQ-0015"],
+        "baseline_sha256": "5f68e97ec97b290bb8264f25f25b151e6bb138f088f6518020f8a1bacfc3c317",
+        "baseline_file_count": 2
+      },
+      {
+        "id": "frontends_remainder",
+        "root": "frontends",
+        "include_prefixes": [],
+        "exclude_prefixes": ["frontends/r", "frontends/python", "frontends/julia"],
+        "owners": [],
+        "baseline_sha256": "8265f27bb2b1ca9f890f09194d63fa1ac27841a9645c5b9e58f1301e8bc16983",
+        "baseline_file_count": 2
+      },
+      {
+        "id": "schemas_prototypes",
+        "root": "schemas/prototypes",
+        "include_prefixes": [],
+        "exclude_prefixes": [],
+        "owners": [],
+        "baseline_sha256": "c766b55670d8722bb17ec42d1eea6ecf556926f6573886f7125d4be977a5dc29",
+        "baseline_file_count": 32
+      }
+    ]
   },
   "rfc_0006": {
     "owner": "SQ-0027",
