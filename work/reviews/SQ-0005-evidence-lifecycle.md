@@ -112,6 +112,30 @@ serialization dispatch `31362719153`, Rust reference workspace run
 SQ-0006 preclaim record may therefore be changed from unresolved to resolved
 without claiming SQ-0006; the final metadata head must repeat the same gates.
 
+### Completed-successor simulation follow-up
+
+The atomic SQ-0006 DONE candidate exposed one further simulation-only defect.
+When the live repository already contained the five newly READY SQ-0006
+successors, the IN_PROGRESS and IN_REVIEW regression simulations moved only
+SQ-0006 backward. They left those successors READY, so the repository
+guardrail correctly rejected the intentionally inconsistent simulated graph.
+The permanent verifier, historical snapshot, and actual DONE ledger all
+continued to pass.
+
+The correction makes `transition_sq0006` model a complete graph transition in
+both directions: DONE makes the five dependency successors READY with 48
+blocked tasks, while READY/IN_PROGRESS/IN_REVIEW simulations restore those
+successors to BLOCKED with 53 blocked tasks. SQ-0008 remains independent and
+untouched. No historical, scientific, profile, fixture, golden, RFC, ADR,
+production, or SQ-0008 contract subject changes. Two explicit DONE-to-earlier
+lifecycle tests make the 59-test suite reproduce the completed-successor
+starting state. The updated test source hash is
+`90a86adcb56690f51f1856f874c45052c30cad693cfd15cb2124dc93edeed0f1`;
+the regenerated manifest hash is
+`1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845`.
+Independent exact-head review and hosted checks remain mandatory before this
+follow-up can merge.
+
 ## Independent review dispositions
 
 - Evidence-model semantics: APPROVE content candidate `01b86c24` — independent
@@ -140,7 +164,7 @@ without claiming SQ-0006; the final metadata head must repeat the same gates.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "fa52699ff08ddbaad8f84f9d82a9ffb46cb1eee80e5c44d49f3bbc315dd94154",
+  "conformance/prototypes/evidence/evidence-manifest.json": "1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845",
   "conformance/prototypes/evidence/evidence-spec.json": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -164,7 +188,7 @@ without claiming SQ-0006; the final metadata head must repeat the same gates.
   "scripts/serialization/build_evidence_manifest.py": "46104e94b860f9f70aaab906228f1df53144e3db8335bd8f25d873f669565945",
   "scripts/serialization/check_evidence.py": "e8d395f37479f74dab4c13df4d4fefbbfd5db0949eba283f9df602094b439271",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "2a001fbac9e164c5a2e985fa6eacea2f5d6412239c6461bc01a713c91dfb1c4f",
+  "scripts/serialization/tests/test_check_evidence.py": "90a86adcb56690f51f1856f874c45052c30cad693cfd15cb2124dc93edeed0f1",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
 }
@@ -183,3 +207,11 @@ without claiming SQ-0006; the final metadata head must repeat the same gates.
 7. Avoid general weakening of evidence validation: YES.
 
 Final disposition: APPROVE_HOSTED_PRECLAIM_GATE_PENDING_FINAL_HEAD
+
+Completed-successor follow-up disposition: independent integration reviewer
+`/root/sq0005_done_transition_test_review` approved exact local patch
+`180a4a0bf9f4b27642df2df01cd2c3a821a448c61a1e20d158f4b1b205d888d4`
+after reproducing the 59 tests, permanent verifier, 273-case conformance,
+byte-identical manifest, repository ledger, and clean disposable checkout.
+The bounded content is `APPROVE_CONTENT_PENDING_HOSTED_HEAD`; no merge is
+approved until the exact committed PR head passes the required hosted checks.
