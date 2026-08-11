@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0015","title":"Bootstrap Julia frontend package","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A Julia package constructs the accepted toy IR and delegates canonicalization to the reference backend.",
+  "id":"SQ-0015","title":"Bootstrap Julia frontend package","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"A Julia package constructs the accepted toy IR and delegates canonicalization to the reference backend.",
   "dependencies":["SQ-0001","SQ-0006"],
   "allowed_paths":["frontends/julia/**","generated/julia/**","conformance/frontend/**","docs/implementation/frontend-conformance.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","backend/src/**","lean/**"],

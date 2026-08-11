@@ -1,5 +1,5 @@
 {
-  "id":"SQ-0011","title":"Implement Rust canonical backend v0","status":"BLOCKED","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Rust parses, validates, canonically encodes, hashes, and inspects the toy IR with bounded deterministic behavior.",
+  "id":"SQ-0011","title":"Implement Rust canonical backend v0","status":"READY","plan":"docs/exec-plans/active/0001-foundation-bootstrap.md","objective":"Rust parses, validates, canonically encodes, hashes, and inspects the toy IR with bounded deterministic behavior.",
   "dependencies":["SQ-0004","SQ-0006"],
   "allowed_paths":["backend/**","conformance/golden/**","docs/implementation/rust-backend.md","docs/implementation/schema-development.md","work/status.yaml","docs/exec-plans/active/0001-foundation-bootstrap.md"],
   "forbidden_paths":["schemas/**/*.cddl","docs/design/**","lean/**","frontends/**"],

@@ -1,7 +1,7 @@
 {
   "id": "SQ-0006",
   "title": "Define schema v0 and golden vectors",
-  "status": "IN_REVIEW",
+  "status": "DONE",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Foundation bootstrap: data-free structural fixture",
   "objective": "Define, validate, and independently review the closed ADR-0011 data-free foundation_structural v0 schema, canonical CBOR golden vectors, and fixture digests without defining the general statistical IR, artifact envelope, or RFC-0006 logical-data identity.",
