@@ -38,8 +38,9 @@ SQ-0014, and SQ-0015 are READY**, no task is active, and SQ-0008 remains
 unstarted. The permanent SQ-0006 verifier now preserves the exact completion
 manifest as historical evidence while allowing independently reviewed
 successor planning and path-granular task ownership. The next operation is a
-planning-only expansion of the still-READY SQ-0007 contract; do not claim
-SQ-0007 until that contract is independently reviewed and merged. RFC-0001 and
+separately coordinated execution of the now-expanded SQ-0007 contract; claim
+only SQ-0007 on its own isolated branch after repeating the full preflight.
+The planning merge itself does not claim or begin SQ-0007. RFC-0001 and
 ADR-0004 remain Accepted for the
 bounded data-free encoding profile. RFC-0006 remains Draft under SQ-0027
 ownership. The SQ-0005 prototypes and SQ-0006 schema evidence have no
@@ -77,11 +78,10 @@ Read, in order:
 17. agents/protocols/handoff.md
 18. the nearest nested AGENTS.md before changing any scoped file.
 
-Do not claim a dependency-ready implementation task at the current reviewed
-state. First expand SQ-0007 into a complete executable contract on an isolated
-planning branch, obtain independent planning/formal/evidence/integration
-review, and merge that planning-only change. Leave all six READY tasks READY
-and unstarted, including SQ-0008.
+Select exactly one dependency-ready task under its reviewed executable
+contract. SQ-0007 is the recommended next isolated execution; claim it only
+after repeating the repository and permanent-evidence preflight. Leave SQ-0008
+and every other READY successor unstarted and do not combine their work.
 
 Non-negotiable constraints:
 - Treat public statistical meanings, normative encodings, and theorem
@@ -124,11 +124,11 @@ For an implementation task after that maintenance is merged:
 11. Merge only after independent integration approval.
 12. Recompute the next READY set after merge.
 
-Do not attempt the full roadmap, combine successors, or begin SQ-0007 before
-its executable planning contract is reviewed and merged.
+Do not attempt the full roadmap or combine successors. A future SQ-0007
+execution must follow its checked contract rather than this summary.
 ```
 
-## Current manager action: expand SQ-0007 planning only
+## Current manager action: execute only a separately coordinated SQ-0007
 
 SQ-0006 is merged and DONE. It established only the Experimental, closed,
 data-free `statqed.foundation-structural.v0` fixture schema, its independently
@@ -145,11 +145,14 @@ Lean, Rust, frontend, prototype, schema, and golden subtrees frozen until an
 explicit owner is active. This maintenance changed no schema scientific
 subject and claimed no successor.
 
-Before SQ-0007 is claimed, expand only its contract on
-`planning/SQ-0007-executable-contract`. Keep its status READY, preserve the
-other five successor contracts and states, and require independent planning,
-formal/trust-boundary, evidence-lifecycle, and integration approval. Do not
-regenerate SQ-0006 evidence merely because SQ-0007 planning prose changes.
+The SQ-0007 executable contract has been expanded and independently reviewed
+without changing its `READY` state. The exact planning head must still pass
+hosted CI and protected integration before it becomes the main-branch launch
+contract. After that protected merge, a future execution may claim SQ-0007 only
+on `agent/SQ-0007-theorem-registry`, atomically update its ledger state, and
+then follow every source, normalizer, closure, authorization, axiom,
+compatibility, evidence, CI, and review gate in that contract. Do not
+regenerate SQ-0006 evidence merely because SQ-0007 planning prose changed.
 
 The checked READY set is:
 
@@ -181,10 +184,9 @@ or integration reviewer.
 
 Use one task per isolated branch or worktree:
 
-Use one isolated branch for the SQ-0007 planning contract. Create no successor
-implementation branch until that planning change is integrated and the full
-checked ledger remains green. Golden bytes and the Experimental schema retain
-only their reviewed structural authority.
+Use one isolated branch for SQ-0007 and claim no other successor in that
+execution. Golden bytes and the Experimental schema retain only their reviewed
+structural authority.
 
 ## What “foundation complete” means
 
