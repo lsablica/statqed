@@ -1332,7 +1332,7 @@
     },
     {
       "path": "lean/Tests/Trust/expectations.json",
-      "sha256": "07f879123539a21b38a09b10021243cb4a80112ccf4b507b0c45f118eeb73027"
+      "sha256": "042f07079be02de8ad6185eb15be5a33f7157785d8e955e9592f589f1d1bc878"
     },
     {
       "path": "lean/Tests/Trust/fabricated_axiom_report.json.fixture",
@@ -1517,6 +1517,10 @@
     {
       "path": "lean/tools/project_axiom_report.py",
       "sha256": "898e60def7dee4c6725bf92954d93933d7b07de1661324e67c26f082dd963627"
+    },
+    {
+      "path": "lean/tools/tests/test_branch_relative_live_reports.py",
+      "sha256": "eda6a4994a8ef5d38be81963a1900923f3a1a57a643259b024507e66fdba5142"
     },
     {
       "path": "lean/tools/tests/test_project_trust.py",
@@ -2212,7 +2216,7 @@
     {
       "path": "scripts/serialization/build_evidence_manifest.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "5c8389c38b5a993289a10532dbf3466bc393b984258e427284ca1658e21f4cd4"
+      "sha256": "b9d140e80e363f59c62f59aec575902456de55089751079b3e0992c4ff244c94"
     },
     {
       "path": "scripts/serialization/check_evidence.py",

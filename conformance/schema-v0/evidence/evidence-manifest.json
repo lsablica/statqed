@@ -1,6 +1,6 @@
 {
   "evidence_manifest_version": "statqed.sq0006-evidence.v3",
-  "evidence_spec_sha256": "271a8d205be6247f3c89f8d76310144ead33f94a526feffd429aac94c496b1d2",
+  "evidence_spec_sha256": "2323d77227ba5d8b1ef618aa7f0c38201a2e462471ec5a2f80e9673914a1abc8",
   "historical_completion": {
     "evidence_manifest_version": "statqed.sq0006-evidence.v1",
     "evidence_spec_sha256": "c4f0312ed6b621270d05e12f01f7b906baecbc1d374cb5e094cc8a245a6435a7",
@@ -772,9 +772,9 @@
   "historical_scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
   "immutable_scientific_subject_count": 44,
   "immutable_scientific_subject_digest": "2f161fb15ef148030a16f2f154b44c42bef88d9a8ba7fad1f43c4d91604c7928",
-  "lifecycle_subject_digest": "cbe317a2e20121c1de21f8e9498de037c8e81450b571b4d61009f96a7bcdf9f4",
+  "lifecycle_subject_digest": "3a609df616dcad3682b479e381c51ec0d462272539cc42c3887fd4358eb74c7c",
   "live_subject_count": 49,
-  "live_subject_digest": "fcb7286b0326475e11c4fdb6af5b86ceca29d3d5abdfa5f73ccc40742ea5f023",
+  "live_subject_digest": "f92778b9cb6b8ca9fc91be09834fe06489828b1aed0b48bfa879870b5ae5f952",
   "live_subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -843,7 +843,7 @@
     },
     {
       "path": "conformance/schema-v0/evidence/evidence-spec.json",
-      "sha256": "271a8d205be6247f3c89f8d76310144ead33f94a526feffd429aac94c496b1d2",
+      "sha256": "2323d77227ba5d8b1ef618aa7f0c38201a2e462471ec5a2f80e9673914a1abc8",
       "size_bytes": 10674
     },
     {
@@ -953,7 +953,7 @@
     },
     {
       "path": "scripts/schema/check_schema_v0.py",
-      "sha256": "540091772ca57322f490c492234c17b892f84b9c13947f4d75d144148613d2ae",
+      "sha256": "e0fc5d627389cb8c1c869dee956efb7dd46765f365821de580617e3a218e788b",
       "size_bytes": 33296
     },
     {
@@ -1022,7 +1022,7 @@
       "size_bytes": 13470
     }
   ],
-  "maintenance_live_baseline_digest": "43f9694e59c9d958ebc806ae3acaf69992939fd7d6656dd0b374c8996ae88c7e",
+  "maintenance_live_baseline_digest": "a1f8a442fbfe62550f2556b9a2dc01f89f09716efed27b5b2d875d064e533e44",
   "maintenance_live_baselines": [
     {
       "path": ".github/workflows/lean.yml",
@@ -1051,8 +1051,8 @@
     },
     {
       "path": "lean/Tests/Trust/expectations.json",
-      "sha256": "07f879123539a21b38a09b10021243cb4a80112ccf4b507b0c45f118eeb73027",
-      "size_bytes": 10367
+      "sha256": "042f07079be02de8ad6185eb15be5a33f7157785d8e955e9592f589f1d1bc878",
+      "size_bytes": 10802
     },
     {
       "path": "lean/Tests/Trust/registry_axiom.lean.fixture",
@@ -1106,8 +1106,8 @@
     },
     {
       "path": "scripts/check_lean_trust.py",
-      "sha256": "0ee817504633cfff0d1dfac7e2ca2567c2a7bed5474bf3ae678c0e3214537215",
-      "size_bytes": 39960
+      "sha256": "e3c5a2e9366b455769be682bff0171c947cd62a126065e4f24c170f393414c46",
+      "size_bytes": 48070
     }
   ]
 }

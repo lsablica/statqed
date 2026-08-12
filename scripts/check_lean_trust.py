@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -40,6 +41,7 @@ HISTORICAL_AXIOM_FILES = {
     "lean/Tests/AxiomReport.lean": "bf1acd71f1b32f4b2e80b24114318a44903c9eb19a7fcd9ff57d90e4e667d23e",
     "lean/tools/axiom_report.py": "487d89eb6d6703f428c1d4043af931bc80665e623dc717419c7aacaec986c498",
 }
+MUTATION_EXPECTATION_SCHEMA = 2
 
 
 @dataclass(frozen=True, order=True)
@@ -636,6 +638,157 @@ def mutate(case: dict[str, Any], source_lean: Path, target_lean: Path, fixture_r
         raise ValueError(f"{case['id']}: unsupported mutation {operation!r}")
 
 
+def load_temporary_project_report(lean_root: Path) -> Any:
+    """Load module discovery from the exact copied repository under test."""
+
+    path = lean_root / "tools" / "project_axiom_report.py"
+    if not path.is_file() or path.is_symlink():
+        raise ValueError("temporary project-axiom reporter is missing or unsafe")
+    name = "_statqed_temporary_project_axiom_report_" + hashlib.sha256(
+        str(path).encode("utf-8")
+    ).hexdigest()
+    specification = importlib.util.spec_from_file_location(name, path)
+    if specification is None or specification.loader is None:
+        raise ValueError("cannot load temporary project-axiom reporter")
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    for attribute in ("SCHEMA", "path_to_module", "source_modules"):
+        if not hasattr(module, attribute):
+            raise ValueError(
+                f"temporary project-axiom reporter lacks {attribute}"
+            )
+    return module
+
+
+def module_list_hash(modules: list[str]) -> str:
+    if modules != sorted(set(modules)) or any(
+        not isinstance(module, str) or not module for module in modules
+    ):
+        raise ValueError("module list must be nonempty, sorted, and unique")
+    encoded = (json.dumps(modules, ensure_ascii=True, separators=(",", ":")) + "\n").encode(
+        "utf-8"
+    )
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def expected_live_report(
+    case: dict[str, Any], baseline_modules: list[str], reporter: Any
+) -> tuple[list[str], list[str]]:
+    """Validate one structured exact-union expectation before mutation."""
+
+    policy = case.get("expected_live_report")
+    if not isinstance(policy, dict) or set(policy) != {
+        "added_modules",
+        "baseline_mode",
+        "require_exact_union",
+    }:
+        raise ValueError(f"{case['id']}: invalid expected_live_report fields")
+    if policy["baseline_mode"] != "current_tracked_modules":
+        raise ValueError(f"{case['id']}: unsupported baseline mode")
+    if policy["require_exact_union"] is not True:
+        raise ValueError(f"{case['id']}: exact module union is required")
+    added = policy["added_modules"]
+    if (
+        not isinstance(added, list)
+        or not added
+        or any(not isinstance(module, str) or not module for module in added)
+        or added != sorted(set(added))
+    ):
+        raise ValueError(f"{case['id']}: added modules must be sorted and unique")
+    module_list_hash(baseline_modules)
+    overlap = sorted(set(baseline_modules).intersection(added))
+    if overlap:
+        raise ValueError(
+            f"{case['id']}: expected added module already exists: {overlap[0]}"
+        )
+    targets = (
+        [case["target"]]
+        if case.get("mutation") == "replace_file"
+        else case.get("targets")
+    )
+    if not isinstance(targets, list) or not targets or any(
+        not isinstance(target, str) for target in targets
+    ):
+        raise ValueError(f"{case['id']}: invalid mutation targets")
+    target_modules = sorted(reporter.path_to_module(Path(target)) for target in targets)
+    if target_modules != added:
+        raise ValueError(
+            f"{case['id']}: target modules {target_modules!r} differ from declared {added!r}"
+        )
+    return added, sorted([*baseline_modules, *added])
+
+
+def validate_successful_live_report(
+    *,
+    case: dict[str, Any],
+    baseline_modules: list[str],
+    reporter: Any,
+    stdout: str,
+    stderr: str,
+) -> dict[str, Any]:
+    """Parse and validate one successful live report as an exact JSON union."""
+
+    added, expected_modules = expected_live_report(case, baseline_modules, reporter)
+    if stderr:
+        raise ValueError(f"{case['id']}: successful report emitted stderr")
+    try:
+        observed = json.loads(stdout)
+    except json.JSONDecodeError as error:
+        raise ValueError(f"{case['id']}: report is not one JSON document") from error
+    if not isinstance(observed, dict):
+        raise ValueError(f"{case['id']}: report root is not an object")
+    deterministic = json.dumps(
+        observed, ensure_ascii=True, indent=2, sort_keys=True
+    ) + "\n"
+    if stdout != deterministic:
+        raise ValueError(f"{case['id']}: report JSON is not deterministic")
+    if observed.get("schema_version") != reporter.SCHEMA:
+        raise ValueError(f"{case['id']}: report schema is unsupported")
+    modules = observed.get("modules")
+    if not isinstance(modules, list) or any(
+        not isinstance(module, str) or not module for module in modules
+    ):
+        raise ValueError(f"{case['id']}: report modules are invalid")
+    if modules != sorted(set(modules)):
+        raise ValueError(f"{case['id']}: report modules are not sorted and unique")
+    count = observed.get("module_count")
+    if type(count) is not int or count != len(modules):
+        raise ValueError(f"{case['id']}: module_count differs from modules")
+    if modules != expected_modules:
+        missing = sorted(set(expected_modules) - set(modules))
+        extra = sorted(set(modules) - set(expected_modules))
+        raise ValueError(
+            f"{case['id']}: report module union mismatch; missing={missing!r}; extra={extra!r}"
+        )
+    if count != len(baseline_modules) + len(added):
+        raise ValueError(f"{case['id']}: branch-relative module count mismatch")
+    return {
+        "baseline_module_count": len(baseline_modules),
+        "baseline_module_list_hash": module_list_hash(baseline_modules),
+        "baseline_modules": baseline_modules,
+        "exact_union": True,
+        "expected_added_modules": added,
+        "expected_final_module_count": len(expected_modules),
+        "observed_final_module_count": count,
+        "observed_final_module_list_hash": module_list_hash(modules),
+        "observed_modules": modules,
+    }
+
+
+def load_mutation_expectations(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot read mutation expectations: {error}") from error
+    if not isinstance(value, dict):
+        raise ValueError("mutation expectations root must be an object")
+    if value.get("schema_version") != MUTATION_EXPECTATION_SCHEMA:
+        raise ValueError(
+            f"schema_version must be {MUTATION_EXPECTATION_SCHEMA}"
+        )
+    return value
+
+
 def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
     baseline = audit(root, live=True)
     if baseline:
@@ -644,11 +797,15 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
     fixture_root = lean_root / "Tests" / "Trust"
     expectations_path = fixture_root / "expectations.json"
     try:
-        expectations = json.loads(expectations_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        return [], [Finding("mutation_fixture_invalid", relative(expectations_path, root), str(error))]
-    if expectations.get("schema_version") != 1:
-        return [], [Finding("mutation_fixture_invalid", relative(expectations_path, root), "schema_version must be 1")]
+        expectations = load_mutation_expectations(expectations_path)
+    except ValueError as error:
+        return [], [
+            Finding(
+                "mutation_fixture_invalid",
+                relative(expectations_path, root),
+                str(error),
+            )
+        ]
     cases = expectations.get("cases", []) + expectations.get("positive_controls", [])
     ids = [case.get("id") for case in cases]
     if any(not isinstance(case, dict) for case in cases) or len(ids) != len(set(ids)):
@@ -719,12 +876,6 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                 lean_root, temp_lean, ignore=shutil.ignore_patterns(".lake")
             )
             try:
-                mutate(case, lean_root, temp_lean, fixture_root)
-                temp_lake = temp_lean / ".lake"
-                temp_lake.mkdir()
-                temp_lake.joinpath("packages").symlink_to(
-                    lean_root / ".lake" / "packages", target_is_directory=True
-                )
                 initialized = run_checked(["git", "init", "--quiet"], temp_root)
                 staged = run_checked(
                     ["git", "add", "lean/StatQED.lean", "lean/StatQED"],
@@ -732,6 +883,26 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                 )
                 if initialized.returncode != 0 or staged.returncode != 0:
                     raise OSError("cannot create isolated tracked-module fixture")
+                reporter = load_temporary_project_report(temp_lean)
+                baseline_modules = reporter.source_modules(temp_root, temp_lean)
+                success_case = (
+                    case.get("expected_code") == "ok"
+                    and case.get("expected_exit") == 0
+                )
+                if success_case:
+                    expected_live_report(case, baseline_modules, reporter)
+                mutate(case, lean_root, temp_lean, fixture_root)
+                staged = run_checked(
+                    ["git", "add", "lean/StatQED.lean", "lean/StatQED"],
+                    temp_root,
+                )
+                if staged.returncode != 0:
+                    raise OSError("cannot stage mutated tracked-module fixture")
+                temp_lake = temp_lean / ".lake"
+                temp_lake.mkdir()
+                temp_lake.joinpath("packages").symlink_to(
+                    lean_root / ".lake" / "packages", target_is_directory=True
+                )
                 build = run_checked(["lake", "build"], temp_lean)
                 report = run_checked(
                     [
@@ -741,14 +912,28 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                     ],
                     temp_lean,
                 )
-                report_output = report.stdout + report.stderr
-                expected_text = case["expected_output_substring"]
+                details: dict[str, Any] = {}
+                expectation_observed = False
+                if success_case and report.returncode == 0:
+                    details = validate_successful_live_report(
+                        case=case,
+                        baseline_modules=baseline_modules,
+                        reporter=reporter,
+                        stdout=report.stdout,
+                        stderr=report.stderr,
+                    )
+                    expectation_observed = True
+                elif not success_case:
+                    expected_text = case["expected_output_substring"]
+                    expectation_observed = expected_text in (
+                        report.stdout + report.stderr
+                    )
                 passed = (
                     build.returncode == case["expected_build_exit"]
                     and report.returncode == case["expected_exit"]
-                    and expected_text in report_output
+                    and expectation_observed
                 )
-                results.append({
+                result = {
                     "build_exit": build.returncode,
                     "expected_code": case["expected_code"],
                     "expected_exit": case["expected_exit"],
@@ -757,14 +942,29 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                         "build_succeeded"
                         if build.returncode == 0
                         else "build_failed",
-                        "expected_diagnostic"
-                        if expected_text in report_output
-                        else "missing_diagnostic",
+                        (
+                            "exact_module_union"
+                            if success_case and expectation_observed
+                            else "expected_diagnostic"
+                            if expectation_observed
+                            else "missing_or_invalid_expectation"
+                        ),
                     ],
                     "observed_exit": report.returncode,
                     "status": "pass" if passed else "fail",
-                })
-            except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
+                }
+                result.update(details)
+                results.append(result)
+            except (
+                AttributeError,
+                ImportError,
+                KeyError,
+                OSError,
+                RuntimeError,
+                TypeError,
+                ValueError,
+                json.JSONDecodeError,
+            ) as error:
                 results.append({
                     "expected_code": case.get("expected_code"),
                     "expected_exit": case.get("expected_exit"),
