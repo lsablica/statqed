@@ -236,7 +236,13 @@
       "expected_build_exit": 0,
       "expected_code": "ok",
       "expected_exit": 0,
-      "expected_output_substring": "\"module_count\": 3",
+      "expected_live_report": {
+        "added_modules": [
+          "StatQED.Registry.Positive"
+        ],
+        "baseline_mode": "current_tracked_modules",
+        "require_exact_union": true
+      },
       "fixture": "registry_safe.lean.fixture",
       "id": "registry_module_live_positive",
       "mutation": "replace_file",
@@ -246,7 +252,17 @@
       "expected_build_exit": 0,
       "expected_code": "ok",
       "expected_exit": 0,
-      "expected_output_substring": "\"module_count\": 7",
+      "expected_live_report": {
+        "added_modules": [
+          "StatQED.Registry.FiveA",
+          "StatQED.Registry.FiveB",
+          "StatQED.Registry.FiveC",
+          "StatQED.Registry.FiveD",
+          "StatQED.Registry.FiveE"
+        ],
+        "baseline_mode": "current_tracked_modules",
+        "require_exact_union": true
+      },
       "fixture": "registry_safe.lean.fixture",
       "id": "five_registry_modules_live_positive",
       "mutation": "replace_files",
@@ -309,7 +325,7 @@
       "target": "StatQED/Registry/Unimportable.lean"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "security_regressions": [
     {
       "command": [

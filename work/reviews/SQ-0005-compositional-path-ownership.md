@@ -94,7 +94,7 @@ prove source fidelity, alter canonical bytes, or confer production authority.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "bb5ec8f4b1e30dbe7be9f6f26787d6e231aeac4c207dd6215147b513f1384812",
+  "conformance/prototypes/evidence/evidence-manifest.json": "22b771b5aa71a72fe3979e9dd29ff8a5ae0b8e082bd0b971036baa0d554a4a7a",
   "conformance/prototypes/evidence/evidence-spec.json": "39fd75ffb754a7f9f7a5a3dafb3653973e65af2f944ae782c6e70e29db3c54b4",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -115,7 +115,7 @@ prove source fidelity, alter canonical bytes, or confer production authority.
   "schemas/prototypes/rust-cbor/evidence/advisory-report.json": "abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55",
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
-  "scripts/serialization/build_evidence_manifest.py": "5c8389c38b5a993289a10532dbf3466bc393b984258e427284ca1658e21f4cd4",
+  "scripts/serialization/build_evidence_manifest.py": "b9d140e80e363f59c62f59aec575902456de55089751079b3e0992c4ff244c94",
   "scripts/serialization/check_evidence.py": "920487821d11ab335130c1bffb3f7e4378265b57872ff61e2fe72dc82fa54381",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
   "scripts/serialization/tests/test_check_evidence.py": "9df52bfafad17773dd8d0782f7ce27fc818d7f3ed5a54e322d6c5f3fa6fa7ea1",
@@ -147,3 +147,15 @@ independent integration disposition remain merge gates; these approvals do
 not authorize Registry implementation or any successor claim.
 
 Final evidence/path disposition: APPROVE_PHASE_M_EVIDENCE_AND_PATH_POLICY
+
+## Phase-T branch-relative trust-fixture supplement
+
+Phase T preserves this v3 ownership policy and the production verifier. Its
+content-addressed generator overlay admits exactly the reviewed expectation-v2
+file and focused regression file into the ownerless Lean-remainder live
+baseline while rejecting any other byte drift. The active subject block above
+binds the regenerated manifest and overlay-aware generator. Scientific/profile
+subjects and all historical v1/v2/v3 references remain unchanged. Detailed
+scope, hashes, and nonclaims are recorded in
+`work/reviews/SQ-0005-branch-relative-live-report-fixtures.md`; exact-head
+independent approval and hosted checks remain merge gates.

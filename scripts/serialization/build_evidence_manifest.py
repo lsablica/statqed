@@ -18,6 +18,12 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 SPEC = REPOSITORY / "conformance/prototypes/evidence/evidence-spec.json"
 OUTPUT = REPOSITORY / "conformance/prototypes/evidence/evidence-manifest.json"
 REVIEWED_V3_BASELINE_COMMIT = "e6e6fcf5a4dc58037be506b67eb25deee9298979"
+REVIEWED_POST_V3_LIVE_OVERLAYS = {
+    "lean/Tests/Trust/expectations.json":
+        "042f07079be02de8ad6185eb15be5a33f7157785d8e955e9592f589f1d1bc878",
+    "lean/tools/tests/test_branch_relative_live_reports.py":
+        "eda6a4994a8ef5d38be81963a1900923f3a1a57a643259b024507e66fdba5142",
+}
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -326,7 +332,23 @@ def reviewed_live_protected_files(prefixes: list[str]) -> list[dict[str, str]]:
             r"[0-9a-f]{64}", str(item.get("sha256", ""))
         ):
             raise RuntimeError("reviewed SQ-0005 v3 protected baseline is malformed")
-    return items
+    return apply_reviewed_live_overlays(items, REPOSITORY)
+
+
+def apply_reviewed_live_overlays(
+    items: list[dict[str, str]], repository: Path
+) -> list[dict[str, str]]:
+    """Apply only the content-addressed post-v3 live maintenance overlay."""
+
+    by_path = {item["path"]: item["sha256"] for item in items}
+    for path, expected_hash in sorted(REVIEWED_POST_V3_LIVE_OVERLAYS.items()):
+        current = repository / path
+        if not current.is_file() or current.is_symlink():
+            raise RuntimeError(f"reviewed SQ-0005 live overlay is missing or unsafe: {path}")
+        if sha256_bytes(current.read_bytes()) != expected_hash:
+            raise RuntimeError(f"reviewed SQ-0005 live overlay differs: {path}")
+        by_path[path] = expected_hash
+    return [{"path": path, "sha256": by_path[path]} for path in sorted(by_path)]
 
 
 def retained_failures(spec: dict[str, Any]) -> list[str]:

@@ -90,7 +90,7 @@ EXPECTED_PATH_PARTITIONS = {
         (),
         ("lean/StatQED/Registry", "lean/StatQED/Assurance", "lean/StatQED/Guarantee"),
         (),
-        "685c9a62b4f7b27a96a1a12b0566321d26c349ff3d018cde6433b1591e5578e7", 66,
+        "5fe397a8b53bfb2488f8dd81e9d7d0d8896c65f754ae8a280db5a8f2125ff184", 67,
     ),
     "backend_registry": (
         "backend",
