@@ -104,9 +104,31 @@ validity, artifact-byte binding, or absence of Lean/kernel defects. It changes
 no public theorem, statistical definition, RFC decision, Registry
 implementation, or SQ-0003 historical subject.
 
-## Independent review checklist
+## Independent review dispositions
 
-The formal-trust, composition, adversarial, CI/reproducibility, and integration
-reviewers must independently confirm the exact hashes above, run the complete
-live replay and inherited mutations, and record final approval or findings.
-This author record intentionally does not self-approve.
+The independent Lean/formal-trust reviewer approved the exact implementation
+commit `50947998ed62806ff42f51c7b850a55465594f12` with dispositions
+`APPROVE_PHASE_M_FORMAL_TRUST` and
+`APPROVE_PHASE_M_AXIOM_COMPOSITION`. The review independently reproduced:
+
+- a deterministic project axiom report for two modules and one declaration,
+  SHA-256 `13f62b97d944b45e8ec1501a6dc95498079ae7610175d97057582106979cb40c`;
+- two of two successful fresh module replays, output SHA-256
+  `0ad2b83992af25857d4e5bd99be1ae117a2d3ba832ece56943be689e9507f1de`;
+- a passing trust JSON observation with no findings, SHA-256
+  `69ddad56f7999b05686958bb0c62ac78e1cb88df6ddd20e64d00ee96afc723b1`;
+- all 24 focused composition tests and all 36 inherited/live trust mutations;
+  and
+- byte-identical preservation of the three historical SQ-0003 subjects.
+
+The independent adversarial and CI reviewer separately approved the bounded
+wrapper-omission guard, module-count bound, smuggling rejections, exact action
+pins, read-only permissions, cached/source-path parity, and clean-tree gates
+(`APPROVE_PHASE_M_ADVERSARIAL_AND_CI`).
+
+Hosted exact-head success and independent integration approval remain merge
+gates. These reviews establish compositional live coverage; they do not make
+any theorem-identity, source-fidelity, Registry-authorization, artifact, or
+statistical-validity claim.
+
+Final formal/composition disposition: APPROVE_PHASE_M_FORMAL_AND_COMPOSITION

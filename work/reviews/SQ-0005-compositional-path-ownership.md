@@ -106,10 +106,24 @@ prove source fidelity, alter canonical bytes, or confer production authority.
 ```
 <!-- SQ-0005-REVIEW-SUBJECTS-END -->
 
-## Independent review disposition
+## Independent review dispositions
 
-Evidence-lifecycle, adversarial path, CI/reproducibility, and integration
-review remain pending for the exact content-addressed candidate. No merge is
-approved by this authoring record.
+The independent evidence-lifecycle reviewer approved the v3 historical/live
+separation and exact subjects above (`APPROVE_PHASE_M_EVIDENCE`). The reviewer
+reproduced all 97 tests (59 retained plus 38 v3 regressions), byte-identical
+manifest generation, preservation of the v1/v2 historical values, and the
+final DONE=6, READY=6, ACTIVE=none, BLOCKED=48 ledger.
 
-Final disposition: PENDING_INDEPENDENT_REVIEW
+The independent adversarial path and CI reviewer approved the fail-closed
+partition policy and hosted-workflow design
+(`APPROVE_PHASE_M_ADVERSARIAL_AND_CI`). The review confirmed that READY,
+BLOCKED, and SUPERSEDED do not authorize paths; that symlink, special-file,
+bytecode, and force-tracked ignored-directory smuggling remain rejected; and
+that the exact pinned, read-only workflows retain clean-tree gates.
+
+Both dispositions bind maintenance implementation commit
+`50947998ed62806ff42f51c7b850a55465594f12`. Hosted exact-head success and the
+independent integration disposition remain merge gates; these approvals do
+not authorize Registry implementation or any successor claim.
+
+Final evidence/path disposition: APPROVE_PHASE_M_EVIDENCE_AND_PATH_POLICY

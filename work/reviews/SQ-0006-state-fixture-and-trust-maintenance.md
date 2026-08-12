@@ -94,3 +94,16 @@ All successor tasks remain READY and unclaimed on the maintenance branch.
 Independent evidence-lifecycle, Lean/formal-trust, adversarial, CI, and final
 integration dispositions are separate merge gates and must bind the exact
 committed maintenance head.
+
+## Independent evidence-lifecycle disposition
+
+The independent evidence-lifecycle reviewer approved this v3 maintenance
+package (`APPROVE_PHASE_M_EVIDENCE`) at implementation commit
+`50947998ed62806ff42f51c7b850a55465594f12`. The reviewer reproduced all 55
+tests (51 retained plus four maintenance regressions), byte-identical manifest
+generation, explicit READY/no-owner scenario construction, ambient-state
+independence, unchanged 49-subject scientific evidence, and the unchanged
+historical scientific digest
+`4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0`.
+
+Final SQ-0006 lifecycle-fixture disposition: APPROVE_PHASE_M_EVIDENCE
