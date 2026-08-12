@@ -2247,7 +2247,7 @@
     {
       "path": "scripts/serialization/tests/test_check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "41a4557e44162f1c09e35ff17be213d30d1bd07fd251a64e48089179b6ced1c4"
+      "sha256": "9df52bfafad17773dd8d0782f7ce27fc818d7f3ed5a54e322d6c5f3fa6fa7ea1"
     },
     {
       "path": "source-audits/encoding/README.md",

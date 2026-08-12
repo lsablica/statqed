@@ -772,9 +772,9 @@
   "historical_scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
   "immutable_scientific_subject_count": 44,
   "immutable_scientific_subject_digest": "2f161fb15ef148030a16f2f154b44c42bef88d9a8ba7fad1f43c4d91604c7928",
-  "lifecycle_subject_digest": "853559a6d3e247ef7270f686231d48ab45441d4abfd1a9d7ba55ae3c67c27f53",
+  "lifecycle_subject_digest": "cbe317a2e20121c1de21f8e9498de037c8e81450b571b4d61009f96a7bcdf9f4",
   "live_subject_count": 49,
-  "live_subject_digest": "4f348e8f99e9d75435463f1034e2340c9f5fb11dfd85bedfec2f5b9c1283b7df",
+  "live_subject_digest": "fcb7286b0326475e11c4fdb6af5b86ceca29d3d5abdfa5f73ccc40742ea5f023",
   "live_subjects": [
     {
       "path": ".github/workflows/schema-v0.yml",
@@ -973,8 +973,8 @@
     },
     {
       "path": "scripts/schema/tests/test_check_schema_v0.py",
-      "sha256": "aacef312ba9af51c6e8df30fcb210cf1bd146ab32ea61f2ca36f34d5965c9aa7",
-      "size_bytes": 37292
+      "sha256": "471bdb17037b98803a89b52a83563d3b1d967308856d950ae5d3e4eaf68240ad",
+      "size_bytes": 38229
     },
     {
       "path": "scripts/schema/tests/test_schema_v0.py",

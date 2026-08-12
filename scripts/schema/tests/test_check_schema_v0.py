@@ -91,6 +91,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
 
         removal_plans: list[tuple[list[Path], list[Path]]] = []
         removed: list[str] = []
+
+        def refuse_walk_error(error: OSError) -> None:
+            raise ValueError(f"neutralizer refuses unreadable path: {error.filename}") from error
+
         for relative in EMPTY_REGISTRY_PARTITIONS:
             target = root / relative
             current = root
@@ -107,7 +111,12 @@ class EvidenceCorruptionTests(unittest.TestCase):
 
             directories: list[Path] = []
             target_files: list[Path] = []
-            for directory, names, files in os.walk(target, topdown=True, followlinks=False):
+            for directory, names, files in os.walk(
+                target,
+                topdown=True,
+                onerror=refuse_walk_error,
+                followlinks=False,
+            ):
                 directory_path = Path(directory)
                 directories.append(directory_path)
                 for name in sorted([*names, *files]):
@@ -803,6 +812,20 @@ class EvidenceCorruptionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "symlink"):
                 self.neutralize_ambient_sq0007_registry_paths(root)
             registry.unlink()
+
+            first_sentinel = registry / "sentinel.lean"
+            first_sentinel.parent.mkdir(parents=True)
+            first_sentinel.write_text("sentinel\n", encoding="utf-8")
+            unreadable = root / "backend/crates/statqed-registry/unreadable"
+            unreadable.mkdir(parents=True)
+            unreadable.chmod(0)
+            try:
+                with self.assertRaisesRegex(ValueError, "unreadable"):
+                    self.neutralize_ambient_sq0007_registry_paths(root)
+                self.assertTrue(first_sentinel.is_file())
+            finally:
+                unreadable.chmod(0o700)
+            self.neutralize_ambient_sq0007_registry_paths(root)
 
             if hasattr(os, "mkfifo"):
                 os.mkfifo(registry)

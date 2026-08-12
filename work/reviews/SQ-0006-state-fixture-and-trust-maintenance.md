@@ -119,8 +119,10 @@ the suite to 57 tests (51 evidence/corruption tests plus six semantic tests).
 Every owner-sensitive scenario now starts from a registered temporary shadow,
 removes only the historically empty `lean/StatQED/Registry` and
 `backend/crates/statqed-registry` partitions after a complete fail-closed
-`lstat` preflight, sets all relevant lifecycle states explicitly, verifies the
-neutral start, and then adds a controlled mutation. An unneutralized synthetic
+`lstat` preflight, including error-raising unreadable-directory traversal, sets
+all relevant lifecycle states explicitly, verifies the neutral start, and then
+adds a controlled mutation. A sentinel regression proves a failure in the
+second partition cannot partially delete the first. An unneutralized synthetic
 Registry remains accepted in SQ-0007 `IN_REVIEW` and rejected in `READY` and
 `SUPERSEDED`. Ambient-empty and ambient-populated runs produce identical Lean
 Registry and backend-remainder no-owner results. Safety coverage rejects broad
@@ -130,9 +132,9 @@ roots. The helper is test-only and never runs in the production verifier.
 Exact local candidate bindings before final independent review:
 
 - regression suite:
-  `aacef312ba9af51c6e8df30fcb210cf1bd146ab32ea61f2ca36f34d5965c9aa7`;
+  `471bdb17037b98803a89b52a83563d3b1d967308856d950ae5d3e4eaf68240ad`;
 - v3 evidence manifest:
-  `8d9b84c0af890087fd4affe80da5e397bd3e8097348f883b33b81abf88c9cf87`;
+  `22dc468e115470be62db55c0b6beffd3e10770030768bc88e380b177adf0fb0b`;
 - unchanged v3 evidence specification:
   `271a8d205be6247f3c89f8d76310144ead33f94a526feffd429aac94c496b1d2`;
 - unchanged production verifier:

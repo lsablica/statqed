@@ -63,8 +63,10 @@ Phase F retains all 97 tests and adds three branch-neutral fixture regressions,
 for 100 total. A test-only helper can remove only the historically empty
 `lean/StatQED/Registry` and `backend/crates/statqed-registry` partitions from
 registered temporary repository copies. It performs a complete `lstat`
-preflight before mutation, refuses symlinks and special files, and records the
-exact removed paths. The new regressions prove unneutralized Registry content
+preflight before mutation, refuses unreadable directories, symlinks, and
+special files, and records the exact removed paths. A sentinel regression
+proves a second-partition traversal failure leaves the first partition intact.
+The new regressions prove unneutralized Registry content
 is accepted for SQ-0007 `IN_REVIEW` but rejected for `READY` and
 `SUPERSEDED`; reconstruct READY, SUPERSEDED, and dual-owner no-owner scenarios
 from a neutral copy; and reject broad, real, symlinked, broken-symlink, and
@@ -92,7 +94,7 @@ prove source fidelity, alter canonical bytes, or confer production authority.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "057395afbed90e6465812c5dbb8a8014ee57d20d2afd64b45224585b04cdc957",
+  "conformance/prototypes/evidence/evidence-manifest.json": "bb5ec8f4b1e30dbe7be9f6f26787d6e231aeac4c207dd6215147b513f1384812",
   "conformance/prototypes/evidence/evidence-spec.json": "39fd75ffb754a7f9f7a5a3dafb3653973e65af2f944ae782c6e70e29db3c54b4",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -116,7 +118,7 @@ prove source fidelity, alter canonical bytes, or confer production authority.
   "scripts/serialization/build_evidence_manifest.py": "5c8389c38b5a993289a10532dbf3466bc393b984258e427284ca1658e21f4cd4",
   "scripts/serialization/check_evidence.py": "920487821d11ab335130c1bffb3f7e4378265b57872ff61e2fe72dc82fa54381",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "41a4557e44162f1c09e35ff17be213d30d1bd07fd251a64e48089179b6ced1c4",
+  "scripts/serialization/tests/test_check_evidence.py": "9df52bfafad17773dd8d0782f7ce27fc818d7f3ed5a54e322d6c5f3fa6fa7ea1",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005-evidence-lifecycle.md": "ae2753b4b74c6c297bfe75556d940579f16696565821ffdae0d9cda9f3b746ba",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"
