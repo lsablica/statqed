@@ -24,36 +24,53 @@ def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def historical_completion(spec: dict[str, Any]) -> dict[str, Any]:
-    """Return and authenticate the complete immutable v1 completion record."""
-    policy = spec["historical_completion_manifest"]
+def historical_records(spec: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Return and authenticate the immutable v1 and v2 historical records."""
+    completion_policy = spec["historical_completion_manifest"]
+    lifecycle_policy = spec["historical_lifecycle_manifest"]
     current = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    if current.get("evidence_manifest_version") == policy["evidence_manifest_version"]:
-        historical = current
-    elif current.get("evidence_manifest_version") == "statqed.sq0006-evidence.v2":
-        historical = current.get("historical_completion")
+    if current.get("evidence_manifest_version") == lifecycle_policy["evidence_manifest_version"]:
+        lifecycle = current
+    elif current.get("evidence_manifest_version") == "statqed.sq0006-evidence.v3":
+        lifecycle = current.get("historical_lifecycle")
     else:
         raise ValueError("unrecognized SQ-0006 evidence manifest version")
+    if not isinstance(lifecycle, dict):
+        raise ValueError("missing historical SQ-0006 v2 lifecycle manifest")
+    if digest(canonical(lifecycle)) != lifecycle_policy["manifest_sha256"]:
+        raise ValueError("historical SQ-0006 v2 lifecycle manifest drift")
+    for field in (
+        "evidence_manifest_version",
+        "evidence_spec_sha256",
+        "historical_completion_manifest_sha256",
+        "historical_scientific_subject_digest",
+        "immutable_scientific_subject_count",
+        "immutable_scientific_subject_digest",
+        "live_subject_count",
+        "live_subject_digest",
+    ):
+        if lifecycle.get(field) != lifecycle_policy[field]:
+            raise ValueError(f"historical SQ-0006 v2 {field} drift")
+    historical = lifecycle.get("historical_completion")
     if not isinstance(historical, dict):
         raise ValueError("missing historical SQ-0006 completion manifest")
-    if digest(canonical(historical)) != policy["manifest_sha256"]:
+    if digest(canonical(historical)) != completion_policy["manifest_sha256"]:
         raise ValueError("historical SQ-0006 completion manifest drift")
-    if historical.get("evidence_manifest_version") != policy["evidence_manifest_version"]:
-        raise ValueError("historical SQ-0006 manifest version drift")
-    if historical.get("evidence_spec_sha256") != policy["evidence_spec_sha256"]:
-        raise ValueError("historical SQ-0006 evidence-spec binding drift")
-    if historical.get("subject_count") != policy["subject_count"]:
-        raise ValueError("historical SQ-0006 subject count drift")
-    if historical.get("subject_digest") != policy["subject_digest"]:
-        raise ValueError("historical SQ-0006 subject digest drift")
-    if historical.get("scientific_subject_digest") != policy["scientific_subject_digest"]:
-        raise ValueError("historical SQ-0006 scientific digest drift")
-    return historical
+    for field in (
+        "evidence_manifest_version",
+        "evidence_spec_sha256",
+        "subject_count",
+        "subject_digest",
+        "scientific_subject_digest",
+    ):
+        if historical.get(field) != completion_policy[field]:
+            raise ValueError(f"historical SQ-0006 v1 {field} drift")
+    return historical, lifecycle
 
 
 def collect() -> dict[str, Any]:
     spec = json.loads(SPEC.read_text(encoding="utf-8"))
-    historical = historical_completion(spec)
+    historical, historical_lifecycle = historical_records(spec)
     paths: set[Path] = set()
     for pattern in spec["subject_patterns"]:
         for path in ROOT.glob(pattern):
@@ -99,15 +116,30 @@ def collect() -> dict[str, Any]:
     lifecycle_subjects = [item for item in subjects if item["path"] in excluded]
     if {item["path"] for item in lifecycle_subjects} != excluded:
         raise ValueError("missing lifecycle-maintenance subject")
+    maintenance_paths = spec["maintenance_live_baseline_paths"]
+    if maintenance_paths != sorted(maintenance_paths) or len(maintenance_paths) != len(set(maintenance_paths)):
+        raise ValueError("invalid maintenance live baseline path policy")
+    maintenance_live_baselines = []
+    for relative in maintenance_paths:
+        path = ROOT / relative
+        if not path.is_file() or path.is_symlink():
+            raise ValueError(f"missing maintenance live baseline: {relative}")
+        maintenance_live_baselines.append(
+            {"path": relative, "sha256": digest(path.read_bytes()), "size_bytes": path.stat().st_size}
+        )
     return {
-        "evidence_manifest_version": "statqed.sq0006-evidence.v2",
+        "evidence_manifest_version": "statqed.sq0006-evidence.v3",
         "evidence_spec_sha256": digest(SPEC.read_bytes()),
         "historical_completion_manifest_sha256": spec["historical_completion_manifest"]["manifest_sha256"],
         "historical_scientific_subject_digest": spec["historical_completion_manifest"]["scientific_subject_digest"],
         "historical_completion": historical,
+        "historical_lifecycle_manifest_sha256": spec["historical_lifecycle_manifest"]["manifest_sha256"],
+        "historical_lifecycle": historical_lifecycle,
         "immutable_scientific_subject_count": len(immutable_scientific),
         "immutable_scientific_subject_digest": immutable_digest,
         "lifecycle_subject_digest": digest(canonical(lifecycle_subjects)),
+        "maintenance_live_baseline_digest": digest(canonical(maintenance_live_baselines)),
+        "maintenance_live_baselines": maintenance_live_baselines,
         "live_subject_digest": digest(live_subject_bytes),
         "live_subject_count": len(subjects),
         "live_subjects": subjects,
@@ -131,7 +163,8 @@ def main() -> int:
     print(
         "wrote SQ-0006 evidence manifest: "
         f"{manifest['live_subject_count']} live subjects, "
-        f"historical science {manifest['historical_scientific_subject_digest']}"
+        f"historical science {manifest['historical_scientific_subject_digest']}, "
+        f"historical lifecycle {manifest['historical_lifecycle_manifest_sha256']}"
     )
     return 0
 

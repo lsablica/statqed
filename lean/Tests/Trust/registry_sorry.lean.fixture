@@ -1,0 +1,8 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Registry
+
+theorem injectedSorry : True := by
+  sorry
+
+end StatQED.Registry

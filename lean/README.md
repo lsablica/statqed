@@ -38,8 +38,8 @@ From this directory:
 lake update --keep-toolchain
 lake build
 lake env lean --trust=0 Examples/Smoke.lean
-lake env leanchecker --fresh StatQED.Internal.Smoke
-python3 tools/axiom_report.py --check Reports/axioms.json
+python3 tools/project_axiom_report.py --verify
+python3 tools/check_all_modules.py
 ```
 
 `StatQED.lean` is the top-level library. `StatQED.Internal.testOnlySmoke` is a
@@ -49,15 +49,16 @@ semantic non-vacuity witness, scientific result, or artifact claim.
 
 The normal update may use Mathlib's binary cache. A cache is a performance and
 supply-chain input, not a semantic authority. A cache miss must fall back to
-the same locked sources. After the project is built, `leanchecker --fresh`
-replays the declarations stored in the smoke module and its imports through a
-fresh Lean kernel environment. This additional check is intended to detect a
+the same locked sources. After the project is built,
+`tools/check_all_modules.py` deterministically enumerates every tracked regular
+`StatQED` module and runs `leanchecker --fresh` once per module. This
+additional check is intended to detect a
 small class of environment-manipulation or compiled-environment attacks that an
 ordinary import can otherwise inherit. It is still a Lean-kernel check rather
 than an independent external verifier, and it does not establish that theorem
 statements have the intended scientific meaning.
 
-## Actual axiom report
+## Historical and compositional live axiom reports
 
 `Tests/AxiomReport.lean` obtains declaration names, defining modules,
 declaration kinds, unsafe flags, elaborated type representations, and transitive axiom sets
@@ -76,13 +77,32 @@ reports the selected imported declaration `Set.ext`.
 - the exact `--trust=0` probe command; and
 - complete project source-module coverage.
 
-The generated report is `Reports/axioms.json`. Regenerate it only from the
-locked environment:
+The generated `Reports/axioms.json` is retained byte-identically as the
+SQ-0003 completion snapshot. `Reports/foundation-axiom-history.json` binds the
+original report, probe, generator, two-module set, and merge commit. Future
+modules do not rewrite that history.
+
+Current live coverage uses separately versioned compositional commands:
 
 ```bash
-python3 tools/axiom_report.py --write Reports/axioms.json
-python3 tools/axiom_report.py --check Reports/axioms.json
+python3 tools/project_axiom_report.py --verify
+python3 tools/check_all_modules.py
 ```
+
+The report helper compares the Git index with regular filesystem sources,
+rejects symlinks, special files, untracked source smuggling, duplicate names,
+and missing or extra modules, then generates a temporary import-all wrapper.
+`Tests/ProjectAxiomProbe.lean` observes each project declaration in that fully
+imported environment. It records declaration module, kind, unsafe status,
+diagnostic elaborated type, and sorted transitive axioms, while rejecting
+project axioms, unsafe declarations, `sorryAx`, project-owned axiom closure,
+and prohibited native-trust axioms. Two clean observations must be identical.
+
+The all-module helper replays each same source-derived module in globally
+sorted order with a bounded `leanchecker --fresh` invocation. One omission,
+count mismatch, or replay failure rejects the whole check. Task-specific
+evidence can bind live output hashes without requiring a globally committed
+mutable report.
 
 The type text is locked diagnostic `Lean.Expr` representation, not a canonical
 theorem identity. The report is actual logical-dependency evidence, not an
@@ -146,9 +166,9 @@ absence of other kernel defects.
 
 For an update, re-audit official releases, change the Lean channel, full
 Mathlib revision, and generated manifest atomically, then rerun normal and
-no-cache builds, fresh compiled-module replay, manifest byte reproduction, the
-live axiom report, trust mutations, and independent review. Rollback restores
-all three lock files and the matching reviewed report together.
+no-cache builds, all-module fresh replay, manifest byte reproduction, the live
+project axiom report, trust mutations, and independent review. Rollback
+restores all three lock files and historical SQ-0003 report integrity together.
 
 A successful build, replay, and axiom report establish only that the stored
 named declarations are accepted under the pinned Lean kernel and have the

@@ -1,0 +1,4 @@
+/- Test-only fixture for compositional module discovery. -/
+namespace StatQED.Registry
+
+end StatQED.Registry

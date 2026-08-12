@@ -34,6 +34,12 @@ PROHIBITED_IMPORTED_NATIVE_AXIOMS = {
     "Lean.ofReduceNat",
     "Lean.trustCompiler",
 }
+FOUNDATION_MODULES = ["StatQED", "StatQED.Internal.Smoke"]
+HISTORICAL_AXIOM_FILES = {
+    "lean/Reports/axioms.json": "96a2b221dcc7f0a08607fbc935f31c5c4846486b0d4edcb585bddfad2298346b",
+    "lean/Tests/AxiomReport.lean": "bf1acd71f1b32f4b2e80b24114318a44903c9eb19a7fcd9ff57d90e4e667d23e",
+    "lean/tools/axiom_report.py": "487d89eb6d6703f428c1d4043af931bc80665e623dc717419c7aacaec986c498",
+}
 
 
 @dataclass(frozen=True, order=True)
@@ -365,8 +371,8 @@ def check_axiom_report_static(lean_root: Path, root: Path, findings: list[Findin
             add(findings, "axiom_report_mismatch", relative(path, root), "report Lean identity is altered")
         if not isinstance(lake_version, str) or EXPECTED_LAKE_VERSION not in lake_version:
             add(findings, "axiom_report_mismatch", relative(path, root), "report Lake identity is altered")
-    if report.get("project_modules") != project_modules(lean_root):
-        add(findings, "axiom_report_mismatch", relative(path, root), "report project module coverage is incomplete or altered")
+    if report.get("project_modules") != FOUNDATION_MODULES:
+        add(findings, "axiom_report_mismatch", relative(path, root), "historical report foundation module set is altered")
     nonclaims = report.get("nonclaims")
     if not isinstance(nonclaims, list) or not nonclaims or not all(isinstance(item, str) for item in nonclaims):
         add(findings, "axiom_report_mismatch", relative(path, root), "report nonclaims are absent")
@@ -445,6 +451,51 @@ def check_axiom_report_static(lean_root: Path, root: Path, findings: list[Findin
     return path
 
 
+def check_historical_axiom_integrity(
+    lean_root: Path, root: Path, findings: list[Finding]
+) -> None:
+    metadata_path = lean_root / "Reports" / "foundation-axiom-history.json"
+    metadata = load_json(
+        metadata_path, root, findings, "historical_axiom_metadata_mismatch"
+    )
+    expected_metadata = {
+        "foundation_modules": FOUNDATION_MODULES,
+        "historical_files": HISTORICAL_AXIOM_FILES,
+        "nonclaims": [
+            "This binds the SQ-0003 completion snapshot; it does not claim coverage of later modules.",
+            "Current project-wide coverage is provided by the separately versioned live compositional checks.",
+        ],
+        "schema_version": "statqed.sq0003-foundation-axiom-history.v1",
+        "sq0003_merge_commit": "92e3b331b1ae795a21d6e030a21e8ce8d7da03dd",
+    }
+    if metadata != expected_metadata:
+        add(
+            findings,
+            "historical_axiom_metadata_mismatch",
+            relative(metadata_path, root),
+            "SQ-0003 historical axiom metadata differs from the reviewed snapshot",
+        )
+    for relative_path, expected_hash in sorted(HISTORICAL_AXIOM_FILES.items()):
+        historical_path = root / relative_path
+        try:
+            actual_hash = sha256_file(historical_path)
+        except OSError as error:
+            add(
+                findings,
+                "historical_axiom_snapshot_mismatch",
+                relative_path,
+                f"cannot read historical SQ-0003 subject: {error}",
+            )
+            continue
+        if actual_hash != expected_hash:
+            add(
+                findings,
+                "historical_axiom_snapshot_mismatch",
+                relative_path,
+                f"historical SHA-256 {actual_hash} differs from {expected_hash}",
+            )
+
+
 def run_checked(command: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     environment = os.environ.copy()
     environment.update({"LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "TZ": "UTC"})
@@ -487,18 +538,32 @@ def check_checkout_heads(
             )
 
 
-def check_axiom_report_live(lean_root: Path, root: Path, report: Path, findings: list[Finding]) -> None:
-    generator = lean_root / "tools" / "axiom_report.py"
+def check_project_axiom_report_live(
+    lean_root: Path, root: Path, findings: list[Finding]
+) -> None:
+    generator = lean_root / "tools" / "project_axiom_report.py"
     if not generator.is_file():
-        add(findings, "axiom_report_live_failure", relative(generator, root), "live axiom-report generator is absent")
+        add(findings, "project_axiom_report_failure", relative(generator, root), "project-wide live axiom-report generator is absent")
         return
     completed = run_checked(
-        [sys.executable, str(generator), "--check", str(report)], lean_root
+        [sys.executable, str(generator), "--verify"], lean_root
     )
     if completed.returncode != 0:
         detail = (completed.stderr.strip() or completed.stdout.strip()).replace(str(root), "<root>")
-        code = "axiom_report_mismatch" if "differs from" in detail else "axiom_report_live_failure"
-        add(findings, code, relative(report, root), detail)
+        add(findings, "project_axiom_report_failure", relative(generator, root), detail)
+
+
+def check_all_modules_live(
+    lean_root: Path, root: Path, findings: list[Finding]
+) -> None:
+    checker = lean_root / "tools" / "check_all_modules.py"
+    if not checker.is_file():
+        add(findings, "all_module_fresh_failure", relative(checker, root), "all-module fresh checker is absent")
+        return
+    completed = run_checked([sys.executable, str(checker), "--json"], lean_root)
+    if completed.returncode != 0:
+        detail = (completed.stderr.strip() or completed.stdout.strip()).replace(str(root), "<root>")
+        add(findings, "all_module_fresh_failure", relative(checker, root), detail)
 
 
 def audit(root: Path, *, live: bool) -> list[Finding]:
@@ -512,10 +577,13 @@ def audit(root: Path, *, live: bool) -> list[Finding]:
     _manifest, packages = check_manifest(lean_root, root, findings)
     check_sources(lean_root, root, findings)
     report = check_axiom_report_static(lean_root, root, findings)
+    check_historical_axiom_integrity(lean_root, root, findings)
     if live and not findings:
         check_checkout_heads(packages, lean_root, root, findings)
         if not findings:
-            check_axiom_report_live(lean_root, root, report, findings)
+            check_project_axiom_report_live(lean_root, root, findings)
+        if not findings:
+            check_all_modules_live(lean_root, root, findings)
     return sorted(set(findings))
 
 
@@ -532,21 +600,35 @@ def apply_json_pointer(payload: Any, pointer: str, value: Any) -> None:
 
 
 def mutate(case: dict[str, Any], source_lean: Path, target_lean: Path, fixture_root: Path) -> None:
-    target = target_lean / case["target"]
     operation = case["mutation"]
     if operation == "replace_file":
+        target = target_lean / case["target"]
         fixture = fixture_root / case["fixture"]
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(fixture, target)
+    elif operation == "replace_files":
+        fixture = fixture_root / case["fixture"]
+        targets = case.get("targets")
+        if not isinstance(targets, list) or not targets:
+            raise ValueError(f"{case['id']}: replace_files requires a nonempty targets list")
+        for relative in targets:
+            if not isinstance(relative, str):
+                raise ValueError(f"{case['id']}: replace_files target is not text")
+            target = target_lean / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(fixture, target)
     elif operation == "remove_file":
+        target = target_lean / case["target"]
         target.unlink(missing_ok=True)
     elif operation == "replace_text":
+        target = target_lean / case["target"]
         text = target.read_text(encoding="utf-8")
         search = case["search"]
         if text.count(search) != 1:
             raise ValueError(f"{case['id']}: expected one occurrence of {search!r}")
         target.write_text(text.replace(search, case["replacement"]), encoding="utf-8")
     elif operation == "replace_json_value":
+        target = target_lean / case["target"]
         payload = json.loads(target.read_text(encoding="utf-8"))
         apply_json_pointer(payload, case["json_pointer"], case["replacement"])
         target.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
@@ -643,14 +725,19 @@ def run_mutations(root: Path) -> tuple[list[dict[str, Any]], list[Finding]]:
                 temp_lake.joinpath("packages").symlink_to(
                     lean_root / ".lake" / "packages", target_is_directory=True
                 )
+                initialized = run_checked(["git", "init", "--quiet"], temp_root)
+                staged = run_checked(
+                    ["git", "add", "lean/StatQED.lean", "lean/StatQED"],
+                    temp_root,
+                )
+                if initialized.returncode != 0 or staged.returncode != 0:
+                    raise OSError("cannot create isolated tracked-module fixture")
                 build = run_checked(["lake", "build"], temp_lean)
-                report_path = temp_lean / "Reports" / "mutated-axioms.json"
                 report = run_checked(
                     [
                         sys.executable,
-                        str(temp_lean / "tools" / "axiom_report.py"),
-                        "--write",
-                        str(report_path),
+                        str(temp_lean / "tools" / "project_axiom_report.py"),
+                        "--verify",
                     ],
                     temp_lean,
                 )
@@ -732,7 +819,9 @@ def render_human(findings: list[Finding], mutation_results: list[dict[str, Any]]
     print(f"  toolchain: {EXPECTED_TOOLCHAIN}")
     print(f"  Mathlib: {EXPECTED_MATHLIB_REVISION}")
     print("  project source: no prohibited trusted-path constructs")
-    print("  axiom report: live environment regeneration matched")
+    print("  historical SQ-0003 report: byte-identical integrity verified")
+    print("  live project axiom report: all tracked modules observed deterministically")
+    print("  fresh kernel replay: every tracked StatQED module passed")
     if mutation_results is not None:
         print(f"  mutations: {len(mutation_results)} intended differentials passed")
 

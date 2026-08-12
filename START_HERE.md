@@ -145,14 +145,16 @@ Lean, Rust, frontend, prototype, schema, and golden subtrees frozen until an
 explicit owner is active. This maintenance changed no schema scientific
 subject and claimed no successor.
 
-The SQ-0007 executable contract has been expanded and independently reviewed
-without changing its `READY` state. The exact planning head must still pass
-hosted CI and protected integration before it becomes the main-branch launch
-contract. After that protected merge, a future execution may claim SQ-0007 only
-on `agent/SQ-0007-theorem-registry`, atomically update its ledger state, and
-then follow every source, normalizer, closure, authorization, axiom,
-compatibility, evidence, CI, and review gate in that contract. Do not
-regenerate SQ-0006 evidence merely because SQ-0007 planning prose changed.
+The SQ-0007 executable contract is merged and independently reviewed. A later
+isolated implementation reached `IN_REVIEW` and correctly stopped when the
+SQ-0003, SQ-0005, and SQ-0006 predecessor checks proved non-compositional for
+new Registry modules. The separately scoped maintenance branch
+`maintenance/compositional-predecessor-evidence` preserves historical evidence,
+adds owner-partitioned live protection and all-module Lean trust coverage, and
+keeps SQ-0007 `READY` on main. Do not resume the preserved implementation branch
+until that maintenance is independently approved, merged, and verified. Do not
+regenerate predecessor scientific subjects merely because Registry modules are
+later added by their reviewed owner.
 
 The checked READY set is:
 

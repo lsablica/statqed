@@ -1,5 +1,5 @@
 {
-  "evidence_spec_version": "statqed.sq0006-evidence-spec.v2",
+  "evidence_spec_version": "statqed.sq0006-evidence-spec.v3",
   "historical_completion_manifest": {
     "evidence_manifest_version": "statqed.sq0006-evidence.v1",
     "manifest_sha256": "eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb",
@@ -7,6 +7,17 @@
     "scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
     "subject_count": 49,
     "subject_digest": "b3ef32b87b78e80c39e62f6efcc3090b93abc3b0cc089e62bc59b4c2b7241b15"
+  },
+  "historical_lifecycle_manifest": {
+    "evidence_manifest_version": "statqed.sq0006-evidence.v2",
+    "manifest_sha256": "5c6b3081846ba8ec2bc1ac17bf7d9014ee4d8f2dedb9e7d625a1226d2957b752",
+    "evidence_spec_sha256": "76255b647a18df29ee690bd6bcd537646e6bd225820a3047d78276e9a9f01e30",
+    "historical_completion_manifest_sha256": "eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb",
+    "historical_scientific_subject_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+    "immutable_scientific_subject_count": 44,
+    "immutable_scientific_subject_digest": "2f161fb15ef148030a16f2f154b44c42bef88d9a8ba7fad1f43c4d91604c7928",
+    "live_subject_count": 49,
+    "live_subject_digest": "ea1b1f51f2ac947dd5c09882546bbe6fb1bda89c8e5ba2b19b7645e6f93ff0db"
   },
   "historical_immutable_scientific_subjects": {
     "excluded_lifecycle_paths": [
@@ -104,9 +115,30 @@
     "rfc_0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
     "schemas_prototypes_tree_sha256": "e18a529776af5c4c6543551064d7715f5b1f5120919c81999cf1dd12b93df519"
   },
+  "maintenance_live_baseline_paths": [
+    ".github/workflows/lean.yml",
+    "docs/implementation/lean-core.md",
+    "lean/README.md",
+    "lean/Reports/foundation-axiom-history.json",
+    "lean/Tests/ProjectAxiomProbe.lean",
+    "lean/Tests/Trust/expectations.json",
+    "lean/Tests/Trust/registry_axiom.lean.fixture",
+    "lean/Tests/Trust/registry_native.lean.fixture",
+    "lean/Tests/Trust/registry_safe.lean.fixture",
+    "lean/Tests/Trust/registry_sorry.lean.fixture",
+    "lean/Tests/Trust/registry_unimportable.lean.fixture",
+    "lean/Tests/Trust/registry_unsafe.lean.fixture",
+    "lean/tools/check_all_modules.py",
+    "lean/tools/no_cache_build.sh",
+    "lean/tools/project_axiom_report.py",
+    "lean/tools/tests/test_project_trust.py",
+    "scripts/check_lean_trust.py"
+  ],
   "protected_path_policy": {
     "ignored_prefixes": [
       "lean/.lake",
+      "lean/tools/__pycache__",
+      "lean/tools/tests/__pycache__",
       "backend/target",
       "schemas/prototypes/rust-cbor/target",
       "schemas/prototypes/python-oracle/.pytest_cache",
@@ -147,8 +179,8 @@
         "include_prefixes": [],
         "exclude_prefixes": ["lean/StatQED/Registry", "lean/StatQED/Assurance", "lean/StatQED/Guarantee"],
         "owners": [],
-        "baseline_sha256": "486109764c763003b6021493cab5693e318a189619e1e7987a1999cd54ae019c",
-        "baseline_file_count": 55
+        "baseline_sha256": "685c9a62b4f7b27a96a1a12b0566321d26c349ff3d018cde6433b1591e5578e7",
+        "baseline_file_count": 66
       },
       {
         "id": "backend_registry",

@@ -74,6 +74,22 @@ class EvidenceCorruptionTests(unittest.TestCase):
                 "*.pyo",
             ),
         )
+        initialized = subprocess.run(
+            ["git", "init", "--quiet"],
+            cwd=self.root,
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.assertEqual(initialized.returncode, 0, initialized.stderr.decode())
+        tracked = subprocess.run(
+            ["git", "add", "backend", "frontends", "lean"],
+            cwd=self.root,
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.assertEqual(tracked.returncode, 0, tracked.stderr.decode())
         self.frozen_manifest = (self.root / MANIFEST).read_bytes()
         self.frozen_spec = (self.root / SPEC).read_bytes()
         manifest = self.manifest()
@@ -743,6 +759,235 @@ class EvidenceCorruptionTests(unittest.TestCase):
         returncode, output = self.run_repository_check()
         self.assertNotEqual(returncode, 0, output)
         self.assertIn("blocked_count", output)
+
+    # V3 path ownership keeps the completion snapshot frozen while permitting
+    # only an explicitly active owner to evolve its static partition.
+
+    def add_protected_file(self, relative: str, content: str = "owned\n") -> None:
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+
+    def test_path_sq0007_ready_registry_lean_rejected(self) -> None:
+        self.set_task_status("SQ-0007", "READY")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0007_in_progress_registry_lean_accepted(self) -> None:
+        self.set_task_status("SQ-0007", "IN_PROGRESS")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0007_in_review_registry_lean_accepted(self) -> None:
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0007_done_registry_lean_accepted(self) -> None:
+        self.set_task_status("SQ-0007", "DONE")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0007_superseded_is_legal_but_non_authorizing(self) -> None:
+        self.set_task_status("SQ-0007", "SUPERSEDED")
+        self.assert_verified()
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0008_superseded_is_legal_but_non_authorizing(self) -> None:
+        self.set_task_status("SQ-0008", "SUPERSEDED")
+        self.assert_verified()
+        self.add_protected_file("lean/StatQED/Assurance/Test.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0007_active_unrelated_lean_rejected(self) -> None:
+        self.set_task_status("SQ-0007", "IN_PROGRESS")
+        self.add_protected_file("lean/StatQED/Unowned.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0007_active_backend_registry_accepted(self) -> None:
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
+        self.assert_verified()
+
+    def test_path_sq0007_ready_backend_registry_rejected(self) -> None:
+        self.set_task_status("SQ-0007", "READY")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0007_active_unrelated_backend_rejected(self) -> None:
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.add_protected_file("backend/crates/unowned/src/lib.rs")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0011_active_backend_remainder_accepted(self) -> None:
+        self.set_task_status("SQ-0011", "IN_PROGRESS")
+        self.add_protected_file("backend/crates/future-backend/src/lib.rs")
+        self.assert_verified()
+
+    def test_path_sq0008_active_assurance_accepted(self) -> None:
+        self.set_task_status("SQ-0008", "IN_PROGRESS")
+        self.add_protected_file("lean/StatQED/Assurance/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0008_active_guarantee_accepted(self) -> None:
+        self.set_task_status("SQ-0008", "IN_REVIEW")
+        self.add_protected_file("lean/StatQED/Guarantee/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0008_active_registry_rejected_without_sq0007(self) -> None:
+        self.set_task_status("SQ-0007", "READY")
+        self.set_task_status("SQ-0008", "IN_PROGRESS")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0008_and_sq0007_active_registry_accepted(self) -> None:
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.set_task_status("SQ-0008", "IN_PROGRESS")
+        self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.assert_verified()
+
+    def test_path_sq0013_active_r_accepted(self) -> None:
+        self.set_task_status("SQ-0013", "IN_PROGRESS")
+        self.add_protected_file("frontends/r/R/test.R")
+        self.assert_verified()
+
+    def test_path_sq0013_active_python_rejected(self) -> None:
+        self.set_task_status("SQ-0013", "IN_PROGRESS")
+        self.add_protected_file("frontends/python/statqed/test.py")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0013_active_julia_rejected(self) -> None:
+        self.set_task_status("SQ-0013", "IN_PROGRESS")
+        self.add_protected_file("frontends/julia/src/Test.jl")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0014_active_python_accepted(self) -> None:
+        self.set_task_status("SQ-0014", "IN_PROGRESS")
+        self.add_protected_file("frontends/python/statqed/test.py")
+        self.assert_verified()
+
+    def test_path_sq0014_active_julia_rejected(self) -> None:
+        self.set_task_status("SQ-0014", "IN_PROGRESS")
+        self.add_protected_file("frontends/julia/src/Test.jl")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0014_active_r_rejected(self) -> None:
+        self.set_task_status("SQ-0014", "IN_PROGRESS")
+        self.add_protected_file("frontends/r/R/test.R")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0015_active_julia_accepted(self) -> None:
+        self.set_task_status("SQ-0015", "IN_PROGRESS")
+        self.add_protected_file("frontends/julia/src/Test.jl")
+        self.assert_verified()
+
+    def test_path_sq0015_active_r_rejected(self) -> None:
+        self.set_task_status("SQ-0015", "IN_PROGRESS")
+        self.add_protected_file("frontends/r/R/test.R")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_sq0015_active_python_rejected(self) -> None:
+        self.set_task_status("SQ-0015", "IN_PROGRESS")
+        self.add_protected_file("frontends/python/statqed/test.py")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_no_owner_active_new_remainder_rejected(self) -> None:
+        for task_id in ("SQ-0007", "SQ-0008", "SQ-0011"):
+            self.set_task_status(task_id, "READY")
+        self.add_protected_file("lean/StatQED/NoOwner/Test.lean")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_no_owner_active_frontends_remainder_rejected(self) -> None:
+        self.add_protected_file("frontends/shared/test.txt")
+        self.assert_rejected("protected production path-set drift")
+
+    def test_path_symlink_smuggling_rejected(self) -> None:
+        path = self.root / "lean/StatQED/smuggled.lean"
+        path.symlink_to(self.root / "lean/README.md")
+        self.assert_rejected("symlink in protected production tree")
+
+    @unittest.skipUnless(hasattr(__import__("os"), "mkfifo"), "FIFO requires POSIX")
+    def test_path_special_file_smuggling_rejected(self) -> None:
+        import os
+
+        os.mkfifo(self.root / "backend/smuggled.fifo")
+        self.assert_rejected("special file in protected production tree")
+
+    def test_path_tracked_target_smuggling_rejected(self) -> None:
+        relative = "backend/target/smuggled.rs"
+        self.add_protected_file(relative)
+        status, output = self.run_command(["git", "init", "-q"])
+        self.assertEqual(status, 0, output)
+        status, output = self.run_command(["git", "add", "-f", relative])
+        self.assertEqual(status, 0, output)
+        self.assert_rejected("protected production path-set drift")
+
+    def assert_force_tracked_ignored_rejected(
+        self, relative: str, diagnostic: str
+    ) -> None:
+        self.add_protected_file(relative)
+        status, output = self.run_command(["git", "init", "-q"])
+        self.assertEqual(status, 0, output)
+        status, output = self.run_command(["git", "add", "-f", relative])
+        self.assertEqual(status, 0, output)
+        self.assert_rejected(diagnostic)
+
+    def test_path_force_tracked_lake_smuggling_rejected(self) -> None:
+        self.assert_force_tracked_ignored_rejected(
+            "lean/.lake/smuggled.lean", "protected production path-set drift"
+        )
+
+    def test_path_force_tracked_pytest_cache_smuggling_rejected(self) -> None:
+        self.assert_force_tracked_ignored_rejected(
+            "lean/.pytest_cache/smuggled.lean", "protected production path-set drift"
+        )
+
+    def test_path_force_tracked_python_cache_smuggling_rejected(self) -> None:
+        self.assert_force_tracked_ignored_rejected(
+            "frontends/python/__pycache__/smuggled.pyc",
+            "generated bytecode in protected tree",
+        )
+
+    def test_path_source_smuggling_in_bytecode_directory_rejected(self) -> None:
+        path = self.root / "frontends/python/__pycache__/smuggled.pyc"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        (path.parent / "smuggled.py").write_text("source = True\n", encoding="utf-8")
+        self.assert_rejected("unexpected source in generated bytecode directory")
+
+    def test_path_historical_v2_snapshot_mutation_rejected(self) -> None:
+        manifest = self.manifest()
+        manifest["protected_files"][0]["sha256"] = "0" * 64
+        self.write_manifest(manifest)
+        self.rewrite_review_bindings()
+        self.assert_rejected("historical v2 protected production snapshot changed")
+
+    def test_path_historical_v2_manifest_binding_mutation_rejected(self) -> None:
+        manifest = self.manifest()
+        manifest["historical_lifecycle_manifest"]["sha256"] = "0" * 64
+        self.write_manifest(manifest)
+        self.rewrite_review_bindings()
+        self.assert_rejected("historical SQ-0005 v2 lifecycle manifest binding changed")
+
+    def test_path_live_owner_policy_change_rejected_after_rebind(self) -> None:
+        manifest = self.manifest()
+        manifest["live_invariants"]["live_path_policy"]["partitions"][0][
+            "owners"
+        ].append("SQ-0008")
+        self.write_manifest(manifest)
+        self.rewrite_review_bindings()
+        self.assert_rejected("live path-owner policy changed")
+
+    def test_path_owner_contract_backlog_disagreement_rejected(self) -> None:
+        path = self.root / "work/contracts/SQ-0007.yaml"
+        contract = json.loads(path.read_text(encoding="utf-8"))
+        contract["status"] = "IN_PROGRESS"
+        canonical_write(path, contract)
+        self.assert_rejected("SQ-0007 contract/backlog status disagreement")
+
+    def test_path_owner_illegal_status_rejected(self) -> None:
+        self.set_task_status("SQ-0007", "CORRUPT")
+        self.assert_rejected("SQ-0007 has illegal lifecycle status")
 
 
 if __name__ == "__main__":

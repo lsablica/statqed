@@ -234,43 +234,79 @@
   "live_report_cases": [
     {
       "expected_build_exit": 0,
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "expected_output_substring": "\"module_count\": 3",
+      "fixture": "registry_safe.lean.fixture",
+      "id": "registry_module_live_positive",
+      "mutation": "replace_file",
+      "target": "StatQED/Registry/Positive.lean"
+    },
+    {
+      "expected_build_exit": 0,
+      "expected_code": "ok",
+      "expected_exit": 0,
+      "expected_output_substring": "\"module_count\": 7",
+      "fixture": "registry_safe.lean.fixture",
+      "id": "five_registry_modules_live_positive",
+      "mutation": "replace_files",
+      "targets": [
+        "StatQED/Registry/FiveA.lean",
+        "StatQED/Registry/FiveB.lean",
+        "StatQED/Registry/FiveC.lean",
+        "StatQED/Registry/FiveD.lean",
+        "StatQED/Registry/FiveE.lean"
+      ]
+    },
+    {
+      "expected_build_exit": 0,
       "expected_code": "axiom_report_live_rejection",
       "expected_exit": 1,
       "expected_output_substring": "depends on sorryAx",
-      "fixture": "sorry.lean.fixture",
+      "fixture": "registry_sorry.lean.fixture",
       "id": "sorry_live_axiom_report",
       "mutation": "replace_file",
-      "target": "StatQED/Internal/Smoke.lean"
+      "target": "StatQED/Registry/Sorry.lean"
     },
     {
       "expected_build_exit": 0,
       "expected_code": "axiom_report_live_rejection",
       "expected_exit": 1,
       "expected_output_substring": "is an axiom declaration",
-      "fixture": "bodyless_constant.lean.fixture",
+      "fixture": "registry_axiom.lean.fixture",
       "id": "bodyless_axiom_live_report",
       "mutation": "replace_file",
-      "target": "StatQED/Internal/Smoke.lean"
+      "target": "StatQED/Registry/Axiom.lean"
     },
     {
       "expected_build_exit": 0,
       "expected_code": "axiom_report_live_rejection",
       "expected_exit": 1,
       "expected_output_substring": "is unsafe",
-      "fixture": "unsafe_declaration.lean.fixture",
+      "fixture": "registry_unsafe.lean.fixture",
       "id": "unsafe_declaration_live_report",
       "mutation": "replace_file",
-      "target": "StatQED/Internal/Smoke.lean"
+      "target": "StatQED/Registry/Unsafe.lean"
     },
     {
       "expected_build_exit": 0,
       "expected_code": "axiom_report_live_rejection",
       "expected_exit": 1,
       "expected_output_substring": "depends on a prohibited native-trust axiom",
-      "fixture": "reduceBool.lean.fixture",
+      "fixture": "registry_native.lean.fixture",
       "id": "indirect_native_axiom_live_report",
       "mutation": "replace_file",
-      "target": "StatQED/Internal/Smoke.lean"
+      "target": "StatQED/Registry/Native.lean"
+    },
+    {
+      "expected_build_exit": 1,
+      "expected_code": "axiom_report_live_rejection",
+      "expected_exit": 1,
+      "expected_output_substring": "project axiom wrapper failed",
+      "fixture": "registry_unimportable.lean.fixture",
+      "id": "registry_unimportable_live_report",
+      "mutation": "replace_file",
+      "target": "StatQED/Registry/Unimportable.lean"
     }
   ],
   "schema_version": 1,

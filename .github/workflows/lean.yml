@@ -165,9 +165,9 @@ jobs:
         working-directory: lean
         run: lake env lean --trust=0 Examples/Smoke.lean
 
-      - name: Replay compiled smoke module in a fresh kernel environment
+      - name: Replay every tracked StatQED module in a fresh kernel environment
         working-directory: lean
-        run: lake env leanchecker --fresh StatQED.Internal.Smoke
+        run: python3 tools/check_all_modules.py
 
       - name: Run human-readable trust scan
         run: python3 scripts/check_lean_trust.py
@@ -175,11 +175,21 @@ jobs:
       - name: Run machine-readable trust scan
         run: python3 scripts/check_lean_trust.py --json
 
-      - name: Check live axiom report
-        run: python3 lean/tools/axiom_report.py --check lean/Reports/axioms.json
+      - name: Check compositional live axiom report
+        run: python3 lean/tools/project_axiom_report.py --verify
+
+      - name: Run compositional trust unit tests
+        run: python3 -m unittest discover -s lean/tools/tests -p 'test_*.py' -v
 
       - name: Run trusted-path mutations
         run: python3 scripts/check_lean_trust.py --run-mutations
+
+      - name: Require a clean tracked and untracked project tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          test -z "$(git status --short --untracked-files=all)"
 
   source_gate:
     name: Select no-binary-cache revalidation
@@ -231,7 +241,13 @@ jobs:
             lean/lean-toolchain \
             lean/lakefile.toml \
             lean/lake-manifest.json \
+            lean/StatQED.lean \
+            lean/StatQED \
+            lean/Tests/ProjectAxiomProbe.lean \
+            lean/tools/project_axiom_report.py \
+            lean/tools/check_all_modules.py \
             lean/tools/no_cache_build.sh \
+            scripts/check_lean_trust.py \
             .github/workflows/lean.yml; then
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
@@ -373,9 +389,9 @@ jobs:
         working-directory: lean
         run: lake env lean --trust=0 Examples/Smoke.lean
 
-      - name: Replay compiled smoke module in a fresh kernel environment
+      - name: Replay every tracked StatQED module in a fresh kernel environment
         working-directory: lean
-        run: lake env leanchecker --fresh StatQED.Internal.Smoke
+        run: python3 tools/check_all_modules.py
 
       - name: Run human-readable trust scan
         run: python3 scripts/check_lean_trust.py
@@ -383,8 +399,18 @@ jobs:
       - name: Run machine-readable trust scan
         run: python3 scripts/check_lean_trust.py --json
 
-      - name: Check live axiom report
-        run: python3 lean/tools/axiom_report.py --check lean/Reports/axioms.json
+      - name: Check compositional live axiom report
+        run: python3 lean/tools/project_axiom_report.py --verify
+
+      - name: Run compositional trust unit tests
+        run: python3 -m unittest discover -s lean/tools/tests -p 'test_*.py' -v
 
       - name: Run trusted-path mutations
         run: python3 scripts/check_lean_trust.py --run-mutations
+
+      - name: Require a clean tracked and untracked project tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          test -z "$(git status --short --untracked-files=all)"
