@@ -71,5 +71,7 @@ STATQED_LEAN_ENV=(
 "${STATQED_LEAN_ENV[@]}" lake update --keep-toolchain
 "${STATQED_LEAN_ENV[@]}" lake build
 "${STATQED_LEAN_ENV[@]}" lake env lean --trust=0 Examples/Smoke.lean
-"${STATQED_LEAN_ENV[@]}" lake env leanchecker --fresh StatQED.Internal.Smoke
-"${STATQED_LEAN_ENV[@]}" python3 tools/axiom_report.py --check Reports/axioms.json
+"${STATQED_LEAN_ENV[@]}" python3 tools/project_axiom_report.py --verify
+"${STATQED_LEAN_ENV[@]}" python3 tools/check_all_modules.py
+"${STATQED_LEAN_ENV[@]}" python3 ../scripts/check_lean_trust.py
+"${STATQED_LEAN_ENV[@]}" python3 -m unittest discover -s tools/tests -p 'test_*.py' -v

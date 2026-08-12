@@ -1,0 +1,8 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Registry
+
+theorem injectedNativeDependency
+    (h : Lean.reduceBool true = true) : Lean.reduceBool true = true := h
+
+end StatQED.Registry
