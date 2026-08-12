@@ -32,6 +32,9 @@ example : maxClosureDepth = 64 := rfl
 example : maxClosureWork = 1000000 := rfl
 example : maxClosureExpressionNodes = 262144 := rfl
 
+#guard closureDepthAllowed maxClosureDepth
+#guard !closureDepthAllowed (maxClosureDepth + 1)
+
 #guard match exprJson maxExpressionDepth (.bvar 0) with
   | .error "registry.normalization.loose_bound_variable" => true
   | _ => false
@@ -39,5 +42,34 @@ example : maxClosureExpressionNodes = 262144 := rfl
 #guard match declarationExprJson [`u] maxExpressionDepth (.sort (.param `v)) with
   | .error "registry.normalization.undeclared_universe_parameter" => true
   | _ => false
+
+private def nestedApplications (count : Nat) : Lean.Expr :=
+  List.range count |>.foldl
+    (fun expression _ => Lean.Expr.app (Lean.Expr.const `f []) expression)
+    (Lean.Expr.const `x [])
+
+private def successorLevel (count : Nat) : Lean.Level :=
+  List.range count |>.foldl (fun level _ => Lean.Level.succ level) Lean.Level.zero
+
+#guard match propositionJson [] (nestedApplications maxExpressionDepth) with
+  | .ok _ => true
+  | _ => false
+
+#guard match propositionJson [] (nestedApplications (maxExpressionDepth + 1)) with
+  | .error "registry.normalization.expression_depth_limit" => true
+  | _ => false
+
+#guard match propositionJson [] (.sort <| successorLevel maxLevelDepth) with
+  | .ok _ => true
+  | _ => false
+
+#guard match propositionJson [] (.sort <| successorLevel (maxLevelDepth + 1)) with
+  | .error "registry.normalization.level_depth_limit" => true
+  | _ => false
+
+-- Canonical CBOR name-byte ordering is length-first for these text segments;
+-- it deliberately differs from ordinary lexical `Name` ordering.
+#guard canonicalNameLT `b `aa
+#guard !canonicalNameLT `aa `b
 
 end StatQED.Registry.Tests.Bounds

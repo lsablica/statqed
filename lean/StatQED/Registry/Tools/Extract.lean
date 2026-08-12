@@ -1,4 +1,5 @@
 import StatQED.Registry.Closure
+import StatQED.Registry.Tests.LiveFixtures
 import StatQED.Registry.Tests.Smoke
 
 /-! Emit the live, typed proposition and closure observation. -/
@@ -51,9 +52,13 @@ elab "#statqed_registry_extract" : command => do
       ("proof_subject_version", .str StatQED.Registry.normalizerVersion),
       ("proposition", proposition)
     ]
+  let liveFixtures ← match StatQED.Registry.Tests.LiveFixtures.report environment with
+    | .ok value => pure value
+    | .error reason => throwError "failed to generate live registry fixtures: {reason}"
   let report := Json.mkObj [
     ("declarations", .arr records),
-    ("schema", .str "statqed.registry-lean-observation.v0")
+    ("live_fixtures", liveFixtures),
+    ("schema", .str "statqed.registry-lean-observation.v1")
   ]
   IO.println "STATQED_REGISTRY_EXTRACT_BEGIN"
   IO.println report.compress

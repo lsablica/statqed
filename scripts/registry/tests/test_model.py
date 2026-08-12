@@ -56,6 +56,21 @@ class ModelTests(unittest.TestCase):
             with self.subTest(expression=expression):
                 self.assertEqual(model.normalize_expr(expression, level_params=params), expression)
 
+    def test_expression_and_level_depth_boundaries(self):
+        expression = [2, [[0, "x"]], []]
+        for _ in range(model.LIMITS["expression_depth"]):
+            expression = [3, [2, [[0, "f"]], []], expression]
+        self.assertEqual(model.normalize_expr(expression), expression)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([3, [2, [[0, "f"]], []], expression])
+
+        level = [0]
+        for _ in range(model.LIMITS["level_depth"]):
+            level = [1, level]
+        self.assertEqual(model.normalize_expr([1, level]), [1, level])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([1, [1, level]])
+
     def test_normalizer_structural_boundaries_accept_maximum_and_reject_one_over(self):
         universes = [[0]] * model.LIMITS["universe_arguments"]
         self.assertEqual(
@@ -106,6 +121,16 @@ class ModelTests(unittest.TestCase):
         }
         self.assertEqual([item["name"] for item in model.closure(["z"], declarations)], ["a", "z"])
 
+    def test_closure_uses_canonical_name_bytes_not_text_order(self):
+        declarations = {
+            "aa": {"kind": "definition", "references": []},
+            "b": {"kind": "definition", "references": []},
+        }
+        self.assertEqual(
+            [item["name"] for item in model.closure(["aa", "b"], declarations)],
+            ["b", "aa"],
+        )
+
     def test_closure_missing_rejected(self):
         with self.assertRaisesRegex(model.RegistryError, "registry.missing_dependency"):
             model.closure(["x"], {})
@@ -128,6 +153,20 @@ class ModelTests(unittest.TestCase):
         graph["over"] = {"references": []}
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
             model.closure(["root"], graph)
+
+    def test_closure_depth_boundary(self):
+        accepted = {
+            f"n{index}": {
+                "references": [] if index == model.LIMITS["closure_depth"] else [f"n{index + 1}"]
+            }
+            for index in range(model.LIMITS["closure_depth"] + 1)
+        }
+        self.assertEqual(len(model.closure(["n0"], accepted)), len(accepted))
+        rejected = copy.deepcopy(accepted)
+        rejected[f"n{model.LIMITS['closure_depth']}"]["references"] = ["over"]
+        rejected["over"] = {"references": []}
+        with self.assertRaisesRegex(model.RegistryError, "registry.closure_depth_limit"):
+            model.closure(["n0"], rejected)
 
     def test_closure_unit_boundary_has_no_off_by_one_escape(self):
         maximum = model.LIMITS["closure_units"]
@@ -163,6 +202,7 @@ class ModelTests(unittest.TestCase):
 
     def test_revocation_dominates(self):
         policy = copy.deepcopy(self.policy)
+        policy["current_permitted_roots"] = []
         policy["revoked_roots"] = [self.bundle["requested_root"]]
         with self.assertRaisesRegex(model.RegistryError, "registry.authorization_root_revoked"):
             model.verify_bundle(copy.deepcopy(self.bundle), policy)
@@ -180,11 +220,59 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.authorization_root_historical_forbidden"):
             model.verify_bundle(copy.deepcopy(self.bundle), policy)
 
+    def test_authorization_root_classes_must_be_pairwise_disjoint(self):
+        for field in (
+            "historical_permitted_roots",
+            "historical_forbidden_roots",
+            "revoked_roots",
+        ):
+            with self.subTest(field=field):
+                policy = copy.deepcopy(self.policy)
+                policy[field].append(self.bundle["requested_root"])
+                with self.assertRaisesRegex(
+                    model.RegistryError, "registry.authorization_policy_unsupported"
+                ):
+                    model.verify_bundle(copy.deepcopy(self.bundle), policy)
+
     def test_forged_metadata_rejected(self):
         bundle = copy.deepcopy(self.bundle)
         bundle["record"]["maturity"] = "Stable"
         with self.assertRaisesRegex(model.RegistryError, "registry.record_digest_mismatch"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+    def test_reauthorized_self_consistent_record_forgery_is_rejected(self):
+        mutations = {
+            "declaration": "StatQED.Registry.Tests.forged",
+            "normalizer": "statqed.lean-expr.v999",
+            "closure": "statqed.lean-environment-closure.v999",
+            "version": "9.9.9",
+            "source_anchor": "forged/source.md",
+            "attribution": "forged attribution",
+            "nonclaims": ["forged public theorem claim"],
+            "axiom_report_digest": "44" * 32,
+        }
+        for field, value in mutations.items():
+            with self.subTest(field=field):
+                bundle = copy.deepcopy(self.bundle)
+                policy = copy.deepcopy(self.policy)
+                bundle["record"][field] = value
+                _, digest = model.digest_frame(
+                    "record", model.canonical_cbor(bundle["record"])
+                )
+                bundle["record_digest"] = digest
+                bundle["snapshot"] = {
+                    "schema": "statqed.registry-snapshot.v0",
+                    "records": [[bundle["record"]["id"], bundle["record"]["version"], digest]],
+                }
+                _, root = model.digest_frame(
+                    "snapshot", model.canonical_cbor(bundle["snapshot"])
+                )
+                bundle["requested_root"] = root
+                policy["current_permitted_roots"] = [root]
+                with self.assertRaisesRegex(
+                    model.RegistryError, "registry.record_digest_mismatch"
+                ):
+                    model.verify_bundle(bundle, policy)
 
     def test_forbidden_axiom_rejected(self):
         bundle = copy.deepcopy(self.bundle)

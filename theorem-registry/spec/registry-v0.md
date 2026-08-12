@@ -56,9 +56,10 @@ The verifier receives `statqed.registry-authorization.v0` policy independently
 of candidate bytes.  Disjoint local sets classify current permitted,
 historical permitted, historical forbidden, revoked, and unknown snapshot
 roots; revocation dominates.  The candidate cannot select policy or add a
-root.  Resolution recomputes the snapshot root, applies local policy, locates
-exactly one ID/version, compares canonical record bytes and digest, then checks
-proposition, closure, proof lock, axiom report and any compatibility lock.
+root. Resolution recomputes the snapshot root, applies local policy, locates
+exactly one ID/version, compares the full closed record against the
+verifier-selected `record_binding` and `record_digest`, then checks proposition,
+closure, proof lock, axiom report and any compatibility lock.
 An internally consistent replacement registry remains unauthorized.
 The composed Python verifier performs these canonical-byte and framing
 recomputations over the retained subjects. The standalone Rust operational

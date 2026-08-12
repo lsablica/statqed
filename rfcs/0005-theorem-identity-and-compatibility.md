@@ -95,6 +95,13 @@ This is the smallest closure supported by the retained referenced-definition,
 import, instance, missing-dependency, cycle, width, depth, and work mutations.
 Complete Mathlib/Lake/project material remains in the proof/build lock.
 
+Exact live fixtures cover every accepted expression constructor, declared
+universe and binder classes, metadata erasure, a selected project-local
+instance, full mutual-family material, canonical-CBOR name ordering, depth
+64/65, and exact work accounting. The independent Python lineage derives
+normalization, references, reachability, records, work, and result classes from
+typed Lean exports rather than accepting primary output as its oracle.
+
 ## Digest domains
 
 All domains use SHA-256 with the Accepted `statqed.digest-lp.v1` frame and
@@ -121,11 +128,12 @@ The only ID is visibly test-only.  Its source anchor is ADR-0011 and its
 original mathematical attribution is `not_applicable` because `True` is
 definitionally trivial.
 
-Trusted local policy supplies disjoint current-permitted,
+Trusted local policy supplies pairwise-disjoint current-permitted,
 historical-permitted, historical-forbidden, and revoked root sets. Revocation
-dominates.  Resolution recomputes the snapshot root, applies the selected local
-policy, locates exactly one ID/version, compares canonical record bytes and
-digest, then checks proposition, closure, proof lock, axiom report, and any
+dominates. Resolution recomputes the snapshot root, applies the selected local
+policy, locates exactly one ID/version, compares every closed record field and
+its digest against verifier-selected bindings, then checks proposition,
+closure, proof lock, axiom report, and any
 compatibility lock.  Candidate-provided policy is ignored.  An internally
 consistent whole-registry replacement remains unknown or forbidden.
 
@@ -186,13 +194,15 @@ maximum and one over it: 1 MiB input/object, 2 MiB output, 16 parser fixture
 entries (one published), expression depth 256/nodes 65,536, level depth 64,
 closure width 256/units 1,024/depth 64/work 1,000,000, 128-byte identifiers,
 256 axioms, 32 compatibility edges/path length one, and 4 KiB diagnostics.
+Depth counts dependency or constructor edges from a root at depth zero.
 
 ## Evidence and implementation independence
 
 The primary extractor reads the live pinned Lean environment and emits typed
 expressions, kind-specific closure, proof subjects, and axiom observations.  A
 separate standard-library Python oracle independently implements the expression
-grammar, environment-closure walk/canonicalization, CBOR encoder, and six digest frames without importing the primary
+grammar, environment-closure walk/canonicalization, CBOR encoder, and six digest
+frames without importing the primary
 normalizer, Rust resolver, or SQ-0005 oracle.  A standalone std-only Rust
 workspace performs bounded offline binding resolution under verifier-selected
 policy; it is not a second canonical-byte parser.

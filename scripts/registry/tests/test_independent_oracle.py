@@ -106,7 +106,7 @@ class IndependentOracleTests(unittest.TestCase):
             oracle.normalize_expression(expression, level_parameters=[alpha]),
             [2, [[0, "SortFixture"]], [[2, [1, [0]], [3, [4, 0], [0]]]]],
         )
-        with self.assertRaisesRegex(oracle.OracleError, "registry.missing_dependency"):
+        with self.assertRaisesRegex(oracle.OracleError, "registry.normalization_failure"):
             oracle.normalize_expression(expression)
 
     def test_metadata_binder_names_and_let_nondep_are_erased(self):
@@ -161,7 +161,7 @@ class IndependentOracleTests(unittest.TestCase):
             ({"tag": "constant", "name": name("X")}, "registry.normalization_failure"),
             ({"tag": "free_variable"}, "registry.expression_unsupported"),
             ({"tag": "literal", "kind": "float", "value": "1.0"}, "registry.expression_unsupported"),
-            ({"tag": "constant", "name": name("X"), "universes": [{"tag": "parameter", "name": name("u")}]}, "registry.missing_dependency"),
+            ({"tag": "constant", "name": name("X"), "universes": [{"tag": "parameter", "name": name("u")}]}, "registry.normalization_failure"),
             ({"tag": "literal", "kind": "string", "value": "x" * (oracle.LIMITS["string_literal_bytes"] + 1)}, "registry.resource_limit"),
         )
         for expression, code in cases:

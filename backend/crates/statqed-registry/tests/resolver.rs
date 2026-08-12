@@ -198,6 +198,33 @@ fn candidate_cannot_select_policy_or_replacement_root() {
 }
 
 #[test]
+fn authorization_root_classes_must_be_pairwise_disjoint() {
+    let policies = [
+        {
+            let mut trusted = policy();
+            trusted.historical_permitted_roots.push(A.to_owned());
+            trusted
+        },
+        {
+            let mut trusted = policy();
+            trusted.historical_forbidden_roots.push(A.to_owned());
+            trusted
+        },
+        {
+            let mut trusted = policy();
+            trusted.revoked_roots.push(A.to_owned());
+            trusted
+        },
+    ];
+    for trusted in policies {
+        assert_eq!(
+            resolve(&record(), &trusted),
+            Err(ErrorCode::AuthorizationPolicyUnsupported)
+        );
+    }
+}
+
+#[test]
 fn governed_record_and_distinct_identity_layers_are_checked() {
     let mutations: &[RecordMutation] = &[
         (

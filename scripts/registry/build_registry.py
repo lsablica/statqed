@@ -122,6 +122,454 @@ def expr_array(value: dict[str, Any], params: list[list[Any]] | None = None) -> 
     raise RuntimeError(f"unsupported Lean expression observation: {tag!r}")
 
 
+def name_json(segments: list[list[Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {"tag": "anonymous"}
+    for kind, segment in segments:
+        value = {
+            "parent": value,
+            "segment": segment,
+            "tag": "string" if kind == 0 else "numeric",
+        }
+    return value
+
+
+def semantic_expr_json(value: list[Any], params: list[dict[str, Any]]) -> dict[str, Any]:
+    tag = value[0]
+
+    def level_json(level: list[Any]) -> dict[str, Any]:
+        level_tag = level[0]
+        if level_tag == 0:
+            return {"tag": "zero"}
+        if level_tag == 1:
+            return {"level": level_json(level[1]), "tag": "succ"}
+        if level_tag in (2, 3):
+            return {
+                "left": level_json(level[1]),
+                "right": level_json(level[2]),
+                "tag": "max" if level_tag == 2 else "imax",
+            }
+        if level_tag == 4 and 0 <= level[1] < len(params):
+            return {"name": params[level[1]], "tag": "parameter"}
+        raise RuntimeError("invalid independent semantic level")
+
+    if tag == 0:
+        return {"index": value[1], "tag": "bound_variable"}
+    if tag == 1:
+        return {"level": level_json(value[1]), "tag": "sort"}
+    if tag == 2:
+        return {
+            "name": name_json(value[1]),
+            "tag": "constant",
+            "universes": [level_json(item) for item in value[2]],
+        }
+    if tag == 3:
+        return {
+            "argument": semantic_expr_json(value[2], params),
+            "function": semantic_expr_json(value[1], params),
+            "tag": "application",
+        }
+    binder = {0: "explicit", 1: "implicit", 2: "strict_implicit", 3: "instance_implicit"}
+    if tag in (4, 5):
+        return {
+            "binder_info": binder[value[1]],
+            "body": semantic_expr_json(value[3], params),
+            "tag": "lambda" if tag == 4 else "forall",
+            "type": semantic_expr_json(value[2], params),
+        }
+    if tag == 6:
+        return {
+            "body": semantic_expr_json(value[3], params),
+            "tag": "let",
+            "type": semantic_expr_json(value[1], params),
+            "value": semantic_expr_json(value[2], params),
+        }
+    if tag == 7:
+        return {"kind": "natural", "tag": "literal", "value": str(value[1])}
+    if tag == 8:
+        return {"kind": "string", "tag": "literal", "value": value[1]}
+    if tag == 9:
+        return {
+            "index": value[2],
+            "structure": semantic_expr_json(value[3], params),
+            "tag": "projection",
+            "type_name": name_json(value[1]),
+        }
+    raise RuntimeError(f"unsupported independent semantic expression tag: {tag!r}")
+
+
+def independently_normalized_expr(
+    typed: dict[str, Any], level_parameters: list[dict[str, Any]]
+) -> dict[str, Any]:
+    semantic = independent_oracle.normalize_expression(
+        typed, level_parameters=level_parameters
+    )
+    return semantic_expr_json(semantic, level_parameters)
+
+
+def independent_name_key(value: dict[str, Any]) -> bytes:
+    return independent_oracle.canonical_cbor(name_segments(value))
+
+
+def expression_references(value: dict[str, Any]) -> list[dict[str, Any]]:
+    found: dict[bytes, dict[str, Any]] = {}
+
+    def add(name: dict[str, Any]) -> None:
+        found[independent_name_key(name)] = name
+
+    def visit(expression: dict[str, Any]) -> None:
+        tag = expression["tag"]
+        if tag == "constant":
+            add(expression["name"])
+        elif tag == "projection":
+            add(expression["type_name"])
+            visit(expression["structure"])
+        elif tag == "application":
+            visit(expression["function"])
+            visit(expression["argument"])
+        elif tag in {"lambda", "forall"}:
+            visit(expression["type"])
+            visit(expression["body"])
+        elif tag == "let":
+            visit(expression["type"])
+            visit(expression["value"])
+            visit(expression["body"])
+        elif tag == "metadata":
+            visit(expression["expression"])
+
+    visit(value)
+    return [found[key] for key in sorted(found)]
+
+
+def independently_normalized_closure_unit(raw: dict[str, Any]) -> dict[str, Any]:
+    result = {key: value for key, value in raw.items() if key not in {"type", "body", "members", "recursors"}}
+    params = raw["level_parameters"]
+    result["type"] = independently_normalized_expr(raw["type"], params)
+    result["body"] = None if raw["body"] is None else independently_normalized_expr(raw["body"], params)
+    references = expression_references(raw["type"])
+    if raw["body"] is not None:
+        references.extend(expression_references(raw["body"]))
+
+    if raw["kind"] == "inductive_family":
+        members = []
+        for member in raw["members"]:
+            member_params = member["level_parameters"]
+            converted_member = {key: value for key, value in member.items() if key not in {"type", "constructors"}}
+            converted_member["type"] = independently_normalized_expr(member["type"], member_params)
+            references.extend(expression_references(member["type"]))
+            constructors = []
+            for constructor in member["constructors"]:
+                constructor_params = constructor["level_parameters"]
+                converted_constructor = {
+                    key: value for key, value in constructor.items()
+                    if key not in {"type", "level_parameters"}
+                }
+                converted_constructor["type"] = independently_normalized_expr(
+                    constructor["type"], constructor_params
+                )
+                constructors.append(converted_constructor)
+                references.append(constructor["name"])
+                references.extend(expression_references(constructor["type"]))
+            converted_member["constructors"] = constructors
+            members.append(converted_member)
+            references.append(member["name"])
+        recursors = []
+        for recursor in raw["recursors"]:
+            recursor_params = recursor["level_parameters"]
+            converted_recursor = {
+                key: value for key, value in recursor.items()
+                if key not in {"type", "rules", "level_parameters"}
+            }
+            converted_recursor["type"] = independently_normalized_expr(
+                recursor["type"], recursor_params
+            )
+            references.append(recursor["name"])
+            references.extend(recursor["family"])
+            references.extend(expression_references(recursor["type"]))
+            rules = []
+            for rule in recursor["rules"]:
+                converted_rule = dict(rule)
+                converted_rule["rhs"] = independently_normalized_expr(
+                    rule["rhs"], recursor_params
+                )
+                rules.append(converted_rule)
+                references.append(rule["constructor"])
+                references.extend(expression_references(rule["rhs"]))
+            converted_recursor["rules"] = rules
+            recursors.append(converted_recursor)
+        result["members"] = members
+        result["recursors"] = recursors
+
+    unique_references = {independent_name_key(name): name for name in references}
+    result["references"] = [unique_references[key] for key in sorted(unique_references)]
+    return result
+
+
+def typed_expression_visits(value: dict[str, Any]) -> int:
+    """Count the expression/level visits defined by closure-v0."""
+
+    def level_visits(level: dict[str, Any]) -> int:
+        tag = level["tag"]
+        if tag in {"zero", "parameter"}:
+            return 1
+        if tag == "succ":
+            return 1 + level_visits(level["level"])
+        if tag in {"max", "imax"}:
+            return 1 + level_visits(level["left"]) + level_visits(level["right"])
+        raise RuntimeError(f"unsupported typed level for work accounting: {tag!r}")
+
+    tag = value["tag"]
+    if tag in {"bound_variable", "literal"}:
+        return 1
+    if tag == "sort":
+        return 1 + level_visits(value["level"])
+    if tag == "constant":
+        return 1 + sum(level_visits(level) for level in value["universes"])
+    if tag == "application":
+        return 1 + typed_expression_visits(value["function"]) + typed_expression_visits(value["argument"])
+    if tag in {"lambda", "forall"}:
+        return 1 + typed_expression_visits(value["type"]) + typed_expression_visits(value["body"])
+    if tag == "let":
+        return (
+            1
+            + typed_expression_visits(value["type"])
+            + typed_expression_visits(value["value"])
+            + typed_expression_visits(value["body"])
+        )
+    if tag == "projection":
+        return 1 + typed_expression_visits(value["structure"])
+    if tag == "metadata":
+        # The v0 normalizer erases mdata before counting a semantic node.
+        return typed_expression_visits(value["expression"])
+    raise RuntimeError(f"unsupported typed expression for work accounting: {tag!r}")
+
+
+def typed_unit_expression_visits(unit: dict[str, Any]) -> int:
+    # The atomic family `members` list already includes the root member type;
+    # non-family units count their top-level type directly.
+    visits = 0 if unit["kind"] == "inductive_family" else typed_expression_visits(unit["type"])
+    if unit["body"] is not None:
+        visits += typed_expression_visits(unit["body"])
+    if unit["kind"] == "inductive_family":
+        for member in unit["members"]:
+            visits += typed_expression_visits(member["type"])
+            visits += sum(
+                typed_expression_visits(constructor["type"])
+                for constructor in member["constructors"]
+            )
+        for recursor in unit["recursors"]:
+            visits += typed_expression_visits(recursor["type"])
+            visits += sum(
+                typed_expression_visits(rule["rhs"])
+                for rule in recursor["rules"]
+            )
+    return visits
+
+
+def derive_live_closure(
+    roots: list[dict[str, Any]], typed_units: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], int, int]:
+    """Independently derive reachability, canonical units, and work counters."""
+
+    units: dict[bytes, dict[str, Any]] = {}
+    aliases: dict[bytes, bytes] = {}
+    normalized: dict[bytes, dict[str, Any]] = {}
+    for unit in typed_units:
+        unit_key = independent_name_key(unit["name"])
+        if unit_key in units:
+            raise RuntimeError("duplicate live typed closure unit")
+        units[unit_key] = unit
+        normalized[unit_key] = independently_normalized_closure_unit(unit)
+        owned = [unit["name"]]
+        if unit["kind"] == "inductive_family":
+            owned.extend(unit["family"])
+            for member in unit["members"]:
+                owned.append(member["name"])
+                owned.extend(constructor["name"] for constructor in member["constructors"])
+            owned.extend(recursor["name"] for recursor in unit["recursors"])
+        for alias in owned:
+            alias_key = independent_name_key(alias)
+            previous = aliases.get(alias_key)
+            if previous is not None and previous != unit_key:
+                raise RuntimeError("live closure alias belongs to multiple atomic units")
+            aliases[alias_key] = unit_key
+
+    reached: set[bytes] = set()
+    active: set[bytes] = set()
+    attempted_edges = 0
+
+    def visit(name: dict[str, Any], depth: int) -> None:
+        nonlocal attempted_edges
+        name_key = independent_name_key(name)
+        unit_key = aliases.get(name_key)
+        if unit_key is None or unit_key not in units:
+            raise RuntimeError("independent live closure has a missing dependency")
+        if unit_key in reached:
+            return
+        if unit_key in active:
+            raise RuntimeError("independent live closure has a non-family cycle")
+        if depth > 64:
+            raise RuntimeError("independent live closure exceeds depth")
+        active.add(unit_key)
+        # Production charges every attempted reference before duplicate/self
+        # suppression.  Mirror that rule independently.
+        for reference in normalized[unit_key]["references"]:
+            attempted_edges += 1
+            reference_key = independent_name_key(reference)
+            if aliases.get(reference_key) == unit_key:
+                continue
+            if aliases.get(reference_key) in reached:
+                continue
+            visit(reference, depth + 1)
+        active.remove(unit_key)
+        reached.add(unit_key)
+
+    for root in sorted(roots, key=independent_name_key):
+        visit(root, 0)
+    if reached != set(units):
+        raise RuntimeError("live closure contains unreachable or extra typed units")
+    expression_visits = sum(typed_unit_expression_visits(units[key]) for key in reached)
+    work = expression_visits + len(reached) + attempted_edges
+    return [normalized[key] for key in sorted(reached)], expression_visits, work
+
+
+def validate_live_fixtures(observation: dict[str, Any]) -> dict[str, Any]:
+    live = observation["live_fixtures"]
+    expression_results = []
+    required_typed_tags = {
+        "LIVE-LAMBDA-CONSTRUCTOR": "lambda",
+        "LIVE-LET-CONSTRUCTOR": "let",
+        "LIVE-METADATA-ERASURE": "metadata",
+        "LIVE-PROJECTION-CONSTRUCTOR": "projection",
+    }
+
+    def contains_typed_tag(value: Any, tag: str) -> bool:
+        if isinstance(value, dict):
+            return value.get("tag") == tag or any(
+                contains_typed_tag(child, tag) for child in value.values()
+            )
+        if isinstance(value, list):
+            return any(contains_typed_tag(child, tag) for child in value)
+        return False
+
+    for fixture in live["expression_fixtures"]:
+        expected = fixture["expected"]
+        required_tag = required_typed_tags.get(fixture["fixture_id"])
+        if required_tag is not None and not contains_typed_tag(fixture["typed_expression"], required_tag):
+            raise RuntimeError(
+                f"live typed fixture omitted required constructor: {fixture['fixture_id']}:{required_tag}"
+            )
+        try:
+            independent = independent_oracle.observe(
+                fixture["typed_expression"],
+                level_parameters=fixture["level_parameters"],
+            )
+        except independent_oracle.OracleError as error:
+            if expected != "rejected" or error.code != "registry.resource_limit":
+                raise RuntimeError(
+                    f"independent live fixture mismatch: {fixture['fixture_id']}:{error.code}"
+                ) from error
+            expression_results.append({
+                "classification": "rejected",
+                "code": error.code,
+                "fixture_id": fixture["fixture_id"],
+            })
+            continue
+        if expected != "accepted":
+            raise RuntimeError(f"independent oracle accepted rejected live fixture: {fixture['fixture_id']}")
+        parameters = [name_segments(name) for name in fixture["level_parameters"]]
+        primary = expr_array(fixture["normalized"]["expression"], parameters)
+        if independent["normalized_expression"] != primary:
+            raise RuntimeError(f"independent oracle disagrees on live fixture: {fixture['fixture_id']}")
+        expression_results.append({
+            "classification": "accepted",
+            "fixture_id": fixture["fixture_id"],
+            "payload_sha256": sha256(bytes.fromhex(independent["payload_hex"])),
+        })
+
+    closure_results = []
+    for fixture in live["closure_fixtures"]:
+        observed = fixture["observation"]
+        independent_records, expression_visits, work = derive_live_closure(
+            observed["roots"], observed["typed_units"]
+        )
+        if independent_records != observed["records"]:
+            raise RuntimeError(f"independent oracle disagrees on live closure: {fixture['fixture_id']}")
+        if expression_visits != observed["expression_level_visits"] or work != observed["work"]:
+            raise RuntimeError(f"independent work accounting disagrees: {fixture['fixture_id']}")
+        payload = independent_oracle.environment_payload_from_records(
+            independent_records, LEAN_COMMIT
+        )
+        closure_results.append({
+            "fixture_id": fixture["fixture_id"],
+            "payload_sha256": sha256(payload),
+            "record_count": len(independent_records),
+            "work": work,
+        })
+        record_names = {independent_name_key(record["name"]) for record in independent_records}
+        for required in fixture.get("required_units", []):
+            if independent_name_key(required) not in record_names:
+                raise RuntimeError(
+                    f"live closure omitted required selected dependency: {fixture['fixture_id']}"
+                )
+    by_fixture = {item["fixture_id"]: item for item in expression_results}
+    if (
+        by_fixture["LIVE-METADATA-BASE"].get("payload_sha256")
+        != by_fixture["LIVE-METADATA-ERASURE"].get("payload_sha256")
+    ):
+        raise RuntimeError("live metadata erasure changed normalized bytes")
+
+    depth_boundary = live["depth_boundary"]
+    accepted_depth = depth_boundary["accepted"]
+    accepted_records, accepted_visits, accepted_work = derive_live_closure(
+        accepted_depth["roots"], accepted_depth["typed_units"]
+    )
+    if (
+        accepted_records != accepted_depth["records"]
+        or accepted_visits != accepted_depth["expression_level_visits"]
+        or accepted_work != accepted_depth["work"]
+    ):
+        raise RuntimeError("independent live closure depth-max observation disagrees")
+    over_units = [*accepted_depth["typed_units"], depth_boundary["over_typed_unit"]]
+    try:
+        derive_live_closure([depth_boundary["over_root"]], over_units)
+    except RuntimeError as error:
+        if str(error) != "independent live closure exceeds depth":
+            raise
+    else:
+        raise RuntimeError("independent oracle accepted live closure one over depth")
+    if depth_boundary["over_code"] != "registry.closure.depth_limit":
+        raise RuntimeError("primary live closure one-over depth error drifted")
+    work_boundary = live["work_boundary"]
+    root_key = independent_name_key(work_boundary["root"])
+    matching = next(
+        fixture for fixture in live["closure_fixtures"]
+        if [independent_name_key(root) for root in fixture["observation"]["roots"]] == [root_key]
+    )
+    _, boundary_visits, boundary_work = derive_live_closure(
+        matching["observation"]["roots"], matching["observation"]["typed_units"]
+    )
+    if (
+        boundary_visits != work_boundary["expression_level_visits"]
+        or boundary_work != work_boundary["required_work"]
+        or work_boundary["one_under_limit"] + 1 != boundary_work
+        or not work_boundary["accepted_at_required"]
+        or work_boundary["one_under_code"] != "registry.closure.work_budget_limit"
+    ):
+        raise RuntimeError("independent work-boundary accounting disagrees")
+    return {
+        "closure_fixtures": closure_results,
+        "depth_boundary": {
+            "accepted_record_count": len(accepted_records),
+            "classification_at_max": "accepted",
+            "classification_one_over": "rejected",
+            "one_over_code": depth_boundary["over_code"],
+        },
+        "expression_fixtures": expression_results,
+        "schema": "statqed.registry-live-independent-comparison.v0",
+        "work_boundary": work_boundary,
+    }
+
+
 def project_source_manifest() -> list[dict[str, str]]:
     return [
         {"path": str(path.relative_to(ROOT)), "sha256": sha256(path.read_bytes())}
@@ -149,13 +597,24 @@ def outputs() -> dict[Path, bytes]:
         raise RuntimeError("live Lean observation used an unsupported normalizer version")
     if target.get("closure_version") != "statqed.lean-environment-closure.v0":
         raise RuntimeError("live Lean observation used an unsupported closure version")
-    proposition_value = ["statqed.lean-expr.v0", expr_array(target["proposition"]["expression"])]
-    refactor_value = ["statqed.lean-expr.v0", expr_array(refactor["proposition"]["expression"])]
+    target_parameters = [name_segments(name) for name in target["proposition"]["level_parameters"]]
+    refactor_parameters = [name_segments(name) for name in refactor["proposition"]["level_parameters"]]
+    proposition_value = [
+        "statqed.lean-expr.v0",
+        expr_array(target["proposition"]["expression"], target_parameters),
+    ]
+    refactor_value = [
+        "statqed.lean-expr.v0",
+        expr_array(refactor["proposition"]["expression"], refactor_parameters),
+    ]
     if proposition_value != refactor_value:
         raise RuntimeError("proof-only refactor changed canonical proposition")
     proposition_bytes = canonical_cbor(proposition_value)
     proposition_frame, proposition_digest = digest_frame("proposition", proposition_bytes)
-    independent = independent_oracle.observe(target["proposition"]["expression"])
+    independent = independent_oracle.observe(
+        target["proposition"]["expression"],
+        level_parameters=target["proposition"]["level_parameters"],
+    )
     if independent["payload_hex"] != proposition_bytes.hex():
         raise RuntimeError("independent oracle disagrees on canonical proposition bytes")
     if independent["digests"]["proposition"]["digest"] != proposition_digest:
@@ -193,6 +652,7 @@ def outputs() -> dict[Path, bytes]:
         "payload_hex": independent_environment_bytes.hex(),
         "record_count": len(target["closure"]),
     }
+    independent["live_fixtures"] = validate_live_fixtures(observation)
 
     axiom_records = axioms["declarations"]
     target_axioms = next(item for item in axiom_records if item["declaration"] == target["declaration"])
@@ -219,7 +679,7 @@ def outputs() -> dict[Path, bytes]:
         "kind": target["kind"],
         "proposition_digest": proposition_digest,
         "environment_digest": environment_digest,
-        "proof_subject": expr_array(target["proof_subject"]),
+        "proof_subject": expr_array(target["proof_subject"], target_parameters),
         "axiom_report_sha256": axiom_digest,
         "kernel_check": {
             "project_axiom_report_sha256": project_axiom_digest,
@@ -235,7 +695,7 @@ def outputs() -> dict[Path, bytes]:
 
     refactor_lock = copy_without = dict(proof_lock)
     copy_without["declaration"] = refactor["declaration"]
-    copy_without["proof_subject"] = expr_array(refactor["proof_subject"])
+    copy_without["proof_subject"] = expr_array(refactor["proof_subject"], refactor_parameters)
     _, refactor_digest = digest_frame("proof_build", canonical_cbor(copy_without))
     if refactor_digest == proof_digest:
         raise RuntimeError("proof-only refactor did not change proof/build lock")
@@ -246,8 +706,14 @@ def outputs() -> dict[Path, bytes]:
         "new_proposition": "False",
         "old_proposition_digest": proposition_digest,
         "declaration": compatibility_source["declaration"],
-        "normalized_type": expr_array(compatibility_source["proposition"]["expression"]),
-        "proof_subject": expr_array(compatibility_source["proof_subject"]),
+        "normalized_type": expr_array(
+            compatibility_source["proposition"]["expression"],
+            [name_segments(name) for name in compatibility_source["proposition"]["level_parameters"]],
+        ),
+        "proof_subject": expr_array(
+            compatibility_source["proof_subject"],
+            [name_segments(name) for name in compatibility_source["proposition"]["level_parameters"]],
+        ),
         "axioms": [],
         "universe_instantiations": {"new": [], "old": []},
         "path_length": 1,
@@ -292,6 +758,8 @@ def outputs() -> dict[Path, bytes]:
         "historical_forbidden_roots": ["22" * 32],
         "revoked_roots": ["33" * 32],
         "compatibility_digest": compatibility_digest,
+        "record_binding": record,
+        "record_digest": record_digest,
         "selection": "verifier_local_only",
     }
     bundle = {

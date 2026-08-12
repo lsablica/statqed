@@ -63,6 +63,12 @@ failures. Stable `registry.*` codes contain no timestamps, random values, host
 paths, locale text, or dependency debug strings. Limits are tested at accepted
 and one-over boundaries.
 
+The live differential path retains typed Lean inputs separately from primary
+normalized output. It checks all accepted constructors, selected-instance and
+mutual-family closure, canonical-CBOR name ordering, exact depth boundaries,
+and independently recomputed work. Rejected expression/closure fixtures compare
+both stable result class and stable code across lineages.
+
 ## Supply chain and platform
 
 The Rust workspace contains only its unpublished local package, so Cargo.lock

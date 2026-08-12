@@ -52,8 +52,8 @@ proposition-digest, environment-digest)`.
 
 ## Limits
 
-- expression depth: 256;
-- level depth: 64;
+- expression depth: 256 constructor edges from a root at depth zero;
+- level depth: 64 constructor edges from a root at depth zero;
 - total expression and level nodes: 65,536;
 - universe arguments: 256 per constant;
 - name segments: 64;
@@ -67,6 +67,13 @@ Each boundary is checked before allocation or recursion crosses it.  A limit
 failure is `registry.resource_limit`; an unsupported or ill-scoped expression
 is `registry.normalization_failure` or `registry.expression_unsupported` as
 recorded by the conformance fixture.
+
+The retained live comparison exports independently consumable typed trees from
+the pinned Lean runtime. It covers every accepted constructor, all four binder
+classes, declared universes, metadata erasure, and exact maximum/one-over
+expression and level depths. The Python oracle derives its own bytes and result
+class from those typed trees; it does not consume the primary normalized bytes
+as expected truth.
 
 ## Examples and nonexamples
 

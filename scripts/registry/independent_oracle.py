@@ -26,7 +26,7 @@ GRAMMAR_ID: Final = "statqed.lean-expr.v0"
 PROFILE_ID: Final = "statqed.cbor-core.v1"
 FRAMING_ID: Final = "statqed.digest-lp.v1"
 ALGORITHM_ID: Final = "sha-256"
-OBSERVATION_ID: Final = "statqed.registry-independent-observation.v0"
+OBSERVATION_ID: Final = "statqed.registry-independent-observation.v1"
 DIGEST_MAGIC: Final = b"StatQED-Digest\x00"
 
 DIGEST_DOMAINS: Final[dict[str, tuple[str, str]]] = {
@@ -202,7 +202,7 @@ def _level(
         try:
             index = parameter_names.index(projected)
         except ValueError as exc:
-            raise OracleError("registry.missing_dependency") from exc
+            raise OracleError("registry.normalization_failure") from exc
         return [4, index]
     if tag == "metavariable":
         raise OracleError("registry.expression_unsupported")
@@ -400,8 +400,10 @@ def normalize_semantic_expression(
     budget = _Budget()
 
     def semantic_name(value: Any) -> list[list[Any]]:
-        if not isinstance(value, list) or not value or len(value) > LIMITS["name_segments"]:
+        if not isinstance(value, list) or not value:
             raise OracleError("registry.normalization_failure")
+        if len(value) > LIMITS["name_segments"]:
+            raise OracleError("registry.resource_limit")
         total = 0
         result = []
         for segment in value:
@@ -519,6 +521,11 @@ def environment_closure(
     emitted: dict[str, dict[str, Any]] = {}
     work = 0
 
+    def name_key(name: str) -> bytes:
+        if not isinstance(name, str) or not name or any(not part for part in name.split(".")):
+            raise OracleError("registry.normalization_failure")
+        return canonical_cbor([[0, part] for part in name.split(".")])
+
     def visit(name: str, depth: int) -> None:
         nonlocal work
         work += 1
@@ -541,14 +548,14 @@ def environment_closure(
         if any(not isinstance(reference, str) for reference in references):
             raise OracleError("registry.normalization_failure")
         active.add(name)
-        for reference in sorted(references, key=lambda item: item.encode("utf-8")):
+        for reference in sorted(references, key=name_key):
             visit(reference, depth + 1)
         active.remove(name)
         emitted[name] = {key: value for key, value in declaration.items() if key != "references"}
 
-    for root in sorted(roots, key=lambda item: item.encode("utf-8")):
+    for root in sorted(roots, key=name_key):
         visit(root, 0)
-    return [dict(name=name, **emitted[name]) for name in sorted(emitted, key=lambda item: item.encode("utf-8"))]
+    return [dict(name=name, **emitted[name]) for name in sorted(emitted, key=name_key)]
 
 
 def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_commit: str) -> bytes:
@@ -559,7 +566,7 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
     encoded = [dict(record) for record in records]
 
     def observed_name_key(value: Any) -> bytes:
-        segments: list[bytes] = []
+        segments: list[list[Any]] = []
 
         def visit(current: Any) -> None:
             node = _object(current, fields={"tag"}, optional={"parent", "segment"})
@@ -570,16 +577,16 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
             visit(node["parent"])
             if node["tag"] == "string" and isinstance(node["segment"], str):
                 raw = node["segment"].encode("utf-8", "strict")
-                segments.append(b"s" + struct.pack(">I", len(raw)) + raw)
+                segments.append([0, node["segment"]])
             elif node["tag"] == "numeric":
-                segments.append(b"n" + struct.pack(">Q", _uint(node["segment"])))
+                segments.append([1, _uint(node["segment"])])
             else:
                 raise OracleError("registry.normalization_failure")
 
         visit(value)
         if not segments:
             raise OracleError("registry.normalization_failure")
-        return b"".join(segments)
+        return canonical_cbor(segments)
 
     names = [observed_name_key(record.get("name")) for record in encoded]
     if names != sorted(names) or len(set(names)) != len(names):

@@ -6,7 +6,7 @@
 
 #![forbid(unsafe_code)]
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::str;
 
 /// Registry format accepted by this resolver.
@@ -466,6 +466,7 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
     ] {
         validate_digest(digest)?;
     }
+    let mut classified_roots = BTreeSet::new();
     for root in policy
         .current_permitted_roots
         .iter()
@@ -474,6 +475,9 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         .chain(&policy.revoked_roots)
     {
         validate_digest(root)?;
+        if !classified_roots.insert(root) {
+            return Err(ErrorCode::AuthorizationPolicyUnsupported);
+        }
     }
     Ok(())
 }

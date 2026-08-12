@@ -74,6 +74,19 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_referenced_definition_mutation(self):
         self.assertIn("evidence.manifest_drift", self.append("lean/StatQED/Registry/Closure.lean"))
 
+    def test_import_environment_mutation_changes_bound_build_material(self):
+        errors = self.mutate(
+            "lean/StatQED/Registry/Tests/Smoke.lean",
+            lambda path: path.write_text(
+                path.read_text().replace(
+                    "import Mathlib.Data.Set.Defs\n",
+                    "import Mathlib.Data.Set.Defs\nimport Mathlib.Data.List.Basic\n",
+                    1,
+                )
+            ),
+        )
+        self.assertIn("evidence.manifest_drift", errors)
+
     def test_golden_replacement(self):
         self.assertIn("evidence.manifest_drift", self.append("conformance/registry/golden/PROP-TRUE.cbor"))
 

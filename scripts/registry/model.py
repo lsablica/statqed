@@ -116,7 +116,10 @@ def canonical_cbor(value: Any, *, _depth: int = 0, _state: list[int] | None = No
 
     if _state is None:
         _state = [0, 0]
-    if _depth > LIMITS["expression_depth"]:
+    # The expression grammar has its own exact depth bound.  Canonical payload
+    # containers add a small fixed envelope around that already-validated
+    # expression, so the generic encoder permits only that explicit overhead.
+    if _depth > LIMITS["expression_depth"] + 8:
         raise RegistryError("registry.resource_limit")
     _state[0] += 1
     if _state[0] > LIMITS["expression_nodes"]:
@@ -273,6 +276,11 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
     done: dict[str, dict[str, Any]] = {}
     work = 0
 
+    def name_key(name: str) -> bytes:
+        if not isinstance(name, str) or not name or any(not part for part in name.split(".")):
+            raise RegistryError("registry.normalization_failure")
+        return canonical_cbor([[0, part] for part in name.split(".")])
+
     def visit(name: str, depth: int) -> None:
         nonlocal work
         work += 1
@@ -293,16 +301,16 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
         if not isinstance(refs, list) or len(refs) > LIMITS["closure_width"]:
             raise RegistryError("registry.closure_width_limit")
         gray.add(name)
-        for reference in sorted(refs):
+        for reference in sorted(refs, key=name_key):
             if not isinstance(reference, str):
                 raise RegistryError("registry.normalization_failure")
             visit(reference, depth + 1)
         gray.remove(name)
         done[name] = {key: value for key, value in declaration.items() if key != "references"}
 
-    for root in sorted(root_names):
+    for root in sorted(root_names, key=name_key):
         visit(root, 0)
-    return [dict(name=name, **done[name]) for name in sorted(done)]
+    return [dict(name=name, **done[name]) for name in sorted(done, key=name_key)]
 
 
 def validate_identifier(value: Any) -> str:
@@ -318,6 +326,22 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         raise RegistryError("registry.resource_limit")
     if policy.get("policy_version") != "statqed.registry-authorization.v0":
         raise RegistryError("registry.authorization_policy_unsupported")
+    root_classes = []
+    for field in (
+        "current_permitted_roots",
+        "historical_permitted_roots",
+        "historical_forbidden_roots",
+        "revoked_roots",
+    ):
+        values = policy.get(field)
+        if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+            raise RegistryError("registry.authorization_policy_unsupported")
+        if len(values) != len(set(values)):
+            raise RegistryError("registry.authorization_policy_unsupported")
+        root_classes.append(set(values))
+    for index, left in enumerate(root_classes):
+        if any(left & right for right in root_classes[index + 1 :]):
+            raise RegistryError("registry.authorization_policy_unsupported")
     record = bundle.get("record")
     snapshot = bundle.get("snapshot")
     if not isinstance(record, dict) or not isinstance(snapshot, dict):
@@ -340,15 +364,22 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
     _, actual_record_digest = digest_frame("record", record_bytes)
     if actual_record_digest != bundle.get("record_digest"):
         raise RegistryError("registry.record_digest_mismatch")
+    # A locally permitted snapshot root is an authorization selector, not a
+    # license for a candidate to redefine the reviewed record.  Bind the full
+    # closed record and its digest in verifier-selected policy so that
+    # re-authorizing a self-consistent forged snapshot cannot change either
+    # mechanically extracted or governed fields.
+    if (
+        policy.get("record_digest") != actual_record_digest
+        or policy.get("record_binding") != record
+    ):
+        raise RegistryError("registry.record_digest_mismatch")
     snapshot_bytes = canonical_cbor(snapshot)
     _, root = digest_frame("snapshot", snapshot_bytes)
     requested = bundle.get("requested_root")
     if requested != root:
         raise RegistryError("registry.authorization_root_mismatch")
-    revoked = set(policy.get("revoked_roots", []))
-    current = set(policy.get("current_permitted_roots", []))
-    historical = set(policy.get("historical_permitted_roots", []))
-    forbidden = set(policy.get("historical_forbidden_roots", []))
+    current, historical, forbidden, revoked = root_classes
     if root in revoked:
         raise RegistryError("registry.authorization_root_revoked")
     if root in forbidden:

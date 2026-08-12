@@ -42,11 +42,26 @@ def read_json(path: Path) -> Any:
 
 
 def expanded(value: Any) -> Any:
+    if value == "@max-depth@":
+        expr: Any = [2, [[0, "x"]], []]
+        for _ in range(LIMITS["expression_depth"]):
+            expr = [3, [2, [[0, "f"]], []], expr]
+        return expr
     if value == "@over-depth@":
         expr: Any = [2, [[0, "x"]], []]
         for _ in range(LIMITS["expression_depth"] + 1):
             expr = [3, [2, [[0, "f"]], []], expr]
         return expr
+    if value == "@max-level-depth@":
+        level: Any = [0]
+        for _ in range(LIMITS["level_depth"]):
+            level = [1, level]
+        return [1, level]
+    if value == "@over-level-depth@":
+        level = [0]
+        for _ in range(LIMITS["level_depth"] + 1):
+            level = [1, level]
+        return [1, level]
     if value == "@over-name-segments@":
         return [2, [[0, "x"]] * 65, []]
     if value == "@over-width@":
@@ -57,6 +72,14 @@ def expanded(value: Any) -> Any:
             result[f"n{i}"] = {
                 "kind": "definition",
                 "references": [] if i == LIMITS["closure_depth"] + 1 else [f"n{i + 1}"],
+            }
+        return result
+    if value == "@max-closure-depth@":
+        result = {}
+        for i in range(LIMITS["closure_depth"] + 1):
+            result[f"n{i}"] = {
+                "kind": "definition",
+                "references": [] if i == LIMITS["closure_depth"] else [f"n{i + 1}"],
             }
         return result
     if value == "@max-string@":
@@ -98,12 +121,37 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["historical_forbidden_roots"] = [root]
     elif mutation == "policy_version":
         policy["policy_version"] = "statqed.registry-authorization.v999"
+    elif mutation == "policy_overlap":
+        policy["historical_permitted_roots"].append(root)
     elif mutation == "forged_id":
         bundle["record"]["id"] = "statqed.test-only.forged.v0"
         rebuild_bundle_record(bundle)
         policy["current_permitted_roots"] = [bundle["requested_root"]]
     elif mutation == "forged_maturity":
         bundle["record"]["maturity"] = "Stable"
+        rebuild_bundle_record(bundle)
+        policy["current_permitted_roots"] = [bundle["requested_root"]]
+    elif mutation in {
+        "forged_declaration",
+        "forged_normalizer",
+        "forged_closure",
+        "forged_version",
+        "forged_source_anchor",
+        "forged_attribution",
+        "forged_nonclaims",
+        "forged_axiom_report_digest",
+    }:
+        field, value = {
+            "forged_declaration": ("declaration", "StatQED.Registry.Tests.forged"),
+            "forged_normalizer": ("normalizer", "statqed.lean-expr.v999"),
+            "forged_closure": ("closure", "statqed.lean-environment-closure.v999"),
+            "forged_version": ("version", "9.9.9"),
+            "forged_source_anchor": ("source_anchor", "forged/source.md"),
+            "forged_attribution": ("attribution", "forged attribution"),
+            "forged_nonclaims": ("nonclaims", ["forged public theorem claim"]),
+            "forged_axiom_report_digest": ("axiom_report_digest", "44" * 32),
+        }[mutation]
+        bundle["record"][field] = value
         rebuild_bundle_record(bundle)
         policy["current_permitted_roots"] = [bundle["requested_root"]]
     elif mutation == "registry_replacement":
@@ -143,37 +191,80 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
     return bundle, policy
 
 
-def evaluate(case: dict[str, Any], bundle: dict[str, Any], policy: dict[str, Any]) -> tuple[str, str, bytes | None]:
+def evaluate(
+    case: dict[str, Any], bundle: dict[str, Any], policy: dict[str, Any]
+) -> tuple[str, str, bytes | None, str | None, str | None]:
     try:
         if case["kind"] == "expression":
             value = expanded(case["input"])
             if isinstance(value, list) and len(value) == 2 and value[0] == 8:
                 value = [8, expanded(value[1])]
-            normalized = normalize_expr(value, level_params=case.get("level_params"))
-            payload = canonical_cbor(["statqed.lean-expr.v0", normalized])
-            oracle_payload = independent_oracle.semantic_expression_payload(
-                value, level_parameter_count=len(case.get("level_params", []))
+            try:
+                normalized = normalize_expr(value, level_params=case.get("level_params"))
+                payload = canonical_cbor(["statqed.lean-expr.v0", normalized])
+                digest_frame("proposition", payload)
+                primary_classification, primary_code = "accepted", "accepted"
+            except RegistryError as error:
+                payload = None
+                primary_classification, primary_code = "rejected", error.code
+            try:
+                oracle_payload = independent_oracle.semantic_expression_payload(
+                    value, level_parameter_count=len(case.get("level_params", []))
+                )
+                oracle_classification, oracle_code = "accepted", "accepted"
+            except independent_oracle.OracleError as error:
+                oracle_payload = None
+                oracle_classification, oracle_code = "rejected", error.code
+            if (
+                primary_classification == "accepted"
+                and oracle_classification == "accepted"
+                and payload != oracle_payload
+            ):
+                oracle_code = "registry.proposition_mismatch"
+            return (
+                primary_classification,
+                primary_code,
+                payload,
+                oracle_classification,
+                oracle_code,
             )
-            if oracle_payload != payload:
-                raise RegistryError("registry.proposition_mismatch")
-            digest_frame("proposition", payload)
-            return "accepted", "accepted", payload
         if case["kind"] == "closure":
             roots = expanded(case["roots"])
             declarations = expanded(case["declarations"])
-            primary = closure(roots, declarations)
-            oracle = independent_oracle.environment_closure(roots, declarations)
-            if oracle != primary:
-                raise RegistryError("registry.environment_mismatch")
-            payload = canonical_cbor(["statqed.lean-environment-closure.v0", primary])
-            digest_frame("environment", payload)
-            return "accepted", "accepted", payload
+            try:
+                primary = closure(roots, declarations)
+                payload = canonical_cbor(["statqed.lean-environment-closure.v0", primary])
+                digest_frame("environment", payload)
+                primary_classification, primary_code = "accepted", "accepted"
+            except RegistryError as error:
+                primary = None
+                payload = None
+                primary_classification, primary_code = "rejected", error.code
+            try:
+                oracle = independent_oracle.environment_closure(roots, declarations)
+                oracle_classification, oracle_code = "accepted", "accepted"
+            except independent_oracle.OracleError as error:
+                oracle = None
+                oracle_classification, oracle_code = "rejected", error.code
+            if (
+                primary_classification == "accepted"
+                and oracle_classification == "accepted"
+                and primary != oracle
+            ):
+                oracle_code = "registry.environment_mismatch"
+            return (
+                primary_classification,
+                primary_code,
+                payload,
+                oracle_classification,
+                oracle_code,
+            )
         if case["kind"] == "bundle":
             candidate, selected_policy = mutate_bundle(bundle, policy, case["mutation"])
             if case["mutation"] == "compatibility_metadata":
                 raise RegistryError("registry.compatibility_missing")
             verify_bundle(candidate, selected_policy)
-            return "accepted", "accepted", None
+            return "accepted", "accepted", None, None, None
         if case["kind"] == "digest":
             payload = canonical_cbor(["statqed.lean-expr.v0", [2, [[0, "True"]], []]])
             frame, digest = digest_frame("proposition", payload)
@@ -203,10 +294,10 @@ def evaluate(case: dict[str, Any], bundle: dict[str, Any], policy: dict[str, Any
                 frame = frame.replace(b"statqed.lean-expr.v0", b"statqed.lean-expr.v-1")
             if hashlib.sha256(frame).hexdigest() != digest:
                 raise RegistryError("registry.statement_digest_mismatch")
-            return "accepted", "accepted", None
+            return "accepted", "accepted", None, None, None
         raise RegistryError("registry.operational_failure")
     except RegistryError as error:
-        return "rejected", error.code, None
+        return "rejected", error.code, None, None, None
 
 
 def _classification(candidate: dict[str, Any], policy: dict[str, Any]) -> str:
@@ -306,15 +397,24 @@ def generated() -> tuple[bytes, bytes, dict[str, bytes]]:
     results = []
     goldens: dict[str, bytes] = {}
     for case in catalog["fixtures"]:
-        classification, code, payload = evaluate(case, bundle, policy)
-        passed = classification == case["expected"] and (classification == "accepted" or code == case["code"])
-        results.append({
+        classification, code, payload, oracle_classification, oracle_code = evaluate(
+            case, bundle, policy
+        )
+        passed = classification == case["expected"] and (
+            classification == "accepted" or code == case["code"]
+        )
+        result = {
             "classification": classification,
             "code": code,
             "expected": case["expected"],
             "fixture_id": case["id"],
-            "status": "pass" if passed else "fail",
-        })
+        }
+        if oracle_classification is not None:
+            passed = passed and oracle_classification == classification and oracle_code == code
+            result["oracle_classification"] = oracle_classification
+            result["oracle_code"] = oracle_code
+        result["status"] = "pass" if passed else "fail"
+        results.append(result)
         if payload is not None and classification == "accepted":
             goldens[case["id"] + ".cbor"] = payload
 
@@ -324,7 +424,7 @@ def generated() -> tuple[bytes, bytes, dict[str, bytes]]:
         "failed": sum(item["status"] != "pass" for item in results),
         "rejected": sum(item["classification"] == "rejected" for item in results),
         "results": results,
-        "schema": "statqed.registry-conformance-results.v0",
+        "schema": "statqed.registry-conformance-results.v1",
         "total": len(results),
     }
     mutation_output = {

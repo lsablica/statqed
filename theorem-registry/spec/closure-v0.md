@@ -32,8 +32,11 @@ material where relevant.
 
 Inductive-family grouping removes constructor/parent pseudo-cycles.  Any other
 gray-stack cycle is `registry.closure_cycle`.  Missing names are
-`registry.missing_dependency`.  Units are deduplicated and sorted by canonical
-name bytes before encoding.
+`registry.missing_dependency`. Units are deduplicated and sorted by canonical
+CBOR name bytes before encoding. This ordering is deliberately not Lean's
+`Name.quickCmp` and is covered by a discriminating vector. Every member,
+constructor, and recursor of a mutual inductive family is emitted in one atomic
+unit.
 
 The closure payload is canonical CBOR of:
 
@@ -53,7 +56,7 @@ framing `statqed.digest-lp.v1`.
 - roots: 256;
 - closure units: 1,024;
 - outgoing edges per unit: 256;
-- closure depth: 64;
+- closure depth: 64 dependency edges from a root at depth zero;
 - total deterministic work units: 1,000,000;
 - total expression/dependency nodes: 262,144;
 - canonical payload: 1,048,576 bytes;
@@ -63,6 +66,12 @@ A work unit is one decoded value, expression/level visit, dependency-edge
 attempt, declaration emission, snapshot inspection, or compatibility-edge
 inspection.  Width, depth, cycle, work, and missing-dependency failures remain
 distinct stable classes.
+
+Live environment fixtures bind a referenced definition body, a project-local
+selected instance, a complete mutual-inductive family, exact depth 64/65, and
+the exact required-work/one-under boundary. A separate Python lineage derives
+references, family aliases, reachability, canonical records, expression visits,
+edge attempts, and payload bytes from the exported typed units.
 
 ## Boundary
 

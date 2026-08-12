@@ -13,11 +13,11 @@
   },
   "review_projection": {
     "path": "work/reviews/SQ-0007.md",
-    "projection_sha256": "10dfce1a80d0c08ef6032c46b4aa52515688ed671b0f564bce2f6a5c312d4296"
+    "projection_sha256": "5d1bdb083c8863587881c0d06243e10bc41ce427afca542e99c9a6dde5feacc2"
   },
   "schema": "statqed.sq0007-evidence.v2",
-  "scientific_subject_count": 65,
-  "scientific_subject_digest": "4aa3e84d18a7775a6720c19dae508686f28a1821ddcbe81382236bcebee57107",
+  "scientific_subject_count": 70,
+  "scientific_subject_digest": "b444ec8e79704ed8b32b81054bf2ea403f12393f214f28365d269fc017fab40c",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -50,24 +50,34 @@
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
-      "bytes": 23936,
+      "bytes": 24117,
       "path": "backend/crates/statqed-registry/src/lib.rs",
-      "sha256": "166dfa6ecf18cea36b004b85c85dfde0e8f0c2243ea28e2ee8f394fd93f5f540"
+      "sha256": "71f3d11cbbd01c9c6aa82f24b092b3b172a0dbd4be3b05ff70c49bc294db7ae0"
     },
     {
-      "bytes": 16401,
+      "bytes": 17099,
       "path": "backend/crates/statqed-registry/tests/resolver.rs",
-      "sha256": "c856538774942736ac12f1f67dbc6cc10d940cc58ab60dea8ed6ed7ed34e23ee"
+      "sha256": "c4d3db14d5998b73686bd8ab3c4d78055b380422c884cf5ebc98ce041561f683"
     },
     {
-      "bytes": 8809,
+      "bytes": 10824,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "5a4fc1907c5c415c1b777176a88c69779924d5090ac88ee86630547392387cde"
+      "sha256": "7304950a2f64bc8565cddbcd00e505508af12dc22f8c2e59eedeb3a7f4b17fe3"
+    },
+    {
+      "bytes": 88,
+      "path": "conformance/registry/golden/CLOSURE-CANONICAL-NAME-ORDER.cbor",
+      "sha256": "a82766b3be99e7ba785a0e88b0ca46964640a93828c6da74300d5bd6c35bfef7"
     },
     {
       "bytes": 113,
       "path": "conformance/registry/golden/CLOSURE-DEFINITION-BODY.cbor",
       "sha256": "5b7ed5e6f606a8891576616a72c4a543e07dc3ee8a12fbeb2f338aeddf7dec32"
+    },
+    {
+      "bytes": 1720,
+      "path": "conformance/registry/golden/CLOSURE-DEPTH-MAX.cbor",
+      "sha256": "9b59fbb2b8e9900d25b2d7825e220a4f274a93da8c45a231ac007d32c8ac3ce8"
     },
     {
       "bytes": 72,
@@ -155,6 +165,16 @@
       "sha256": "e79e8cc0f343911a3c847d5b95f0004290c2f90e3f87e91cbe75d2dffb6dce1f"
     },
     {
+      "bytes": 2590,
+      "path": "conformance/registry/golden/RESOURCE-DEPTH-MAX.cbor",
+      "sha256": "7d0e6092e6dd6ac59e1299d4eb6b1f3b57462b39f160644f1f97f12162c4744f"
+    },
+    {
+      "bytes": 154,
+      "path": "conformance/registry/golden/RESOURCE-LEVEL-DEPTH-MAX.cbor",
+      "sha256": "6d45b5ae0e1fa0df7b67428b70648a6f57925eee795a4da6909a2a2b9c4a04b2"
+    },
+    {
       "bytes": 65565,
       "path": "conformance/registry/golden/RESOURCE-STRING-MAX.cbor",
       "sha256": "5648d2af4593abd25d4b762c9263bb9f3fbdb3d3eb943967319458c71bc71465"
@@ -165,9 +185,9 @@
       "sha256": "3ddce342aea212528377a849823565cfa923b138649a92869f8542aeea0c7967"
     },
     {
-      "bytes": 9092,
+      "bytes": 13877,
       "path": "conformance/registry/results/results.json",
-      "sha256": "c6b95aaf13b4b1d113216e9ecca9bdc06d1d25593818a5de8d10e904145db03e"
+      "sha256": "75e1f548007c8fdebace1481417b99a8bf5141895bd78c78b2e6a060588c0a1b"
     },
     {
       "bytes": 4026,
@@ -175,24 +195,29 @@
       "sha256": "b1660dc03b382685bec08fc56bd6e34c2bf860af31247e1ba43c5314f3af36ab"
     },
     {
-      "bytes": 12504,
+      "bytes": 21001,
       "path": "lean/StatQED/Registry/Closure.lean",
-      "sha256": "98d4b9377c5b7bce69fc5743e290af0aab64cc0c6a1e450899faa4c73fa9ce0a"
+      "sha256": "216d32ab532556c19ca88d7379a863dfb27c2cdd9a78f7b464ac59801af3a73c"
     },
     {
-      "bytes": 13962,
+      "bytes": 22277,
       "path": "lean/StatQED/Registry/Normalize.lean",
-      "sha256": "c6745508cd61dc80aa67500f16e937ecbf352651bb809c5755a6007574d660e5"
+      "sha256": "bf9d88f31b1994f717d10532cfe86852d2f971d23a62c214e6a5d9deedd70110"
     },
     {
-      "bytes": 1527,
+      "bytes": 2709,
       "path": "lean/StatQED/Registry/Tests/Bounds.lean",
-      "sha256": "ce1c3a97f3d91a23d0c9877ffebe7616802008680991b041aa980217c6f84124"
+      "sha256": "2307eab8cb0fce752a9634b9294db68a52fab52470a4871564ff13f03731a3d1"
     },
     {
-      "bytes": 861,
+      "bytes": 8545,
+      "path": "lean/StatQED/Registry/Tests/LiveFixtures.lean",
+      "sha256": "94817dd063a3c71977902451808a3a16999926171e76c6d7a11888870c7c6b2d"
+    },
+    {
+      "bytes": 9309,
       "path": "lean/StatQED/Registry/Tests/Smoke.lean",
-      "sha256": "7065e7bbf4607989ae4153300d5635639da5b9a727a2f6783aaf08ae54b3d893"
+      "sha256": "d3d2ee362094c3e9874a5ddedca47d1dd79a5d18684c2a536341f1f7668bbdd8"
     },
     {
       "bytes": 3184,
@@ -200,14 +225,14 @@
       "sha256": "ae7ae607c4a6d6f762750fdc8933d27967403d92b4be040fef000c1ea9254747"
     },
     {
-      "bytes": 2519,
+      "bytes": 2806,
       "path": "lean/StatQED/Registry/Tools/Extract.lean",
-      "sha256": "a35607c6c13bc7df8ef060a530f4f531a82525a60991d0680f275394562bf0f7"
+      "sha256": "bbd5c7e89e096641e468fd74a4b23f3fe0d8e7d234a244cae5b84a8ebcfd91d9"
     },
     {
-      "bytes": 13219,
+      "bytes": 13787,
       "path": "rfcs/0005-theorem-identity-and-compatibility.md",
-      "sha256": "416d3e362c10b0a574d73086fbc79ea239a69105535e78c4057c040e754857b3"
+      "sha256": "8397918ebcdce09ceb66e95c03216d01140e457013e6207513c4130d168612d9"
     },
     {
       "bytes": 590,
@@ -225,9 +250,9 @@
       "sha256": "1848bb3abad3250401801038fa19af6a9bf664107b7772b38f7afbd5b2fb4284"
     },
     {
-      "bytes": 1392,
+      "bytes": 1582,
       "path": "theorem-registry/evidence/all-module-fresh-check.json",
-      "sha256": "10d045d9629987b5679693c0b82d32e99c507aa19931082a1bd05451d2eb13b6"
+      "sha256": "53e82e6660c0a0365e2de93ed64da07a6978e2c5e9538f402ee7930226720199"
     },
     {
       "bytes": 1637,
@@ -237,7 +262,7 @@
     {
       "bytes": 1650,
       "path": "theorem-registry/evidence/bundle.json",
-      "sha256": "62399c89c87e1a222f2376029d4f781cc3180c11c2fb2ca44481cff7956ab7be"
+      "sha256": "e76cc868282727f5653798670d1989f032185c76b51c800e291ce24b152fec52"
     },
     {
       "bytes": 554,
@@ -245,39 +270,39 @@
       "sha256": "a0daf0ed5302f5257e0848e2ed936642bc57ecc9e1fc0b4d3b47f5ace0941bc6"
     },
     {
-      "bytes": 2361,
+      "bytes": 2480,
       "path": "theorem-registry/evidence/environment.cbor",
-      "sha256": "b81c29a7b6a2830c7427a6ef36b15dd01e78e7c73cafd102707c964615a93852"
+      "sha256": "2502c43638dc7534427743858d111128c7ccdba1f82ca378e1262688849d8b04"
     },
     {
-      "bytes": 2512,
+      "bytes": 2631,
       "path": "theorem-registry/evidence/environment.frame",
-      "sha256": "dd784847a62008956abe8de597287fa7d043b0d63ac3672d4efdc0d08b036a3e"
+      "sha256": "c3df13c2b89df48b2a864126a08f65429cca9536839d578c31d9ba30571e7c5e"
     },
     {
       "bytes": 779,
       "path": "theorem-registry/evidence/identity-summary.json",
-      "sha256": "45a14c2f49d8e469f34af2c7d45da23711ec7e18a1dc500bee85c6433de5b806"
+      "sha256": "40ea247d11bbe24aea9509610f662487a500a6eb0976fdb05c21f4586d0882be"
     },
     {
-      "bytes": 12899,
+      "bytes": 16708,
       "path": "theorem-registry/evidence/independent-observation.json",
-      "sha256": "80326cefc2d82451187531ce55cc9507cc215f54411c6d5b022daceb8eba206f"
+      "sha256": "8942f954d0252c41773d9fc91c7c02fac03ce245911eac364c00555024687089"
     },
     {
-      "bytes": 13174,
+      "bytes": 558292,
       "path": "theorem-registry/evidence/lean-observation.json",
-      "sha256": "811eb607faffc78a0df20e07b75caf00b641ad531abd52204756d0e3c2f0c230"
+      "sha256": "8d9daca83ec7ff0d072bece5e7e7485f9908a3e45d699fae44f22552658d9b19"
     },
     {
-      "bytes": 3268815,
+      "bytes": 4290321,
       "path": "theorem-registry/evidence/project-axioms.json",
-      "sha256": "356b70811a97700b86c264b9b2cf60b22de6f358df8847eeea9e72d0f231dc15"
+      "sha256": "e887c9b63953045fe50c70c76b46034bbe762c9eb7a11aab54a855d50d3bd0c3"
     },
     {
-      "bytes": 1888,
+      "bytes": 2014,
       "path": "theorem-registry/evidence/proof-build.frame",
-      "sha256": "474f5ebdee86427061187c1cb8b84fa52b4c06b0494097ab7c7e95442b603cf5"
+      "sha256": "e660b2a8b8ce46cea2dfb824077b637d4e9d983e53a8b778965ddd3f93f0d7d0"
     },
     {
       "bytes": 33,
@@ -292,12 +317,12 @@
     {
       "bytes": 989,
       "path": "theorem-registry/evidence/record.frame",
-      "sha256": "2ed813891079a2e83a74e392b42c6eec3f8470a2eca3439279ff7aef2745aa7a"
+      "sha256": "34fb226b99563f5fa8dab967b9f21954f1be53c79d4967b4421f83022b22d687"
     },
     {
       "bytes": 300,
       "path": "theorem-registry/evidence/snapshot.frame",
-      "sha256": "d153f91ab9077dfc4c90659e105d4838081240764e8c5e58c3dbf930543f12ad"
+      "sha256": "03e323bb23b41970bae20ef3a4f790700a100515b5fc6a33443b107f39ee7bb2"
     },
     {
       "bytes": 504,
@@ -305,48 +330,48 @@
       "sha256": "eae5cd6e840b9be82bdefc6667fa6ea1c77666e44a058b3206291d8ec3f87715"
     },
     {
-      "bytes": 1930,
+      "bytes": 2063,
       "path": "theorem-registry/locks/proof-build-refactor-v0.json",
-      "sha256": "72756ea16c82eab83bc44ca4a3fa435c7211a53e6b067ecbe6cca61b45f96a37"
+      "sha256": "60d05d341b5ec66f8cc77a4497a84c33a0e167880931c93a3d42dbc469141488"
     },
     {
-      "bytes": 1861,
+      "bytes": 1994,
       "path": "theorem-registry/locks/proof-build-v0.json",
-      "sha256": "0b3e2820f36648f42a1b9b7a4506690cdffe6f3090eba226218a80fd84d891ee"
+      "sha256": "dfc80c28dfb1a042e23c080fa59186b5057d6cfe9457542d081055049dddc8d3"
     },
     {
-      "bytes": 607,
+      "bytes": 1611,
       "path": "theorem-registry/policy/authorization-v0.json",
-      "sha256": "015476f2d26a04c01514fe284039e38ceec7c088f92f386ea332382799f6d91c"
+      "sha256": "3c08285ad89133e4492edd3d88714d1efc319ed7a6b3702143f9966a59d7aae8"
     },
     {
       "bytes": 170,
       "path": "theorem-registry/records/snapshot-v0.json",
-      "sha256": "37b5320eb72d256f11bee3b070ca40fee28a96b98959126e0dd06c06baa13704"
+      "sha256": "9998a44fc1343e0e167c8259684f639bbbd7d4c50e4df77cd4e3dd55d73fe803"
     },
     {
       "bytes": 904,
       "path": "theorem-registry/records/test-only-true.v0.json",
-      "sha256": "555a3767dc9597fbd1d5e584902b4ac5961dd63c8b9bddd9b421a8945c19e957"
+      "sha256": "d109a1de39a058ea22240a14045a67577832f0bbd198fe907f59cef0f17a55f3"
     },
     {
-      "bytes": 3155,
+      "bytes": 3780,
       "path": "theorem-registry/spec/closure-v0.md",
-      "sha256": "8bc5c769c94bf58e168a8caeb9245d5d7731802d100d25633afda008cb08ec93"
+      "sha256": "ea5da7999012bd631a37b9785b8dbd4e6e69f8583cec0f1c632c75a01da67c42"
     },
     {
-      "bytes": 3179,
+      "bytes": 3678,
       "path": "theorem-registry/spec/normalizer-v0.md",
-      "sha256": "0d82cc5502ddb7d2254d2fef8e2cedcdf43d4430190bf998024bea21c788c6d7"
+      "sha256": "d81dc3e1a37affa02f7d2d78920930cf4cd0399a208a343adb552b9f776ef555"
     },
     {
-      "bytes": 6254,
+      "bytes": 6309,
       "path": "theorem-registry/spec/registry-v0.md",
-      "sha256": "203fa244832084d97364d3ee5821473d8b2bcb80621dafd4747ba41b76db3633"
+      "sha256": "4f762c7d3835aa0ea2cbc77a404503e23d54ee97e160f5f2b34a956b40ec62bb"
     }
   ],
-  "subject_count": 88,
-  "subject_digest": "e6a398e4dce9645da4c63fda7d8cc8a07833abb895a696eeffef9a21229df345",
+  "subject_count": 94,
+  "subject_digest": "d4df6a7b395fc4d408f395dada65eee294a53ec58e8a599076320f34daf85422",
   "subjects": [
     {
       "bytes": 6529,
@@ -394,24 +419,34 @@
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
-      "bytes": 23936,
+      "bytes": 24117,
       "path": "backend/crates/statqed-registry/src/lib.rs",
-      "sha256": "166dfa6ecf18cea36b004b85c85dfde0e8f0c2243ea28e2ee8f394fd93f5f540"
+      "sha256": "71f3d11cbbd01c9c6aa82f24b092b3b172a0dbd4be3b05ff70c49bc294db7ae0"
     },
     {
-      "bytes": 16401,
+      "bytes": 17099,
       "path": "backend/crates/statqed-registry/tests/resolver.rs",
-      "sha256": "c856538774942736ac12f1f67dbc6cc10d940cc58ab60dea8ed6ed7ed34e23ee"
+      "sha256": "c4d3db14d5998b73686bd8ab3c4d78055b380422c884cf5ebc98ce041561f683"
     },
     {
-      "bytes": 8809,
+      "bytes": 10824,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "5a4fc1907c5c415c1b777176a88c69779924d5090ac88ee86630547392387cde"
+      "sha256": "7304950a2f64bc8565cddbcd00e505508af12dc22f8c2e59eedeb3a7f4b17fe3"
+    },
+    {
+      "bytes": 88,
+      "path": "conformance/registry/golden/CLOSURE-CANONICAL-NAME-ORDER.cbor",
+      "sha256": "a82766b3be99e7ba785a0e88b0ca46964640a93828c6da74300d5bd6c35bfef7"
     },
     {
       "bytes": 113,
       "path": "conformance/registry/golden/CLOSURE-DEFINITION-BODY.cbor",
       "sha256": "5b7ed5e6f606a8891576616a72c4a543e07dc3ee8a12fbeb2f338aeddf7dec32"
+    },
+    {
+      "bytes": 1720,
+      "path": "conformance/registry/golden/CLOSURE-DEPTH-MAX.cbor",
+      "sha256": "9b59fbb2b8e9900d25b2d7825e220a4f274a93da8c45a231ac007d32c8ac3ce8"
     },
     {
       "bytes": 72,
@@ -499,6 +534,16 @@
       "sha256": "e79e8cc0f343911a3c847d5b95f0004290c2f90e3f87e91cbe75d2dffb6dce1f"
     },
     {
+      "bytes": 2590,
+      "path": "conformance/registry/golden/RESOURCE-DEPTH-MAX.cbor",
+      "sha256": "7d0e6092e6dd6ac59e1299d4eb6b1f3b57462b39f160644f1f97f12162c4744f"
+    },
+    {
+      "bytes": 154,
+      "path": "conformance/registry/golden/RESOURCE-LEVEL-DEPTH-MAX.cbor",
+      "sha256": "6d45b5ae0e1fa0df7b67428b70648a6f57925eee795a4da6909a2a2b9c4a04b2"
+    },
+    {
       "bytes": 65565,
       "path": "conformance/registry/golden/RESOURCE-STRING-MAX.cbor",
       "sha256": "5648d2af4593abd25d4b762c9263bb9f3fbdb3d3eb943967319458c71bc71465"
@@ -509,9 +554,9 @@
       "sha256": "3ddce342aea212528377a849823565cfa923b138649a92869f8542aeea0c7967"
     },
     {
-      "bytes": 9092,
+      "bytes": 13877,
       "path": "conformance/registry/results/results.json",
-      "sha256": "c6b95aaf13b4b1d113216e9ecca9bdc06d1d25593818a5de8d10e904145db03e"
+      "sha256": "75e1f548007c8fdebace1481417b99a8bf5141895bd78c78b2e6a060588c0a1b"
     },
     {
       "bytes": 4026,
@@ -524,9 +569,9 @@
       "sha256": "18adaff510f27e70d2c0b9e56a3a9c6c8904ef558bc989746f619d7d61e8a8fe"
     },
     {
-      "bytes": 4451,
+      "bytes": 4822,
       "path": "docs/implementation/theorem-registry.md",
-      "sha256": "2014260d902211778f8c5aa0e5d4025447ec917ab33c9df6db0d18290a1193c4"
+      "sha256": "ab927900439ff3db6a16bd01423b339cbeb3be843c290235c96d36146cfd9c53"
     },
     {
       "bytes": 2675,
@@ -534,24 +579,29 @@
       "sha256": "4ace431dd998edfd70b3145f3bae68cdf7450ce7c5e4c42c124a14498754193c"
     },
     {
-      "bytes": 12504,
+      "bytes": 21001,
       "path": "lean/StatQED/Registry/Closure.lean",
-      "sha256": "98d4b9377c5b7bce69fc5743e290af0aab64cc0c6a1e450899faa4c73fa9ce0a"
+      "sha256": "216d32ab532556c19ca88d7379a863dfb27c2cdd9a78f7b464ac59801af3a73c"
     },
     {
-      "bytes": 13962,
+      "bytes": 22277,
       "path": "lean/StatQED/Registry/Normalize.lean",
-      "sha256": "c6745508cd61dc80aa67500f16e937ecbf352651bb809c5755a6007574d660e5"
+      "sha256": "bf9d88f31b1994f717d10532cfe86852d2f971d23a62c214e6a5d9deedd70110"
     },
     {
-      "bytes": 1527,
+      "bytes": 2709,
       "path": "lean/StatQED/Registry/Tests/Bounds.lean",
-      "sha256": "ce1c3a97f3d91a23d0c9877ffebe7616802008680991b041aa980217c6f84124"
+      "sha256": "2307eab8cb0fce752a9634b9294db68a52fab52470a4871564ff13f03731a3d1"
     },
     {
-      "bytes": 861,
+      "bytes": 8545,
+      "path": "lean/StatQED/Registry/Tests/LiveFixtures.lean",
+      "sha256": "94817dd063a3c71977902451808a3a16999926171e76c6d7a11888870c7c6b2d"
+    },
+    {
+      "bytes": 9309,
       "path": "lean/StatQED/Registry/Tests/Smoke.lean",
-      "sha256": "7065e7bbf4607989ae4153300d5635639da5b9a727a2f6783aaf08ae54b3d893"
+      "sha256": "d3d2ee362094c3e9874a5ddedca47d1dd79a5d18684c2a536341f1f7668bbdd8"
     },
     {
       "bytes": 3184,
@@ -559,14 +609,14 @@
       "sha256": "ae7ae607c4a6d6f762750fdc8933d27967403d92b4be040fef000c1ea9254747"
     },
     {
-      "bytes": 2519,
+      "bytes": 2806,
       "path": "lean/StatQED/Registry/Tools/Extract.lean",
-      "sha256": "a35607c6c13bc7df8ef060a530f4f531a82525a60991d0680f275394562bf0f7"
+      "sha256": "bbd5c7e89e096641e468fd74a4b23f3fe0d8e7d234a244cae5b84a8ebcfd91d9"
     },
     {
-      "bytes": 13219,
+      "bytes": 13787,
       "path": "rfcs/0005-theorem-identity-and-compatibility.md",
-      "sha256": "416d3e362c10b0a574d73086fbc79ea239a69105535e78c4057c040e754857b3"
+      "sha256": "8397918ebcdce09ceb66e95c03216d01140e457013e6207513c4130d168612d9"
     },
     {
       "bytes": 590,
@@ -584,9 +634,9 @@
       "sha256": "a99ab3901c15723f1aa74a63766703443b29adc7b0269ae91689d4de2e08e5c2"
     },
     {
-      "bytes": 16563,
+      "bytes": 36859,
       "path": "scripts/registry/build_registry.py",
-      "sha256": "317a04fe16811409a01dd290671f3590c3e850f970727c5c6ce4708015b54a61"
+      "sha256": "7d29ba95e16244f37e6db9d479effafb029fda5ca864890e058174bec7613ff1"
     },
     {
       "bytes": 1080,
@@ -614,19 +664,19 @@
       "sha256": "870d2c9758f3ea12143690aae9095423c0db839bc5cd5360262a5a1dd8a503a9"
     },
     {
-      "bytes": 27290,
+      "bytes": 27522,
       "path": "scripts/registry/independent_oracle.py",
-      "sha256": "a22f2a71d5cc3adaf69dd226992bfadadfa8f84b9a931910cf0d533366ab8d88"
+      "sha256": "ea7a645f9021926368e3058634aae76772f0ed41dd2ab88c6af88292c578f96c"
     },
     {
-      "bytes": 17354,
+      "bytes": 19003,
       "path": "scripts/registry/model.py",
-      "sha256": "4111dd44ec54e6e61ae31949546948ddc0ff4cec43826978795057fec321b308"
+      "sha256": "5eca0941a058139e565df2616cf8089b852d0fcdc6352dcff2ccf936cb2b51b5"
     },
     {
-      "bytes": 16729,
+      "bytes": 20811,
       "path": "scripts/registry/run_conformance.py",
-      "sha256": "2f104b942eabccd19ce64f9fab9e6d0efc18bb81b674a4fe548bc3a9070aee68"
+      "sha256": "27509f5fc21c243e9e403771ef32f1d444760ac8f3297c3568a863e596e5ccb6"
     },
     {
       "bytes": 1046,
@@ -634,19 +684,24 @@
       "sha256": "fb1c77533ce0e3f04fa9c0fe49b36008f3e442e1a0e09116c8cd096cf11fbf43"
     },
     {
-      "bytes": 12960,
+      "bytes": 13469,
       "path": "scripts/registry/tests/test_check_evidence.py",
-      "sha256": "d34430a612f3b2e3ad389a322121b93b28407a51c434b6dc995eee707741061e"
+      "sha256": "0b2d42d2dd0124831e9b52decfec342065f9efcc69863d8e2ad4d9c4ede7184a"
     },
     {
-      "bytes": 10331,
+      "bytes": 10337,
       "path": "scripts/registry/tests/test_independent_oracle.py",
-      "sha256": "596f18e212caff24d2b4792abb9f125a06d2b3fe68dd58afacf4a4962ef037f4"
+      "sha256": "84ee34920d71c36668120795e66ae8ab19775d68798b7e0010c75b8765690342"
     },
     {
-      "bytes": 10901,
+      "bytes": 14942,
       "path": "scripts/registry/tests/test_model.py",
-      "sha256": "c18e2951f000985bca4cffcc5499f88f7ed15e3f56ff1f12223570f58e51f365"
+      "sha256": "a6d16d239a1e6555ef8ccd41ddec547358ff1f9ac9df68003915bb2d60522a5c"
+    },
+    {
+      "bytes": 4313,
+      "path": "scripts/registry/tests/test_run_conformance.py",
+      "sha256": "6ae8ffbaba97de5e0b8fed8f56572cb41814a48cdfdd5e2c2a1a0225139b5904"
     },
     {
       "bytes": 5460,
@@ -664,9 +719,9 @@
       "sha256": "cba10f7b494680564f4100dd451f2b605f0ab0a002d5a0525bbed51a634860e7"
     },
     {
-      "bytes": 1392,
+      "bytes": 1582,
       "path": "theorem-registry/evidence/all-module-fresh-check.json",
-      "sha256": "10d045d9629987b5679693c0b82d32e99c507aa19931082a1bd05451d2eb13b6"
+      "sha256": "53e82e6660c0a0365e2de93ed64da07a6978e2c5e9538f402ee7930226720199"
     },
     {
       "bytes": 1637,
@@ -676,7 +731,7 @@
     {
       "bytes": 1650,
       "path": "theorem-registry/evidence/bundle.json",
-      "sha256": "62399c89c87e1a222f2376029d4f781cc3180c11c2fb2ca44481cff7956ab7be"
+      "sha256": "e76cc868282727f5653798670d1989f032185c76b51c800e291ce24b152fec52"
     },
     {
       "bytes": 554,
@@ -684,39 +739,39 @@
       "sha256": "a0daf0ed5302f5257e0848e2ed936642bc57ecc9e1fc0b4d3b47f5ace0941bc6"
     },
     {
-      "bytes": 2361,
+      "bytes": 2480,
       "path": "theorem-registry/evidence/environment.cbor",
-      "sha256": "b81c29a7b6a2830c7427a6ef36b15dd01e78e7c73cafd102707c964615a93852"
+      "sha256": "2502c43638dc7534427743858d111128c7ccdba1f82ca378e1262688849d8b04"
     },
     {
-      "bytes": 2512,
+      "bytes": 2631,
       "path": "theorem-registry/evidence/environment.frame",
-      "sha256": "dd784847a62008956abe8de597287fa7d043b0d63ac3672d4efdc0d08b036a3e"
+      "sha256": "c3df13c2b89df48b2a864126a08f65429cca9536839d578c31d9ba30571e7c5e"
     },
     {
       "bytes": 779,
       "path": "theorem-registry/evidence/identity-summary.json",
-      "sha256": "45a14c2f49d8e469f34af2c7d45da23711ec7e18a1dc500bee85c6433de5b806"
+      "sha256": "40ea247d11bbe24aea9509610f662487a500a6eb0976fdb05c21f4586d0882be"
     },
     {
-      "bytes": 12899,
+      "bytes": 16708,
       "path": "theorem-registry/evidence/independent-observation.json",
-      "sha256": "80326cefc2d82451187531ce55cc9507cc215f54411c6d5b022daceb8eba206f"
+      "sha256": "8942f954d0252c41773d9fc91c7c02fac03ce245911eac364c00555024687089"
     },
     {
-      "bytes": 13174,
+      "bytes": 558292,
       "path": "theorem-registry/evidence/lean-observation.json",
-      "sha256": "811eb607faffc78a0df20e07b75caf00b641ad531abd52204756d0e3c2f0c230"
+      "sha256": "8d9daca83ec7ff0d072bece5e7e7485f9908a3e45d699fae44f22552658d9b19"
     },
     {
-      "bytes": 3268815,
+      "bytes": 4290321,
       "path": "theorem-registry/evidence/project-axioms.json",
-      "sha256": "356b70811a97700b86c264b9b2cf60b22de6f358df8847eeea9e72d0f231dc15"
+      "sha256": "e887c9b63953045fe50c70c76b46034bbe762c9eb7a11aab54a855d50d3bd0c3"
     },
     {
-      "bytes": 1888,
+      "bytes": 2014,
       "path": "theorem-registry/evidence/proof-build.frame",
-      "sha256": "474f5ebdee86427061187c1cb8b84fa52b4c06b0494097ab7c7e95442b603cf5"
+      "sha256": "e660b2a8b8ce46cea2dfb824077b637d4e9d983e53a8b778965ddd3f93f0d7d0"
     },
     {
       "bytes": 33,
@@ -731,12 +786,12 @@
     {
       "bytes": 989,
       "path": "theorem-registry/evidence/record.frame",
-      "sha256": "2ed813891079a2e83a74e392b42c6eec3f8470a2eca3439279ff7aef2745aa7a"
+      "sha256": "34fb226b99563f5fa8dab967b9f21954f1be53c79d4967b4421f83022b22d687"
     },
     {
       "bytes": 300,
       "path": "theorem-registry/evidence/snapshot.frame",
-      "sha256": "d153f91ab9077dfc4c90659e105d4838081240764e8c5e58c3dbf930543f12ad"
+      "sha256": "03e323bb23b41970bae20ef3a4f790700a100515b5fc6a33443b107f39ee7bb2"
     },
     {
       "bytes": 504,
@@ -744,49 +799,49 @@
       "sha256": "eae5cd6e840b9be82bdefc6667fa6ea1c77666e44a058b3206291d8ec3f87715"
     },
     {
-      "bytes": 1930,
+      "bytes": 2063,
       "path": "theorem-registry/locks/proof-build-refactor-v0.json",
-      "sha256": "72756ea16c82eab83bc44ca4a3fa435c7211a53e6b067ecbe6cca61b45f96a37"
+      "sha256": "60d05d341b5ec66f8cc77a4497a84c33a0e167880931c93a3d42dbc469141488"
     },
     {
-      "bytes": 1861,
+      "bytes": 1994,
       "path": "theorem-registry/locks/proof-build-v0.json",
-      "sha256": "0b3e2820f36648f42a1b9b7a4506690cdffe6f3090eba226218a80fd84d891ee"
+      "sha256": "dfc80c28dfb1a042e23c080fa59186b5057d6cfe9457542d081055049dddc8d3"
     },
     {
-      "bytes": 607,
+      "bytes": 1611,
       "path": "theorem-registry/policy/authorization-v0.json",
-      "sha256": "015476f2d26a04c01514fe284039e38ceec7c088f92f386ea332382799f6d91c"
+      "sha256": "3c08285ad89133e4492edd3d88714d1efc319ed7a6b3702143f9966a59d7aae8"
     },
     {
       "bytes": 170,
       "path": "theorem-registry/records/snapshot-v0.json",
-      "sha256": "37b5320eb72d256f11bee3b070ca40fee28a96b98959126e0dd06c06baa13704"
+      "sha256": "9998a44fc1343e0e167c8259684f639bbbd7d4c50e4df77cd4e3dd55d73fe803"
     },
     {
       "bytes": 904,
       "path": "theorem-registry/records/test-only-true.v0.json",
-      "sha256": "555a3767dc9597fbd1d5e584902b4ac5961dd63c8b9bddd9b421a8945c19e957"
+      "sha256": "d109a1de39a058ea22240a14045a67577832f0bbd198fe907f59cef0f17a55f3"
     },
     {
       "bytes": 420,
       "path": "theorem-registry/registry.json",
-      "sha256": "0179bf1a5105063c04cb0ed0310749b3fb7d4d1f2124fade6f7bddbce2432cea"
+      "sha256": "ac4aa0650b216b2ee14e1737a8843fd5ef62618500f61f15f3a4462ab8c66c3c"
     },
     {
-      "bytes": 3155,
+      "bytes": 3780,
       "path": "theorem-registry/spec/closure-v0.md",
-      "sha256": "8bc5c769c94bf58e168a8caeb9245d5d7731802d100d25633afda008cb08ec93"
+      "sha256": "ea5da7999012bd631a37b9785b8dbd4e6e69f8583cec0f1c632c75a01da67c42"
     },
     {
-      "bytes": 3179,
+      "bytes": 3678,
       "path": "theorem-registry/spec/normalizer-v0.md",
-      "sha256": "0d82cc5502ddb7d2254d2fef8e2cedcdf43d4430190bf998024bea21c788c6d7"
+      "sha256": "d81dc3e1a37affa02f7d2d78920930cf4cd0399a208a343adb552b9f776ef555"
     },
     {
-      "bytes": 6254,
+      "bytes": 6309,
       "path": "theorem-registry/spec/registry-v0.md",
-      "sha256": "203fa244832084d97364d3ee5821473d8b2bcb80621dafd4747ba41b76db3633"
+      "sha256": "4f762c7d3835aa0ea2cbc77a404503e23d54ee97e160f5f2b34a956b40ec62bb"
     }
   ],
   "task_local_changed_paths": [
@@ -804,6 +859,29 @@
     "conformance/registry/evidence/evidence-manifest.json",
     "conformance/registry/evidence/evidence-spec.json",
     "conformance/registry/fixtures/catalog.json",
+    "conformance/registry/golden/CLOSURE-CANONICAL-NAME-ORDER.cbor",
+    "conformance/registry/golden/CLOSURE-DEFINITION-BODY.cbor",
+    "conformance/registry/golden/CLOSURE-DEPTH-MAX.cbor",
+    "conformance/registry/golden/CLOSURE-TRUE-FAMILY.cbor",
+    "conformance/registry/golden/PROP-APP.cbor",
+    "conformance/registry/golden/PROP-FALSE.cbor",
+    "conformance/registry/golden/PROP-FORALL-EXPLICIT.cbor",
+    "conformance/registry/golden/PROP-FORALL-IMPLICIT.cbor",
+    "conformance/registry/golden/PROP-FORALL-INSTANCE.cbor",
+    "conformance/registry/golden/PROP-FORALL-STRICT.cbor",
+    "conformance/registry/golden/PROP-LAMBDA.cbor",
+    "conformance/registry/golden/PROP-LET.cbor",
+    "conformance/registry/golden/PROP-NAT-LITERAL.cbor",
+    "conformance/registry/golden/PROP-NUMERIC-NAME.cbor",
+    "conformance/registry/golden/PROP-PROJECTION.cbor",
+    "conformance/registry/golden/PROP-SORT-SUCC.cbor",
+    "conformance/registry/golden/PROP-SORT-ZERO.cbor",
+    "conformance/registry/golden/PROP-STRING-LITERAL.cbor",
+    "conformance/registry/golden/PROP-TRUE.cbor",
+    "conformance/registry/golden/PROP-UNIVERSE-PARAM.cbor",
+    "conformance/registry/golden/RESOURCE-DEPTH-MAX.cbor",
+    "conformance/registry/golden/RESOURCE-LEVEL-DEPTH-MAX.cbor",
+    "conformance/registry/golden/RESOURCE-STRING-MAX.cbor",
     "conformance/registry/results/mutations.json",
     "conformance/registry/results/results.json",
     "docs/adr/0007-versioned-theorem-registry.md",
@@ -815,6 +893,7 @@
     "lean/StatQED/Registry/Closure.lean",
     "lean/StatQED/Registry/Normalize.lean",
     "lean/StatQED/Registry/Tests/Bounds.lean",
+    "lean/StatQED/Registry/Tests/LiveFixtures.lean",
     "lean/StatQED/Registry/Tests/Smoke.lean",
     "lean/StatQED/Registry/Tools/AxiomReport.lean",
     "lean/StatQED/Registry/Tools/Extract.lean",
@@ -835,18 +914,21 @@
     "scripts/registry/tests/test_check_evidence.py",
     "scripts/registry/tests/test_independent_oracle.py",
     "scripts/registry/tests/test_model.py",
+    "scripts/registry/tests/test_run_conformance.py",
     "source-audits/registry/primary-sources.yaml",
     "theorem-registry/README.md",
     "theorem-registry/evidence/all-module-fresh-check.json",
     "theorem-registry/evidence/axioms.json",
     "theorem-registry/evidence/bundle.json",
     "theorem-registry/evidence/compatibility.frame",
+    "theorem-registry/evidence/environment.cbor",
     "theorem-registry/evidence/environment.frame",
     "theorem-registry/evidence/identity-summary.json",
     "theorem-registry/evidence/independent-observation.json",
     "theorem-registry/evidence/lean-observation.json",
     "theorem-registry/evidence/project-axioms.json",
     "theorem-registry/evidence/proof-build.frame",
+    "theorem-registry/evidence/proposition.cbor",
     "theorem-registry/evidence/proposition.frame",
     "theorem-registry/evidence/record.frame",
     "theorem-registry/evidence/snapshot.frame",
@@ -866,7 +948,7 @@
     "work/reviews/SQ-0007.md",
     "work/status.yaml"
   ],
-  "task_local_changed_paths_digest": "42477a8b9e4065f5172e29fc9fc6c237229f6bddb3b5ae475a70d30d2569263f",
+  "task_local_changed_paths_digest": "cfb2cf837b8a99da907b78e7182e6eff0e429421b94180d1d4b4a287928faa22",
   "verified_predecessor_chain": [
     {
       "first_parent": "8d327ec7d7d533d9485194c373bb44c7ea27d795",
