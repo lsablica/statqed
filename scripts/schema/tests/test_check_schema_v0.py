@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -17,9 +18,17 @@ from check_schema_v0 import EvidenceError, protected_files, protected_partition_
 
 
 ROOT = Path(__file__).resolve().parents[3]
+EMPTY_REGISTRY_PARTITIONS = (
+    "lean/StatQED/Registry",
+    "backend/crates/statqed-registry",
+)
+EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 
 class EvidenceCorruptionTests(unittest.TestCase):
+    def setUp(self):
+        self._shadow_roots: set[Path] = set()
+
     def shadow(self):
         temporary = tempfile.TemporaryDirectory(prefix="statqed-sq0006-corrupt-")
         destination = Path(temporary.name) / "repo"
@@ -48,7 +57,89 @@ class EvidenceCorruptionTests(unittest.TestCase):
             if source.is_file() and not target.exists():
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, target)
+        self._shadow_roots.add(destination.resolve())
         return temporary, destination
+
+    def neutralize_ambient_sq0007_registry_paths(
+        self,
+        root: Path,
+        relative_roots: tuple[str, ...] = EMPTY_REGISTRY_PARTITIONS,
+    ) -> tuple[str, ...]:
+        """Restore only the historically empty Registry partitions in a shadow."""
+
+        resolved_root = root.resolve()
+        if (
+            resolved_root == ROOT.resolve()
+            or resolved_root == Path(resolved_root.anchor)
+            or resolved_root not in self._shadow_roots
+            or not (root / "work/status.yaml").is_file()
+        ):
+            raise ValueError("neutralizer requires an isolated temporary repository copy")
+        if tuple(relative_roots) != EMPTY_REGISTRY_PARTITIONS:
+            raise ValueError("neutralizer roots must equal the exact Registry allowlist")
+
+        spec = json.loads(
+            (root / "conformance/schema-v0/evidence/evidence-spec.json").read_text()
+        )
+        partitions = {
+            item["id"]: item for item in spec["protected_path_policy"]["partitions"]
+        }
+        for partition_id in ("lean_registry", "backend_registry"):
+            policy = partitions[partition_id]
+            self.assertEqual(0, policy["baseline_file_count"])
+            self.assertEqual(EMPTY_SHA256, policy["baseline_sha256"])
+
+        removal_plans: list[tuple[list[Path], list[Path]]] = []
+        removed: list[str] = []
+
+        def refuse_walk_error(error: OSError) -> None:
+            raise ValueError(f"neutralizer refuses unreadable path: {error.filename}") from error
+
+        for relative in EMPTY_REGISTRY_PARTITIONS:
+            target = root / relative
+            current = root
+            for part in Path(relative).parts:
+                current = current / part
+                if current.is_symlink():
+                    raise ValueError(f"neutralizer refuses symlink traversal: {relative}")
+            try:
+                target_mode = target.lstat().st_mode
+            except FileNotFoundError:
+                continue
+            if not stat.S_ISDIR(target_mode):
+                raise ValueError(f"neutralizer refuses non-directory root: {relative}")
+
+            directories: list[Path] = []
+            target_files: list[Path] = []
+            for directory, names, files in os.walk(
+                target,
+                topdown=True,
+                onerror=refuse_walk_error,
+                followlinks=False,
+            ):
+                directory_path = Path(directory)
+                directories.append(directory_path)
+                for name in sorted([*names, *files]):
+                    path = directory_path / name
+                    mode = path.lstat().st_mode
+                    if stat.S_ISLNK(mode):
+                        raise ValueError(
+                            f"neutralizer refuses symlink entry: {path.relative_to(root)}"
+                        )
+                    if not (stat.S_ISDIR(mode) or stat.S_ISREG(mode)):
+                        raise ValueError(
+                            f"neutralizer refuses special entry: {path.relative_to(root)}"
+                        )
+                    if stat.S_ISREG(mode):
+                        target_files.append(path)
+                        removed.append(path.relative_to(root).as_posix())
+            removal_plans.append((target_files, directories))
+        for target_files, directories in removal_plans:
+            for path in sorted(target_files):
+                path.unlink()
+            for directory in sorted(directories, key=lambda path: len(path.parts), reverse=True):
+                directory.rmdir()
+        return tuple(sorted(removed))
 
     def mutate(self, root: Path, relative: str, transform):
         path = root / relative
@@ -203,7 +294,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_01_sq0007_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0007")
             verify(root)
         finally:
@@ -212,7 +305,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_02_sq0008_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0008", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0008")
             verify(root)
         finally:
@@ -221,7 +317,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_03_sq0011_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0011", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0011")
             verify(root)
         finally:
@@ -230,7 +329,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_04_sq0013_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0013", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0013")
             verify(root)
         finally:
@@ -239,7 +341,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_05_sq0014_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0014", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0014")
             verify(root)
         finally:
@@ -248,7 +353,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_06_sq0015_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0015", "READY")
+            verify(root)
             self.expand_contract(root, "SQ-0015")
             verify(root)
         finally:
@@ -257,6 +365,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_07_contract_expansion_preserves_historical_hashes(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             before = json.loads((root / "conformance/schema-v0/evidence/evidence-spec.json").read_text())[
                 "historical_successor_contracts"
             ]
@@ -273,6 +384,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_08_contract_expansion_needs_no_manifest_regeneration(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             manifest_path = root / "conformance/schema-v0/evidence/evidence-manifest.json"
             before = manifest_path.read_bytes()
             historical = json.loads(before)["historical_scientific_subject_digest"]
@@ -313,6 +427,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_10_successor_contract_backlog_disagreement_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             contract = json.loads((root / "work/contracts/SQ-0007.yaml").read_text())
             contract["status"] = "IN_PROGRESS"
             self.write_json(root, "work/contracts/SQ-0007.yaml", contract)
@@ -324,6 +441,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_11_illegal_successor_status_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             self.set_task_state(root, "SQ-0007", "UNREVIEWED")
             with self.assertRaisesRegex(EvidenceError, "illegal backlog status: SQ-0007"):
                 verify(root)
@@ -379,7 +499,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_15_sq0007_ready_registry_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "READY")
+            verify(root)
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
             with self.assertRaisesRegex(EvidenceError, "lean_registry"):
                 verify(root)
@@ -389,8 +511,11 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_16_sq0007_active_registry_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
+            self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
             verify(root)
         finally:
             temporary.cleanup()
@@ -398,7 +523,9 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_17_sq0007_active_unrelated_lean_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "lean/StatQED/Unowned/Probe.lean")
             with self.assertRaisesRegex(EvidenceError, "lean_remainder"):
                 verify(root)
@@ -408,8 +535,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_18_sq0007_active_backend_registry_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0011", "READY")
+            verify(root)
             self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
             verify(root)
         finally:
@@ -418,8 +547,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_19_sq0007_active_unrelated_backend_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0011", "READY")
+            verify(root)
             self.add_file(root, "backend/crates/unowned-probe/src/lib.rs")
             with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
                 verify(root)
@@ -427,8 +558,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
             temporary.cleanup()
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0011", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
             self.add_file(root, "backend/crates/sq0011-probe/src/lib.rs")
             verify(root)
@@ -438,7 +571,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_20_sq0008_active_assurance_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "lean/StatQED/Assurance/Probe.lean")
             verify(root)
         finally:
@@ -447,8 +583,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_21_sq0008_active_registry_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
             with self.assertRaisesRegex(EvidenceError, "lean_registry"):
                 verify(root)
@@ -456,8 +594,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
             temporary.cleanup()
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
             verify(root)
             status = json.loads((root / "work/status.yaml").read_text())
@@ -471,7 +611,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_22_sq0013_active_r_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0013", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "frontends/r/R/probe.R")
             verify(root)
         finally:
@@ -480,8 +623,11 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_23_sq0013_active_python_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0013", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0014", "READY")
+            verify(root)
             self.add_file(root, "frontends/python/probe.py")
             with self.assertRaisesRegex(EvidenceError, "frontend_python"):
                 verify(root)
@@ -491,7 +637,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_24_sq0014_active_python_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0014", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "frontends/python/probe.py")
             verify(root)
         finally:
@@ -500,8 +649,11 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_25_sq0014_active_julia_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0014", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0015", "READY")
+            verify(root)
             self.add_file(root, "frontends/julia/src/Probe.jl")
             with self.assertRaisesRegex(EvidenceError, "frontend_julia"):
                 verify(root)
@@ -511,7 +663,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_26_sq0015_active_julia_change_accepted(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0015", "IN_PROGRESS")
+            verify(root)
             self.add_file(root, "frontends/julia/src/Probe.jl")
             verify(root)
         finally:
@@ -520,8 +675,11 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_27_sq0015_active_r_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0015", "IN_PROGRESS")
             self.set_task_state(root, "SQ-0013", "READY")
+            verify(root)
             self.add_file(root, "frontends/r/R/probe.R")
             with self.assertRaisesRegex(EvidenceError, "frontend_r"):
                 verify(root)
@@ -531,8 +689,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_28_no_owner_active_new_protected_file_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
             self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0011", "READY")
+            verify(root)
             self.add_file(root, "backend/new-protected-file.txt")
             with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
                 verify(root)
@@ -542,8 +702,10 @@ class EvidenceCorruptionTests(unittest.TestCase):
             with self.subTest(ignored_kind=kind):
                 temporary, root = self.shadow()
                 try:
+                    self.neutralize_ambient_sq0007_registry_paths(root)
                     self.set_task_state(root, "SQ-0007", "READY")
                     self.set_task_state(root, "SQ-0011", "READY")
+                    verify(root)
                     target = root / "backend/target"
                     if kind == "symlink":
                         target.symlink_to(root / "lean", target_is_directory=True)
@@ -557,29 +719,120 @@ class EvidenceCorruptionTests(unittest.TestCase):
                 finally:
                     temporary.cleanup()
 
-    def test_phase_m_ready_and_no_owner_scenarios_ignore_ambient_sq0007_state(self):
-        outcomes = []
-        for ambient in ("READY", "IN_REVIEW"):
+    def test_phase_f_unneutralized_registry_paths_obey_live_owner_state(self):
+        temporary, root = self.shadow()
+        try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            for index in range(5):
+                self.add_file(root, f"lean/StatQED/Registry/Ambient{index}.lean")
+            self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
+            self.set_task_state(root, "SQ-0007", "IN_REVIEW")
+            verify(root)
+            self.set_task_state(root, "SQ-0007", "READY")
+            with self.assertRaisesRegex(EvidenceError, "lean_registry"):
+                verify(root)
+            self.set_task_state(root, "SQ-0007", "SUPERSEDED")
+            with self.assertRaisesRegex(EvidenceError, "lean_registry"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_f_owner_scenarios_ignore_ambient_registry_paths(self):
+        outcomes: list[str] = []
+        for ambient in (False, True):
             with self.subTest(ambient=ambient):
                 temporary, root = self.shadow()
                 try:
-                    # Establish the ambient copied-repository state first, then
-                    # construct each declared READY/no-owner scenario explicitly.
-                    self.set_task_state(root, "SQ-0007", ambient)
+                    self.neutralize_ambient_sq0007_registry_paths(root)
+                    expected_removed: list[str] = []
+                    if ambient:
+                        for index in range(5):
+                            relative = f"lean/StatQED/Registry/Ambient{index}.lean"
+                            self.add_file(root, relative)
+                            expected_removed.append(relative)
+                        rust = "backend/crates/statqed-registry/src/lib.rs"
+                        self.add_file(root, rust)
+                        expected_removed.append(rust)
+                        self.set_task_state(root, "SQ-0007", "IN_REVIEW")
+                        verify(root)
+                    removed = self.neutralize_ambient_sq0007_registry_paths(root)
+                    self.assertEqual(tuple(sorted(expected_removed)), removed)
                     self.set_task_state(root, "SQ-0007", "READY")
                     self.set_task_state(root, "SQ-0011", "READY")
-                    self.add_file(root, "lean/StatQED/Registry/AmbientProbe.lean")
-                    with self.assertRaisesRegex(EvidenceError, "lean_registry") as registry:
+                    verify(root)
+                    self.add_file(root, "lean/StatQED/Registry/Controlled.lean")
+                    with self.assertRaisesRegex(EvidenceError, "lean_registry") as caught:
                         verify(root)
-
-                    (root / "lean/StatQED/Registry/AmbientProbe.lean").unlink()
-                    self.add_file(root, "backend/ambient-unowned-probe.txt")
-                    with self.assertRaisesRegex(EvidenceError, "backend_remainder") as backend:
+                    registry_outcome = str(caught.exception)
+                    (root / "lean/StatQED/Registry/Controlled.lean").unlink()
+                    self.add_file(root, "backend/controlled-unowned-probe.txt")
+                    with self.assertRaisesRegex(EvidenceError, "backend_remainder") as caught:
                         verify(root)
-                    outcomes.append((str(registry.exception), str(backend.exception)))
+                    outcomes.extend((registry_outcome, str(caught.exception)))
                 finally:
                     temporary.cleanup()
-        self.assertEqual(outcomes[0], outcomes[1])
+        self.assertEqual(outcomes[:2], outcomes[2:])
+
+    def test_phase_f_registry_neutralizer_is_allowlisted_and_safe(self):
+        temporary, root = self.shadow()
+        try:
+            self.neutralize_ambient_sq0007_registry_paths(root)
+            self.add_file(root, "lean/StatQED/Registry/Controlled.lean")
+            self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
+            self.assertEqual(
+                (
+                    "backend/crates/statqed-registry/src/lib.rs",
+                    "lean/StatQED/Registry/Controlled.lean",
+                ),
+                self.neutralize_ambient_sq0007_registry_paths(root),
+            )
+            for invalid in (
+                ("/",),
+                (".",),
+                ("lean",),
+                ("backend",),
+                ("lean/StatQED/Assurance",),
+            ):
+                with self.assertRaises(ValueError):
+                    self.neutralize_ambient_sq0007_registry_paths(
+                        root, relative_roots=invalid
+                    )
+            for invalid_root in (Path("/"), ROOT, root.parent, root / "lean"):
+                with self.assertRaises(ValueError):
+                    self.neutralize_ambient_sq0007_registry_paths(invalid_root)
+
+            registry = root / "lean/StatQED/Registry"
+            registry.parent.mkdir(parents=True, exist_ok=True)
+            registry.symlink_to(root / "lean", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "symlink"):
+                self.neutralize_ambient_sq0007_registry_paths(root)
+            registry.unlink()
+
+            registry.symlink_to(root / "missing-registry-target", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "symlink"):
+                self.neutralize_ambient_sq0007_registry_paths(root)
+            registry.unlink()
+
+            first_sentinel = registry / "sentinel.lean"
+            first_sentinel.parent.mkdir(parents=True)
+            first_sentinel.write_text("sentinel\n", encoding="utf-8")
+            unreadable = root / "backend/crates/statqed-registry/unreadable"
+            unreadable.mkdir(parents=True)
+            unreadable.chmod(0)
+            try:
+                with self.assertRaisesRegex(ValueError, "unreadable"):
+                    self.neutralize_ambient_sq0007_registry_paths(root)
+                self.assertTrue(first_sentinel.is_file())
+            finally:
+                unreadable.chmod(0o700)
+            self.neutralize_ambient_sq0007_registry_paths(root)
+
+            if hasattr(os, "mkfifo"):
+                os.mkfifo(registry)
+                with self.assertRaisesRegex(ValueError, "non-directory"):
+                    self.neutralize_ambient_sq0007_registry_paths(root)
+        finally:
+            temporary.cleanup()
 
     def test_phase_a_29_unowned_historical_baseline_mutation_rejected(self):
         self.assert_rejected(
