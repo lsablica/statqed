@@ -1,0 +1,17 @@
+{
+  "foundation_modules": [
+    "StatQED",
+    "StatQED.Internal.Smoke"
+  ],
+  "historical_files": {
+    "lean/Reports/axioms.json": "96a2b221dcc7f0a08607fbc935f31c5c4846486b0d4edcb585bddfad2298346b",
+    "lean/Tests/AxiomReport.lean": "bf1acd71f1b32f4b2e80b24114318a44903c9eb19a7fcd9ff57d90e4e667d23e",
+    "lean/tools/axiom_report.py": "487d89eb6d6703f428c1d4043af931bc80665e623dc717419c7aacaec986c498"
+  },
+  "nonclaims": [
+    "This binds the SQ-0003 completion snapshot; it does not claim coverage of later modules.",
+    "Current project-wide coverage is provided by the separately versioned live compositional checks."
+  ],
+  "schema_version": "statqed.sq0003-foundation-axiom-history.v1",
+  "sq0003_merge_commit": "92e3b331b1ae795a21d6e030a21e8ce8d7da03dd"
+}

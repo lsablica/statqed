@@ -1,0 +1,7 @@
+import Mathlib.Data.Set.Defs
+
+namespace StatQED.Registry
+
+unsafe def injectedUnsafe : Nat := 0
+
+end StatQED.Registry

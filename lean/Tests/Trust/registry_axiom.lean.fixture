@@ -1,0 +1,18 @@
+import Mathlib.Data.Set.Defs
+import Lean
+
+open Lean Elab Command
+
+namespace StatQED.Registry
+
+elab "#inject_registry_axiom" : command => do
+  liftCoreM <| addDecl <| .axiomDecl {
+    name := `StatQED.Registry.injectedPremise
+    levelParams := []
+    type := mkConst ``False
+    isUnsafe := false
+  }
+
+#inject_registry_axiom
+
+end StatQED.Registry

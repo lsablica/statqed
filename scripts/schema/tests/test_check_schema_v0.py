@@ -37,6 +37,17 @@ class EvidenceCorruptionTests(unittest.TestCase):
             target = destination / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
+        # A maintenance candidate can bind newly added live trust files before
+        # its review commit exists. Copy the spec-declared set explicitly; do
+        # not widen the shadow to arbitrary untracked workspace content.
+        spec = json.loads((ROOT / "conformance/schema-v0/evidence/evidence-spec.json").read_text())
+        for relative_text in spec.get("maintenance_live_baseline_paths", []):
+            relative = Path(relative_text)
+            source = ROOT / relative
+            target = destination / relative
+            if source.is_file() and not target.exists():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, target)
         return temporary, destination
 
     def mutate(self, root: Path, relative: str, transform):
@@ -192,6 +203,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_01_sq0007_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0007", "READY")
             self.expand_contract(root, "SQ-0007")
             verify(root)
         finally:
@@ -200,6 +212,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_02_sq0008_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0008", "READY")
             self.expand_contract(root, "SQ-0008")
             verify(root)
         finally:
@@ -208,6 +221,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_03_sq0011_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0011", "READY")
             self.expand_contract(root, "SQ-0011")
             verify(root)
         finally:
@@ -216,6 +230,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_04_sq0013_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0013", "READY")
             self.expand_contract(root, "SQ-0013")
             verify(root)
         finally:
@@ -224,6 +239,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_05_sq0014_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0014", "READY")
             self.expand_contract(root, "SQ-0014")
             verify(root)
         finally:
@@ -232,6 +248,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_06_sq0015_ready_contract_expansion(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0015", "READY")
             self.expand_contract(root, "SQ-0015")
             verify(root)
         finally:
@@ -362,6 +379,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_15_sq0007_ready_registry_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0007", "READY")
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
             with self.assertRaisesRegex(EvidenceError, "lean_registry"):
                 verify(root)
@@ -391,6 +409,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         temporary, root = self.shadow()
         try:
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0011", "READY")
             self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
             verify(root)
         finally:
@@ -400,6 +419,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         temporary, root = self.shadow()
         try:
             self.set_task_state(root, "SQ-0007", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0011", "READY")
             self.add_file(root, "backend/crates/unowned-probe/src/lib.rs")
             with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
                 verify(root)
@@ -407,6 +427,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
             temporary.cleanup()
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0011", "IN_PROGRESS")
             self.add_file(root, "backend/crates/statqed-registry/src/lib.rs")
             self.add_file(root, "backend/crates/sq0011-probe/src/lib.rs")
@@ -426,6 +447,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_21_sq0008_active_registry_change_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0007", "READY")
             self.set_task_state(root, "SQ-0008", "IN_PROGRESS")
             self.add_file(root, "lean/StatQED/Registry/Probe.lean")
             with self.assertRaisesRegex(EvidenceError, "lean_registry"):
@@ -459,6 +481,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         temporary, root = self.shadow()
         try:
             self.set_task_state(root, "SQ-0013", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0014", "READY")
             self.add_file(root, "frontends/python/probe.py")
             with self.assertRaisesRegex(EvidenceError, "frontend_python"):
                 verify(root)
@@ -478,6 +501,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         temporary, root = self.shadow()
         try:
             self.set_task_state(root, "SQ-0014", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0015", "READY")
             self.add_file(root, "frontends/julia/src/Probe.jl")
             with self.assertRaisesRegex(EvidenceError, "frontend_julia"):
                 verify(root)
@@ -497,6 +521,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         temporary, root = self.shadow()
         try:
             self.set_task_state(root, "SQ-0015", "IN_PROGRESS")
+            self.set_task_state(root, "SQ-0013", "READY")
             self.add_file(root, "frontends/r/R/probe.R")
             with self.assertRaisesRegex(EvidenceError, "frontend_r"):
                 verify(root)
@@ -506,6 +531,8 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_phase_a_28_no_owner_active_new_protected_file_rejected(self):
         temporary, root = self.shadow()
         try:
+            self.set_task_state(root, "SQ-0007", "READY")
+            self.set_task_state(root, "SQ-0011", "READY")
             self.add_file(root, "backend/new-protected-file.txt")
             with self.assertRaisesRegex(EvidenceError, "backend_remainder"):
                 verify(root)
@@ -515,6 +542,8 @@ class EvidenceCorruptionTests(unittest.TestCase):
             with self.subTest(ignored_kind=kind):
                 temporary, root = self.shadow()
                 try:
+                    self.set_task_state(root, "SQ-0007", "READY")
+                    self.set_task_state(root, "SQ-0011", "READY")
                     target = root / "backend/target"
                     if kind == "symlink":
                         target.symlink_to(root / "lean", target_is_directory=True)
@@ -528,12 +557,65 @@ class EvidenceCorruptionTests(unittest.TestCase):
                 finally:
                     temporary.cleanup()
 
+    def test_phase_m_ready_and_no_owner_scenarios_ignore_ambient_sq0007_state(self):
+        outcomes = []
+        for ambient in ("READY", "IN_REVIEW"):
+            with self.subTest(ambient=ambient):
+                temporary, root = self.shadow()
+                try:
+                    # Establish the ambient copied-repository state first, then
+                    # construct each declared READY/no-owner scenario explicitly.
+                    self.set_task_state(root, "SQ-0007", ambient)
+                    self.set_task_state(root, "SQ-0007", "READY")
+                    self.set_task_state(root, "SQ-0011", "READY")
+                    self.add_file(root, "lean/StatQED/Registry/AmbientProbe.lean")
+                    with self.assertRaisesRegex(EvidenceError, "lean_registry") as registry:
+                        verify(root)
+
+                    (root / "lean/StatQED/Registry/AmbientProbe.lean").unlink()
+                    self.add_file(root, "backend/ambient-unowned-probe.txt")
+                    with self.assertRaisesRegex(EvidenceError, "backend_remainder") as backend:
+                        verify(root)
+                    outcomes.append((str(registry.exception), str(backend.exception)))
+                finally:
+                    temporary.cleanup()
+        self.assertEqual(outcomes[0], outcomes[1])
+
     def test_phase_a_29_unowned_historical_baseline_mutation_rejected(self):
         self.assert_rejected(
             "lean/README.md",
             lambda data: data + b"\nphase-a mutation\n",
-            "lean_remainder",
+            "maintenance live baseline mismatch",
         )
+
+    def test_phase_m_historical_v2_manifest_mutation_rejected(self):
+        temporary, root = self.shadow()
+        try:
+            manifest = json.loads((root / "conformance/schema-v0/evidence/evidence-manifest.json").read_text())
+            manifest["historical_lifecycle"]["live_subject_count"] += 1
+            self.write_json(root, "conformance/schema-v0/evidence/evidence-manifest.json", manifest)
+            with self.assertRaisesRegex(EvidenceError, "historical SQ-0006 v2 lifecycle manifest drift"):
+                verify(root)
+        finally:
+            temporary.cleanup()
+
+    def test_phase_m_maintenance_live_baseline_rejects_trust_drift(self):
+        self.assert_rejected(
+            "scripts/check_lean_trust.py",
+            lambda data: data + b"\n# unreviewed trust mutation\n",
+            "maintenance live baseline mismatch",
+        )
+
+    def test_phase_m_untracked_ignored_cache_symlink_is_pruned(self):
+        temporary, root = self.shadow()
+        try:
+            subprocess.run(["git", "init", "--quiet"], cwd=root, check=True)
+            cache = root / "lean/.lake/packages/example/docs"
+            cache.mkdir(parents=True)
+            (cache / "README.md").symlink_to(root / "README.md")
+            verify(root)
+        finally:
+            temporary.cleanup()
 
 
 if __name__ == "__main__":

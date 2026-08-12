@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -17,6 +18,7 @@ SCOPE_BEGIN = "<!-- SQ-0005-NORMATIVE-SCOPE-BEGIN -->"
 SCOPE_END = "<!-- SQ-0005-NORMATIVE-SCOPE-END -->"
 EXPECTED_HISTORICAL_MANIFEST_SHA256 = "eefe309c3ab16d05321e5071698009b716721b8c1119c7c48bf4fa37d60521eb"
 EXPECTED_HISTORICAL_SCIENTIFIC_SHA256 = "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0"
+EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST_SHA256 = "5c6b3081846ba8ec2bc1ac17bf7d9014ee4d8f2dedb9e7d625a1226d2957b752"
 EXPECTED_SUCCESSOR_HISTORY = {
     "SQ-0007": (
         "bddf4334bbef4391b6024010f6073bcec34c272d9e15809f54d6ee927de5c4e2",
@@ -45,6 +47,25 @@ EXPECTED_SUCCESSOR_HISTORY = {
 }
 EXPECTED_LEGAL_STATUSES = ("BLOCKED", "READY", "IN_PROGRESS", "IN_REVIEW", "DONE", "SUPERSEDED")
 EXPECTED_AUTHORIZING_STATUSES = ("IN_PROGRESS", "IN_REVIEW", "DONE")
+EXPECTED_MAINTENANCE_LIVE_BASELINE_PATHS = (
+    ".github/workflows/lean.yml",
+    "docs/implementation/lean-core.md",
+    "lean/README.md",
+    "lean/Reports/foundation-axiom-history.json",
+    "lean/Tests/ProjectAxiomProbe.lean",
+    "lean/Tests/Trust/expectations.json",
+    "lean/Tests/Trust/registry_axiom.lean.fixture",
+    "lean/Tests/Trust/registry_native.lean.fixture",
+    "lean/Tests/Trust/registry_safe.lean.fixture",
+    "lean/Tests/Trust/registry_sorry.lean.fixture",
+    "lean/Tests/Trust/registry_unimportable.lean.fixture",
+    "lean/Tests/Trust/registry_unsafe.lean.fixture",
+    "lean/tools/check_all_modules.py",
+    "lean/tools/no_cache_build.sh",
+    "lean/tools/project_axiom_report.py",
+    "lean/tools/tests/test_project_trust.py",
+    "scripts/check_lean_trust.py",
+)
 EXPECTED_LIFECYCLE_PATHS = (
     "conformance/schema-v0/evidence/evidence-spec.json",
     "scripts/schema/build_evidence_manifest.py",
@@ -69,7 +90,7 @@ EXPECTED_PATH_PARTITIONS = {
         (),
         ("lean/StatQED/Registry", "lean/StatQED/Assurance", "lean/StatQED/Guarantee"),
         (),
-        "486109764c763003b6021493cab5693e318a189619e1e7987a1999cd54ae019c", 55,
+        "685c9a62b4f7b27a96a1a12b0566321d26c349ff3d018cde6433b1591e5578e7", 66,
     ),
     "backend_registry": (
         "backend",
@@ -107,6 +128,8 @@ EXPECTED_PATH_PARTITIONS = {
 }
 EXPECTED_IGNORED_PREFIXES = (
     "lean/.lake",
+    "lean/tools/__pycache__",
+    "lean/tools/tests/__pycache__",
     "backend/target",
     "schemas/prototypes/rust-cbor/target",
     "schemas/prototypes/python-oracle/.pytest_cache",
@@ -163,21 +186,39 @@ def protected_files(root: Path, relative: str, ignored: tuple[str, ...]) -> list
         raise EvidenceError(f"missing protected tree: {relative}")
     tracked = tracked_paths(root, relative)
     files: list[tuple[str, Path]] = []
-    for path in base.rglob("*"):
-        item = path.relative_to(root).as_posix()
-        if path.is_symlink():
-            raise EvidenceError(f"protected path symlink: {item}")
-        if path.is_dir():
-            continue
-        if not path.is_file():
-            raise EvidenceError(f"protected path special file: {item}")
-        if any(under_prefix(item, prefix) for prefix in ignored):
-            if tracked is None:
-                raise EvidenceError(f"unverifiable ignored protected path: {item}")
-            if item in tracked:
-                raise EvidenceError(f"tracked protected path under ignored cache: {item}")
-            continue
-        files.append((item, path))
+    for directory, directory_names, file_names in os.walk(base, topdown=True, followlinks=False):
+        current = Path(directory)
+        kept_directories: list[str] = []
+        for name in sorted(directory_names):
+            path = current / name
+            item = path.relative_to(root).as_posix()
+            if path.is_symlink():
+                raise EvidenceError(f"protected path symlink: {item}")
+            if any(under_prefix(item, prefix) for prefix in ignored):
+                if tracked is None:
+                    raise EvidenceError(f"unverifiable ignored protected path: {item}")
+                tracked_below = sorted(entry for entry in tracked if under_prefix(entry, item))
+                if tracked_below:
+                    raise EvidenceError(
+                        f"tracked protected path under ignored cache: {tracked_below[0]}"
+                    )
+                continue
+            kept_directories.append(name)
+        directory_names[:] = kept_directories
+        for name in sorted(file_names):
+            path = current / name
+            item = path.relative_to(root).as_posix()
+            if path.is_symlink():
+                raise EvidenceError(f"protected path symlink: {item}")
+            if not path.is_file():
+                raise EvidenceError(f"protected path special file: {item}")
+            if any(under_prefix(item, prefix) for prefix in ignored):
+                if tracked is None:
+                    raise EvidenceError(f"unverifiable ignored protected path: {item}")
+                if item in tracked:
+                    raise EvidenceError(f"tracked protected path under ignored cache: {item}")
+                continue
+            files.append((item, path))
     return sorted(files)
 
 
@@ -321,9 +362,9 @@ def validate_live_ledger(
 def verify(root: Path = ROOT) -> dict[str, Any]:
     spec = load_json(root, "conformance/schema-v0/evidence/evidence-spec.json")
     manifest = load_json(root, "conformance/schema-v0/evidence/evidence-manifest.json")
-    if spec.get("evidence_spec_version") != "statqed.sq0006-evidence-spec.v2":
+    if spec.get("evidence_spec_version") != "statqed.sq0006-evidence-spec.v3":
         raise EvidenceError("unexpected SQ-0006 evidence spec version")
-    if manifest.get("evidence_manifest_version") != "statqed.sq0006-evidence.v2":
+    if manifest.get("evidence_manifest_version") != "statqed.sq0006-evidence.v3":
         raise EvidenceError("unexpected SQ-0006 evidence manifest version")
     if manifest.get("evidence_spec_sha256") != sha256((root / "conformance/schema-v0/evidence/evidence-spec.json").read_bytes()):
         raise EvidenceError("evidence spec hash mismatch")
@@ -337,6 +378,28 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
         raise EvidenceError("historical completion binding drift")
     if manifest.get("historical_scientific_subject_digest") != EXPECTED_HISTORICAL_SCIENTIFIC_SHA256:
         raise EvidenceError("historical scientific binding drift")
+    lifecycle_policy = spec.get("historical_lifecycle_manifest", {})
+    if lifecycle_policy.get("manifest_sha256") != EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST_SHA256:
+        raise EvidenceError("historical v2 lifecycle policy drift")
+    historical_lifecycle = manifest.get("historical_lifecycle")
+    if not isinstance(historical_lifecycle, dict) or sha256(canonical(historical_lifecycle)) != EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST_SHA256:
+        raise EvidenceError("historical SQ-0006 v2 lifecycle manifest drift")
+    if manifest.get("historical_lifecycle_manifest_sha256") != EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST_SHA256:
+        raise EvidenceError("historical v2 lifecycle binding drift")
+    for field in (
+        "evidence_manifest_version",
+        "evidence_spec_sha256",
+        "historical_completion_manifest_sha256",
+        "historical_scientific_subject_digest",
+        "immutable_scientific_subject_count",
+        "immutable_scientific_subject_digest",
+        "live_subject_count",
+        "live_subject_digest",
+    ):
+        if historical_lifecycle.get(field) != lifecycle_policy.get(field):
+            raise EvidenceError(f"historical SQ-0006 v2 {field} drift")
+    if historical_lifecycle.get("historical_completion") != manifest.get("historical_completion"):
+        raise EvidenceError("historical SQ-0006 v1/v2 completion disagreement")
 
     subjects = manifest.get("live_subjects")
     if not isinstance(subjects, list) or len(subjects) != manifest.get("live_subject_count"):
@@ -399,6 +462,19 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
         raise EvidenceError("lifecycle-maintenance subject set mismatch")
     if sha256(canonical(lifecycle_subjects)) != manifest.get("lifecycle_subject_digest"):
         raise EvidenceError("lifecycle-maintenance subject digest mismatch")
+    maintenance_paths = spec.get("maintenance_live_baseline_paths")
+    if not isinstance(maintenance_paths, list) or tuple(maintenance_paths) != EXPECTED_MAINTENANCE_LIVE_BASELINE_PATHS:
+        raise EvidenceError("invalid maintenance live baseline path policy")
+    maintenance_live = manifest.get("maintenance_live_baselines")
+    if not isinstance(maintenance_live, list) or [item.get("path") for item in maintenance_live] != maintenance_paths:
+        raise EvidenceError("maintenance live baseline set mismatch")
+    for subject in maintenance_live:
+        relative = subject["path"]
+        path = root / relative
+        if path.is_symlink() or not path.is_file() or path.stat().st_size != subject.get("size_bytes") or sha256(path.read_bytes()) != subject.get("sha256"):
+            raise EvidenceError(f"maintenance live baseline mismatch: {relative}")
+    if sha256(canonical(maintenance_live)) != manifest.get("maintenance_live_baseline_digest"):
+        raise EvidenceError("maintenance live baseline digest mismatch")
 
     decisions = spec["accepted_decisions"]
     rfc = root / "rfcs/0001-deterministic-encoding.md"

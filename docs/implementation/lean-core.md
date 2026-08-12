@@ -72,7 +72,8 @@ lake --version
 lake update --keep-toolchain
 lake build
 lake env lean --trust=0 Examples/Smoke.lean
-lake env leanchecker --fresh StatQED.Internal.Smoke
+python3 tools/project_axiom_report.py --verify
+python3 tools/check_all_modules.py
 ```
 
 The ordinary path may download and reuse Mathlib binary build outputs. These
@@ -104,11 +105,15 @@ After `lake build`, run:
 
 ```bash
 cd lean
-lake env leanchecker --fresh StatQED.Internal.Smoke
+python3 tools/project_axiom_report.py --verify
+python3 tools/check_all_modules.py
 ```
 
-The built-in `leanchecker` replays declarations stored in the selected `.olean`
-module and its imports into a fresh kernel environment. This guards against a
+The compositional tools derive every tracked regular `StatQED` source module,
+generate an import-all live axiom probe, and replay each resulting `.olean`
+module separately with the built-in `leanchecker --fresh`. They reject module
+set disagreement, symlinks, special files, untracked module smuggling, missing
+imports, prohibited declarations, and any failed replay. This guards against a
 small class of environment manipulation that can survive an ordinary build or
 import path. It complements rather than replaces:
 
@@ -156,7 +161,8 @@ python3 scripts/check_lean_trust.py --run-mutations --json
 ```
 
 The scanner binds the exact toolchain, Lake configuration, manifest, resolved
-checkout revisions, committed report, and live report regeneration. Its
+checkout revisions, immutable SQ-0003 report history, compositional live
+project report, and all-module fresh replay. Its
 comment/string-aware source scan is supplementary: declaration kind, module
 ownership, elaborated type representation, and transitive axioms come from the
 live Lean environment.
@@ -181,31 +187,35 @@ the non-vacuous bodyless-assumption test. A right-hand-side-free `opaque`
 declaration for an inhabited type receives a definition and is not mislabeled
 as an axiom.
 
-## Actual axiom report
+## Historical report and compositional live coverage
 
-Run:
+The committed `lean/Reports/axioms.json`, `lean/Tests/AxiomReport.lean`, and
+`lean/tools/axiom_report.py` remain the byte-identical SQ-0003 completion
+snapshot. `lean/Reports/foundation-axiom-history.json` binds their hashes,
+foundation module set, and merge commit. This is historical evidence, not a
+mutable report which future modules rewrite.
+
+Run the current live checks:
 
 ```bash
 cd lean
-lake env lean --trust=0 Tests/AxiomReport.lean
-python3 tools/axiom_report.py --check Reports/axioms.json
+python3 tools/project_axiom_report.py --verify
+python3 tools/check_all_modules.py
 ```
 
-`Tests/AxiomReport.lean` enumerates declarations owned by imported `StatQED`
-modules from `Lean.Environment`, inspects declaration kinds, unsafe flags, and
-module ownership, and calls `Lean.collectAxioms`. The selected imported control
-`Set.ext` observes `Quot.sound` and `propext`; the internal smoke theorem
-observes no transitive axioms. Imported logical axioms are reported separately
-from prohibited project-defined axioms. Unsafe project declarations and
-project closures containing `sorryAx`, project-owned axioms, or reviewed
-native-trust axioms fail report generation.
+`tools/project_axiom_report.py` compares tracked Git entries against regular
+filesystem sources, derives module names, and generates an ephemeral wrapper
+that imports every source plus `Tests/ProjectAxiomProbe.lean`. The live probe
+enumerates project declarations from `Lean.Environment`, records module, kind,
+unsafe flag, diagnostic elaborated type, and sorted transitive
+`Lean.collectAxioms` output, and fails on prohibited trust. It also requires
+the imported environment module set to equal the source set exactly.
 
-`tools/axiom_report.py` binds the observation to exact Lean/Lake output,
-Mathlib checkout `HEAD`, Mathlib input and resolved revisions, manifest digest,
-named command, and deterministic non-normative provenance. The serialized
-`Lean.Expr` representation is a locked-environment diagnostic only. This
-report is not an axiom permission list, canonical theorem identity, theorem
-authorization record, compatibility lock, or RFC-0005 decision.
+`tools/check_all_modules.py` runs bounded fresh-kernel replay for every same
+module in sorted order and rejects any omission or failure. The serialized
+`Lean.Expr` representation remains a locked-environment diagnostic only. The
+live report is not an axiom permission list, canonical theorem identity,
+theorem authorization record, compatibility lock, or RFC-0005 decision.
 
 ## CI behavior
 
@@ -253,13 +263,14 @@ Python report orchestration, GitHub Actions, reviewers, and agents are
 operational or evidence-producing inputs; they are not silently promoted to
 scientific or artifact-verification authority.
 
-SQ-0003 establishes only:
+SQ-0003 historical evidence and the later compositional maintenance establish
+only:
 
 - a reproducible minimal Lean project;
 - a specific locked Lean/Mathlib environment;
 - project-source trust checks with retained positive and negative controls;
-- fresh kernel replay of the selected compiled module and imports; and
-- actual axiom observations for explicitly named declarations.
+- fresh kernel replay of every tracked project module; and
+- live axiom observations for every project declaration in those modules.
 
 It does not establish source-theorem fidelity, statistical identification or
 validity, external model assumptions, numerical correctness, data or

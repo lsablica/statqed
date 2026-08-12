@@ -6,8 +6,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
+import stat
+import subprocess
 import sys
 from typing import Any
 
@@ -53,6 +56,13 @@ EXPECTED_HISTORICAL_MANIFEST = {
     "sha256": "0512a79a42cc6c6b70e5c139044841827b3ac3103968892fe6f135f02436a233",
     "subjects_sha256": "59aa64011c7afea1ed923a50479f151999cfcd16f7fa125114f6558c9a2b9105",
 }
+EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST = {
+    "commit": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+    "path": "conformance/prototypes/evidence/evidence-manifest.json",
+    "protected_files_sha256": "75f1b0f6266791e55777a87530c7f46c62a89b932e81196b27877eec93f0a7fb",
+    "schema": "statqed.sq0005-evidence.v2",
+    "sha256": "1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845",
+}
 EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS = {
     "SQ-0006": {
         "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
@@ -65,7 +75,7 @@ EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS = {
         "sha256": "8ca1d8f0a50abc6d081cd2b3b73456a334f6ac43a2572576b6b452553ec8d471",
     },
 }
-EXPECTED_REVIEW_RECORD = "work/reviews/SQ-0005-evidence-lifecycle.md"
+EXPECTED_REVIEW_RECORD = "work/reviews/SQ-0005-compositional-path-ownership.md"
 EXPECTED_BASELINE = {
     "commit": "8875d8f6fa8e3b45e706ea567d45448927a02efa",
     "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429",
@@ -86,7 +96,94 @@ EXPECTED_MAKEFILE_INTEGRATION = {
     "check_dependency": "check-sq0005-evidence",
     "command": "python3 scripts/serialization/check_evidence.py",
 }
-ALLOWED_SUCCESSOR_STATUSES = ("READY", "IN_PROGRESS", "IN_REVIEW", "DONE")
+EXPECTED_SUCCESSOR_LIFECYCLE = {
+    "SQ-0006": ["READY", "IN_PROGRESS", "IN_REVIEW", "DONE"],
+    "SQ-0008": ["BLOCKED", "READY", "IN_PROGRESS", "IN_REVIEW", "DONE", "SUPERSEDED"],
+}
+OWNER_TASKS = ("SQ-0007", "SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015")
+EXPECTED_LIVE_PATH_POLICY = {
+    "authorizing_statuses": ["IN_PROGRESS", "IN_REVIEW", "DONE"],
+    "ignored_directories": [".lake", ".pytest_cache", "__pycache__", "target"],
+    "owner_allowed_statuses": [
+        "BLOCKED",
+        "READY",
+        "IN_PROGRESS",
+        "IN_REVIEW",
+        "DONE",
+        "SUPERSEDED",
+    ],
+    "partitions": [
+        {
+            "exclude": [],
+            "id": "backend_registry",
+            "include": "backend/crates/statqed-registry/**",
+            "owners": ["SQ-0007", "SQ-0011"],
+        },
+        {
+            "exclude": ["backend/crates/statqed-registry/**"],
+            "id": "backend_remainder",
+            "include": "backend/**",
+            "owners": ["SQ-0011"],
+        },
+        {
+            "exclude": [],
+            "id": "frontend_julia",
+            "include": "frontends/julia/**",
+            "owners": ["SQ-0015"],
+        },
+        {
+            "exclude": [],
+            "id": "frontend_python",
+            "include": "frontends/python/**",
+            "owners": ["SQ-0014"],
+        },
+        {
+            "exclude": [],
+            "id": "frontend_r",
+            "include": "frontends/r/**",
+            "owners": ["SQ-0013"],
+        },
+        {
+            "exclude": [
+                "frontends/julia/**",
+                "frontends/python/**",
+                "frontends/r/**",
+            ],
+            "id": "frontends_remainder",
+            "include": "frontends/**",
+            "owners": [],
+        },
+        {
+            "exclude": [],
+            "id": "lean_assurance",
+            "include": "lean/StatQED/Assurance/**",
+            "owners": ["SQ-0008"],
+        },
+        {
+            "exclude": [],
+            "id": "lean_guarantee",
+            "include": "lean/StatQED/Guarantee/**",
+            "owners": ["SQ-0008"],
+        },
+        {
+            "exclude": [],
+            "id": "lean_registry",
+            "include": "lean/StatQED/Registry/**",
+            "owners": ["SQ-0007"],
+        },
+        {
+            "exclude": [
+                "lean/StatQED/Assurance/**",
+                "lean/StatQED/Guarantee/**",
+                "lean/StatQED/Registry/**",
+            ],
+            "id": "lean_remainder",
+            "include": "lean/**",
+            "owners": [],
+        },
+    ],
+    "protected_roots": ["backend", "frontends", "lean"],
+}
 EXPECTED_SHARED_DOCUMENT_POLICIES = {
     "docs/quality/dashboard.md": {"projection": "sq0005_dashboard_v1"},
     "docs/spec/canonicalization.md": {
@@ -500,6 +597,11 @@ def verify_historical_completion(root: Path, manifest: dict[str, Any]) -> None:
     if manifest.get("historical_manifest") != EXPECTED_HISTORICAL_MANIFEST:
         raise EvidenceError("historical SQ-0005 manifest binding changed")
     if (
+        manifest.get("historical_lifecycle_manifest")
+        != EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST
+    ):
+        raise EvidenceError("historical SQ-0005 v2 lifecycle manifest binding changed")
+    if (
         manifest.get("historical_successor_contracts")
         != EXPECTED_HISTORICAL_SUCCESSOR_CONTRACTS
     ):
@@ -522,9 +624,12 @@ def ledger_membership(status: dict[str, Any], task_id: str, task_status: str) ->
         "IN_PROGRESS": "in_progress",
         "IN_REVIEW": "in_progress",
         "READY": "ready",
+        "BLOCKED": None,
+        "SUPERSEDED": None,
     }[task_status]
     present = [name for name, values in buckets.items() if task_id in values]
-    if present != [expected_bucket]:
+    expected = [] if expected_bucket is None else [expected_bucket]
+    if present != expected:
         raise EvidenceError(
             f"{task_id} live ledger membership disagrees with {task_status}: {present}"
         )
@@ -540,6 +645,8 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("SQ-0005 live completion policy changed")
     if policy.get("makefile_integration") != EXPECTED_MAKEFILE_INTEGRATION:
         raise EvidenceError("SQ-0005 Makefile integration policy changed")
+    if policy.get("live_path_policy") != EXPECTED_LIVE_PATH_POLICY:
+        raise EvidenceError("SQ-0005 live path-owner policy changed")
     successor_policy = policy.get("successor_lifecycle")
     if not isinstance(successor_policy, dict) or sorted(successor_policy) != [
         "SQ-0006",
@@ -548,7 +655,7 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("SQ-0005 successor lifecycle policy changed")
     for task_id in sorted(successor_policy):
         if successor_policy[task_id] != {
-            "allowed_statuses": list(ALLOWED_SUCCESSOR_STATUSES)
+            "allowed_statuses": EXPECTED_SUCCESSOR_LIFECYCLE[task_id]
         }:
             raise EvidenceError(f"{task_id} allowed lifecycle policy changed")
 
@@ -572,7 +679,19 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         backlog_status = backlog_task.get("status")
         if contract_status != backlog_status:
             raise EvidenceError(f"{task_id} contract/backlog status disagreement")
-        if contract_status not in ALLOWED_SUCCESSOR_STATUSES:
+        if contract_status not in EXPECTED_SUCCESSOR_LIFECYCLE[task_id]:
+            raise EvidenceError(f"{task_id} has illegal lifecycle status: {contract_status}")
+        ledger_membership(status, task_id, contract_status)
+
+    owner_allowed = tuple(EXPECTED_LIVE_PATH_POLICY["owner_allowed_statuses"])
+    for task_id in OWNER_TASKS:
+        contract = load_json(root / f"work/contracts/{task_id}.yaml")
+        backlog_task = task(backlog["tasks"], task_id)
+        contract_status = contract.get("status")
+        backlog_status = backlog_task.get("status")
+        if contract_status != backlog_status:
+            raise EvidenceError(f"{task_id} contract/backlog status disagreement")
+        if contract_status not in owner_allowed:
             raise EvidenceError(f"{task_id} has illegal lifecycle status: {contract_status}")
         ledger_membership(status, task_id, contract_status)
 
@@ -716,6 +835,123 @@ def verify_live_status_and_scope(root: Path, manifest: dict[str, Any]) -> None:
         raise EvidenceError("RFC-0001 and ADR-0004 normative scopes disagree")
 
 
+def path_matches_pattern(path: str, pattern: str) -> bool:
+    if not pattern.endswith("/**"):
+        raise EvidenceError(f"unsupported protected-path pattern: {pattern}")
+    prefix = pattern[:-3].rstrip("/")
+    return path == prefix or path.startswith(prefix + "/")
+
+
+def protected_partition(path: str) -> dict[str, Any]:
+    matches: list[dict[str, Any]] = []
+    for partition in EXPECTED_LIVE_PATH_POLICY["partitions"]:
+        if not path_matches_pattern(path, partition["include"]):
+            continue
+        if any(path_matches_pattern(path, value) for value in partition["exclude"]):
+            continue
+        matches.append(partition)
+    if len(matches) != 1:
+        raise EvidenceError(
+            f"protected path has {len(matches)} static owner partitions: {path}"
+        )
+    return matches[0]
+
+
+def git_tracked_paths(root: Path) -> set[str]:
+    completed = subprocess.run(
+        ["git", "ls-files", "-z", "--", *EXPECTED_LIVE_PATH_POLICY["protected_roots"]],
+        cwd=root,
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if completed.returncode != 0:
+        detail = completed.stderr.decode("utf-8", errors="replace").strip()
+        raise EvidenceError(f"cannot enumerate tracked protected paths: {detail}")
+    return {
+        item.decode("utf-8")
+        for item in completed.stdout.split(b"\0")
+        if item
+    }
+
+
+def current_protected_files(root: Path) -> dict[str, str]:
+    observed: dict[str, str] = {}
+    ignored = set(EXPECTED_LIVE_PATH_POLICY["ignored_directories"])
+
+    def scan(directory: Path) -> None:
+        try:
+            entries = sorted(os.scandir(directory), key=lambda item: item.name)
+        except OSError as error:
+            raise EvidenceError(f"cannot scan protected path {directory}: {error}") from error
+        for entry in entries:
+            path = Path(entry.path)
+            relative = path.relative_to(root).as_posix()
+            mode = entry.stat(follow_symlinks=False).st_mode
+            if stat.S_ISLNK(mode):
+                raise EvidenceError(f"symlink in protected production tree: {relative}")
+            if stat.S_ISDIR(mode):
+                if entry.name in ignored:
+                    if entry.name == "__pycache__":
+                        for generated in path.rglob("*"):
+                            if generated.is_file() and generated.suffix not in {
+                                ".pyc",
+                                ".pyo",
+                            }:
+                                raise EvidenceError(
+                                    "unexpected source in generated bytecode directory: "
+                                    + generated.relative_to(root).as_posix()
+                                )
+                    continue
+                scan(path)
+                continue
+            if not stat.S_ISREG(mode):
+                raise EvidenceError(f"special file in protected production tree: {relative}")
+            if path.suffix in {".pyc", ".pyo"}:
+                raise EvidenceError(f"generated bytecode in protected tree: {relative}")
+            observed[relative] = sha256(path)
+
+    for value in EXPECTED_LIVE_PATH_POLICY["protected_roots"]:
+        directory = repository_path(root, value)
+        if not directory.is_dir() or directory.is_symlink():
+            raise EvidenceError(f"protected directory missing or unsafe: {value}")
+        scan(directory)
+
+    # Build/cache directories are operationally ignored, but a force-added tracked
+    # file cannot use such a directory to evade the owner partition check.
+    for relative in sorted(git_tracked_paths(root)):
+        parts = PurePosixPath(relative).parts
+        if not ignored.intersection(parts):
+            continue
+        path = repository_path(root, relative)
+        try:
+            mode = path.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if not stat.S_ISREG(mode) or path.is_symlink():
+            raise EvidenceError(f"tracked ignored path is not regular: {relative}")
+        if path.suffix in {".pyc", ".pyo"}:
+            raise EvidenceError(f"generated bytecode in protected tree: {relative}")
+        observed[relative] = sha256(path)
+    return observed
+
+
+def owner_statuses(root: Path) -> dict[str, str]:
+    backlog = load_json(root / "work/backlog.yaml")
+    result: dict[str, str] = {}
+    allowed = set(EXPECTED_LIVE_PATH_POLICY["owner_allowed_statuses"])
+    for task_id in OWNER_TASKS:
+        contract = load_json(root / f"work/contracts/{task_id}.yaml")
+        backlog_status = task(backlog["tasks"], task_id).get("status")
+        contract_status = contract.get("status")
+        if contract_status != backlog_status:
+            raise EvidenceError(f"{task_id} contract/backlog status disagreement")
+        if contract_status not in allowed:
+            raise EvidenceError(f"{task_id} has illegal lifecycle status: {contract_status}")
+        result[task_id] = contract_status
+    return result
+
+
 def verify_rfc6_and_protected(root: Path, manifest: dict[str, Any]) -> None:
     rfc6 = require_file(root, "rfcs/0006-canonical-logical-data-digest.md")
     baseline = manifest["baseline"]
@@ -730,34 +966,50 @@ def verify_rfc6_and_protected(root: Path, manifest: dict[str, Any]) -> None:
     if owners.get("RFC-0006") != "SQ-0027":
         raise EvidenceError("RFC-0006 ownership drift")
     protected = manifest.get("protected_files", [])
+    if manifest.get("protected_prefixes") != EXPECTED_LIVE_PATH_POLICY["protected_roots"]:
+        raise EvidenceError("historical protected production roots changed")
+    if (
+        hashlib.sha256(canonical_json_bytes(protected)).hexdigest()
+        != EXPECTED_HISTORICAL_LIFECYCLE_MANIFEST["protected_files_sha256"]
+    ):
+        raise EvidenceError("historical v2 protected production snapshot changed")
     protected_paths = [item.get("path") for item in protected]
     if protected_paths != sorted(protected_paths) or len(set(protected_paths)) != len(
         protected_paths
     ):
         raise EvidenceError("protected file list is not unique and sorted")
-    for item in protected:
-        if sha256(require_file(root, item["path"])) != item["sha256"]:
-            raise EvidenceError(f"protected production file changed: {item['path']}")
-    expected_protected = set(protected_paths)
-    actual_protected: set[str] = set()
-    for prefix in manifest.get("protected_prefixes", []):
-        directory = repository_path(root, prefix)
-        if not directory.is_dir():
-            raise EvidenceError(f"protected directory missing: {prefix}")
-        for path in directory.rglob("*"):
-            if (
-                path.is_file()
-                and not path.is_symlink()
-                and not any(
-                    part in {"target", ".lake", "__pycache__", ".pytest_cache"}
-                    for part in path.relative_to(root).parts
-                )
-                and path.suffix not in {".pyc", ".pyo"}
-            ):
-                actual_protected.add(path.relative_to(root).as_posix())
-    extras = sorted(actual_protected - expected_protected)
-    missing = sorted(expected_protected - actual_protected)
-    if extras or missing:
+    historical = {item["path"]: item["sha256"] for item in protected}
+    live_baseline_items = manifest.get("live_protected_files", [])
+    live_baseline_paths = [item.get("path") for item in live_baseline_items]
+    if (
+        live_baseline_paths != sorted(live_baseline_paths)
+        or len(live_baseline_paths) != len(set(live_baseline_paths))
+        or any(
+            not re.fullmatch(r"[0-9a-f]{64}", str(item.get("sha256", "")))
+            for item in live_baseline_items
+        )
+    ):
+        raise EvidenceError("v3 live protected baseline is invalid")
+    live_baseline = {
+        item["path"]: item["sha256"] for item in live_baseline_items
+    }
+    current = current_protected_files(root)
+    statuses = owner_statuses(root)
+    authorizing = set(EXPECTED_LIVE_PATH_POLICY["authorizing_statuses"])
+    failures: list[str] = []
+    for path in sorted(set(live_baseline) | set(current)):
+        partition = protected_partition(path)
+        active = any(statuses[owner] in authorizing for owner in partition["owners"])
+        if active:
+            continue
+        if path not in live_baseline or path not in current:
+            failures.append(path)
+            continue
+        if live_baseline[path] != current[path]:
+            raise EvidenceError(f"protected production file changed: {path}")
+    if failures:
+        extras = [path for path in failures if path not in live_baseline]
+        missing = [path for path in failures if path not in current]
         raise EvidenceError(
             "protected production path-set drift: extras="
             + ",".join(extras)
@@ -767,7 +1019,7 @@ def verify_rfc6_and_protected(root: Path, manifest: dict[str, Any]) -> None:
 def verify(root: Path, manifest_value: str) -> dict[str, Any]:
     manifest_path = require_file(root, manifest_value)
     manifest = load_json(manifest_path)
-    if manifest.get("schema") != "statqed.sq0005-evidence.v2":
+    if manifest.get("schema") != "statqed.sq0005-evidence.v3":
         raise EvidenceError("unsupported evidence manifest schema")
     verify_historical_completion(root, manifest)
     historical_subjects = verify_historical_subjects(manifest)

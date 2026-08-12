@@ -1,0 +1,6 @@
+/- Test-only fixture whose missing import must fail the live compositor. -/
+import StatQED.Registry.DefinitelyMissing
+
+namespace StatQED.Registry
+
+end StatQED.Registry

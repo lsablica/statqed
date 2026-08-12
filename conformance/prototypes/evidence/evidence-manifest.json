@@ -123,6 +123,13 @@
       "rfc0001": "Accepted"
     }
   },
+  "historical_lifecycle_manifest": {
+    "commit": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+    "path": "conformance/prototypes/evidence/evidence-manifest.json",
+    "protected_files_sha256": "75f1b0f6266791e55777a87530c7f46c62a89b932e81196b27877eec93f0a7fb",
+    "schema": "statqed.sq0005-evidence.v2",
+    "sha256": "1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845"
+  },
   "historical_manifest": {
     "commit": "6c0451fffa8b875bf8a275473a3033bddb8a34da",
     "path": "conformance/prototypes/evidence/evidence-manifest.json",
@@ -957,6 +964,121 @@
       "rfc0006": "Draft",
       "rfc0006_owner": "SQ-0027"
     },
+    "live_path_policy": {
+      "authorizing_statuses": [
+        "IN_PROGRESS",
+        "IN_REVIEW",
+        "DONE"
+      ],
+      "ignored_directories": [
+        ".lake",
+        ".pytest_cache",
+        "__pycache__",
+        "target"
+      ],
+      "owner_allowed_statuses": [
+        "BLOCKED",
+        "READY",
+        "IN_PROGRESS",
+        "IN_REVIEW",
+        "DONE",
+        "SUPERSEDED"
+      ],
+      "partitions": [
+        {
+          "exclude": [],
+          "id": "backend_registry",
+          "include": "backend/crates/statqed-registry/**",
+          "owners": [
+            "SQ-0007",
+            "SQ-0011"
+          ]
+        },
+        {
+          "exclude": [
+            "backend/crates/statqed-registry/**"
+          ],
+          "id": "backend_remainder",
+          "include": "backend/**",
+          "owners": [
+            "SQ-0011"
+          ]
+        },
+        {
+          "exclude": [],
+          "id": "frontend_julia",
+          "include": "frontends/julia/**",
+          "owners": [
+            "SQ-0015"
+          ]
+        },
+        {
+          "exclude": [],
+          "id": "frontend_python",
+          "include": "frontends/python/**",
+          "owners": [
+            "SQ-0014"
+          ]
+        },
+        {
+          "exclude": [],
+          "id": "frontend_r",
+          "include": "frontends/r/**",
+          "owners": [
+            "SQ-0013"
+          ]
+        },
+        {
+          "exclude": [
+            "frontends/julia/**",
+            "frontends/python/**",
+            "frontends/r/**"
+          ],
+          "id": "frontends_remainder",
+          "include": "frontends/**",
+          "owners": []
+        },
+        {
+          "exclude": [],
+          "id": "lean_assurance",
+          "include": "lean/StatQED/Assurance/**",
+          "owners": [
+            "SQ-0008"
+          ]
+        },
+        {
+          "exclude": [],
+          "id": "lean_guarantee",
+          "include": "lean/StatQED/Guarantee/**",
+          "owners": [
+            "SQ-0008"
+          ]
+        },
+        {
+          "exclude": [],
+          "id": "lean_registry",
+          "include": "lean/StatQED/Registry/**",
+          "owners": [
+            "SQ-0007"
+          ]
+        },
+        {
+          "exclude": [
+            "lean/StatQED/Assurance/**",
+            "lean/StatQED/Guarantee/**",
+            "lean/StatQED/Registry/**"
+          ],
+          "id": "lean_remainder",
+          "include": "lean/**",
+          "owners": []
+        }
+      ],
+      "protected_roots": [
+        "backend",
+        "frontends",
+        "lean"
+      ]
+    },
     "makefile_integration": {
       "check_dependency": "check-sq0005-evidence",
       "command": "python3 scripts/serialization/check_evidence.py"
@@ -1005,14 +1127,402 @@
       },
       "SQ-0008": {
         "allowed_statuses": [
+          "BLOCKED",
           "READY",
           "IN_PROGRESS",
           "IN_REVIEW",
-          "DONE"
+          "DONE",
+          "SUPERSEDED"
         ]
       }
     }
   },
+  "live_protected_files": [
+    {
+      "path": "backend/AGENTS.md",
+      "sha256": "64861abcac207d169383f627a25267b40939f01d2a48731bce2d18a40df53bb2"
+    },
+    {
+      "path": "backend/Cargo.lock",
+      "sha256": "408f171020abc33031390a1c22ed3f21ec271b797d880f7749f83edec04211a3"
+    },
+    {
+      "path": "backend/Cargo.toml",
+      "sha256": "dc49b4186d2f0e188993e1a1ccf43b9ce831de71e323431dd1e3028636de2c91"
+    },
+    {
+      "path": "backend/README.md",
+      "sha256": "5cdfb4e68ac144425b24164136af27d3169dfa2c982d92998e0508d52168179d"
+    },
+    {
+      "path": "backend/crates/statqed-cli/Cargo.toml",
+      "sha256": "f93f73f46cf3af273146ea1c25a90973cf9539fb12c893458cee9cc25e6268b4"
+    },
+    {
+      "path": "backend/crates/statqed-cli/src/main.rs",
+      "sha256": "7d0d85cbb4e4960bbd3262cc70b0e74604cc6e241db2959d3ef3716f42152f34"
+    },
+    {
+      "path": "backend/crates/statqed-cli/tests/cli.rs",
+      "sha256": "cb68b40533f28a032bb649cf12a399080a506b3ba0d2636bcb5d5b316189bd6b"
+    },
+    {
+      "path": "backend/crates/statqed-core/Cargo.toml",
+      "sha256": "631e617337bdb1c9ce49a14647cfc3cfe627cdca1d6425230c1d365b28c3b10c"
+    },
+    {
+      "path": "backend/crates/statqed-core/src/lib.rs",
+      "sha256": "336d7c2633f98d03f39332114a22aeba3dd8df50be6c823f353f6165d055300f"
+    },
+    {
+      "path": "backend/evidence/advisory-report.json",
+      "sha256": "521a22ceb0a147306af89022a4bf1537cff76b31e2fd80181aaa1854aa472942"
+    },
+    {
+      "path": "backend/evidence/bindings.json",
+      "sha256": "71e803fd77e095f22295bb91babb25ebd2d53e00bbfb18af667db5d3adb2a216"
+    },
+    {
+      "path": "backend/evidence/dependency-license-inventory.json",
+      "sha256": "e68c036a44ac100a615cc642ebaaa55850466ea10aba1eddf84f9873635215db"
+    },
+    {
+      "path": "backend/evidence/deterministic-output-fixtures.json",
+      "sha256": "41a8675a17c8e8fba799cb9811e2dc90170d30eb20d377c35c15d892b48a8927"
+    },
+    {
+      "path": "backend/evidence/isolated-execution.json",
+      "sha256": "5e7cad28b3b5c06a22fda58e44b41781d5b1a53eab3eb311aeda379593c79b58"
+    },
+    {
+      "path": "backend/evidence/mutation-results.json",
+      "sha256": "32257d526324f542f802c65301840d47aaf6e241552e90f4efc1af8df755deb3"
+    },
+    {
+      "path": "backend/evidence/security-lock.json",
+      "sha256": "7afc4b4c5abf7ee02a178e4a1dc26b53d0dd376f35ba2818759dae6c49477428"
+    },
+    {
+      "path": "backend/evidence/source-lock.json",
+      "sha256": "7f45f629ff17eb8843e36d703fe6911b6b54d4236cb88f02efe3c9fb99208275"
+    },
+    {
+      "path": "backend/rust-toolchain.toml",
+      "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
+    },
+    {
+      "path": "backend/tools/check_workspace.py",
+      "sha256": "eb6a29c5806053eec8e6b5ca1d013a1ccebf7b7fbe6c1eb48b059cacfd4697f2"
+    },
+    {
+      "path": "backend/tools/dependency_inventory.py",
+      "sha256": "8c32f8a98c648323f77f7ab6425d0cf304887e06bf49ba5cf575a90c1e0e4af4"
+    },
+    {
+      "path": "backend/tools/run_isolated_checks.py",
+      "sha256": "71d49b65f53cdbf0847e9eaab4d97bc583309b51fec846ac68a0280ed97bf805"
+    },
+    {
+      "path": "backend/tools/security_audit.py",
+      "sha256": "ef68782de1b61464fbfd4b8dc065b55629802c5df4bffc57b8fd81ea9633b6f4"
+    },
+    {
+      "path": "frontends/AGENTS.md",
+      "sha256": "f108efbe902cb400cffc5f8e713e4d4974235ad7bedbc2f234f98be6809e37cc"
+    },
+    {
+      "path": "frontends/README.md",
+      "sha256": "f5be10cd1ea03fd45ccaabb048c72c3adf2dd80a68a198aa4ecbe5d60bd57fb3"
+    },
+    {
+      "path": "frontends/julia/AGENTS.md",
+      "sha256": "4a7fed430b857676f1018eda99690c4c8e41c8f833e253aa18eff08e34be625d"
+    },
+    {
+      "path": "frontends/julia/README.md",
+      "sha256": "bfb1e532fc53150a93de5a97758878862405ff1290c113e3de0efa3b798ddf9d"
+    },
+    {
+      "path": "frontends/python/AGENTS.md",
+      "sha256": "0447a6c4e863d1e0875c9939b9b372b35200e6e44130a6f374f4f1e629ff057a"
+    },
+    {
+      "path": "frontends/python/README.md",
+      "sha256": "438d55e0fe3dcf367680cfdd90f65726dd8bb9f98b145867801b51d062e1236d"
+    },
+    {
+      "path": "frontends/r/AGENTS.md",
+      "sha256": "12459bbae6d5627104b75e56fce62aa54dbd9e77445700e79856ddbd972acad2"
+    },
+    {
+      "path": "frontends/r/README.md",
+      "sha256": "82cf2b679600925850a83ac4be4fd7d0aa9de69ae0e6e2ae27e5b1d5d58c7c92"
+    },
+    {
+      "path": "lean/AGENTS.md",
+      "sha256": "59b31658f9a602b58ad30de8ab8d3c292315ee910425ed101a1dafc8d71ebe49"
+    },
+    {
+      "path": "lean/Examples/Smoke.lean",
+      "sha256": "c6b8d8ef26c97f4e295d86cc501dae780addf60667f99e4a1d74ea3c7dedc6b0"
+    },
+    {
+      "path": "lean/README.md",
+      "sha256": "21fee646dce90e02f474d76daf4e2b56105a43b8dcb1115bff0909487abf942f"
+    },
+    {
+      "path": "lean/Reports/axioms.json",
+      "sha256": "96a2b221dcc7f0a08607fbc935f31c5c4846486b0d4edcb585bddfad2298346b"
+    },
+    {
+      "path": "lean/Reports/foundation-axiom-history.json",
+      "sha256": "4295ec84023209cf794f2172a960f938f296020379e867fc3e1939a0f1fa7042"
+    },
+    {
+      "path": "lean/StatQED.lean",
+      "sha256": "251dff81a48657d51f26968018479cb1b043a2978a7e59c687e881e8189ecd20"
+    },
+    {
+      "path": "lean/StatQED/Internal/Smoke.lean",
+      "sha256": "76bb1f4916d62c252a6ddcaac39e29b295afefd15d85ddd5d393fcd4935ce1e0"
+    },
+    {
+      "path": "lean/Tests/AxiomReport.lean",
+      "sha256": "bf1acd71f1b32f4b2e80b24114318a44903c9eb19a7fcd9ff57d90e4e667d23e"
+    },
+    {
+      "path": "lean/Tests/ProjectAxiomProbe.lean",
+      "sha256": "1937b31ae83163408a2654628d593e88475924f738cb6d1e007ddbe844b9a227"
+    },
+    {
+      "path": "lean/Tests/Trust/README.md",
+      "sha256": "6b058357651948ea994f29aae8a38bb2cf1dc7f536ecadf6f452ae6d8714e21a"
+    },
+    {
+      "path": "lean/Tests/Trust/adjacent_toolchain.fixture",
+      "sha256": "8e3538e0ab5f81a3ee04927d8838c8c674e0e112838b4b3ce87ec218143276af"
+    },
+    {
+      "path": "lean/Tests/Trust/admit.lean.fixture",
+      "sha256": "91955758e352fc98382a06f22d79cc159cc2613b80cb85bd5c2ee16e3c885120"
+    },
+    {
+      "path": "lean/Tests/Trust/altered_toolchain.fixture",
+      "sha256": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
+    },
+    {
+      "path": "lean/Tests/Trust/annotated_axiom.lean.fixture",
+      "sha256": "66108728ec26785d6f95c2e0cb66ae4ed02f87d8736e5657efddc8d00e6ecb1d"
+    },
+    {
+      "path": "lean/Tests/Trust/bodyless_constant.lean.fixture",
+      "sha256": "29f362c8d86f6ba7236f8c15b5b17af982e81200328963c1aeae80228c27f366"
+    },
+    {
+      "path": "lean/Tests/Trust/bv_decide.lean.fixture",
+      "sha256": "7fc17e91db70f5b84e5270c9873a00097315a2230b33ee48398beb2a76759cbe"
+    },
+    {
+      "path": "lean/Tests/Trust/constant_syntax_impossible.lean.fixture",
+      "sha256": "53c619d4f8cdf2d2bea721777a4e6fed9eb9752526289516abae601d8d227a1f"
+    },
+    {
+      "path": "lean/Tests/Trust/decide_native.lean.fixture",
+      "sha256": "e13f7260636402791deaec04d06cd8419359cd054eabd07be675a23fb26cb9db"
+    },
+    {
+      "path": "lean/Tests/Trust/expectations.json",
+      "sha256": "07f879123539a21b38a09b10021243cb4a80112ccf4b507b0c45f118eeb73027"
+    },
+    {
+      "path": "lean/Tests/Trust/fabricated_axiom_report.json.fixture",
+      "sha256": "240c065129729a4be9c6f89fd61ed74250b3f42e9a06f4d23fa38099d87e2088"
+    },
+    {
+      "path": "lean/Tests/Trust/kernel_projection_14576.lean.fixture",
+      "sha256": "f46b478f0838cd4b5a78a0e0beaa5947ef17851e24e5aa015e7e384bcdf7186a"
+    },
+    {
+      "path": "lean/Tests/Trust/keyword_false_positive.lean.fixture",
+      "sha256": "ce1aa3c28bb19038342b73b728acb15a6ec9529e3d8df1eb437e8a31807b7857"
+    },
+    {
+      "path": "lean/Tests/Trust/name_quotation_false_positive.lean.fixture",
+      "sha256": "f616fc1ac1e077f0fb28611260c980a3606ef259504db0647736234231a993c7"
+    },
+    {
+      "path": "lean/Tests/Trust/native_decide.lean.fixture",
+      "sha256": "bb11959f4b845f96002b9b82ffd0ce22f90706b11d6bd12367f0bce2180f5996"
+    },
+    {
+      "path": "lean/Tests/Trust/ofReduceBool.lean.fixture",
+      "sha256": "dd7ef01c6cbecb7486a735189f7c2834e5aeb0c67bd51b3a8db7e431b0850ef7"
+    },
+    {
+      "path": "lean/Tests/Trust/ofReduceNat.lean.fixture",
+      "sha256": "8628b92da79882098bc6cb9a655fa6b92b3f70cbdf0971ae4a1cf108469d88ad"
+    },
+    {
+      "path": "lean/Tests/Trust/project_axiom.lean.fixture",
+      "sha256": "62d7dd1e449751eff70ac3c1e8c4be240f076e4886b88eebe1d89327ff8aa94f"
+    },
+    {
+      "path": "lean/Tests/Trust/quoted_axiomDecl.lean.fixture",
+      "sha256": "3a6bd23aecceb8a8bfb02708e621ed3d8ac158e3e880bedfadd9162c336b4ab8"
+    },
+    {
+      "path": "lean/Tests/Trust/quoted_sorryAx.lean.fixture",
+      "sha256": "ab3eb77b1367764d2a150fe94a7b0f3a3e8a66117325a9a4e7686fc901e60f8e"
+    },
+    {
+      "path": "lean/Tests/Trust/reduceBool.lean.fixture",
+      "sha256": "40edecaee74f187b63120f3d180c08f4b6117b35df7c9f421eb2d220ab85495e"
+    },
+    {
+      "path": "lean/Tests/Trust/reduceNat.lean.fixture",
+      "sha256": "87edd82e4c3f833d811488b4d0b7e3ac85febb0557b67e6a2690a63f368f1bec"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_axiom.lean.fixture",
+      "sha256": "fdbc5ae37a9120765d17b15d1da9f511c10a1d3187ddc0e3959c93bf637e37cb"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_native.lean.fixture",
+      "sha256": "aeb78a41b2f8ee5c9f593c0608bb9d620d4f78842409e6e1698d806cb46399eb"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_safe.lean.fixture",
+      "sha256": "1236c38813556d6455f7b811535710047146312a48e582178579b92375caf6da"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_sorry.lean.fixture",
+      "sha256": "73ca9a0f83afa2ed4dab69329fccc7d278184f5082c0b99a39c1ff04ae660aa9"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_unimportable.lean.fixture",
+      "sha256": "4a705c992a3d9c80919042b71b46890b17e7fc96cf82b8113321729c690b6ccd"
+    },
+    {
+      "path": "lean/Tests/Trust/registry_unsafe.lean.fixture",
+      "sha256": "4749255e3682b2df1151418ccd6f804476cc7a1a5dea8032319c8b3e42ac12c2"
+    },
+    {
+      "path": "lean/Tests/Trust/sorry.lean.fixture",
+      "sha256": "85923ddb3b28080de137e8e7cd6fb8e0dcd466b260fbe0ff1f38f797667060e5"
+    },
+    {
+      "path": "lean/Tests/Trust/sorryAx.lean.fixture",
+      "sha256": "d3af7a27e8d0eb1f015feb7e27893974c3216b386b40d6f01a03fde6486fc10b"
+    },
+    {
+      "path": "lean/Tests/Trust/trustCompiler.lean.fixture",
+      "sha256": "5d3e087904b18f64ee2ed2607eb843de24f1e22a04914ee9ec1c52b2b37b6081"
+    },
+    {
+      "path": "lean/Tests/Trust/unsafe_declaration.lean.fixture",
+      "sha256": "0fd6d93605d26f8ad8b3228fce5e157d6b3f9ec61219dbd4303e845a1ea610fb"
+    },
+    {
+      "path": "lean/evidence/README.md",
+      "sha256": "d2822094a9195bc84df3d0d871d0f2c2429200062fb1a12d51cf3c678e92b9c0"
+    },
+    {
+      "path": "lean/evidence/bodyless-assumption.json",
+      "sha256": "4ea774d96fc536a96b2053c3c63aecee240f5dc29f87f633d0e099de1c5721bc"
+    },
+    {
+      "path": "lean/evidence/bodyless-constant-language.json",
+      "sha256": "5c62d79541a152d0ddf32d56af5a47158c62b8a6b444165c403a5e17037a520d"
+    },
+    {
+      "path": "lean/evidence/environment.json",
+      "sha256": "f8230a6f77fbc757e8a36672ec86328e9f8f248bcbe19de92f12f0b880627608"
+    },
+    {
+      "path": "lean/evidence/failures/github-cached-toolchain-selection.json",
+      "sha256": "4c1f6a2e22fc245ca577c8b748af6aeaafe56d0b7fda4426696fefda556889db"
+    },
+    {
+      "path": "lean/evidence/failures/github-workflow-configuration.json",
+      "sha256": "edd4871f901e43026314ceef73d5549a74aec16594d039745bc3caf3aeb425c6"
+    },
+    {
+      "path": "lean/evidence/failures/initial-manifest-sandbox-dns.json",
+      "sha256": "73a01f98d1e87247bf55da69edc7c15f402795f829a91895ee65c98d3b4654cf"
+    },
+    {
+      "path": "lean/evidence/failures/make-check-local-lake.json",
+      "sha256": "78747636575557179ba1cc5655c6dec89d17071b894d1a3a59bfbda7dc8a2c86"
+    },
+    {
+      "path": "lean/evidence/failures/missing-smoke-glob.json",
+      "sha256": "40c48651b572d93359c443c01b5a13c7f030a9cc8b3b07e1bc5aaeab4af332df"
+    },
+    {
+      "path": "lean/evidence/failures/no-cache-source-sandbox-dns.json",
+      "sha256": "e7274ed57ad576598e60022708b47729baa5997e0fa2b5a81345b7f5c758d3d6"
+    },
+    {
+      "path": "lean/evidence/kernel-regression.json",
+      "sha256": "b7e934bbf2927c8bca1d1a7f3256ec37d795b778780f413e6e308144ed789da7"
+    },
+    {
+      "path": "lean/evidence/manifest-reproduction.json",
+      "sha256": "fd8bb7141e02059608d986795f8f9f58541b0f8545a4821972aaeca2401d846b"
+    },
+    {
+      "path": "lean/evidence/mutation-tests.json",
+      "sha256": "3040689cf244215b4426b9d9f0f3235c1bb4eab7690327517aba318debea89e7"
+    },
+    {
+      "path": "lean/evidence/native-trust-controls.json",
+      "sha256": "dd1337433e60faaf96a80e208f2ffaa72c6c4bbbfbd81c7cb18d4e55b5fdb5c1"
+    },
+    {
+      "path": "lean/evidence/no-cache-source-build-initial.json",
+      "sha256": "465947ee069ce87705f40a101b064e158e040ba5b5885bbb58402fe1fbe60fbd"
+    },
+    {
+      "path": "lean/evidence/no-cache-source-build.json",
+      "sha256": "41b12dc120e24c2671f633cc1947aa42c802c5833bdf8213d3260e81f9654075"
+    },
+    {
+      "path": "lean/evidence/normal-build.json",
+      "sha256": "3219802283c8565277bff8a00740521f61609b23fae33fb4941506d7f521ac51"
+    },
+    {
+      "path": "lean/lake-manifest.json",
+      "sha256": "c7e814b11c0e33ec8dd4e58bb31ea0999910bdb32848770dd5721f43eee7a14b"
+    },
+    {
+      "path": "lean/lakefile.toml",
+      "sha256": "8bfe03cf6b84652643f28c37e808ba0ffc7778bd060f58c595cedbef09535dd0"
+    },
+    {
+      "path": "lean/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "lean/tools/axiom_report.py",
+      "sha256": "487d89eb6d6703f428c1d4043af931bc80665e623dc717419c7aacaec986c498"
+    },
+    {
+      "path": "lean/tools/check_all_modules.py",
+      "sha256": "8a33ca751a1d2faa019dcd73e3f6a7442ffa0bbea23e13fe07aa73300160d79e"
+    },
+    {
+      "path": "lean/tools/no_cache_build.sh",
+      "sha256": "e853f1795bb2d15d584ecee5e664b5d24faf485e86c6e6a8461d77648f464805"
+    },
+    {
+      "path": "lean/tools/project_axiom_report.py",
+      "sha256": "898e60def7dee4c6725bf92954d93933d7b07de1661324e67c26f082dd963627"
+    },
+    {
+      "path": "lean/tools/tests/test_project_trust.py",
+      "sha256": "a43318abd6bd3fa00f9d138edf03b54331294ac94d0bef8d3d6c0c6e5f629ad8"
+    }
+  ],
   "live_subjects": [
     {
       "path": ".github/workflows/serialization-prototypes.yml",
@@ -1027,7 +1537,7 @@
     {
       "path": "conformance/prototypes/evidence/evidence-spec.json",
       "role": "semantic fixtures, binary vectors, differential results, and retained failures",
-      "sha256": "666706ba320ea092d3b3d5af27842563dbdcbe85d5ead907a7f1d8d1df82d976"
+      "sha256": "39fd75ffb754a7f9f7a5a3dafb3653973e65af2f944ae782c6e70e29db3c54b4"
     },
     {
       "path": "conformance/prototypes/fixtures/semantic-v1/atoms-and-widths.json",
@@ -1702,12 +2212,12 @@
     {
       "path": "scripts/serialization/build_evidence_manifest.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "46104e94b860f9f70aaab906228f1df53144e3db8335bd8f25d873f669565945"
+      "sha256": "3d7367c471f3307093ffe91ee1011c953aed87d76857646f28dc327d570509ca"
     },
     {
       "path": "scripts/serialization/check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "e8d395f37479f74dab4c13df4d4fefbbfd5db0949eba283f9df602094b439271"
+      "sha256": "920487821d11ab335130c1bffb3f7e4378265b57872ff61e2fe72dc82fa54381"
     },
     {
       "path": "scripts/serialization/check_yanked.py",
@@ -1737,7 +2247,7 @@
     {
       "path": "scripts/serialization/tests/test_check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "90a86adcb56690f51f1856f874c45052c30cad693cfd15cb2124dc93edeed0f1"
+      "sha256": "9e352056f1a9a0fc7671d1f9fa82f56894b475f7efb84f155ebf4671624de85b"
     },
     {
       "path": "source-audits/encoding/README.md",
@@ -2351,7 +2861,7 @@
     "conformance/prototypes/results/failures/rust-first-full-differential-v1.json",
     "conformance/prototypes/results/failures/simple-24-malformed-fixture-v1.json"
   ],
-  "review_record": "work/reviews/SQ-0005-evidence-lifecycle.md",
+  "review_record": "work/reviews/SQ-0005-compositional-path-ownership.md",
   "review_subject_paths": [
     ".github/workflows/serialization-prototypes.yml",
     "ARCHITECTURE.md",
@@ -2381,7 +2891,8 @@
     "scripts/serialization/run_conformance.py",
     "scripts/serialization/tests/test_check_evidence.py",
     "source-audits/encoding/manifest.json",
+    "work/reviews/SQ-0005-evidence-lifecycle.md",
     "work/reviews/SQ-0005.md"
   ],
-  "schema": "statqed.sq0005-evidence.v2"
+  "schema": "statqed.sq0005-evidence.v3"
 }
