@@ -129,6 +129,13 @@ digest, then checks proposition, closure, proof lock, axiom report, and any
 compatibility lock.  Candidate-provided policy is ignored.  An internally
 consistent whole-registry replacement remains unknown or forbidden.
 
+The composed Python resolver performs those canonical-byte and framing
+recomputations over the retained record, snapshot, lock, and policy subjects.
+The standalone Rust component consumes a deliberately non-normative bounded
+transport and compares its separated digest fields with independently supplied
+trusted bindings. It does not parse Lean expressions, canonical CBOR, or lock
+payloads and is not independent evidence that those bytes were recomputed.
+
 ## Proof/build and axiom policy
 
 The proof/build lock binds the exact Lean release/source, Lake, Mathlib commit,
@@ -159,6 +166,11 @@ implication metadata. Compatibility permits disclosed substitution only; it
 does not merge identities or transfer semantic, source, maturity, or
 interpretation review.
 
+The only v0 compatibility fixture is the vacuous test-only implication
+`False -> True`. It demonstrates lock construction, direction checking, axiom
+observation, and substitution-rejection plumbing; it is not evidence of a
+nontrivial theorem migration or a public compatibility relation.
+
 ## Stable failures and resources
 
 V0 publishes deterministic `registry.*` classes for malformed/version,
@@ -180,9 +192,10 @@ closure width 256/units 1,024/depth 64/work 1,000,000, 128-byte identifiers,
 The primary extractor reads the live pinned Lean environment and emits typed
 expressions, kind-specific closure, proof subjects, and axiom observations.  A
 separate standard-library Python oracle independently implements the expression
-grammar, CBOR encoder, and six digest frames without importing the primary
+grammar, environment-closure walk/canonicalization, CBOR encoder, and six digest frames without importing the primary
 normalizer, Rust resolver, or SQ-0005 oracle.  A standalone std-only Rust
-workspace performs bounded offline resolution under verifier-selected policy.
+workspace performs bounded offline binding resolution under verifier-selected
+policy; it is not a second canonical-byte parser.
 
 Agreement is evidence, not authority.  Deliberately wrong encoders, closure
 walks, record/root selection, proof/axiom checks, and compatibility direction

@@ -68,6 +68,10 @@ LIMITS: Final = {
     "expression_depth": 256,
     "expression_nodes": 65_536,
     "level_depth": 64,
+    "universe_arguments": 256,
+    "name_segments": 64,
+    "name_segment_bytes": 256,
+    "qualified_name_bytes": 1_024,
     "closure_width": 256,
     "closure_depth": 64,
     "closure_units": 1_024,
@@ -80,7 +84,7 @@ LIMITS: Final = {
 _IDENTIFIER = re.compile(r"^[a-z0-9][a-z0-9._:-]{0,127}$")
 
 
-@dataclass(frozen=True)
+@dataclass
 class RegistryError(Exception):
     code: str
 
@@ -204,8 +208,10 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
         raise RegistryError("registry.normalization_failure")
 
     def name(value: Any) -> Any:
-        if not isinstance(value, list) or len(value) > 64:
+        if not isinstance(value, list) or not value:
             raise RegistryError("registry.normalization_failure")
+        if len(value) > LIMITS["name_segments"]:
+            raise RegistryError("registry.resource_limit")
         total = 0
         result = []
         for segment in value:
@@ -215,13 +221,13 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
                 if not isinstance(segment[1], str):
                     raise RegistryError("registry.normalization_failure")
                 raw = segment[1].encode("utf-8", "strict")
-                if len(raw) > 256:
+                if len(raw) > LIMITS["name_segment_bytes"]:
                     raise RegistryError("registry.resource_limit")
                 total += len(raw)
             elif type(segment[1]) is not int or not 0 <= segment[1] <= 0xFFFF_FFFF_FFFF_FFFF:
                 raise RegistryError("registry.normalization_failure")
             result.append(segment)
-        if total > 1_024:
+        if total > LIMITS["qualified_name_bytes"]:
             raise RegistryError("registry.resource_limit")
         return result
 
@@ -238,6 +244,8 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
         if tag == 1 and len(value) == 2:
             return [1, level(value[1], 0)]
         if tag == 2 and len(value) == 3 and isinstance(value[2], list):
+            if len(value[2]) > LIMITS["universe_arguments"]:
+                raise RegistryError("registry.resource_limit")
             return [2, name(value[1]), [level(item, 0) for item in value[2]]]
         if tag == 3 and len(value) == 3:
             return [3, walk(value[1], depth + 1, bound), walk(value[2], depth + 1, bound)]
@@ -268,7 +276,7 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
     def visit(name: str, depth: int) -> None:
         nonlocal work
         work += 1
-        if work > LIMITS["work"] or len(done) > LIMITS["closure_units"]:
+        if work > LIMITS["work"]:
             raise RegistryError("registry.closure_work_budget_limit")
         if depth > LIMITS["closure_depth"]:
             raise RegistryError("registry.closure_depth_limit")
@@ -276,6 +284,8 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
             return
         if name in gray:
             raise RegistryError("registry.closure_cycle")
+        if len(done) + len(gray) >= LIMITS["closure_units"]:
+            raise RegistryError("registry.closure_work_budget_limit")
         declaration = declarations.get(name)
         if declaration is None:
             raise RegistryError("registry.missing_dependency")
@@ -360,6 +370,25 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
     if axioms:
         raise RegistryError("registry.forbidden_axiom")
     compatibility = bundle.get("compatibility")
-    if compatibility is not None and compatibility.get("direction") != "new_implies_old":
-        raise RegistryError("registry.compatibility_wrong_direction")
+    if compatibility is not None:
+        if not isinstance(compatibility, dict):
+            raise RegistryError("registry.compatibility_missing")
+        if compatibility.get("direction") != "new_implies_old":
+            raise RegistryError("registry.compatibility_wrong_direction")
+        if compatibility.get("schema") != "statqed.compatibility-proof-lock.v0":
+            raise RegistryError("registry.compatibility_missing")
+        if compatibility.get("old_proposition_digest") != bundle.get("proposition_digest"):
+            raise RegistryError("registry.compatibility_missing")
+        if compatibility.get("declaration") != "StatQED.Registry.Tests.falseImpliesTrue":
+            raise RegistryError("registry.compatibility_missing")
+        if compatibility.get("axioms") != [] or compatibility.get("path_length") != 1:
+            raise RegistryError("registry.compatibility_missing")
+        _, compatibility_digest = digest_frame(
+            "compatibility", canonical_cbor(compatibility)
+        )
+        if (
+            compatibility_digest != bundle.get("compatibility_digest")
+            or compatibility_digest != policy.get("compatibility_digest")
+        ):
+            raise RegistryError("registry.compatibility_missing")
     return {"classification": "accepted", "root_status": "current" if root in current else "historical_permitted"}

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -25,6 +26,7 @@ from model import (  # noqa: E402
     normalize_expr,
     verify_bundle,
 )
+import independent_oracle  # noqa: E402
 
 CATALOG = ROOT / "conformance/registry/fixtures/catalog.json"
 RESULTS = ROOT / "conformance/registry/results/results.json"
@@ -32,6 +34,7 @@ MUTATIONS = ROOT / "conformance/registry/results/mutations.json"
 GOLDEN_DIR = ROOT / "conformance/registry/golden"
 BUNDLE_PATH = ROOT / "theorem-registry/evidence/bundle.json"
 POLICY_PATH = ROOT / "theorem-registry/policy/authorization-v0.json"
+COMPATIBILITY_PATH = ROOT / "theorem-registry/locks/compatibility-v0.json"
 
 
 def read_json(path: Path) -> Any:
@@ -119,9 +122,20 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
     elif mutation == "forbidden_axiom":
         bundle["axioms"] = ["Classical.choice"]
     elif mutation == "compatibility_correct":
-        bundle["compatibility"] = {"direction": "new_implies_old", "proof": "StatQED.Registry.Tests.falseImpliesTrue"}
+        bundle["compatibility"] = read_json(COMPATIBILITY_PATH)
+        _, bundle["compatibility_digest"] = digest_frame(
+            "compatibility", canonical_cbor(bundle["compatibility"])
+        )
+        policy["compatibility_digest"] = bundle["compatibility_digest"]
     elif mutation == "compatibility_reverse":
-        bundle["compatibility"] = {"direction": "old_implies_new", "proof": "forged"}
+        bundle["compatibility"] = read_json(COMPATIBILITY_PATH)
+        bundle["compatibility"]["direction"] = "old_implies_new"
+        _, bundle["compatibility_digest"] = digest_frame(
+            "compatibility", canonical_cbor(bundle["compatibility"])
+        )
+        policy["compatibility_digest"] = digest_frame(
+            "compatibility", canonical_cbor(read_json(COMPATIBILITY_PATH))
+        )[1]
     elif mutation == "compatibility_metadata":
         bundle["compatibility"] = {"label": "equivalent"}
     else:
@@ -137,12 +151,21 @@ def evaluate(case: dict[str, Any], bundle: dict[str, Any], policy: dict[str, Any
                 value = [8, expanded(value[1])]
             normalized = normalize_expr(value, level_params=case.get("level_params"))
             payload = canonical_cbor(["statqed.lean-expr.v0", normalized])
+            oracle_payload = independent_oracle.semantic_expression_payload(
+                value, level_parameter_count=len(case.get("level_params", []))
+            )
+            if oracle_payload != payload:
+                raise RegistryError("registry.proposition_mismatch")
             digest_frame("proposition", payload)
             return "accepted", "accepted", payload
         if case["kind"] == "closure":
             roots = expanded(case["roots"])
             declarations = expanded(case["declarations"])
-            payload = canonical_cbor(["statqed.lean-environment-closure.v0", closure(roots, declarations)])
+            primary = closure(roots, declarations)
+            oracle = independent_oracle.environment_closure(roots, declarations)
+            if oracle != primary:
+                raise RegistryError("registry.environment_mismatch")
+            payload = canonical_cbor(["statqed.lean-environment-closure.v0", primary])
             digest_frame("environment", payload)
             return "accepted", "accepted", payload
         if case["kind"] == "bundle":
@@ -155,17 +178,125 @@ def evaluate(case: dict[str, Any], bundle: dict[str, Any], policy: dict[str, Any
             payload = canonical_cbor(["statqed.lean-expr.v0", [2, [[0, "True"]], []]])
             frame, digest = digest_frame("proposition", payload)
             if case["mutation"] == "cross_domain":
-                _, digest = digest_frame("environment", payload)
+                frame, _ = digest_frame("environment", payload)
             elif case["mutation"] == "truncated":
                 frame = frame[:-1]
             elif case["mutation"] == "purpose":
                 frame = frame.replace(b"statqed.theorem.proposition.v0", b"statqed.theorem.environment.v0")
-            if __import__("hashlib").sha256(frame).hexdigest() != digest:
+            elif case["mutation"] == "algorithm":
+                frame = frame.replace(b"sha-256", b"sha-512")
+            elif case["mutation"] == "profile":
+                frame = frame.replace(b"statqed.cbor-core.v1", b"statqed.cbor-core.v0")
+            elif case["mutation"] == "object_class":
+                frame = frame.replace(b"statqed.lean-proposition.v0", b"statqed.registry-record.v0")
+            elif case["mutation"] == "framing":
+                frame = frame.replace(b"statqed.digest-lp.v1", b"statqed.digest-lp.v0")
+            elif case["mutation"] == "reordered":
+                frame = frame.replace(b"sha-256", b"SHA-256")
+            elif case["mutation"] == "concatenation":
+                frame = frame.replace((7).to_bytes(4, "big") + b"sha-256", b"sha-256")
+            elif case["mutation"] == "empty":
+                frame = frame[:-len(payload)]
+            elif case["mutation"] == "fallback":
+                frame = frame.replace(b"sha-256", b"sha-1")
+            elif case["mutation"] == "downgrade":
+                frame = frame.replace(b"statqed.lean-expr.v0", b"statqed.lean-expr.v-1")
+            if hashlib.sha256(frame).hexdigest() != digest:
                 raise RegistryError("registry.statement_digest_mismatch")
             return "accepted", "accepted", None
         raise RegistryError("registry.operational_failure")
     except RegistryError as error:
         return "rejected", error.code, None
+
+
+def _classification(candidate: dict[str, Any], policy: dict[str, Any]) -> str:
+    try:
+        verify_bundle(candidate, policy)
+        return "accepted"
+    except RegistryError as error:
+        return error.code
+
+
+def deliberate_divergences(
+    bundle: dict[str, Any], policy: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Execute ten deliberately wrong implementations and detect disagreement."""
+
+    true_expr = [2, [[0, "True"]], []]
+    correct_expr = independent_oracle.semantic_expression_payload(true_expr)
+    wrong_tag = canonical_cbor(["statqed.lean-expr.v0", [1, [0]]])
+
+    binder = [5, 0, [1, [0]], [0, 0]]
+    wrong_binder = copy.deepcopy(binder)
+    wrong_binder[1] = 3
+    binder_detected = (
+        independent_oracle.semantic_expression_payload(binder)
+        != canonical_cbor(["statqed.lean-expr.v0", wrong_binder])
+    )
+
+    universe = [1, [4, 0]]
+    wrong_universe = [1, [0]]
+    universe_detected = (
+        independent_oracle.semantic_expression_payload(universe, level_parameter_count=1)
+        != canonical_cbor(["statqed.lean-expr.v0", wrong_universe])
+    )
+
+    typed_metadata = {
+        "tag": "metadata",
+        "metadata": {"source": "deliberately-retained"},
+        "expression": {
+            "tag": "constant",
+            "name": {"tag": "string", "parent": {"tag": "anonymous"}, "segment": "True"},
+            "universes": [],
+        },
+    }
+    erased = independent_oracle.proposition_payload(typed_metadata)
+    retained = canonical_cbor(["statqed.lean-expr.v0", [10, "metadata", true_expr]])
+
+    declarations = {
+        "root": {"kind": "definition", "references": ["dep"]},
+        "dep": {"kind": "definition", "references": []},
+    }
+    correct_closure = independent_oracle.environment_closure(["root"], declarations)
+    wrong_closure = [{"name": "root", "kind": "definition"}]
+
+    forged, forged_policy = mutate_bundle(bundle, policy, "forged_id")
+    selected = copy.deepcopy(bundle)
+    selected["requested_root"] = "44" * 32
+    selected_policy = copy.deepcopy(policy)
+    substituted = copy.deepcopy(bundle)
+    substituted["proof_build_digest"] = "55" * 32
+    axiom_candidate = copy.deepcopy(bundle)
+    axiom_candidate["axioms"] = ["Classical.choice"]
+    axiom_omitting_bad = copy.deepcopy(axiom_candidate)
+    axiom_omitting_bad["axioms"] = []
+    reverse, reverse_policy = mutate_bundle(bundle, policy, "compatibility_reverse")
+    correct_compat, correct_compat_policy = mutate_bundle(bundle, policy, "compatibility_correct")
+
+    observations = [
+        ("wrong_expression_tag", correct_expr != wrong_tag),
+        ("wrong_binder_info", binder_detected),
+        ("wrong_universe_param", universe_detected),
+        ("metadata_not_erased", erased != retained),
+        ("missing_closure_edge", correct_closure != wrong_closure),
+        ("record_field_forgery", _classification(forged, forged_policy) == "registry.record_digest_mismatch"),
+        ("candidate_selected_root", _classification(selected, selected_policy) == "registry.authorization_root_mismatch"),
+        ("proof_lock_substitution", _classification(substituted, policy) == "registry.proof_build_lock_mismatch"),
+        (
+            "axiom_omission",
+            _classification(axiom_candidate, policy) == "registry.forbidden_axiom"
+            and _classification(axiom_omitting_bad, policy) == "accepted",
+        ),
+        (
+            "compatibility_reversal",
+            _classification(correct_compat, correct_compat_policy) == "accepted"
+            and _classification(reverse, reverse_policy) == "registry.compatibility_wrong_direction",
+        ),
+    ]
+    return [
+        {"detected": detected, "id": name, "status": "pass" if detected else "fail"}
+        for name, detected in observations
+    ]
 
 
 def generated() -> tuple[bytes, bytes, dict[str, bytes]]:
@@ -187,15 +318,7 @@ def generated() -> tuple[bytes, bytes, dict[str, bytes]]:
         if payload is not None and classification == "accepted":
             goldens[case["id"] + ".cbor"] = payload
 
-    # The harness must detect independent encoder, decoder, closure, record,
-    # root, proof, axiom, compatibility, and diagnostic divergences.
-    deliberate = [
-        "wrong_expression_tag", "wrong_binder_info", "wrong_universe_param",
-        "metadata_not_erased", "missing_closure_edge", "record_field_forgery",
-        "candidate_selected_root", "proof_lock_substitution", "axiom_omission",
-        "compatibility_reversal",
-    ]
-    mutations = [{"detected": True, "id": name, "status": "pass"} for name in deliberate]
+    mutations = deliberate_divergences(bundle, policy)
     output = {
         "accepted": sum(item["classification"] == "accepted" for item in results),
         "failed": sum(item["status"] != "pass" for item in results),
@@ -205,7 +328,7 @@ def generated() -> tuple[bytes, bytes, dict[str, bytes]]:
         "total": len(results),
     }
     mutation_output = {
-        "detected": len(mutations),
+        "detected": sum(item["detected"] for item in mutations),
         "mutations": mutations,
         "schema": "statqed.registry-deliberate-mutations.v0",
     }

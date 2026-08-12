@@ -29,13 +29,13 @@ elab "#statqed_registry_extract" : command => do
   for declaration in declarations do
     let some info := environment.find? declaration
       | throwError "registry declaration '{declaration}' is missing"
-    let proposition ← match StatQED.Registry.propositionJson info.type with
+    let proposition ← match StatQED.Registry.propositionJson info.levelParams info.type with
       | .ok value => pure value
       | .error reason => throwError "failed to normalize '{declaration}': {reason}"
     let some proofValue := info.value? (allowOpaque := true)
       | throwError "registry declaration '{declaration}' has no proof/value subject"
-    let proofSubject ← match StatQED.Registry.exprJson
-        StatQED.Registry.maxExpressionDepth proofValue with
+    let proofSubject ← match StatQED.Registry.declarationExprJson
+        info.levelParams StatQED.Registry.maxExpressionDepth proofValue with
       | .ok value => pure value
       | .error reason => throwError "failed to normalize proof/value for '{declaration}': {reason}"
     let closure ← match StatQED.Registry.collectClosure environment

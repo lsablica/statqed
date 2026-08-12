@@ -61,37 +61,106 @@ def path_allowed(path: str, allowed_patterns: list[str]) -> bool:
     )
 
 
-def active_scope_errors(root: Path, launch_base: str, allowed_patterns: list[str]) -> list[str]:
+def git(root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=root,
+        check=False,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+
+def commit_exists(root: Path, commit: str) -> bool:
+    return git(root, ["cat-file", "-e", f"{commit}^{{commit}}"]).returncode == 0
+
+
+def is_ancestor(root: Path, ancestor: str, descendant: str = "HEAD") -> bool:
+    return git(root, ["merge-base", "--is-ancestor", ancestor, descendant]).returncode == 0
+
+
+def commit_parents(root: Path, commit: str) -> list[str] | None:
+    completed = git(root, ["show", "-s", "--format=%P", commit])
+    return completed.stdout.strip().split() if completed.returncode == 0 else None
+
+
+def ancestry_errors(root: Path, spec: dict) -> list[str]:
+    """Verify frozen launch provenance and reviewed normal predecessor merges."""
     if not (root / ".git").exists():
         return []
-    completed = subprocess.run(
-        ["git", "diff", "--name-only", launch_base, "--"],
-        cwd=root,
-        check=False,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    errors: list[str] = []
+    launch = spec["historical_launch_base"]
+    historical = spec["historical_task_commits"]
+    chain = spec["verified_predecessor_chain"]
+    required_phases = [
+        "phase_m_compositional_evidence",
+        "phase_f_fixture_neutrality",
+        "phase_t_branch_relative_live_report_fixtures",
+    ]
+    if [entry.get("phase") for entry in chain] != required_phases:
+        errors.append("evidence.predecessor_chain_unverified")
+        return errors
+    required = [launch, *historical.values()]
+    for entry in chain:
+        required.extend((entry["predecessor_tip"], entry["task_integration_merge"]))
+    if any(not commit_exists(root, commit) for commit in required):
+        errors.append("evidence.predecessor_commit_missing")
+        return errors
+    if spec["verified_predecessor_tip"] != chain[-1]["predecessor_tip"]:
+        errors.append("evidence.predecessor_tip_unverified")
+    if not is_ancestor(root, launch, historical["prototype"]):
+        errors.append("evidence.launch_base_replaced")
+    if not is_ancestor(root, historical["prototype"], historical["blocked_head"]):
+        errors.append("evidence.historical_task_history_rewritten")
+    for index, entry in enumerate(chain):
+        expected_parents = [entry["first_parent"], entry["second_parent"]]
+        if commit_parents(root, entry["task_integration_merge"]) != expected_parents:
+            errors.append(f"evidence.predecessor_merge_not_normal:{entry['phase']}")
+        if entry["second_parent"] != entry["predecessor_tip"]:
+            errors.append(f"evidence.predecessor_chain_unverified:{entry['phase']}")
+        if not is_ancestor(root, entry["predecessor_tip"]):
+            errors.append(f"evidence.predecessor_tip_not_in_ancestry:{entry['phase']}")
+        if not is_ancestor(root, entry["task_integration_merge"]):
+            errors.append(f"evidence.predecessor_tip_not_in_ancestry:{entry['phase']}")
+        if index and entry["first_parent"] != chain[index - 1]["task_integration_merge"]:
+            errors.append(f"evidence.predecessor_chain_truncated:{entry['phase']}")
+    if not is_ancestor(root, historical["blocked_head"]):
+        errors.append("evidence.historical_task_history_rewritten")
+    return sorted(set(errors))
+
+
+def active_scope_errors(root: Path, verified_tip: str, launch_base: str, allowed_patterns: list[str]) -> list[str]:
+    if not (root / ".git").exists():
+        return []
+    completed = git(root, ["diff", "--name-only", verified_tip, "--"])
     if completed.returncode != 0:
         return ["evidence.scope_diff_failed"]
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard"],
-        cwd=root,
-        check=False,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    untracked = git(root, ["ls-files", "--others", "--exclude-standard"])
     if untracked.returncode != 0:
         return ["evidence.scope_untracked_failed"]
     paths = sorted(set(completed.stdout.splitlines() + untracked.stdout.splitlines()))
-    return [f"evidence.path_outside_contract:{path}" for path in paths if not path_allowed(path, allowed_patterns)]
+    errors = [f"evidence.path_outside_contract:{path}" for path in paths if not path_allowed(path, allowed_patterns)]
+    predecessor = git(root, ["diff", "--name-only", launch_base, verified_tip, "--"])
+    if predecessor.returncode != 0:
+        errors.append("evidence.predecessor_scope_diff_failed")
+    else:
+        predecessor_only = {
+            path for path in predecessor.stdout.splitlines()
+            if not path_allowed(path, allowed_patterns)
+        }
+        errors.extend(
+            f"evidence.predecessor_file_modified_by_task:{path}"
+            for path in paths if path in predecessor_only
+        )
+    return errors
 
 
 def verify(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     try:
         spec = load_json(root / build_evidence_manifest.SPEC_PATH)
+        errors.extend(ancestry_errors(root, spec))
         expected = build_evidence_manifest.encoded(build_evidence_manifest.build(root))
         manifest_path = root / build_evidence_manifest.MANIFEST_PATH
         if not manifest_path.is_file() or manifest_path.read_bytes() != expected:
@@ -121,7 +190,12 @@ def verify(root: Path = ROOT) -> list[str]:
         if represented != current:
             errors.append("evidence.task_status_ledger_disagreement")
         if current != "DONE":
-            errors.extend(active_scope_errors(root, spec["launch_base"], contract["allowed_paths"]))
+            errors.extend(active_scope_errors(
+                root,
+                spec["verified_predecessor_tip"],
+                spec["historical_launch_base"],
+                contract["allowed_paths"],
+            ))
 
         rfc = root / "rfcs/0005-theorem-identity-and-compatibility.md"
         adr = root / "docs/adr/0007-versioned-theorem-registry.md"
@@ -141,6 +215,8 @@ def verify(root: Path = ROOT) -> list[str]:
         required = (
             "theorem-registry/evidence/axioms.json",
             "theorem-registry/evidence/independent-observation.json",
+            "theorem-registry/evidence/project-axioms.json",
+            "theorem-registry/evidence/all-module-fresh-check.json",
             "theorem-registry/records/test-only-true.v0.json",
             "theorem-registry/policy/authorization-v0.json",
             "conformance/registry/results/results.json",

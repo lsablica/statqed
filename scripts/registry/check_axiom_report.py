@@ -32,7 +32,7 @@ def verify(path: Path) -> None:
             "origin", "type_repr_diagnostic", "unsafe",
         }:
             raise ValueError("registry.axiom_report_shape")
-        if item["normalizer"] != "statqed.lean-proposition.v0":
+        if item["normalizer"] != "statqed.lean-expr.v0":
             raise ValueError("registry.axiom_report_normalizer")
         if item["unsafe"] is not False or item["axioms"] != []:
             raise ValueError("registry.forbidden_axiom")

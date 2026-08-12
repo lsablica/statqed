@@ -14,10 +14,19 @@ open Lean
 namespace StatQED.Registry
 
 /-- Version identifier for the test-only structural observation. -/
-def normalizerVersion : String := "statqed.lean-proposition.v0"
+def normalizerVersion : String := "statqed.lean-expr.v0"
 
 /-- Maximum accepted expression nesting depth for the Lean-side extractor. -/
-def maxExpressionDepth : Nat := 64
+def maxExpressionDepth : Nat := 256
+def maxLevelDepth : Nat := 64
+def maxExpressionNodes : Nat := 65536
+def maxUniverseArguments : Nat := 256
+def maxNameSegments : Nat := 64
+def maxNameSegmentBytes : Nat := 256
+def maxQualifiedNameBytes : Nat := 1024
+def maxStringLiteralBytes : Nat := 65536
+def maxAggregateStringBytes : Nat := 262144
+def maxObservationBytes : Nat := 1048576
 
 private def obj (fields : List (String × Json)) : Json := Json.mkObj fields
 
@@ -35,25 +44,60 @@ def nameJson : Name → Json
       ("tag", .str "numeric")
     ]
 
+private def nameStats : Name → Nat × Nat
+  | .anonymous => (0, 0)
+  | .str parent segment =>
+      let (segments, bytes) := nameStats parent
+      (segments + 1, bytes + segment.toUTF8.size)
+  | .num parent _ =>
+      let (segments, bytes) := nameStats parent
+      (segments + 1, bytes)
+
+private def checkedNameJson (name : Name) : Except String Json := do
+  let (segments, bytes) := nameStats name
+  if segments == 0 then
+    .error "registry.normalization.anonymous_name"
+  else if segments > maxNameSegments then
+    .error "registry.normalization.name_segment_limit"
+  else if bytes > maxQualifiedNameBytes then
+    .error "registry.normalization.name_byte_limit"
+  else
+    let rec checkSegments : Name → Except String Unit
+      | .anonymous => .ok ()
+      | .str parent segment => do
+          if segment.toUTF8.size > maxNameSegmentBytes then
+            .error "registry.normalization.name_segment_byte_limit"
+          else
+            checkSegments parent
+      | .num parent _ => checkSegments parent
+    checkSegments name
+    pure <| nameJson name
+
 /-- Encode a universe level structurally, rejecting metavariables. -/
-def levelJson (fuel : Nat) : Level → Except String Json
+def levelJson (parameters : List Name) (fuel : Nat) : Level → Except String Json
   | level => match fuel with
     | 0 => .error "registry.normalization.level_depth_limit"
     | fuel + 1 => match level with
       | .zero => .ok <| obj [("tag", .str "zero")]
       | .succ inner => do
-          let innerJson ← levelJson fuel inner
+          let innerJson ← levelJson parameters fuel inner
           pure <| obj [("level", innerJson), ("tag", .str "succ")]
       | .max left right => do
-          let leftJson ← levelJson fuel left
-          let rightJson ← levelJson fuel right
+          let leftJson ← levelJson parameters fuel left
+          let rightJson ← levelJson parameters fuel right
           pure <| obj [("left", leftJson), ("right", rightJson), ("tag", .str "max")]
       | .imax left right => do
-          let leftJson ← levelJson fuel left
-          let rightJson ← levelJson fuel right
+          let leftJson ← levelJson parameters fuel left
+          let rightJson ← levelJson parameters fuel right
           pure <| obj [("left", leftJson), ("right", rightJson), ("tag", .str "imax")]
-      | .param name => .ok <| obj [("name", nameJson name), ("tag", .str "parameter")]
+      | .param name => do
+          if !parameters.contains name then
+            .error "registry.normalization.undeclared_universe_parameter"
+          else
+            let encoded ← checkedNameJson name
+            .ok <| obj [("name", encoded), ("tag", .str "parameter")]
       | .mvar _ => .error "registry.normalization.universe_metavariable"
+termination_by fuel
 
 private def binderInfoString : BinderInfo → String
   | .default => "explicit"
@@ -61,43 +105,138 @@ private def binderInfoString : BinderInfo → String
   | .strictImplicit => "strict_implicit"
   | .instImplicit => "instance_implicit"
 
-private def levelsJson (levels : List Level) : Except String Json := do
-  let encoded ← levels.mapM (levelJson maxExpressionDepth)
+private def levelsJson (parameters : List Name) (levels : List Level) : Except String Json := do
+  if levels.length > maxUniverseArguments then
+    .error "registry.normalization.universe_argument_limit"
+  let encoded ← levels.mapM (levelJson parameters maxLevelDepth)
   pure <| .arr encoded.toArray
+
+private def combineStats (left right : Nat × Nat) : Nat × Nat :=
+  (left.1 + right.1, left.2 + right.2)
+
+private def levelStats (parameters : List Name) (fuel : Nat) : Level → Except String (Nat × Nat)
+  | level => match fuel with
+    | 0 => .error "registry.normalization.level_depth_limit"
+    | fuel + 1 => match level with
+      | .zero => .ok (1, 0)
+      | .succ inner => do
+          let stats ← levelStats parameters fuel inner
+          pure (stats.1 + 1, stats.2)
+      | .max left right | .imax left right => do
+          let leftStats ← levelStats parameters fuel left
+          let rightStats ← levelStats parameters fuel right
+          let combined := combineStats leftStats rightStats
+          pure (combined.1 + 1, combined.2)
+      | .param name => do
+          if !parameters.contains name then
+            .error "registry.normalization.undeclared_universe_parameter"
+          else
+            let (segments, bytes) := nameStats name
+            if segments == 0 || segments > maxNameSegments || bytes > maxQualifiedNameBytes then
+              .error "registry.normalization.name_limit"
+            else
+              pure (1, bytes)
+      | .mvar _ => .error "registry.normalization.universe_metavariable"
+termination_by fuel
+
+private def exprStats
+    (parameters : List Name) (bound fuel : Nat) : Expr → Except String (Nat × Nat)
+  | expression => match fuel with
+    | 0 => .error "registry.normalization.expression_depth_limit"
+    | fuel + 1 => match expression with
+      | .bvar index =>
+          if index < bound then .ok (1, 0)
+          else .error "registry.normalization.loose_bound_variable"
+      | .fvar _ => .error "registry.normalization.free_variable"
+      | .mvar _ => .error "registry.normalization.expression_metavariable"
+      | .sort level => do
+          let stats ← levelStats parameters maxLevelDepth level
+          pure (stats.1 + 1, stats.2)
+      | .const name levels => do
+          if levels.length > maxUniverseArguments then
+            .error "registry.normalization.universe_argument_limit"
+          let (segments, nameBytes) := nameStats name
+          if segments == 0 || segments > maxNameSegments || nameBytes > maxQualifiedNameBytes then
+            .error "registry.normalization.name_limit"
+          let mut stats := (1, nameBytes)
+          for level in levels do
+            stats := combineStats stats (← levelStats parameters maxLevelDepth level)
+          pure stats
+      | .app function argument => do
+          let functionStats ← exprStats parameters bound fuel function
+          let argumentStats ← exprStats parameters bound fuel argument
+          let combined := combineStats functionStats argumentStats
+          pure (combined.1 + 1, combined.2)
+      | .lam _ type body _ | .forallE _ type body _ => do
+          let typeStats ← exprStats parameters bound fuel type
+          let bodyStats ← exprStats parameters (bound + 1) fuel body
+          let combined := combineStats typeStats bodyStats
+          pure (combined.1 + 1, combined.2)
+      | .letE _ type value body _ => do
+          let typeStats ← exprStats parameters bound fuel type
+          let valueStats ← exprStats parameters bound fuel value
+          let bodyStats ← exprStats parameters (bound + 1) fuel body
+          let combined := combineStats (combineStats typeStats valueStats) bodyStats
+          pure (combined.1 + 1, combined.2)
+      | .lit (.natVal _) => .ok (1, 0)
+      | .lit (.strVal value) =>
+          if value.toUTF8.size > maxStringLiteralBytes then
+            .error "registry.normalization.string_literal_limit"
+          else
+            .ok (1, value.toUTF8.size)
+      | .mdata _ inner => exprStats parameters bound fuel inner
+      | .proj typeName _ subject => do
+          let (segments, nameBytes) := nameStats typeName
+          if segments == 0 || segments > maxNameSegments || nameBytes > maxQualifiedNameBytes then
+            .error "registry.normalization.name_limit"
+          let subjectStats ← exprStats parameters bound fuel subject
+          pure (subjectStats.1 + 1, subjectStats.2 + nameBytes)
+termination_by fuel
+
+/-- Return the bounded expression/level-node and UTF-8 string totals. -/
+def expressionStats
+    (levelParameters : List Name) (expression : Expr) : Except String (Nat × Nat) :=
+  exprStats levelParameters 0 maxExpressionDepth expression
 
 /--
 Encode a kernel expression structurally. The fuel bounds depth. Free and meta
 variables are rejected because registry subjects must be closed elaborated
 declaration types.
 -/
-def exprJson (fuel : Nat) : Expr → Except String Json
+def exprJsonWithContext
+    (parameters : List Name) (bound fuel : Nat) : Expr → Except String Json
   | expression => match fuel with
     | 0 => .error "registry.normalization.expression_depth_limit"
     | fuel + 1 => match expression with
-      | .bvar index => .ok <| obj [("index", toJson index), ("tag", .str "bound_variable")]
+      | .bvar index =>
+          if index < bound then
+            .ok <| obj [("index", toJson index), ("tag", .str "bound_variable")]
+          else
+            .error "registry.normalization.loose_bound_variable"
       | .fvar _ => .error "registry.normalization.free_variable"
       | .mvar _ => .error "registry.normalization.expression_metavariable"
       | .sort level => do
-          let levelJson ← levelJson maxExpressionDepth level
+          let levelJson ← levelJson parameters maxLevelDepth level
           pure <| obj [("level", levelJson), ("tag", .str "sort")]
       | .const name levels => do
-          let encodedLevels ← levelsJson levels
+          let encodedName ← checkedNameJson name
+          let encodedLevels ← levelsJson parameters levels
           pure <| obj [
-            ("name", nameJson name),
+            ("name", encodedName),
             ("tag", .str "constant"),
             ("universes", encodedLevels)
           ]
       | .app function argument => do
-          let functionJson ← exprJson fuel function
-          let argumentJson ← exprJson fuel argument
+          let functionJson ← exprJsonWithContext parameters bound fuel function
+          let argumentJson ← exprJsonWithContext parameters bound fuel argument
           pure <| obj [
             ("argument", argumentJson),
             ("function", functionJson),
             ("tag", .str "application")
           ]
       | .lam _ type body binderInfo => do
-          let typeJson ← exprJson fuel type
-          let bodyJson ← exprJson fuel body
+          let typeJson ← exprJsonWithContext parameters bound fuel type
+          let bodyJson ← exprJsonWithContext parameters (bound + 1) fuel body
           pure <| obj [
             ("binder_info", .str <| binderInfoString binderInfo),
             ("body", bodyJson),
@@ -105,8 +244,8 @@ def exprJson (fuel : Nat) : Expr → Except String Json
             ("type", typeJson)
           ]
       | .forallE _ type body binderInfo => do
-          let typeJson ← exprJson fuel type
-          let bodyJson ← exprJson fuel body
+          let typeJson ← exprJsonWithContext parameters bound fuel type
+          let bodyJson ← exprJsonWithContext parameters (bound + 1) fuel body
           pure <| obj [
             ("binder_info", .str <| binderInfoString binderInfo),
             ("body", bodyJson),
@@ -114,9 +253,9 @@ def exprJson (fuel : Nat) : Expr → Except String Json
             ("type", typeJson)
           ]
       | .letE _ type value body _ => do
-          let typeJson ← exprJson fuel type
-          let valueJson ← exprJson fuel value
-          let bodyJson ← exprJson fuel body
+          let typeJson ← exprJsonWithContext parameters bound fuel type
+          let valueJson ← exprJsonWithContext parameters bound fuel value
+          let bodyJson ← exprJsonWithContext parameters (bound + 1) fuel body
           pure <| obj [
             ("body", bodyJson),
             ("tag", .str "let"),
@@ -128,27 +267,54 @@ def exprJson (fuel : Nat) : Expr → Except String Json
           ("tag", .str "literal"),
           ("value", .str value.repr)
         ]
-      | .lit (.strVal value) => .ok <| obj [
-          ("kind", .str "string"),
-          ("tag", .str "literal"),
-          ("value", .str value)
-        ]
-      | .mdata _ inner => exprJson fuel inner
+      | .lit (.strVal value) =>
+          if value.toUTF8.size > maxStringLiteralBytes then
+            .error "registry.normalization.string_literal_limit"
+          else
+            .ok <| obj [
+              ("kind", .str "string"),
+              ("tag", .str "literal"),
+              ("value", .str value)
+            ]
+      | .mdata _ inner => exprJsonWithContext parameters bound fuel inner
       | .proj typeName index subject => do
-          let structureJson ← exprJson fuel subject
+          let encodedName ← checkedNameJson typeName
+          let structureJson ← exprJsonWithContext parameters bound fuel subject
           pure <| obj [
             ("index", toJson index),
             ("structure", structureJson),
             ("tag", .str "projection"),
-            ("type_name", nameJson typeName)
+            ("type_name", encodedName)
           ]
+termination_by fuel
+
+/-- Encode a closed expression under an explicit declaration-universe context. -/
+def declarationExprJson
+    (levelParameters : List Name) (fuel : Nat) (expression : Expr) : Except String Json := do
+  let (nodes, stringBytes) ← exprStats levelParameters 0 fuel expression
+  if nodes > maxExpressionNodes || stringBytes > maxAggregateStringBytes then
+    .error "registry.normalization.resource_limit"
+  else
+    exprJsonWithContext levelParameters 0 fuel expression
+
+/-- Encode a closed expression with no universe parameters. -/
+def exprJson (fuel : Nat) (expression : Expr) : Except String Json :=
+  declarationExprJson [] fuel expression
 
 /-- Encode a closed proposition type using the versioned structural grammar. -/
-def propositionJson (type : Expr) : Except String Json := do
-  let expression ← exprJson maxExpressionDepth type
-  pure <| obj [
+def propositionJson (levelParameters : List Name) (type : Expr) : Except String Json := do
+  let (nodes, stringBytes) ← exprStats levelParameters 0 maxExpressionDepth type
+  if nodes > maxExpressionNodes || stringBytes > maxAggregateStringBytes then
+    .error "registry.normalization.resource_limit"
+  let expression ← exprJsonWithContext levelParameters 0 maxExpressionDepth type
+  let result := obj [
     ("expression", expression),
+    ("level_parameters", .arr <| levelParameters.toArray.map nameJson),
     ("normalizer", .str normalizerVersion)
   ]
+  if result.compress.toUTF8.size > maxObservationBytes then
+    .error "registry.normalization.output_limit"
+  else
+    pure result
 
 end StatQED.Registry

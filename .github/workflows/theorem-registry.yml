@@ -87,6 +87,14 @@ jobs:
           [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
           [[ "$rustc_floor" == *"commit-hash: $EXPECTED_RUSTC_FLOOR_COMMIT"* ]]
 
+      - name: Run repository and predecessor gates before dependency material exists
+        run: |
+          make check
+          make list-work
+          git diff --check
+          python3 scripts/serialization/run_conformance.py --verify
+          python3 scripts/schema/check_schema_v0.py
+
       - name: Resolve exact Mathlib lock and use reviewed binary cache
         shell: bash
         working-directory: lean
@@ -97,13 +105,8 @@ jobs:
           cmp lake-manifest.json "$RUNNER_TEMP/lake-manifest.committed.json"
           lake exe cache get
 
-      - name: Run repository, predecessor, and permanent registry evidence gates
+      - name: Run permanent registry evidence gates
         run: |
-          make check
-          make list-work
-          git diff --check
-          python3 scripts/serialization/run_conformance.py --verify
-          python3 scripts/schema/check_schema_v0.py
           python3 scripts/registry/check_evidence.py
           python3 scripts/registry/run_conformance.py --verify
 

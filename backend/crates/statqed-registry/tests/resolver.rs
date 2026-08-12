@@ -168,7 +168,7 @@ fn historical_permitted_root_is_explicitly_accepted() {
 #[test]
 fn unknown_revoked_and_forbidden_roots_are_distinct() {
     for (root, expected) in [
-        (C, ErrorCode::AuthorizationRootMismatch),
+        (C, ErrorCode::AuthorizationRootHistoricalForbidden),
         (D, ErrorCode::AuthorizationRootRevoked),
         (
             "9999999999999999999999999999999999999999999999999999999999999999",
@@ -235,7 +235,7 @@ fn governed_record_and_distinct_identity_layers_are_checked() {
 #[test]
 fn normalization_and_closure_failures_keep_stable_ownership() {
     for (status, expected) in [
-        ("unsupported_expression", ErrorCode::UnsupportedExpression),
+        ("unsupported_expression", ErrorCode::ExpressionUnsupported),
         ("failure", ErrorCode::NormalizationFailure),
     ] {
         let mut candidate = record();
@@ -245,7 +245,9 @@ fn normalization_and_closure_failures_keep_stable_ownership() {
     for (status, expected) in [
         ("cycle", ErrorCode::ClosureCycle),
         ("missing_dependency", ErrorCode::MissingDependency),
-        ("budget", ErrorCode::ClosureBudget),
+        ("width_limit", ErrorCode::ClosureWidthLimit),
+        ("depth_limit", ErrorCode::ClosureDepthLimit),
+        ("work_budget_limit", ErrorCode::ClosureWorkBudgetLimit),
     ] {
         let mut candidate = record();
         candidate.closure_status = status.to_owned();
@@ -447,9 +449,11 @@ fn all_error_codes_are_stable_and_bounded() {
         ErrorCode::MalformedRecord,
         ErrorCode::VersionUnsupported,
         ErrorCode::NormalizationFailure,
-        ErrorCode::UnsupportedExpression,
+        ErrorCode::ExpressionUnsupported,
         ErrorCode::ClosureCycle,
-        ErrorCode::ClosureBudget,
+        ErrorCode::ClosureWidthLimit,
+        ErrorCode::ClosureDepthLimit,
+        ErrorCode::ClosureWorkBudgetLimit,
         ErrorCode::MissingDependency,
         ErrorCode::PropositionMismatch,
         ErrorCode::EnvironmentMismatch,
@@ -458,6 +462,7 @@ fn all_error_codes_are_stable_and_bounded() {
         ErrorCode::AuthorizationRootMismatch,
         ErrorCode::AuthorizationRootUnknown,
         ErrorCode::AuthorizationRootRevoked,
+        ErrorCode::AuthorizationRootHistoricalForbidden,
         ErrorCode::AuthorizationPolicyUnsupported,
         ErrorCode::ProofBuildLockMismatch,
         ErrorCode::ForbiddenAxiom,

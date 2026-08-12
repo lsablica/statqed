@@ -56,7 +56,7 @@ framing `statqed.digest-lp.v1`.
 - closure depth: 64;
 - total deterministic work units: 1,000,000;
 - total expression/dependency nodes: 262,144;
-- canonical payload: 16,777,216 bytes;
+- canonical payload: 1,048,576 bytes;
 - diagnostic output: 4,096 bytes.
 
 A work unit is one decoded value, expression/level visit, dependency-edge

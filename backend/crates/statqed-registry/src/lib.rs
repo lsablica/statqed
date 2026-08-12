@@ -62,11 +62,15 @@ pub enum ErrorCode {
     /// Proposition normalization failed upstream.
     NormalizationFailure,
     /// An expression constructor is outside the accepted normalizer grammar.
-    UnsupportedExpression,
+    ExpressionUnsupported,
     /// The closure evidence reports a cycle.
     ClosureCycle,
     /// Closure width, depth, or work budget is exceeded.
-    ClosureBudget,
+    ClosureWidthLimit,
+    /// Closure depth is greater than the versioned bound.
+    ClosureDepthLimit,
+    /// Closure deterministic work is greater than the versioned bound.
+    ClosureWorkBudgetLimit,
     /// A required environment dependency is absent.
     MissingDependency,
     /// Proposition identity does not match trusted policy.
@@ -83,6 +87,8 @@ pub enum ErrorCode {
     AuthorizationRootUnknown,
     /// Root is revoked by trusted policy.
     AuthorizationRootRevoked,
+    /// A historical root is explicitly forbidden by trusted policy.
+    AuthorizationRootHistoricalForbidden,
     /// Authorization policy version is unsupported.
     AuthorizationPolicyUnsupported,
     /// Proof/build lock does not match trusted policy.
@@ -107,9 +113,11 @@ impl ErrorCode {
             Self::MalformedRecord => "registry.malformed_record",
             Self::VersionUnsupported => "registry.version_unsupported",
             Self::NormalizationFailure => "registry.normalization_failure",
-            Self::UnsupportedExpression => "registry.unsupported_expression",
+            Self::ExpressionUnsupported => "registry.expression_unsupported",
             Self::ClosureCycle => "registry.closure_cycle",
-            Self::ClosureBudget => "registry.closure_budget",
+            Self::ClosureWidthLimit => "registry.closure_width_limit",
+            Self::ClosureDepthLimit => "registry.closure_depth_limit",
+            Self::ClosureWorkBudgetLimit => "registry.closure_work_budget_limit",
             Self::MissingDependency => "registry.missing_dependency",
             Self::PropositionMismatch => "registry.proposition_mismatch",
             Self::EnvironmentMismatch => "registry.environment_mismatch",
@@ -118,6 +126,9 @@ impl ErrorCode {
             Self::AuthorizationRootMismatch => "registry.authorization_root_mismatch",
             Self::AuthorizationRootUnknown => "registry.authorization_root_unknown",
             Self::AuthorizationRootRevoked => "registry.authorization_root_revoked",
+            Self::AuthorizationRootHistoricalForbidden => {
+                "registry.authorization_root_historical_forbidden"
+            }
             Self::AuthorizationPolicyUnsupported => "registry.authorization_policy_unsupported",
             Self::ProofBuildLockMismatch => "registry.proof_build_lock_mismatch",
             Self::ForbiddenAxiom => "registry.forbidden_axiom",
@@ -304,7 +315,7 @@ pub fn resolve(record: &RegistryRecord, policy: &TrustedPolicy) -> Result<Resolu
     }
     match record.normalization_status.as_str() {
         "ok" => {}
-        "unsupported_expression" => return Err(ErrorCode::UnsupportedExpression),
+        "unsupported_expression" => return Err(ErrorCode::ExpressionUnsupported),
         _ => return Err(ErrorCode::NormalizationFailure),
     }
     if record.closure != CLOSURE_VERSION {
@@ -314,7 +325,9 @@ pub fn resolve(record: &RegistryRecord, policy: &TrustedPolicy) -> Result<Resolu
         "ok" => {}
         "cycle" => return Err(ErrorCode::ClosureCycle),
         "missing_dependency" => return Err(ErrorCode::MissingDependency),
-        "budget" => return Err(ErrorCode::ClosureBudget),
+        "width_limit" => return Err(ErrorCode::ClosureWidthLimit),
+        "depth_limit" => return Err(ErrorCode::ClosureDepthLimit),
+        "work_budget_limit" => return Err(ErrorCode::ClosureWorkBudgetLimit),
         _ => return Err(ErrorCode::MalformedRecord),
     }
     if record.proposition_digest != policy.proposition_digest {
@@ -526,7 +539,7 @@ fn classify_root(root: &str, policy: &TrustedPolicy) -> Result<RootStatus, Error
         .iter()
         .any(|item| item == root)
     {
-        return Err(ErrorCode::AuthorizationRootMismatch);
+        return Err(ErrorCode::AuthorizationRootHistoricalForbidden);
     }
     if policy
         .current_permitted_roots

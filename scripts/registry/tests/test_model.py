@@ -56,6 +56,32 @@ class ModelTests(unittest.TestCase):
             with self.subTest(expression=expression):
                 self.assertEqual(model.normalize_expr(expression, level_params=params), expression)
 
+    def test_normalizer_structural_boundaries_accept_maximum_and_reject_one_over(self):
+        universes = [[0]] * model.LIMITS["universe_arguments"]
+        self.assertEqual(
+            model.normalize_expr([2, [[0, "X"]], universes]),
+            [2, [[0, "X"]], universes],
+        )
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([2, [[0, "X"]], universes + [[0]]])
+
+        segments = [[0, "x"]] * model.LIMITS["name_segments"]
+        self.assertEqual(model.normalize_expr([2, segments, []]), [2, segments, []])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([2, segments + [[0, "x"]], []])
+
+        segment = "x" * model.LIMITS["name_segment_bytes"]
+        self.assertEqual(model.normalize_expr([2, [[0, segment]], []]), [2, [[0, segment]], []])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([2, [[0, segment + "x"]], []])
+
+        qualified = [[0, "x" * model.LIMITS["name_segment_bytes"]]] * (
+            model.LIMITS["qualified_name_bytes"] // model.LIMITS["name_segment_bytes"]
+        )
+        self.assertEqual(model.normalize_expr([2, qualified, []]), [2, qualified, []])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([2, qualified + [[0, "x"]], []])
+
     def test_binder_info_changes_identity(self):
         vectors = [model.canonical_cbor(model.normalize_expr([5, info, [1, [0]], [0, 0]])) for info in range(4)]
         self.assertEqual(len(set(vectors)), 4)
@@ -95,6 +121,32 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(len(model.closure(roots, declarations)), len(roots))
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
             model.closure(roots + ["over"], declarations)
+        outgoing = [f"d{i}" for i in range(model.LIMITS["closure_width"])]
+        graph = {"root": {"references": outgoing}, **{name: {"references": []} for name in outgoing}}
+        self.assertEqual(len(model.closure(["root"], graph)), len(outgoing) + 1)
+        graph["root"]["references"].append("over")
+        graph["over"] = {"references": []}
+        with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
+            model.closure(["root"], graph)
+
+    def test_closure_unit_boundary_has_no_off_by_one_escape(self):
+        maximum = model.LIMITS["closure_units"]
+        branches = [f"b{i}" for i in range(model.LIMITS["closure_width"])]
+        accepted = {"root": {"references": branches}}
+        remaining = maximum - 1 - len(branches)
+        for index, branch in enumerate(branches):
+            leaf_count = min(3, remaining)
+            leaves = [f"{branch}.l{leaf}" for leaf in range(leaf_count)]
+            accepted[branch] = {"references": leaves}
+            accepted.update({leaf: {"references": []} for leaf in leaves})
+            remaining -= leaf_count
+        self.assertEqual(remaining, 0)
+        self.assertEqual(len(model.closure(["root"], accepted)), maximum)
+        rejected = copy.deepcopy(accepted)
+        rejected[branches[-1]]["references"].append("one.over")
+        rejected["one.over"] = {"references": []}
+        with self.assertRaisesRegex(model.RegistryError, "registry.closure_work_budget_limit"):
+            model.closure(["root"], rejected)
 
     def test_identifier_boundary(self):
         self.assertEqual(model.validate_identifier("a" + "x" * 127), "a" + "x" * 127)
@@ -144,6 +196,20 @@ class ModelTests(unittest.TestCase):
         bundle = copy.deepcopy(self.bundle)
         bundle["compatibility"] = {"direction": "old_implies_new"}
         with self.assertRaisesRegex(model.RegistryError, "registry.compatibility_wrong_direction"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+    def test_compatibility_requires_the_bound_kernel_checked_lock(self):
+        bundle = copy.deepcopy(self.bundle)
+        bundle["compatibility"] = {
+            "schema": "statqed.compatibility-proof-lock.v0",
+            "direction": "new_implies_old",
+            "declaration": "totally.forged.and.nonexistent",
+            "old_proposition_digest": bundle["proposition_digest"],
+            "axioms": [],
+            "path_length": 1,
+        }
+        bundle["compatibility_digest"] = "00" * 32
+        with self.assertRaisesRegex(model.RegistryError, "registry.compatibility_missing"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
     def test_proof_lock_substitution_rejected(self):

@@ -48,8 +48,8 @@ elab "#statqed_registry_axiom_report" : command => do
     if isProjectDeclaration environment declaration && (axioms.any fun name =>
         isProjectDeclaration environment name) then
       throwError "project registry declaration '{declaration}' depends on a project axiom"
-    let normalizedType ← match StatQED.Registry.exprJson
-        StatQED.Registry.maxExpressionDepth info.type with
+    let normalizedType ← match StatQED.Registry.declarationExprJson
+        info.levelParams StatQED.Registry.maxExpressionDepth info.type with
       | .ok value => pure value
       | .error reason => throwError "failed to normalize type for '{declaration}': {reason}"
     records := records.push <| Json.mkObj [

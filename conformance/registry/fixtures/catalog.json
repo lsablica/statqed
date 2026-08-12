@@ -31,7 +31,7 @@
     {"id":"RESOURCE-STRING-MAX","kind":"expression","input":[8,"@max-string@"],"expected":"accepted"},
     {"id":"RESOURCE-STRING-OVER","kind":"expression","input":[8,"@over-string@"],"expected":"rejected","code":"registry.resource_limit"},
     {"id":"RESOURCE-DEPTH-OVER","kind":"expression","input":"@over-depth@","expected":"rejected","code":"registry.resource_limit"},
-    {"id":"RESOURCE-NAME-SEGMENTS-OVER","kind":"expression","input":"@over-name-segments@","expected":"rejected","code":"registry.normalization_failure"},
+    {"id":"RESOURCE-NAME-SEGMENTS-OVER","kind":"expression","input":"@over-name-segments@","expected":"rejected","code":"registry.resource_limit"},
 
     {"id":"CLOSURE-TRUE-FAMILY","kind":"closure","roots":["True"],"declarations":{"True":{"kind":"inductive_family","references":[]}},"expected":"accepted"},
     {"id":"CLOSURE-DEFINITION-BODY","kind":"closure","roots":["root"],"declarations":{"root":{"kind":"definition","references":["dep"],"value":"body"},"dep":{"kind":"definition","references":[],"value":"one"}},"expected":"accepted"},
@@ -60,6 +60,15 @@
     {"id":"COMPAT-METADATA-ONLY","kind":"bundle","mutation":"compatibility_metadata","expected":"rejected","code":"registry.compatibility_missing"},
     {"id":"DIGEST-CROSS-DOMAIN","kind":"digest","mutation":"cross_domain","expected":"rejected","code":"registry.statement_digest_mismatch"},
     {"id":"DIGEST-TRUNCATED","kind":"digest","mutation":"truncated","expected":"rejected","code":"registry.statement_digest_mismatch"},
-    {"id":"DIGEST-PURPOSE-CHANGED","kind":"digest","mutation":"purpose","expected":"rejected","code":"registry.statement_digest_mismatch"}
+    {"id":"DIGEST-PURPOSE-CHANGED","kind":"digest","mutation":"purpose","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-ALGORITHM-CHANGED","kind":"digest","mutation":"algorithm","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-PROFILE-CHANGED","kind":"digest","mutation":"profile","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-OBJECT-CLASS-CHANGED","kind":"digest","mutation":"object_class","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-FRAMING-CHANGED","kind":"digest","mutation":"framing","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-COMPONENT-REORDERED","kind":"digest","mutation":"reordered","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-CONCATENATION-AMBIGUITY","kind":"digest","mutation":"concatenation","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-EMPTY-PAYLOAD","kind":"digest","mutation":"empty","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-UNSUPPORTED-FALLBACK","kind":"digest","mutation":"fallback","expected":"rejected","code":"registry.statement_digest_mismatch"},
+    {"id":"DIGEST-NORMALIZER-DOWNGRADE","kind":"digest","mutation":"downgrade","expected":"rejected","code":"registry.statement_digest_mismatch"}
   ]
 }

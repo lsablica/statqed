@@ -16,9 +16,14 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+LEAN_TOOLS = Path(__file__).resolve().parents[2] / "lean/tools"
+if str(LEAN_TOOLS) not in sys.path:
+    sys.path.insert(0, str(LEAN_TOOLS))
 
 from model import canonical_cbor, canonical_json, digest_frame  # noqa: E402
 import independent_oracle  # noqa: E402
+import check_all_modules  # noqa: E402
+import project_axiom_report  # noqa: E402
 
 LEAN_ROOT = ROOT / "lean"
 EVIDENCE = ROOT / "theorem-registry/evidence"
@@ -140,6 +145,10 @@ def outputs() -> dict[Path, bytes]:
     refactor = by_name["StatQED.Registry.Tests.testOnlyTrueRefactor"]
     compatibility_source = by_name["StatQED.Registry.Tests.falseImpliesTrue"]
 
+    if target["proposition"].get("normalizer") != "statqed.lean-expr.v0":
+        raise RuntimeError("live Lean observation used an unsupported normalizer version")
+    if target.get("closure_version") != "statqed.lean-environment-closure.v0":
+        raise RuntimeError("live Lean observation used an unsupported closure version")
     proposition_value = ["statqed.lean-expr.v0", expr_array(target["proposition"]["expression"])]
     refactor_value = ["statqed.lean-expr.v0", expr_array(refactor["proposition"]["expression"])]
     if proposition_value != refactor_value:
@@ -167,7 +176,23 @@ def outputs() -> dict[Path, bytes]:
     if environment_value != refactor_environment_value:
         raise RuntimeError("proof-only refactor changed environment closure")
     environment_bytes = canonical_cbor(environment_value)
+    independent_environment_bytes = independent_oracle.environment_payload_from_records(
+        target["closure"], LEAN_COMMIT
+    )
+    if independent_environment_bytes != environment_bytes:
+        raise RuntimeError("independent oracle disagrees on environment closure bytes")
     environment_frame, environment_digest = digest_frame("environment", environment_bytes)
+    independent_environment_frame, independent_environment_digest = (
+        independent_oracle.digest_frame("environment", independent_environment_bytes)
+    )
+    if independent_environment_digest != environment_digest:
+        raise RuntimeError("independent oracle disagrees on environment closure digest")
+    independent["environment_closure"] = {
+        "digest": independent_environment_digest,
+        "frame_hex": independent_environment_frame.hex(),
+        "payload_hex": independent_environment_bytes.hex(),
+        "record_count": len(target["closure"]),
+    }
 
     axiom_records = axioms["declarations"]
     target_axioms = next(item for item in axiom_records if item["declaration"] == target["declaration"])
@@ -175,6 +200,10 @@ def outputs() -> dict[Path, bytes]:
         raise RuntimeError("test-only record has nonempty transitive axiom observation")
     axiom_bytes = canonical_json(axioms)
     axiom_digest = sha256(axiom_bytes)
+    project_axiom_bytes = project_axiom_report.encoded(project_axiom_report.generate())
+    fresh_check_bytes = canonical_json(check_all_modules.check_all())
+    project_axiom_digest = sha256(project_axiom_bytes)
+    fresh_check_digest = sha256(fresh_check_bytes)
     source_manifest = project_source_manifest()
     manifest_digest = sha256((LEAN_ROOT / "lake-manifest.json").read_bytes())
 
@@ -192,7 +221,12 @@ def outputs() -> dict[Path, bytes]:
         "environment_digest": environment_digest,
         "proof_subject": expr_array(target["proof_subject"]),
         "axiom_report_sha256": axiom_digest,
-        "kernel_check": "lake env lean --trust=0 and same-kernel leanchecker --fresh passed",
+        "kernel_check": {
+            "project_axiom_report_sha256": project_axiom_digest,
+            "all_module_fresh_check_sha256": fresh_check_digest,
+            "module_count": json.loads(fresh_check_bytes)["module_count"],
+            "status": "pass",
+        },
         "trust_policy": "statqed.registry-empty-imported-axioms.v0",
         "nonclaim": "Same-kernel replay is not an external verifier.",
     }
@@ -257,6 +291,7 @@ def outputs() -> dict[Path, bytes]:
         "historical_permitted_roots": ["11" * 32],
         "historical_forbidden_roots": ["22" * 32],
         "revoked_roots": ["33" * 32],
+        "compatibility_digest": compatibility_digest,
         "selection": "verifier_local_only",
     }
     bundle = {
@@ -267,6 +302,7 @@ def outputs() -> dict[Path, bytes]:
         "proposition_digest": proposition_digest,
         "environment_digest": environment_digest,
         "proof_build_digest": proof_digest,
+        "compatibility_digest": compatibility_digest,
         "axioms": [],
         "compatibility": None,
     }
@@ -301,6 +337,8 @@ def outputs() -> dict[Path, bytes]:
         EVIDENCE / "lean-observation.json": canonical_json(observation),
         EVIDENCE / "independent-observation.json": canonical_json(independent),
         EVIDENCE / "axioms.json": axiom_bytes,
+        EVIDENCE / "project-axioms.json": project_axiom_bytes,
+        EVIDENCE / "all-module-fresh-check.json": fresh_check_bytes,
         EVIDENCE / "identity-summary.json": canonical_json(identity),
         EVIDENCE / "bundle.json": canonical_json(bundle),
         EVIDENCE / "proposition.cbor": proposition_bytes,

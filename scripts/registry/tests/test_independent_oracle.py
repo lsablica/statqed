@@ -188,6 +188,28 @@ class IndependentOracleTests(unittest.TestCase):
         with self.assertRaisesRegex(oracle.OracleError, "registry.proposition_mismatch"):
             oracle.require_candidate_bytes(expression, bytes(wrong))
 
+    def test_semantic_array_oracle_covers_expression_and_closure_corpora(self):
+        expression = [5, 3, [1, [0]], [0, 0]]
+        self.assertEqual(
+            oracle.semantic_expression_payload(expression),
+            oracle.canonical_cbor([oracle.GRAMMAR_ID, expression]),
+        )
+        declarations = {
+            "root": {"kind": "definition", "references": ["dep"]},
+            "dep": {"kind": "definition", "references": []},
+        }
+        self.assertEqual(
+            oracle.environment_closure(["root"], declarations),
+            [
+                {"name": "dep", "kind": "definition"},
+                {"name": "root", "kind": "definition"},
+            ],
+        )
+        with self.assertRaisesRegex(oracle.OracleError, "registry.closure_cycle"):
+            oracle.environment_closure(
+                ["a"], {"a": {"references": ["b"]}, "b": {"references": ["a"]}}
+            )
+
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]
         input_bytes = (

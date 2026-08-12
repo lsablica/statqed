@@ -16,12 +16,15 @@ Status: Experimental and test-only.
   closure, proof subjects, and transitive axiom observations. It is the primary
   environment observation, not an external verifier.
 - `scripts/registry/independent_oracle.py` independently implements the v0
-  expression grammar, canonical CBOR and digest domains without importing the
+  expression grammar, environment-closure walk/canonicalization, canonical
+  CBOR and digest domains without importing the
   primary model, Rust resolver, or SQ-0005 oracle.
 - `scripts/registry/build_registry.py` is the deterministic comparison and
   record generator.
 - `backend/crates/statqed-registry/` is a standalone, std-only, bounded offline
-  resolver. Its key/value transport is operational and non-normative.
+  binding resolver. Its key/value transport is operational and non-normative;
+  canonical-byte and framing recomputation remains in the composed Python
+  verifier and is not duplicated by this Rust crate.
 - `scripts/registry/check_evidence.py` permanently binds evidence and live
   predecessor invariants.
 

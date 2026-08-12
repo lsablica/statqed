@@ -60,6 +60,11 @@ root.  Resolution recomputes the snapshot root, applies local policy, locates
 exactly one ID/version, compares canonical record bytes and digest, then checks
 proposition, closure, proof lock, axiom report and any compatibility lock.
 An internally consistent replacement registry remains unauthorized.
+The composed Python verifier performs these canonical-byte and framing
+recomputations over the retained subjects. The standalone Rust operational
+resolver compares the separated results with exact verifier-selected bindings;
+it intentionally does not parse canonical CBOR or Lean/lock payloads and is not
+an independent canonical-byte oracle.
 
 ## Proof/build lock and axioms
 
@@ -85,6 +90,10 @@ the new theorem replaces an old requirement.  Reversed direction,
 metadata-only implication/equivalence, changed assumptions, missing locks, and
 substituted proofs are rejected.  Compatibility does not merge identities or
 transfer review annotations.
+
+The retained `False -> True` fixture is intentionally vacuous and test-only;
+it exercises directional proof-lock plumbing and makes no nontrivial migration
+claim.
 
 ## Stable failure classes and resources
 

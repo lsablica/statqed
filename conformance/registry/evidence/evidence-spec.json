@@ -1,9 +1,37 @@
 {
-  "schema": "statqed.sq0007-evidence-spec.v1",
-  "launch_base": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+  "schema": "statqed.sq0007-evidence-spec.v2",
+  "historical_launch_base": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+  "historical_task_commits": {
+    "prototype": "2296f3f441c5601eb92de84fc61c8c2823ab4524",
+    "blocked_head": "8d327ec7d7d533d9485194c373bb44c7ea27d795"
+  },
+  "verified_predecessor_chain": [
+    {
+      "phase": "phase_m_compositional_evidence",
+      "predecessor_tip": "e6e6fcf5a4dc58037be506b67eb25deee9298979",
+      "task_integration_merge": "524eb11036f53babb2cb92d3e60973f6ee44e81a",
+      "first_parent": "8d327ec7d7d533d9485194c373bb44c7ea27d795",
+      "second_parent": "e6e6fcf5a4dc58037be506b67eb25deee9298979"
+    },
+    {
+      "phase": "phase_f_fixture_neutrality",
+      "predecessor_tip": "950ebf5f591f7d58d089d215c9c76863bc50f7f6",
+      "task_integration_merge": "4b99eabf02c333790bc7cd438625c9f2328fb101",
+      "first_parent": "524eb11036f53babb2cb92d3e60973f6ee44e81a",
+      "second_parent": "950ebf5f591f7d58d089d215c9c76863bc50f7f6"
+    },
+    {
+      "phase": "phase_t_branch_relative_live_report_fixtures",
+      "predecessor_tip": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f",
+      "task_integration_merge": "1b9ce9555cb524c7b727a67c275ba68ef7b93798",
+      "first_parent": "4b99eabf02c333790bc7cd438625c9f2328fb101",
+      "second_parent": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f"
+    }
+  ],
+  "verified_predecessor_tip": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f",
   "predecessor_bindings": {
-    "sq0005_manifest_sha256": "1259049334d6413e9a84e13592bec1eba3bc0a6e36607c2f4a2c96f71a894845",
-    "sq0006_manifest_sha256": "5c6b3081846ba8ec2bc1ac17bf7d9014ee4d8f2dedb9e7d625a1226d2957b752",
+    "sq0005_manifest_sha256": "22b771b5aa71a72fe3979e9dd29ff8a5ae0b8e082bd0b971036baa0d554a4a7a",
+    "sq0006_manifest_sha256": "3a5c97ab4aea0f8c3eb8c0f5ac9f3d30d7f04f22898b7ecefd8e64321f103a40",
     "sq0006_scientific_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
     "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429"
   },

@@ -9,6 +9,11 @@ provided trusted policy. The transport is deliberately not described as the
 normative registry encoding. Normative identities are represented by distinct
 lower-case SHA-256 digest values for proposition, environment, registry record,
 authorization, proof/build, axiom observation, and compatibility evidence.
+Canonical subjects and framed digests are recomputed by the composed Python
+verifier before this resolver is invoked. This crate compares the resulting
+separated bindings with verifier-selected policy; it does not parse canonical
+CBOR, Lean expressions, or proof-lock payloads and is not an independent
+canonical-byte oracle.
 
 The crate has no third-party dependencies, build script, network fallback,
 ambient credential use, unsafe code, or locale-dependent error text.
