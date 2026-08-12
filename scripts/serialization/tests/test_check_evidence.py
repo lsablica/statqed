@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -40,6 +42,10 @@ HIGH_VALUE_PATHS = (
     "schemas/prototypes/rust-cbor/Cargo.lock",
     "schemas/prototypes/rust-cbor/LINEAGE.md",
     "source-audits/encoding/manifest.json",
+)
+EMPTY_REGISTRY_PARTITIONS = (
+    "lean/StatQED/Registry",
+    "backend/crates/statqed-registry",
 )
 
 
@@ -171,6 +177,86 @@ class EvidenceCorruptionTests(unittest.TestCase):
             {path: digest(self.root / path) for path in HIGH_VALUE_PATHS},
             self.frozen_high_value,
         )
+
+    def neutralize_ambient_sq0007_registry_paths(
+        self,
+        shadow_root: Path | None = None,
+        relative_roots: tuple[str, ...] = EMPTY_REGISTRY_PARTITIONS,
+    ) -> tuple[str, ...]:
+        """Restore only the historically empty SQ-0007 owner partitions in a copy."""
+
+        root = self.root if shadow_root is None else shadow_root
+        resolved_root = root.resolve()
+        temporary_root = Path(self.temporary.name).resolve()
+        if (
+            resolved_root == REPOSITORY.resolve()
+            or resolved_root == temporary_root
+            or temporary_root not in resolved_root.parents
+            or not (root / "work/status.yaml").is_file()
+            or not (root / MANIFEST).is_file()
+        ):
+            raise ValueError("neutralizer requires an isolated temporary repository copy")
+        if resolved_root == Path(root.anchor).resolve() or not root.is_dir():
+            raise ValueError("neutralizer refuses a filesystem or missing root")
+        if tuple(relative_roots) != EMPTY_REGISTRY_PARTITIONS:
+            raise ValueError("neutralizer roots must equal the exact Registry allowlist")
+
+        manifest = json.loads((root / MANIFEST).read_text(encoding="utf-8"))
+        historical = {item["path"] for item in manifest["protected_files"]}
+        live_baseline = {item["path"] for item in manifest["live_protected_files"]}
+        for relative in EMPTY_REGISTRY_PARTITIONS:
+            prefix = relative + "/"
+            self.assertFalse(
+                any(path == relative or path.startswith(prefix) for path in historical),
+                f"reviewed predecessor Registry baseline is not empty: {relative}",
+            )
+            self.assertFalse(
+                any(path == relative or path.startswith(prefix) for path in live_baseline),
+                f"reviewed v3 Registry baseline is not empty: {relative}",
+            )
+
+        removal_plans: list[tuple[list[Path], list[Path]]] = []
+        removed: list[str] = []
+        for relative in EMPTY_REGISTRY_PARTITIONS:
+            target = root / relative
+            current = root
+            for part in Path(relative).parts:
+                current = current / part
+                if current.is_symlink():
+                    raise ValueError(f"neutralizer refuses symlink traversal: {relative}")
+            try:
+                target_mode = target.lstat().st_mode
+            except FileNotFoundError:
+                continue
+            if not stat.S_ISDIR(target_mode):
+                raise ValueError(f"neutralizer refuses non-directory root: {relative}")
+
+            directories: list[Path] = []
+            target_files: list[Path] = []
+            for directory, names, files in os.walk(target, topdown=True, followlinks=False):
+                directory_path = Path(directory)
+                directories.append(directory_path)
+                for name in sorted([*names, *files]):
+                    path = directory_path / name
+                    mode = path.lstat().st_mode
+                    if stat.S_ISLNK(mode):
+                        raise ValueError(
+                            f"neutralizer refuses symlink entry: {path.relative_to(root)}"
+                        )
+                    if not (stat.S_ISDIR(mode) or stat.S_ISREG(mode)):
+                        raise ValueError(
+                            f"neutralizer refuses special entry: {path.relative_to(root)}"
+                        )
+                    if stat.S_ISREG(mode):
+                        target_files.append(path)
+                        removed.append(path.relative_to(root).as_posix())
+            removal_plans.append((target_files, directories))
+        for target_files, directories in removal_plans:
+            for path in sorted(target_files):
+                path.unlink()
+            for directory in sorted(directories, key=lambda path: len(path.parts), reverse=True):
+                directory.rmdir()
+        return tuple(sorted(removed))
 
     def manifest(self) -> dict:
         return json.loads((self.root / MANIFEST).read_text(encoding="utf-8"))
@@ -389,6 +475,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_in_progress_verifies_with_schema_path(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.transition_sq0006("IN_PROGRESS")
         schema = self.root / "schemas/v0/lifecycle-simulation.md"
         schema.parent.mkdir(parents=True, exist_ok=True)
@@ -397,23 +484,27 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_in_review_verifies(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.transition_sq0006("IN_REVIEW")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_done_then_in_progress_verifies(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.transition_sq0006("DONE")
         self.transition_sq0006("IN_PROGRESS")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_done_then_in_review_verifies(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.transition_sq0006("DONE")
         self.transition_sq0006("IN_REVIEW")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
 
     def test_lifecycle_sq0006_done_verifies_with_recomputed_successors(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.transition_sq0006("DONE")
         self.assert_verified(repository=True)
         self.assert_frozen_evidence_unchanged()
@@ -769,136 +860,186 @@ class EvidenceCorruptionTests(unittest.TestCase):
         path.write_text(content, encoding="utf-8")
 
     def test_path_sq0007_ready_registry_lean_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "READY")
+        self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0007_in_progress_registry_lean_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_PROGRESS")
+        self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
         self.assert_verified()
 
     def test_path_sq0007_in_review_registry_lean_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
         self.assert_verified()
 
     def test_path_sq0007_done_registry_lean_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "DONE")
+        self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
         self.assert_verified()
 
     def test_path_sq0007_superseded_is_legal_but_non_authorizing(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "SUPERSEDED")
         self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0008_superseded_is_legal_but_non_authorizing(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0008", "SUPERSEDED")
         self.assert_verified()
         self.add_protected_file("lean/StatQED/Assurance/Test.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0007_active_unrelated_lean_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_PROGRESS")
         self.add_protected_file("lean/StatQED/Unowned.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0007_active_backend_registry_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_REVIEW")
         self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
         self.assert_verified()
 
     def test_path_sq0007_ready_backend_registry_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "READY")
+        self.assert_verified()
         self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0007_active_unrelated_backend_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_REVIEW")
         self.add_protected_file("backend/crates/unowned/src/lib.rs")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0011_active_backend_remainder_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0011", "IN_PROGRESS")
         self.add_protected_file("backend/crates/future-backend/src/lib.rs")
         self.assert_verified()
 
     def test_path_sq0008_active_assurance_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0008", "IN_PROGRESS")
         self.add_protected_file("lean/StatQED/Assurance/Test.lean")
         self.assert_verified()
 
     def test_path_sq0008_active_guarantee_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0008", "IN_REVIEW")
         self.add_protected_file("lean/StatQED/Guarantee/Test.lean")
         self.assert_verified()
 
     def test_path_sq0008_active_registry_rejected_without_sq0007(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0008", "IN_PROGRESS")
+        self.assert_verified()
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0008_and_sq0007_active_registry_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "IN_REVIEW")
         self.set_task_status("SQ-0008", "IN_PROGRESS")
         self.add_protected_file("lean/StatQED/Registry/Test.lean")
         self.assert_verified()
 
     def test_path_sq0013_active_r_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0013", "IN_PROGRESS")
         self.add_protected_file("frontends/r/R/test.R")
         self.assert_verified()
 
     def test_path_sq0013_active_python_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0013", "IN_PROGRESS")
         self.add_protected_file("frontends/python/statqed/test.py")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0013_active_julia_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0013", "IN_PROGRESS")
         self.add_protected_file("frontends/julia/src/Test.jl")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0014_active_python_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0014", "IN_PROGRESS")
         self.add_protected_file("frontends/python/statqed/test.py")
         self.assert_verified()
 
     def test_path_sq0014_active_julia_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0014", "IN_PROGRESS")
         self.add_protected_file("frontends/julia/src/Test.jl")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0014_active_r_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0014", "IN_PROGRESS")
         self.add_protected_file("frontends/r/R/test.R")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0015_active_julia_accepted(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0015", "IN_PROGRESS")
         self.add_protected_file("frontends/julia/src/Test.jl")
         self.assert_verified()
 
     def test_path_sq0015_active_r_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0015", "IN_PROGRESS")
         self.add_protected_file("frontends/r/R/test.R")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_sq0015_active_python_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.set_task_status("SQ-0007", "READY")
         self.set_task_status("SQ-0015", "IN_PROGRESS")
         self.add_protected_file("frontends/python/statqed/test.py")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_no_owner_active_new_remainder_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         for task_id in ("SQ-0007", "SQ-0008", "SQ-0011"):
             self.set_task_status(task_id, "READY")
         self.add_protected_file("lean/StatQED/NoOwner/Test.lean")
         self.assert_rejected("protected production path-set drift")
 
     def test_path_no_owner_active_frontends_remainder_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        for task_id in ("SQ-0007", "SQ-0013", "SQ-0014", "SQ-0015"):
+            self.set_task_status(task_id, "READY")
         self.add_protected_file("frontends/shared/test.txt")
         self.assert_rejected("protected production path-set drift")
 
@@ -986,8 +1127,109 @@ class EvidenceCorruptionTests(unittest.TestCase):
         self.assert_rejected("SQ-0007 contract/backlog status disagreement")
 
     def test_path_owner_illegal_status_rejected(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
         self.set_task_status("SQ-0007", "CORRUPT")
         self.assert_rejected("SQ-0007 has illegal lifecycle status")
+
+    def test_path_ambient_registry_production_policy_remains_fail_closed(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        for index in range(5):
+            self.add_protected_file(f"lean/StatQED/Registry/Ambient{index}.lean")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.set_task_status("SQ-0011", "READY")
+        self.assert_verified()
+        self.set_task_status("SQ-0007", "READY")
+        status, output = self.run_check()
+        self.assertNotEqual(0, status)
+        self.assertIn("lean/StatQED/Registry/Ambient0.lean", output)
+        self.assertIn("backend/crates/statqed-registry/src/lib.rs", output)
+        self.set_task_status("SQ-0007", "SUPERSEDED")
+        status, output = self.run_check()
+        self.assertNotEqual(0, status)
+        self.assertIn("lean/StatQED/Registry/Ambient0.lean", output)
+        self.assertIn("backend/crates/statqed-registry/src/lib.rs", output)
+
+    def test_path_fixture_neutralizer_is_allowlisted_and_safe(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        self.add_protected_file("lean/StatQED/Registry/Controlled.lean")
+        self.add_protected_file("backend/crates/statqed-registry/src/lib.rs")
+        removed = self.neutralize_ambient_sq0007_registry_paths()
+        self.assertEqual(
+            removed,
+            (
+                "backend/crates/statqed-registry/src/lib.rs",
+                "lean/StatQED/Registry/Controlled.lean",
+            ),
+        )
+        for invalid in (
+            ("/",),
+            (".",),
+            ("lean",),
+            ("backend",),
+            ("lean/StatQED/Assurance",),
+        ):
+            with self.assertRaises(ValueError):
+                self.neutralize_ambient_sq0007_registry_paths(relative_roots=invalid)
+        for invalid_root in (Path("/"), Path(self.temporary.name), self.root / "lean"):
+            with self.assertRaises(ValueError):
+                self.neutralize_ambient_sq0007_registry_paths(shadow_root=invalid_root)
+
+        registry = self.root / "lean/StatQED/Registry"
+        registry.parent.mkdir(parents=True, exist_ok=True)
+        registry.symlink_to(self.root / "lean", target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "symlink"):
+            self.neutralize_ambient_sq0007_registry_paths()
+        registry.unlink()
+
+        registry.symlink_to(self.root / "missing-registry-target", target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "symlink"):
+            self.neutralize_ambient_sq0007_registry_paths()
+        registry.unlink()
+
+        if hasattr(os, "mkfifo"):
+            os.mkfifo(registry)
+            with self.assertRaisesRegex(ValueError, "non-directory"):
+                self.neutralize_ambient_sq0007_registry_paths()
+
+    def test_path_ambient_registry_meta_scenarios_are_branch_neutral(self) -> None:
+        self.neutralize_ambient_sq0007_registry_paths()
+        ambient = [
+            *(f"lean/StatQED/Registry/Ambient{index}.lean" for index in range(5)),
+            "backend/crates/statqed-registry/src/lib.rs",
+        ]
+        for relative in ambient:
+            self.add_protected_file(relative)
+        self.set_task_status("SQ-0007", "IN_REVIEW")
+        self.assert_verified()
+
+        source_root = self.root
+        for scenario, status in (
+            ("ready", "READY"),
+            ("superseded", "SUPERSEDED"),
+            ("no-owner", "READY"),
+        ):
+            scenario_root = Path(self.temporary.name) / f"scenario-{scenario}"
+            shutil.copytree(source_root, scenario_root)
+            self.root = scenario_root
+            try:
+                removed = self.neutralize_ambient_sq0007_registry_paths()
+                self.assertEqual(tuple(sorted(ambient)), removed)
+                self.set_task_status("SQ-0007", status)
+                if scenario == "no-owner":
+                    self.set_task_status("SQ-0011", "READY")
+                self.assert_verified()
+                controlled = (
+                    "backend/crates/statqed-registry/Controlled.txt"
+                    if scenario == "no-owner"
+                    else "lean/StatQED/Registry/Controlled.lean"
+                )
+                self.add_protected_file(controlled)
+                self.assert_rejected("protected production path-set drift")
+            finally:
+                self.root = source_root
+            for relative in ambient:
+                self.assertTrue((source_root / relative).is_file())
 
 
 if __name__ == "__main__":

@@ -107,3 +107,39 @@ historical scientific digest
 `4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0`.
 
 Final SQ-0006 lifecycle-fixture disposition: APPROVE_PHASE_M_EVIDENCE
+
+## Phase-F ambient-owner fixture-neutrality supplement
+
+Phase F leaves the v3 evidence specification, production verifier, path
+partitions, schema sources, fixtures, goldens, results, and scientific subject
+byte-identical. It changes only temporary test construction and its lifecycle
+manifest binding. The 55 Phase-M tests remain; two net-new regressions bring
+the suite to 57 tests (51 evidence/corruption tests plus six semantic tests).
+
+Every owner-sensitive scenario now starts from a registered temporary shadow,
+removes only the historically empty `lean/StatQED/Registry` and
+`backend/crates/statqed-registry` partitions after a complete fail-closed
+`lstat` preflight, sets all relevant lifecycle states explicitly, verifies the
+neutral start, and then adds a controlled mutation. An unneutralized synthetic
+Registry remains accepted in SQ-0007 `IN_REVIEW` and rejected in `READY` and
+`SUPERSEDED`. Ambient-empty and ambient-populated runs produce identical Lean
+Registry and backend-remainder no-owner results. Safety coverage rejects broad
+roots, unregistered roots, symlinks (including broken links), and special-file
+roots. The helper is test-only and never runs in the production verifier.
+
+Exact local candidate bindings before final independent review:
+
+- regression suite:
+  `aacef312ba9af51c6e8df30fcb210cf1bd146ab32ea61f2ca36f34d5965c9aa7`;
+- v3 evidence manifest:
+  `8d9b84c0af890087fd4affe80da5e397bd3e8097348f883b33b81abf88c9cf87`;
+- unchanged v3 evidence specification:
+  `271a8d205be6247f3c89f8d76310144ead33f94a526feffd429aac94c496b1d2`;
+- unchanged production verifier:
+  `540091772ca57322f490c492234c17b892f84b9c13947f4d75d144148613d2ae`;
+- unchanged scientific digest:
+  `4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0`.
+
+The prior Phase-M approval remains historical. Phase-F exact-head lifecycle,
+adversarial, manifest-reproducibility, and integration review remain merge
+gates. No successor was claimed and no Registry implementation is included.

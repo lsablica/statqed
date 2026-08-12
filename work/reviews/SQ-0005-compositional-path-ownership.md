@@ -1,6 +1,6 @@
 # SQ-0005 compositional path-ownership maintenance review
 
-Status: IN_REVIEW
+Status: IN_REVIEW (Phase-F fixture-neutrality supplement pending exact-head review)
 
 This supplemental record reviews only the v3 live path-ownership policy for
 the permanent SQ-0005 evidence verifier. It does not replace or rewrite the
@@ -59,6 +59,24 @@ partitions; no-owner behavior; symlink, FIFO, bytecode, and tracked-target
 smuggling; historical v2 mutation; policy mutation; owner status disagreement;
 and illegal owner status. The resulting focused suite passes all 97 tests.
 
+Phase F retains all 97 tests and adds three branch-neutral fixture regressions,
+for 100 total. A test-only helper can remove only the historically empty
+`lean/StatQED/Registry` and `backend/crates/statqed-registry` partitions from
+registered temporary repository copies. It performs a complete `lstat`
+preflight before mutation, refuses symlinks and special files, and records the
+exact removed paths. The new regressions prove unneutralized Registry content
+is accepted for SQ-0007 `IN_REVIEW` but rejected for `READY` and
+`SUPERSEDED`; reconstruct READY, SUPERSEDED, and dual-owner no-owner scenarios
+from a neutral copy; and reject broad, real, symlinked, broken-symlink, and
+special-file targets. The real verifier never invokes the helper.
+
+The manifest generator now obtains `live_protected_files` from reviewed v3
+maintenance main `e6e6fcf5a4dc58037be506b67eb25deee9298979`, rather than
+mistaking an active successor tree for the predecessor baseline. This is
+required for byte-identical hosted regeneration on successor branches. The v3
+evidence specification and production verifier are byte-identical to their
+reviewed values.
+
 ## TCB and nonclaims
 
 The live path classifier and owner-status reader enter the evidence-verifier
@@ -74,7 +92,7 @@ prove source fidelity, alter canonical bytes, or confer production authority.
 {
   ".github/workflows/serialization-prototypes.yml": "3cb67d26721258413ff80150df453dca77f76ea77374fe6a5a92bd7494cd8536",
   "ARCHITECTURE.md": "482523d5cf858b1674852074695ecab54623bbbe0814f5e9417eca32f060005a",
-  "conformance/prototypes/evidence/evidence-manifest.json": "33d7a0b5898d45e5cc88b18dafc81e3933f7b7a025562d0c2f1c722ac5a31bb6",
+  "conformance/prototypes/evidence/evidence-manifest.json": "057395afbed90e6465812c5dbb8a8014ee57d20d2afd64b45224585b04cdc957",
   "conformance/prototypes/evidence/evidence-spec.json": "39fd75ffb754a7f9f7a5a3dafb3653973e65af2f944ae782c6e70e29db3c54b4",
   "conformance/prototypes/fixtures/semantic-v1/catalog.json": "d5bf3079d9ff8119a2372873a1b116601011e78c30067bc1d05228211659b4d3",
   "conformance/prototypes/fixtures/semantic-v1/digest-framing.json": "36895de279202434a1511bb1bf552c199e55d57ee8a57a7d724772a737824d0b",
@@ -95,10 +113,10 @@ prove source fidelity, alter canonical bytes, or confer production authority.
   "schemas/prototypes/rust-cbor/evidence/advisory-report.json": "abe01dc61e4f02fb179f39457077b832491c3503d8461fe82f1835712482cd55",
   "schemas/prototypes/rust-cbor/evidence/crates-io-yanked.json": "fd69cb31758d9f3da5f674a3b14b731bda03ba77e9ca1295e03663d67e571e2b",
   "schemas/prototypes/rust-cbor/evidence/dependency-license-inventory.json": "3d44e9d26c756c2aa950779f9fcf557f11efc28a50d20f27c2ec1a501aaadfa9",
-  "scripts/serialization/build_evidence_manifest.py": "3d7367c471f3307093ffe91ee1011c953aed87d76857646f28dc327d570509ca",
+  "scripts/serialization/build_evidence_manifest.py": "5c8389c38b5a993289a10532dbf3466bc393b984258e427284ca1658e21f4cd4",
   "scripts/serialization/check_evidence.py": "920487821d11ab335130c1bffb3f7e4378265b57872ff61e2fe72dc82fa54381",
   "scripts/serialization/run_conformance.py": "8a61f6deeeba7bed4e8bb7e0c8202fa0ce730d5328036365d8536ed5950fe01c",
-  "scripts/serialization/tests/test_check_evidence.py": "9e352056f1a9a0fc7671d1f9fa82f56894b475f7efb84f155ebf4671624de85b",
+  "scripts/serialization/tests/test_check_evidence.py": "41a4557e44162f1c09e35ff17be213d30d1bd07fd251a64e48089179b6ced1c4",
   "source-audits/encoding/manifest.json": "b3f70746a36c350590f2f77ffebb0e550773337d79db4103317426be94ac0a40",
   "work/reviews/SQ-0005-evidence-lifecycle.md": "ae2753b4b74c6c297bfe75556d940579f16696565821ffdae0d9cda9f3b746ba",
   "work/reviews/SQ-0005.md": "a45c57c5abf9d99b89a5c5b86143da34651728a86b3b72d8ca7d5886a62f3ff7"

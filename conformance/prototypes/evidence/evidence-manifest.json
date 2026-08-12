@@ -2212,7 +2212,7 @@
     {
       "path": "scripts/serialization/build_evidence_manifest.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "3d7367c471f3307093ffe91ee1011c953aed87d76857646f28dc327d570509ca"
+      "sha256": "5c8389c38b5a993289a10532dbf3466bc393b984258e427284ca1658e21f4cd4"
     },
     {
       "path": "scripts/serialization/check_evidence.py",
@@ -2247,7 +2247,7 @@
     {
       "path": "scripts/serialization/tests/test_check_evidence.py",
       "role": "conformance, evidence, dependency, security, and corruption verifiers",
-      "sha256": "9e352056f1a9a0fc7671d1f9fa82f56894b475f7efb84f155ebf4671624de85b"
+      "sha256": "41a4557e44162f1c09e35ff17be213d30d1bd07fd251a64e48089179b6ced1c4"
     },
     {
       "path": "source-audits/encoding/README.md",
