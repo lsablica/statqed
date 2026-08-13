@@ -451,6 +451,15 @@ def validate_live_fixtures(observation: dict[str, Any]) -> dict[str, Any]:
             return any(contains_typed_tag(child, tag) for child in value)
         return False
 
+    def primary_result_class(code: str) -> str:
+        if code == "registry.normalization_failure":
+            return code
+        if code.startswith("registry.normalization.") and code.endswith("_limit"):
+            return "registry.resource_limit"
+        if code.startswith("registry.normalization."):
+            return "registry.normalization_failure"
+        return code
+
     for fixture in live["expression_fixtures"]:
         expected = fixture["expected"]
         required_tag = required_typed_tags.get(fixture["fixture_id"])
@@ -464,7 +473,7 @@ def validate_live_fixtures(observation: dict[str, Any]) -> dict[str, Any]:
                 level_parameters=fixture["level_parameters"],
             )
         except independent_oracle.OracleError as error:
-            if expected != "rejected" or error.code != "registry.resource_limit":
+            if expected != "rejected" or error.code != primary_result_class(fixture.get("code", "")):
                 raise RuntimeError(
                     f"independent live fixture mismatch: {fixture['fixture_id']}:{error.code}"
                 ) from error
@@ -556,6 +565,25 @@ def validate_live_fixtures(observation: dict[str, Any]) -> dict[str, Any]:
         or work_boundary["one_under_code"] != "registry.closure.work_budget_limit"
     ):
         raise RuntimeError("independent work-boundary accounting disagrees")
+    unit_boundary = live["unit_boundary"]
+    if unit_boundary != {
+        "accepted_at_max": True,
+        "configured_limit": independent_oracle.LIMITS["closure_units"],
+        "one_over_rejected": True,
+    }:
+        raise RuntimeError("live closure-unit boundary predicate disagrees")
+    fixed_work_boundary = live["fixed_work_boundary"]
+    dominance_upper_bound = 262_144 + independent_oracle.LIMITS["closure_units"] + (
+        independent_oracle.LIMITS["closure_units"] * independent_oracle.LIMITS["closure_width"]
+    )
+    if (
+        fixed_work_boundary["accepted_at_max"] is not True
+        or fixed_work_boundary["configured_limit"] != independent_oracle.LIMITS["work"]
+        or fixed_work_boundary["dominance_upper_bound"] != dominance_upper_bound
+        or fixed_work_boundary["one_over_rejected"] is not True
+        or dominance_upper_bound >= independent_oracle.LIMITS["work"]
+    ):
+        raise RuntimeError("live fixed work-boundary predicate disagrees")
     return {
         "closure_fixtures": closure_results,
         "depth_boundary": {
@@ -566,6 +594,8 @@ def validate_live_fixtures(observation: dict[str, Any]) -> dict[str, Any]:
         },
         "expression_fixtures": expression_results,
         "schema": "statqed.registry-live-independent-comparison.v0",
+        "fixed_work_boundary": fixed_work_boundary,
+        "unit_boundary": unit_boundary,
         "work_boundary": work_boundary,
     }
 
@@ -700,20 +730,50 @@ def outputs() -> dict[Path, bytes]:
     if refactor_digest == proof_digest:
         raise RuntimeError("proof-only refactor did not change proof/build lock")
 
+    compatibility_parameters = [name_segments(name) for name in compatibility_source["proposition"]["level_parameters"]]
+    compatibility_normalized_type = expr_array(
+        compatibility_source["proposition"]["expression"], compatibility_parameters
+    )
+    if compatibility_normalized_type[:2] != [5, 0]:
+        raise RuntimeError("compatibility declaration is not an explicit implication")
+    new_proposition_bytes = canonical_cbor(["statqed.lean-expr.v0", compatibility_normalized_type[2]])
+    _, new_proposition_digest = digest_frame("proposition", new_proposition_bytes)
+    compatibility_environment_bytes = canonical_cbor([
+        "statqed.lean-environment-closure.v0", LEAN_COMMIT,
+        "statqed.lean-expr.v0", compatibility_source["closure"],
+    ])
+    _, compatibility_environment_digest = digest_frame("environment", compatibility_environment_bytes)
+    compatibility_axioms = next(
+        item for item in axiom_records if item["declaration"] == compatibility_source["declaration"]
+    )["axioms"]
+    if compatibility_axioms:
+        raise RuntimeError("compatibility proof has nonempty transitive axiom observation")
+    compatibility_proof_lock = {
+        **proof_lock,
+        "declaration": compatibility_source["declaration"],
+        "proposition_digest": digest_frame(
+            "proposition", canonical_cbor(["statqed.lean-expr.v0", compatibility_normalized_type])
+        )[1],
+        "environment_digest": compatibility_environment_digest,
+        "proof_subject": expr_array(compatibility_source["proof_subject"], compatibility_parameters),
+        "axiom_report_sha256": axiom_digest,
+    }
+    compatibility_proof_bytes = canonical_cbor(compatibility_proof_lock)
+    compatibility_proof_frame, compatibility_proof_digest = digest_frame(
+        "proof_build", compatibility_proof_bytes
+    )
     compatibility = {
         "schema": "statqed.compatibility-proof-lock.v0",
         "direction": "new_implies_old",
         "new_proposition": "False",
+        "new_proposition_digest": new_proposition_digest,
         "old_proposition_digest": proposition_digest,
+        "environment_digest": compatibility_environment_digest,
         "declaration": compatibility_source["declaration"],
-        "normalized_type": expr_array(
-            compatibility_source["proposition"]["expression"],
-            [name_segments(name) for name in compatibility_source["proposition"]["level_parameters"]],
-        ),
-        "proof_subject": expr_array(
-            compatibility_source["proof_subject"],
-            [name_segments(name) for name in compatibility_source["proposition"]["level_parameters"]],
-        ),
+        "normalized_type": compatibility_normalized_type,
+        "proof_subject": expr_array(compatibility_source["proof_subject"], compatibility_parameters),
+        "proof_build_digest": compatibility_proof_digest,
+        "axiom_report_digest": axiom_digest,
         "axioms": [],
         "universe_instantiations": {"new": [], "old": []},
         "path_length": 1,
@@ -758,6 +818,7 @@ def outputs() -> dict[Path, bytes]:
         "historical_forbidden_roots": ["22" * 32],
         "revoked_roots": ["33" * 32],
         "compatibility_digest": compatibility_digest,
+        "compatibility_binding": compatibility,
         "record_binding": record,
         "record_digest": record_digest,
         "selection": "verifier_local_only",
@@ -817,12 +878,14 @@ def outputs() -> dict[Path, bytes]:
         EVIDENCE / "proof-build.frame": proof_frame,
         EVIDENCE / "snapshot.frame": snapshot_frame,
         EVIDENCE / "compatibility.frame": compatibility_frame,
+        EVIDENCE / "compatibility-proof-build.frame": compatibility_proof_frame,
         ROOT / "theorem-registry/registry.json": canonical_json(registry_index),
         RECORDS / "test-only-true.v0.json": canonical_json(record),
         RECORDS / "snapshot-v0.json": canonical_json(snapshot),
         LOCKS / "proof-build-v0.json": canonical_json(proof_lock),
         LOCKS / "proof-build-refactor-v0.json": canonical_json(copy_without),
         LOCKS / "compatibility-v0.json": canonical_json(compatibility),
+        LOCKS / "compatibility-proof-build-v0.json": canonical_json(compatibility_proof_lock),
         POLICY / "authorization-v0.json": canonical_json(policy),
     }
 

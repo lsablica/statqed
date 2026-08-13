@@ -101,6 +101,51 @@ class ModelTests(unittest.TestCase):
         vectors = [model.canonical_cbor(model.normalize_expr([5, info, [1, [0]], [0, 0]])) for info in range(4)]
         self.assertEqual(len(set(vectors)), 4)
 
+    def test_integer_type_unicode_and_uint64_boundaries(self):
+        rejected = (
+            [5, True, [1, [0]], [0, 0]], [5, False, [1, [0]], [0, 0]],
+            [2, [[False, "x"]], []], [8, "\ud800"], [8, "\udfff"],
+            [2, [[0, "\ud800"]], []], [7, 1 << 64],
+            [9, [[0, "P"]], 1 << 64, [2, [[0, "x"]], []]],
+            [2, [[1, 1 << 64]], []], [4, 0, [1, [0]], [0, 1 << 64]],
+        )
+        for expression in rejected:
+            with self.subTest(expression=repr(expression)), self.assertRaisesRegex(
+                model.RegistryError, "registry.normalization_failure"
+            ):
+                model.normalize_expr(expression)
+        maximum = (1 << 64) - 1
+        for expression in (
+            [7, maximum], [9, [[0, "P"]], maximum, [2, [[0, "x"]], []]],
+            [2, [[1, maximum]], []],
+        ):
+            self.assertEqual(model.normalize_expr(expression), expression)
+
+    def test_semantic_limits_survive_canonical_framing(self):
+        leaves = [[0, 0] for _ in range(32_767)]
+        while len(leaves) > 1:
+            paired = [[3, leaves[index], leaves[index + 1]] for index in range(0, len(leaves) - 1, 2)]
+            if len(leaves) % 2:
+                paired.append(leaves[-1])
+            leaves = paired
+        exact_nodes = [4, 0, [1, [0]], leaves[0]]
+        model.canonical_cbor(["statqed.lean-expr.v0", model.normalize_expr(exact_nodes)])
+        over_nodes = [3, [2, [[0, "f"]], []], copy.deepcopy(exact_nodes)]
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr(over_nodes)
+        level = [0]
+        for _ in range(model.LIMITS["level_depth"]):
+            level = [1, level]
+        combined = [1, level]
+        for _ in range(model.LIMITS["expression_depth"]):
+            combined = [3, [2, [[0, "f"]], []], combined]
+        model.canonical_cbor(["statqed.lean-expr.v0", model.normalize_expr(combined)])
+        literal = [8, "x" * model.LIMITS["string_bytes"]]
+        aggregate = [3, [3, literal, literal], [3, literal, literal]]
+        model.canonical_cbor(["statqed.lean-expr.v0", model.normalize_expr(aggregate)])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.normalize_expr([3, aggregate, [8, "x"]])
+
     def test_loose_variable_rejected(self):
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
             model.normalize_expr([0, 0])
@@ -187,6 +232,15 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_work_budget_limit"):
             model.closure(["root"], rejected)
 
+    def test_fixed_work_cap_is_explicitly_dominated_by_other_v0_limits(self):
+        dominance_upper_bound = (
+            262_144
+            + model.LIMITS["closure_units"]
+            + model.LIMITS["closure_units"] * model.LIMITS["closure_width"]
+        )
+        self.assertEqual(dominance_upper_bound, 525_312)
+        self.assertLess(dominance_upper_bound, model.LIMITS["work"])
+
     def test_identifier_boundary(self):
         self.assertEqual(model.validate_identifier("a" + "x" * 127), "a" + "x" * 127)
         with self.assertRaisesRegex(model.RegistryError, "registry.malformed_record"):
@@ -233,6 +287,20 @@ class ModelTests(unittest.TestCase):
                     model.RegistryError, "registry.authorization_policy_unsupported"
                 ):
                     model.verify_bundle(copy.deepcopy(self.bundle), policy)
+
+    def test_authorization_policy_is_closed_bounded_and_utf8(self):
+        mutations = []
+        for field, value in (("schema", "forged"), ("selection", "candidate_selected")):
+            policy = copy.deepcopy(self.policy); policy[field] = value; mutations.append(policy)
+        policy = copy.deepcopy(self.policy); policy["unknown"] = "field"; mutations.append(policy)
+        policy = copy.deepcopy(self.policy); policy["historical_permitted_roots"].append("not-a-digest"); mutations.append(policy)
+        policy = copy.deepcopy(self.policy); policy["current_permitted_roots"] += [f"{index + 4:064x}" for index in range(13)]; mutations.append(policy)
+        for policy in mutations:
+            with self.assertRaisesRegex(model.RegistryError, "registry.authorization_policy_unsupported"):
+                model.verify_bundle(copy.deepcopy(self.bundle), policy)
+        bundle = copy.deepcopy(self.bundle); bundle["unexpected"] = "\ud800"
+        with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
     def test_forged_metadata_rejected(self):
         bundle = copy.deepcopy(self.bundle)
@@ -282,7 +350,8 @@ class ModelTests(unittest.TestCase):
 
     def test_wrong_compatibility_direction_rejected(self):
         bundle = copy.deepcopy(self.bundle)
-        bundle["compatibility"] = {"direction": "old_implies_new"}
+        bundle["compatibility"] = copy.deepcopy(self.policy["compatibility_binding"])
+        bundle["compatibility"]["direction"] = "old_implies_new"
         with self.assertRaisesRegex(model.RegistryError, "registry.compatibility_wrong_direction"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
@@ -299,6 +368,21 @@ class ModelTests(unittest.TestCase):
         bundle["compatibility_digest"] = "00" * 32
         with self.assertRaisesRegex(model.RegistryError, "registry.compatibility_missing"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+    def test_compatibility_lock_binds_environment_axioms_and_proof(self):
+        original = copy.deepcopy(self.policy["compatibility_binding"])
+        for field, value in (
+            ("environment_digest", "44" * 32), ("axiom_report_digest", "55" * 32),
+            ("proof_build_digest", "66" * 32),
+            ("normalized_type", [5, 0, [2, [[0, "True"]], []], [2, [[0, "True"]], []]]),
+            ("proof_subject", [2, [[0, "True"], [0, "intro"]], []]),
+        ):
+            bundle = copy.deepcopy(self.bundle)
+            compatibility = copy.deepcopy(original); compatibility[field] = value
+            bundle["compatibility"] = compatibility
+            _, bundle["compatibility_digest"] = model.digest_frame("compatibility", model.canonical_cbor(compatibility))
+            with self.subTest(field=field), self.assertRaisesRegex(model.RegistryError, "registry.compatibility_missing"):
+                model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
     def test_proof_lock_substitution_rejected(self):
         bundle = copy.deepcopy(self.bundle)

@@ -53,6 +53,32 @@ private def normalizationFixture
     ]
   | _, _ => .error s!"registry.fixture.unexpected_result:{fixtureId}"
 
+private def normalizationFixtureFromTyped
+    (fixtureId expected : String) (expression : Expr) (typed : Json) : Except String Json := do
+  let result := propositionJson [] expression
+  match expected, result with
+  | "accepted", .ok normalized => pure <| Json.mkObj [
+      ("expected", .str expected), ("fixture_id", .str fixtureId),
+      ("level_parameters", .arr #[]), ("normalized", normalized),
+      ("typed_expression", typed)]
+  | "rejected", .error code => pure <| Json.mkObj [
+      ("code", .str code), ("expected", .str expected),
+      ("fixture_id", .str fixtureId), ("level_parameters", .arr #[]),
+      ("typed_expression", typed)]
+  | _, _ => .error s!"registry.fixture.unexpected_result:{fixtureId}"
+
+private def typedNatural (value : Nat) : Json := Json.mkObj [
+  ("kind", .str "natural"), ("tag", .str "literal"), ("value", .str value.repr)]
+
+private def typedConstant (name : Name) : Json := Json.mkObj [
+  ("name", nameJson name), ("tag", .str "constant"), ("universes", .arr #[])]
+
+private def typedProjection (index : Nat) : Json := Json.mkObj [
+  ("index", toJson index),
+  ("structure", typedConstant `StatQED.Registry.Tests.liveProjectionFixture),
+  ("tag", .str "projection"),
+  ("type_name", nameJson `StatQED.Registry.Tests.LiveProjectionFixture)]
+
 private def levelBoundaryFixture
     (fixtureId expected : String) (successors : Nat) : Except String Json := do
   let level := successorLevel successors
@@ -119,6 +145,27 @@ private def workBoundaryFixture
     ("required_work", toJson required), ("root", nameJson root)
   ]
 
+private def integerBoundaryFixtures : Except String (Array Json) := do
+  let uintMax ← normalizationFixture "LIVE-NATURAL-UINT64-MAX" "accepted"
+    (.lit (.natVal maxUnsignedInteger)) 1
+  let uintOverValue := maxUnsignedInteger + 1
+  let uintOver ← normalizationFixtureFromTyped "LIVE-NATURAL-UINT64-OVER" "rejected"
+    (.lit (.natVal uintOverValue)) (typedNatural uintOverValue)
+  let numericNameMax := .num `StatQED.Registry.Tests.Numeric maxUnsignedInteger
+  let numericNameMaxFixture ← normalizationFixture "LIVE-NUMERIC-NAME-UINT64-MAX" "accepted"
+    (.const numericNameMax []) 1
+  let numericNameOver := .num `StatQED.Registry.Tests.Numeric uintOverValue
+  let numericNameOverFixture ← normalizationFixtureFromTyped "LIVE-NUMERIC-NAME-UINT64-OVER" "rejected"
+    (.const numericNameOver []) (typedConstant numericNameOver)
+  let projectionMax ← normalizationFixture "LIVE-PROJECTION-UINT64-MAX" "accepted"
+    (.proj `StatQED.Registry.Tests.LiveProjectionFixture maxUnsignedInteger
+      (.const `StatQED.Registry.Tests.liveProjectionFixture [])) 2
+  let projectionOver ← normalizationFixtureFromTyped "LIVE-PROJECTION-UINT64-OVER" "rejected"
+    (.proj `StatQED.Registry.Tests.LiveProjectionFixture uintOverValue
+      (.const `StatQED.Registry.Tests.liveProjectionFixture [])) (typedProjection uintOverValue)
+  pure #[uintMax, uintOver, numericNameMaxFixture, numericNameOverFixture,
+    projectionMax, projectionOver]
+
 /-- Emit all live inputs and primary observations for independent comparison. -/
 def report (environment : Environment) : Except String Json := do
   let expressionFixtures ← #[
@@ -146,6 +193,7 @@ def report (environment : Environment) : Except String Json := do
     (nestedApplications (maxExpressionDepth + 1)) (maxExpressionDepth + 2)
   let levelMax ← levelBoundaryFixture "LIVE-LEVEL-DEPTH-MAX" "accepted" maxLevelDepth
   let levelOver ← levelBoundaryFixture "LIVE-LEVEL-DEPTH-OVER" "rejected" (maxLevelDepth + 1)
+  let integerBoundaries ← integerBoundaryFixtures
   let closureFixtures ← #[
     ("LIVE-CLOSURE-TRUE-FAMILY", #[``True], #[]),
     ("LIVE-CLOSURE-DEFINITION", #[`StatQED.Registry.Tests.liveDefinitionReferenceFixture], #[]),
@@ -156,12 +204,25 @@ def report (environment : Environment) : Except String Json := do
     closureFixture environment fixtureId roots requiredUnits
   let depthBoundary ← depthBoundaryFixture environment
   let workBoundary ← workBoundaryFixture environment ``True
+  let unitBoundary := Json.mkObj [
+    ("accepted_at_max", .bool <| closureUnitCountAllowed maxClosureUnits),
+    ("configured_limit", toJson maxClosureUnits),
+    ("one_over_rejected", .bool <| !(closureUnitCountAllowed (maxClosureUnits + 1)))]
+  let fixedWorkBoundary := Json.mkObj [
+    ("accepted_at_max", .bool <| closureWorkAllowed maxClosureWork),
+    ("configured_limit", toJson maxClosureWork),
+    ("dominance_upper_bound", toJson <|
+      maxClosureExpressionNodes + maxClosureUnits + maxClosureUnits * maxClosureWidth),
+    ("one_over_rejected", .bool <| !(closureWorkAllowed (maxClosureWork + 1)))]
   pure <| Json.mkObj [
     ("closure_fixtures", .arr closureFixtures),
     ("depth_boundary", depthBoundary),
     ("expression_fixtures", .arr <| expressionFixtures ++ #[metadataBase, metadata,
-      lambdaConstructor, letConstructor, projectionConstructor, depthMax, depthOver, levelMax, levelOver]),
+      lambdaConstructor, letConstructor, projectionConstructor, depthMax, depthOver, levelMax, levelOver]
+      ++ integerBoundaries),
+    ("fixed_work_boundary", fixedWorkBoundary),
     ("schema", .str "statqed.registry-live-fixtures.v0"),
+    ("unit_boundary", unitBoundary),
     ("work_boundary", workBoundary)
   ]
 

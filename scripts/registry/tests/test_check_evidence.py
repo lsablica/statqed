@@ -121,6 +121,21 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def test_compatibility_reversal(self):
         self.assertIn("evidence.manifest_drift", self.append("theorem-registry/locks/compatibility-v0.json"))
 
+    def test_compatibility_proof_build_lock_replacement(self):
+        self.assertIn(
+            "evidence.manifest_drift",
+            self.append("theorem-registry/locks/compatibility-proof-build-v0.json"),
+        )
+
+    def test_compatibility_policy_binding_replacement(self):
+        errors = self.mutate(
+            "theorem-registry/policy/authorization-v0.json",
+            lambda path: path.write_text(
+                path.read_text().replace('"compatibility_binding":', '"forged_compatibility_binding":', 1)
+            ),
+        )
+        self.assertIn("evidence.manifest_drift", errors)
+
     def test_rfc0006_mutation(self):
         errors = self.append("rfcs/0006-canonical-logical-data-digest.md")
         self.assertTrue(any(error.startswith("evidence.predecessor_drift:rfcs/0006") for error in errors))

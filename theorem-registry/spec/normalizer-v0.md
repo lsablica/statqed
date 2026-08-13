@@ -37,6 +37,10 @@ delta, iota, zeta, eta, literal-desugaring, unfolding, universe algebra, or
 Unicode normalization.  It rejects free variables, metavariables, universe
 metavariables, loose bound variables, undeclared universe parameters, invalid
 UTF-8, unsupported constructors, and out-of-range integers.
+Every semantic integer position is an unsigned integer in
+`0..18446744073709551615`; booleans are not integers. This applies to tags,
+binder information, de Bruijn indices, numeric name segments, natural
+literals, projection indices, and universe-parameter indices.
 
 The proposition payload is the canonical CBOR representation of:
 
@@ -62,6 +66,13 @@ proposition-digest, environment-digest)`.
 - string literal: 65,536 UTF-8 bytes;
 - aggregate strings: 262,144 bytes;
 - canonical payload: 1,048,576 bytes.
+
+The canonical-CBOR traversal budget is derived from the 1 MiB payload bound
+(at most 1,048,576 encoded nodes, each consuming at least one byte) with a
+336-level structural recursion cap covering the independently bounded
+256-expression-plus-64-level shape and fixed envelope. These serialization
+guards do not consume the semantic expression-node or aggregate-string
+budgets a second time.
 
 Each boundary is checked before allocation or recursion crosses it.  A limit
 failure is `registry.resource_limit`; an unsupported or ill-scoped expression

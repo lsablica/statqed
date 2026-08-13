@@ -27,6 +27,9 @@ def closureDepthAllowed (edgeDepth : Nat) : Bool :=
   edgeDepth <= maxClosureDepth
 def maxClosureObservationBytes : Nat := 1048576
 
+def closureUnitCountAllowed (count : Nat) : Bool := count <= maxClosureUnits
+def closureWorkAllowed (count : Nat) : Bool := count <= maxClosureWork
+
 private def namesIn (expression : Expr) : Array Name :=
   expression.getUsedConstants
 
@@ -352,7 +355,7 @@ private def visitClosure
     .ok (#[], visited, work, expressionNodes)
   else if !closureDepthAllowed path.size then
     .error "registry.closure.depth_limit"
-  else if visited.size + path.size >= maxClosureUnits then
+  else if !closureUnitCountAllowed (visited.size + 1) then
     .error "registry.closure.unit_limit"
   else match fuel with
     | 0 => .error "registry.closure.depth_limit"
@@ -367,7 +370,7 @@ private def visitClosure
           .error "registry.closure.expression_node_limit"
         -- Every expression/level visit and declaration emission consumes work.
         let work := work + declarationNodes + 1
-        if work > workLimit then
+        if work > workLimit || !closureWorkAllowed work then
           .error "registry.closure.work_budget_limit"
         let record ← closureRecordJson environment info
         let mut records := #[(current, record)]
@@ -381,7 +384,7 @@ private def visitClosure
         for reference in references do
           -- Count every attempted dependency edge, including duplicates.
           nextWork := nextWork + 1
-          if nextWork > workLimit then
+          if nextWork > workLimit || !closureWorkAllowed nextWork then
             throw "registry.closure.work_budget_limit"
           let (nested, nestedVisited, nestedWork, nestedExpressionNodes) ←
             visitClosure environment reference nextPath nextVisited nextWork nextExpressionNodes fuel workLimit
@@ -416,7 +419,7 @@ def collectClosureNamedWithWorkLimit
     visited := nestedVisited
     work := nestedWork
     expressionNodes := nestedExpressionNodes
-  if records.size > maxClosureUnits then
+  if !closureUnitCountAllowed records.size then
     .error "registry.closure.work_budget_limit"
   else
     let result := records.qsort (fun left right => canonicalNameLT left.1 right.1)

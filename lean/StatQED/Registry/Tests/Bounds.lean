@@ -23,6 +23,7 @@ example : maxNameSegmentBytes = 256 := rfl
 example : maxQualifiedNameBytes = 1024 := rfl
 example : maxStringLiteralBytes = 65536 := rfl
 example : maxAggregateStringBytes = 262144 := rfl
+example : maxUnsignedInteger = 18446744073709551615 := rfl
 
 example : closureVersion = "statqed.lean-environment-closure.v0" := rfl
 example : maxClosureRoots = 256 := rfl
@@ -34,6 +35,18 @@ example : maxClosureExpressionNodes = 262144 := rfl
 
 #guard closureDepthAllowed maxClosureDepth
 #guard !closureDepthAllowed (maxClosureDepth + 1)
+#guard closureUnitCountAllowed maxClosureUnits
+#guard !closureUnitCountAllowed (maxClosureUnits + 1)
+#guard closureWorkAllowed maxClosureWork
+#guard !closureWorkAllowed (maxClosureWork + 1)
+
+#guard match propositionJson [] (.lit (.natVal maxUnsignedInteger)) with
+  | .ok _ => true
+  | _ => false
+
+#guard match propositionJson [] (.lit (.natVal (maxUnsignedInteger + 1))) with
+  | .error "registry.normalization_failure" => true
+  | _ => false
 
 #guard match exprJson maxExpressionDepth (.bvar 0) with
   | .error "registry.normalization.loose_bound_variable" => true

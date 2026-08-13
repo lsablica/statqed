@@ -67,6 +67,15 @@ attempt, declaration emission, snapshot inspection, or compatibility-edge
 inspection.  Width, depth, cycle, work, and missing-dependency failures remain
 distinct stable classes.
 
+The 1,000,000 work cap is a fail-closed outer safety cap. Under the other v0
+limits, the closure traversal's reachable upper bound is 525,312 work units
+(262,144 expression/level visits, 1,024 declaration emissions, and at most
+1,024 × 256 edge attempts), so expression, unit, or width limits necessarily
+dominate first. The implementation tests the exact cap predicate at 1,000,000
+and one over, and separately tests traversal accounting at an exact reachable
+required-work/one-under boundary; it does not claim a reachable closure can
+trigger the outer cap in v0.
+
 Live environment fixtures bind a referenced definition body, a project-local
 selected instance, a complete mutual-inductive family, exact depth 64/65, and
 the exact required-work/one-under boundary. A separate Python lineage derives

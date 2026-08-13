@@ -195,6 +195,11 @@ entries (one published), expression depth 256/nodes 65,536, level depth 64,
 closure width 256/units 1,024/depth 64/work 1,000,000, 128-byte identifiers,
 256 axioms, 32 compatibility edges/path length one, and 4 KiB diagnostics.
 Depth counts dependency or constructor edges from a root at depth zero.
+The fixed closure-work cap is an outer safety limit: the other v0 limits imply
+a reachable traversal maximum of 525,312, so the exact 1,000,000/1,000,001
+predicate is tested separately while real traversal accounting is checked at
+a reachable required-work/one-under boundary. No v0 fixture claims to reach
+the dominated outer work cap.
 
 ## Evidence and implementation independence
 

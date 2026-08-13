@@ -87,10 +87,13 @@ change the proof/build lock whenever its canonical proof subject changes.
 Direct substitution requires byte-identical proposition bytes and environment
 digest.  Otherwise a locally authorized compatibility lock must bind a
 kernel-checked declaration with exact normalized type `T_new -> T_old`, where
-the new theorem replaces an old requirement.  Reversed direction,
-metadata-only implication/equivalence, changed assumptions, missing locks, and
-substituted proofs are rejected.  Compatibility does not merge identities or
-transfer review annotations.
+the new theorem replaces an old requirement. The lock separately binds both
+proposition digests, the exact compatibility-declaration environment digest,
+the canonical proof subject, its proof/build-lock digest, and the actual live
+axiom-report digest. Reversed direction, metadata-only implication/equivalence,
+changed assumptions or referenced definitions, environment mismatch, missing
+proofs/locks, and substituted proof locks are rejected. Compatibility does not
+merge identities or transfer review annotations.
 
 The retained `False -> True` fixture is intentionally vacuous and test-only;
 it exercises directional proof-lock plumbing and makes no nontrivial migration
@@ -114,7 +117,10 @@ Limits are: input and individual canonical objects 1 MiB, output 2 MiB,
 published entries exactly one, parser fixture entries 16, compatibility edges
 32/path length one, expression depth 256/nodes 65,536, closure width 256/units
 1,024/depth 64/work 1,000,000, identifier 128 ASCII bytes, axiom entries 256,
-and diagnostics 4 KiB.  Maximum and one-over cases are tested.
+and diagnostics 4 KiB. Maximum and one-over cases are tested. The 1,000,000
+closure-work cap is an outer safety cap dominated by the v0 expression/unit/
+width limits; its exact predicate is tested while traversal accounting is
+tested at a reachable required-work/one-under boundary.
 
 ## Nonclaims
 

@@ -64,6 +64,30 @@ def expanded(value: Any) -> Any:
         return [1, level]
     if value == "@over-name-segments@":
         return [2, [[0, "x"]] * 65, []]
+    if value == "@max-expression-nodes@":
+        leaves: list[Any] = [[0, 0] for _ in range(32_767)]
+        while len(leaves) > 1:
+            paired = [[3, leaves[index], leaves[index + 1]] for index in range(0, len(leaves) - 1, 2)]
+            if len(leaves) % 2:
+                paired.append(leaves[-1])
+            leaves = paired
+        return [4, 0, [1, [0]], leaves[0]]
+    if value == "@over-expression-nodes@":
+        expression = expanded("@max-expression-nodes@")
+        return [3, [2, [[0, "f"]], []], expression]
+    if value == "@combined-depth-max@":
+        level = [0]
+        for _ in range(LIMITS["level_depth"]):
+            level = [1, level]
+        expression = [1, level]
+        for _ in range(LIMITS["expression_depth"]):
+            expression = [3, [2, [[0, "f"]], []], expression]
+        return expression
+    if value == "@aggregate-string-max@":
+        literal = [8, "x" * LIMITS["string_bytes"]]
+        return [3, [3, literal, literal], [3, literal, literal]]
+    if value == "@aggregate-string-over@":
+        return [3, expanded("@aggregate-string-max@"), [8, "x"]]
     if value == "@over-width@":
         return [f"r{i:03d}" for i in range(LIMITS["closure_width"] + 1)]
     if value == "@over-closure-depth@":
@@ -123,6 +147,20 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["policy_version"] = "statqed.registry-authorization.v999"
     elif mutation == "policy_overlap":
         policy["historical_permitted_roots"].append(root)
+    elif mutation == "policy_schema":
+        policy["schema"] = "forged"
+    elif mutation == "policy_selection":
+        policy["selection"] = "candidate_selected"
+    elif mutation == "policy_unknown_field":
+        policy["unknown"] = "field"
+    elif mutation == "policy_malformed_root":
+        policy["historical_permitted_roots"].append("not-a-digest")
+    elif mutation == "policy_root_limit":
+        policy["current_permitted_roots"] = [root] + [f"{index + 4:064x}" for index in range(12)]
+    elif mutation == "policy_root_over":
+        policy["current_permitted_roots"] = [root] + [f"{index + 4:064x}" for index in range(13)]
+    elif mutation == "bundle_surrogate":
+        bundle["unexpected"] = "\ud800"
     elif mutation == "forged_id":
         bundle["record"]["id"] = "statqed.test-only.forged.v0"
         rebuild_bundle_record(bundle)
@@ -186,6 +224,28 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         )[1]
     elif mutation == "compatibility_metadata":
         bundle["compatibility"] = {"label": "equivalent"}
+    elif mutation in {
+        "compatibility_environment", "compatibility_assumption",
+        "compatibility_definition", "compatibility_missing_proof",
+        "compatibility_proof_lock",
+    }:
+        bundle["compatibility"] = read_json(COMPATIBILITY_PATH)
+        field, value = {
+            "compatibility_environment": ("environment_digest", "44" * 32),
+            "compatibility_assumption": (
+                "normalized_type", [5, 0, [2, [[0, "True"]], []], [2, [[0, "True"]], []]]
+            ),
+            "compatibility_definition": ("new_proposition_digest", "55" * 32),
+            "compatibility_missing_proof": ("proof_subject", None),
+            "compatibility_proof_lock": ("proof_build_digest", "66" * 32),
+        }[mutation]
+        if value is None:
+            del bundle["compatibility"][field]
+        else:
+            bundle["compatibility"][field] = value
+        _, bundle["compatibility_digest"] = digest_frame(
+            "compatibility", canonical_cbor(bundle["compatibility"])
+        )
     else:
         raise AssertionError(mutation)
     return bundle, policy

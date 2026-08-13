@@ -70,6 +70,8 @@ LIMITS: Final[dict[str, int]] = {
     "closure_depth": 64,
     "closure_units": 1_024,
     "work": 1_000_000,
+    "canonical_nodes": 1_048_576,
+    "canonical_depth": 336,
 }
 
 _BINDER_INFO: Final = {
@@ -352,7 +354,7 @@ def canonical_cbor(value: Any, *, _depth: int = 0, _nodes: list[int] | None = No
 
     nodes = _nodes if _nodes is not None else [0]
     nodes[0] += 1
-    if nodes[0] > LIMITS["nodes"] or _depth > LIMITS["expression_depth"] + 8:
+    if nodes[0] > LIMITS["canonical_nodes"] or _depth > LIMITS["canonical_depth"]:
         raise OracleError("registry.resource_limit")
     if value is None:
         out = b"\xf6"
@@ -408,6 +410,8 @@ def normalize_semantic_expression(
         result = []
         for segment in value:
             if not isinstance(segment, list) or len(segment) != 2:
+                raise OracleError("registry.normalization_failure")
+            if type(segment[0]) is not int:
                 raise OracleError("registry.normalization_failure")
             if segment[0] == 0 and isinstance(segment[1], str):
                 raw = budget.string(
@@ -470,7 +474,7 @@ def normalize_semantic_expression(
             ]
         if tag == 3 and len(value) == 3:
             return [3, walk(value[1], depth + 1, bound), walk(value[2], depth + 1, bound)]
-        if tag in (4, 5) and len(value) == 4 and value[1] in (0, 1, 2, 3):
+        if tag in (4, 5) and len(value) == 4 and type(value[1]) is int and value[1] in (0, 1, 2, 3):
             return [
                 tag,
                 value[1],

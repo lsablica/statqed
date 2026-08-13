@@ -27,6 +27,7 @@ def maxQualifiedNameBytes : Nat := 1024
 def maxStringLiteralBytes : Nat := 65536
 def maxAggregateStringBytes : Nat := 262144
 def maxObservationBytes : Nat := 1048576
+def maxUnsignedInteger : Nat := 18446744073709551615
 
 private def obj (fields : List (String × Json)) : Json := Json.mkObj fields
 
@@ -69,7 +70,11 @@ private def checkedNameJson (name : Name) : Except String Json := do
             .error "registry.normalization.name_segment_byte_limit"
           else
             checkSegments parent
-      | .num parent _ => checkSegments parent
+      | .num parent segment =>
+          if segment > maxUnsignedInteger then
+            .error "registry.normalization_failure"
+          else
+            checkSegments parent
     checkSegments name
     pure <| nameJson name
 
@@ -241,14 +246,19 @@ private def exprStats
           let bodyStats ← exprStats parameters (bound + 1) fuel body
           let combined := combineStats (combineStats typeStats valueStats) bodyStats
           pure (combined.1 + 1, combined.2)
-      | .lit (.natVal _) => .ok (1, 0)
+      | .lit (.natVal value) =>
+          if value > maxUnsignedInteger then
+            .error "registry.normalization_failure"
+          else .ok (1, 0)
       | .lit (.strVal value) =>
           if value.toUTF8.size > maxStringLiteralBytes then
             .error "registry.normalization.string_literal_limit"
           else
             .ok (1, value.toUTF8.size)
       | .mdata _ inner => exprStats parameters bound fuel inner
-      | .proj typeName _ subject => do
+      | .proj typeName index subject => do
+          if index > maxUnsignedInteger then
+            .error "registry.normalization_failure"
           let (segments, nameBytes) := nameStats typeName
           if segments == 0 || segments > maxNameSegments || nameBytes > maxQualifiedNameBytes then
             .error "registry.normalization.name_limit"
@@ -325,11 +335,13 @@ def exprJsonWithContext
             ("type", typeJson),
             ("value", valueJson)
           ]
-      | .lit (.natVal value) => .ok <| obj [
-          ("kind", .str "natural"),
-          ("tag", .str "literal"),
-          ("value", .str value.repr)
-        ]
+      | .lit (.natVal value) =>
+          if value > maxUnsignedInteger then
+            .error "registry.normalization_failure"
+          else .ok <| obj [
+            ("kind", .str "natural"), ("tag", .str "literal"),
+            ("value", .str value.repr)
+          ]
       | .lit (.strVal value) =>
           if value.toUTF8.size > maxStringLiteralBytes then
             .error "registry.normalization.string_literal_limit"
@@ -341,6 +353,8 @@ def exprJsonWithContext
             ]
       | .mdata _ inner => exprJsonWithContext parameters bound fuel inner
       | .proj typeName index subject => do
+          if index > maxUnsignedInteger then
+            .error "registry.normalization_failure"
           let encodedName ← checkedNameJson typeName
           let structureJson ← exprJsonWithContext parameters bound fuel subject
           pure <| obj [

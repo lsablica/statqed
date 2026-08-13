@@ -79,6 +79,9 @@ LIMITS: Final = {
     "axioms": 256,
     "compatibility_edges": 32,
     "diagnostic_bytes": 4_096,
+    "canonical_nodes": 1_048_576,
+    "canonical_depth": 336,
+    "canonical_string_bytes": 1_048_576,
 }
 
 _IDENTIFIER = re.compile(r"^[a-z0-9][a-z0-9._:-]{0,127}$")
@@ -94,7 +97,10 @@ class RegistryError(Exception):
 
 
 def canonical_json(value: Any) -> bytes:
-    return (json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode()
+    try:
+        return (json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8", "strict")
+    except (UnicodeEncodeError, UnicodeDecodeError) as exc:
+        raise RegistryError("registry.normalization_failure") from exc
 
 
 def _head(major: int, value: int) -> bytes:
@@ -116,13 +122,10 @@ def canonical_cbor(value: Any, *, _depth: int = 0, _state: list[int] | None = No
 
     if _state is None:
         _state = [0, 0]
-    # The expression grammar has its own exact depth bound.  Canonical payload
-    # containers add a small fixed envelope around that already-validated
-    # expression, so the generic encoder permits only that explicit overhead.
-    if _depth > LIMITS["expression_depth"] + 8:
+    if _depth > LIMITS["canonical_depth"]:
         raise RegistryError("registry.resource_limit")
     _state[0] += 1
-    if _state[0] > LIMITS["expression_nodes"]:
+    if _state[0] > LIMITS["canonical_nodes"]:
         raise RegistryError("registry.resource_limit")
     if value is None:
         out = b"\xf6"
@@ -139,11 +142,11 @@ def canonical_cbor(value: Any, *, _depth: int = 0, _state: list[int] | None = No
         if len(raw) > LIMITS["string_bytes"]:
             raise RegistryError("registry.resource_limit")
         _state[1] += len(raw)
-        if _state[1] > LIMITS["aggregate_string_bytes"]:
+        if _state[1] > LIMITS["canonical_string_bytes"]:
             raise RegistryError("registry.resource_limit")
         out = _head(3, len(raw)) + raw
     elif isinstance(value, list):
-        if len(value) > LIMITS["expression_nodes"]:
+        if len(value) > LIMITS["canonical_nodes"]:
             raise RegistryError("registry.resource_limit")
         parts = [canonical_cbor(item, _depth=_depth + 1, _state=_state) for item in value]
         out = _head(4, len(parts)) + b"".join(parts)
@@ -191,6 +194,20 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
 
     params = level_params or []
     nodes = 0
+    string_bytes = 0
+
+    def bounded_text(value: str, individual_limit: int) -> bytes:
+        nonlocal string_bytes
+        try:
+            raw = value.encode("utf-8", "strict")
+        except UnicodeEncodeError as exc:
+            raise RegistryError("registry.normalization_failure") from exc
+        if len(raw) > individual_limit:
+            raise RegistryError("registry.resource_limit")
+        string_bytes += len(raw)
+        if string_bytes > LIMITS["aggregate_string_bytes"]:
+            raise RegistryError("registry.resource_limit")
+        return raw
 
     def level(value: Any, depth: int) -> Any:
         nonlocal nodes
@@ -220,12 +237,12 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
         for segment in value:
             if not isinstance(segment, list) or len(segment) != 2 or segment[0] not in (0, 1):
                 raise RegistryError("registry.normalization_failure")
+            if type(segment[0]) is not int:
+                raise RegistryError("registry.normalization_failure")
             if segment[0] == 0:
                 if not isinstance(segment[1], str):
                     raise RegistryError("registry.normalization_failure")
-                raw = segment[1].encode("utf-8", "strict")
-                if len(raw) > LIMITS["name_segment_bytes"]:
-                    raise RegistryError("registry.resource_limit")
+                raw = bounded_text(segment[1], LIMITS["name_segment_bytes"])
                 total += len(raw)
             elif type(segment[1]) is not int or not 0 <= segment[1] <= 0xFFFF_FFFF_FFFF_FFFF:
                 raise RegistryError("registry.normalization_failure")
@@ -252,15 +269,16 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
             return [2, name(value[1]), [level(item, 0) for item in value[2]]]
         if tag == 3 and len(value) == 3:
             return [3, walk(value[1], depth + 1, bound), walk(value[2], depth + 1, bound)]
-        if tag in (4, 5) and len(value) == 4 and value[1] in (0, 1, 2, 3):
+        if tag in (4, 5) and len(value) == 4 and type(value[1]) is int and value[1] in (0, 1, 2, 3):
             return [tag, value[1], walk(value[2], depth + 1, bound), walk(value[3], depth + 1, bound + 1)]
         if tag == 6 and len(value) == 4:
             return [6, walk(value[1], depth + 1, bound), walk(value[2], depth + 1, bound), walk(value[3], depth + 1, bound + 1)]
-        if tag == 7 and len(value) == 2 and type(value[1]) is int and value[1] >= 0:
+        if tag == 7 and len(value) == 2 and type(value[1]) is int and 0 <= value[1] <= 0xFFFF_FFFF_FFFF_FFFF:
             return value
         if tag == 8 and len(value) == 2 and isinstance(value[1], str):
+            bounded_text(value[1], LIMITS["string_bytes"])
             return value
-        if tag == 9 and len(value) == 4 and type(value[2]) is int and value[2] >= 0:
+        if tag == 9 and len(value) == 4 and type(value[2]) is int and 0 <= value[2] <= 0xFFFF_FFFF_FFFF_FFFF:
             return [9, name(value[1]), value[2], walk(value[3], depth + 1, bound)]
         raise RegistryError("registry.normalization_failure")
 
@@ -324,7 +342,20 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
 
     if len(canonical_json(bundle)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
-    if policy.get("policy_version") != "statqed.registry-authorization.v0":
+    if len(canonical_json(policy)) > LIMITS["input_bytes"]:
+        raise RegistryError("registry.resource_limit")
+    expected_policy_fields = {
+        "schema", "policy_version", "current_permitted_roots",
+        "historical_permitted_roots", "historical_forbidden_roots",
+        "revoked_roots", "compatibility_digest", "record_binding",
+        "compatibility_binding", "record_digest", "selection",
+    }
+    if (
+        set(policy) != expected_policy_fields
+        or policy.get("schema") != "statqed.registry-authorization-policy.v0"
+        or policy.get("selection") != "verifier_local_only"
+        or policy.get("policy_version") != "statqed.registry-authorization.v0"
+    ):
         raise RegistryError("registry.authorization_policy_unsupported")
     root_classes = []
     for field in (
@@ -334,11 +365,19 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         "revoked_roots",
     ):
         values = policy.get(field)
-        if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+        if not isinstance(values, list) or any(
+            not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None
+            for value in values
+        ):
             raise RegistryError("registry.authorization_policy_unsupported")
         if len(values) != len(set(values)):
             raise RegistryError("registry.authorization_policy_unsupported")
         root_classes.append(set(values))
+    if sum(len(values) for values in root_classes) > LIMITS["registry_entries"]:
+        raise RegistryError("registry.authorization_policy_unsupported")
+    for digest_field in ("record_digest", "compatibility_digest"):
+        if re.fullmatch(r"[0-9a-f]{64}", str(policy.get(digest_field))) is None:
+            raise RegistryError("registry.authorization_policy_unsupported")
     for index, left in enumerate(root_classes):
         if any(left & right for right in root_classes[index + 1 :]):
             raise RegistryError("registry.authorization_policy_unsupported")
@@ -404,6 +443,14 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
     if compatibility is not None:
         if not isinstance(compatibility, dict):
             raise RegistryError("registry.compatibility_missing")
+        expected_compatibility_fields = {
+            "schema", "direction", "new_proposition", "new_proposition_digest",
+            "old_proposition_digest", "environment_digest", "declaration",
+            "normalized_type", "proof_subject", "proof_build_digest",
+            "axiom_report_digest", "axioms", "universe_instantiations", "path_length",
+        }
+        if set(compatibility) != expected_compatibility_fields:
+            raise RegistryError("registry.compatibility_missing")
         if compatibility.get("direction") != "new_implies_old":
             raise RegistryError("registry.compatibility_wrong_direction")
         if compatibility.get("schema") != "statqed.compatibility-proof-lock.v0":
@@ -414,12 +461,19 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
             raise RegistryError("registry.compatibility_missing")
         if compatibility.get("axioms") != [] or compatibility.get("path_length") != 1:
             raise RegistryError("registry.compatibility_missing")
+        for field in (
+            "new_proposition_digest", "old_proposition_digest", "environment_digest",
+            "proof_build_digest", "axiom_report_digest",
+        ):
+            if re.fullmatch(r"[0-9a-f]{64}", str(compatibility.get(field))) is None:
+                raise RegistryError("registry.compatibility_missing")
         _, compatibility_digest = digest_frame(
             "compatibility", canonical_cbor(compatibility)
         )
         if (
             compatibility_digest != bundle.get("compatibility_digest")
             or compatibility_digest != policy.get("compatibility_digest")
+            or compatibility != policy.get("compatibility_binding")
         ):
             raise RegistryError("registry.compatibility_missing")
     return {"classification": "accepted", "root_status": "current" if root in current else "historical_permitted"}
