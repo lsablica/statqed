@@ -20,7 +20,12 @@ LEAN_TOOLS = Path(__file__).resolve().parents[2] / "lean/tools"
 if str(LEAN_TOOLS) not in sys.path:
     sys.path.insert(0, str(LEAN_TOOLS))
 
-from model import canonical_cbor, canonical_json, digest_frame  # noqa: E402
+from model import (  # noqa: E402
+    canonical_cbor,
+    canonical_json,
+    digest_frame,
+    retained_evidence_json,
+)
 import independent_oracle  # noqa: E402
 import check_all_modules  # noqa: E402
 import project_axiom_report  # noqa: E402
@@ -863,8 +868,8 @@ def outputs() -> dict[Path, bytes]:
     }
 
     return {
-        EVIDENCE / "lean-observation.json": canonical_json(observation),
-        EVIDENCE / "independent-observation.json": canonical_json(independent),
+        EVIDENCE / "lean-observation.json": retained_evidence_json(observation),
+        EVIDENCE / "independent-observation.json": retained_evidence_json(independent),
         EVIDENCE / "axioms.json": axiom_bytes,
         EVIDENCE / "project-axioms.json": project_axiom_bytes,
         EVIDENCE / "all-module-fresh-check.json": fresh_check_bytes,

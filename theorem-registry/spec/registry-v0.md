@@ -122,6 +122,12 @@ closure-work cap is an outer safety cap dominated by the v0 expression/unit/
 width limits; its exact predicate is tested while traversal accounting is
 tested at a reachable required-work/one-under boundary.
 
+Generic JSON ingress is additionally bounded to 336 container edges before
+serialization; malformed bundle shapes fail as `registry.malformed_record`,
+malformed verifier policy shapes as
+`registry.authorization_policy_unsupported`, and structural maximum-plus-one
+or more than 16 total authorization roots as `registry.resource_limit`.
+
 ## Nonclaims
 
 The record is vacuous, test-only and Experimental.  It is not a public or

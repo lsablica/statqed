@@ -121,6 +121,22 @@ class ModelTests(unittest.TestCase):
         ):
             self.assertEqual(model.normalize_expr(expression), expression)
 
+    def test_closure_unicode_failures_are_stable(self):
+        cases = (
+            (["\ud800"], {"\ud800": {"references": []}}),
+            (["root"], {"root": {"references": ["\ud800"]}, "\ud800": {"references": []}}),
+        )
+        for roots, declarations in cases:
+            with self.subTest(roots=repr(roots)), self.assertRaisesRegex(
+                model.RegistryError, "registry.normalization_failure"
+            ):
+                model.closure(roots, declarations)
+        retained = model.closure(
+            ["root"], {"root": {"references": [], "value": "\ud800"}}
+        )
+        with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
+            model.canonical_cbor(["statqed.lean-environment-closure.v0", retained])
+
     def test_semantic_limits_survive_canonical_framing(self):
         leaves = [[0, 0] for _ in range(32_767)]
         while len(leaves) > 1:
@@ -130,7 +146,8 @@ class ModelTests(unittest.TestCase):
             leaves = paired
         exact_nodes = [4, 0, [1, [0]], leaves[0]]
         model.canonical_cbor(["statqed.lean-expr.v0", model.normalize_expr(exact_nodes)])
-        over_nodes = [3, [2, [[0, "f"]], []], copy.deepcopy(exact_nodes)]
+        over_nodes = copy.deepcopy(exact_nodes)
+        over_nodes[2] = [1, [1, [0]]]
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.normalize_expr(over_nodes)
         level = [0]
@@ -158,6 +175,43 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
             model.normalize_expr([1, [4, 0]])
         self.assertEqual(model.normalize_expr([1, [4, 0]], level_params=["u"]), [1, [4, 0]])
+
+    def test_level_parameter_context_is_closed_and_utf8(self):
+        for parameters in ("u", 1, [None], [True], ["\ud800"], ["u", "u"]):
+            with self.subTest(parameters=repr(parameters)), self.assertRaisesRegex(
+                model.RegistryError, "registry.normalization_failure"
+            ):
+                model.validate_level_parameters(parameters)
+        maximum = [f"u{index}" for index in range(model.LIMITS["universe_arguments"])]
+        self.assertEqual(model.validate_level_parameters(maximum), maximum)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.validate_level_parameters(maximum + ["over"])
+
+    def test_bundle_and_policy_shapes_fail_stably(self):
+        for bundle in (None, []):
+            with self.subTest(bundle=repr(bundle)), self.assertRaisesRegex(
+                model.RegistryError, "registry.malformed_record"
+            ):
+                model.verify_bundle(bundle, copy.deepcopy(self.policy))
+        with self.assertRaisesRegex(model.RegistryError, "registry.authorization_policy_unsupported"):
+            model.verify_bundle(copy.deepcopy(self.bundle), None)
+
+    def test_json_structure_depth_boundary(self):
+        value = None
+        for _ in range(model.LIMITS["canonical_depth"]):
+            value = [value]
+        model.canonical_json(value)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.canonical_json([value])
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.canonical_json(1 << 64)
+        cyclic = []
+        cyclic.append(cyclic)
+        with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
+            model.canonical_json(cyclic)
+
+        retained = model.retained_evidence_json({"rejected_integer": 1 << 64})
+        self.assertIn(b'"rejected_integer":18446744073709551616', retained)
 
     def test_closure_is_sorted(self):
         declarations = {
@@ -294,11 +348,14 @@ class ModelTests(unittest.TestCase):
             policy = copy.deepcopy(self.policy); policy[field] = value; mutations.append(policy)
         policy = copy.deepcopy(self.policy); policy["unknown"] = "field"; mutations.append(policy)
         policy = copy.deepcopy(self.policy); policy["historical_permitted_roots"].append("not-a-digest"); mutations.append(policy)
-        policy = copy.deepcopy(self.policy); policy["current_permitted_roots"] += [f"{index + 4:064x}" for index in range(13)]; mutations.append(policy)
         for policy in mutations:
             with self.assertRaisesRegex(model.RegistryError, "registry.authorization_policy_unsupported"):
                 model.verify_bundle(copy.deepcopy(self.bundle), policy)
-        bundle = copy.deepcopy(self.bundle); bundle["unexpected"] = "\ud800"
+        policy = copy.deepcopy(self.policy)
+        policy["current_permitted_roots"] += [f"{index + 4:064x}" for index in range(13)]
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(copy.deepcopy(self.bundle), policy)
+        bundle = copy.deepcopy(self.bundle); bundle["candidate_policy"] = "\ud800"
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 

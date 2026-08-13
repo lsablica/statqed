@@ -210,6 +210,49 @@ class IndependentOracleTests(unittest.TestCase):
                 ["a"], {"a": {"references": ["b"]}, "b": {"references": ["a"]}}
             )
 
+    def test_closure_unicode_failures_are_stable(self):
+        cases = (
+            (["\ud800"], {"\ud800": {"references": []}}),
+            (["root"], {"root": {"references": ["\ud800"]}, "\ud800": {"references": []}}),
+        )
+        for roots, declarations in cases:
+            with self.subTest(roots=repr(roots)), self.assertRaisesRegex(
+                oracle.OracleError, "registry.normalization_failure"
+            ):
+                oracle.environment_closure(roots, declarations)
+        retained = oracle.environment_closure(
+            ["root"], {"root": {"references": [], "value": "\ud800"}}
+        )
+        with self.assertRaisesRegex(oracle.OracleError, "registry.normalization_failure"):
+            oracle.canonical_cbor(["statqed.lean-environment-closure.v0", retained])
+
+    def test_level_parameter_context_is_closed_and_utf8(self):
+        for parameters in (None, "u", 1, [None], [True], ["\ud800"], ["u", "u"]):
+            with self.subTest(parameters=repr(parameters)), self.assertRaisesRegex(
+                oracle.OracleError, "registry.normalization_failure"
+            ):
+                oracle.validate_level_parameters(parameters)
+        maximum = [f"u{index}" for index in range(oracle.LIMITS["universe_arguments"])]
+        self.assertEqual(oracle.validate_level_parameters(maximum), maximum)
+        with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
+            oracle.validate_level_parameters(maximum + ["over"])
+        for count in (True, -1, oracle.LIMITS["universe_arguments"] + 1):
+            with self.assertRaisesRegex(oracle.OracleError, "registry.normalization_failure"):
+                oracle.normalize_semantic_expression([1, [0]], level_parameter_count=count)
+
+    def test_malformed_closure_shapes_fail_stably(self):
+        cases = (
+            (None, {}), ("root", {"root": {"references": []}}),
+            ([], None), ([], []), (["root"], {"root": []}),
+            (["root"], {"root": {"references": None}}),
+            (["root"], {"root": {"references": "dep"}}),
+        )
+        for roots, declarations in cases:
+            with self.subTest(roots=repr(roots), declarations=repr(declarations)), self.assertRaisesRegex(
+                oracle.OracleError, "registry.normalization_failure"
+            ):
+                oracle.environment_closure(roots, declarations)
+
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]
         input_bytes = (
@@ -236,6 +279,17 @@ class IndependentOracleTests(unittest.TestCase):
         self.assertEqual(oversized.returncode, 2)
         self.assertEqual(
             oversized.stdout,
+            b'{"classification":"rejected","code":"registry.resource_limit"}\n',
+        )
+        deeply_nested = subprocess.run(
+            command,
+            input=(b'{"expression":' + b'[' * 2000 + b'null' + b']' * 2000 + b'}'),
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(deeply_nested.returncode, 2)
+        self.assertEqual(
+            deeply_nested.stdout,
             b'{"classification":"rejected","code":"registry.resource_limit"}\n',
         )
 

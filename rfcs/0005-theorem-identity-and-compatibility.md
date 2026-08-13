@@ -194,6 +194,9 @@ maximum and one over it: 1 MiB input/object, 2 MiB output, 16 parser fixture
 entries (one published), expression depth 256/nodes 65,536, level depth 64,
 closure width 256/units 1,024/depth 64/work 1,000,000, 128-byte identifiers,
 256 axioms, 32 compatibility edges/path length one, and 4 KiB diagnostics.
+Generic JSON ingress is bounded to 336 container edges, and verifier-selected
+authorization policy contains at most 16 total roots across its disjoint root
+classes.
 Depth counts dependency or constructor edges from a root at depth zero.
 The fixed closure-work cap is an outer safety limit: the other v0 limits imply
 a reachable traversal maximum of 525,312, so the exact 1,000,000/1,000,001

@@ -11,7 +11,10 @@ Lean text is never identity material.
 Names are arrays of segments: `[0, text]` for a string segment and `[1, uint]`
 for a numeric segment.  Universe levels are `[0]` (zero), `[1, level]` (succ),
 `[2, left, right]` (max), `[3, left, right]` (imax), or `[4, parameter-index]`.
-Declaration universe parameters are numbered in declaration order.
+Declaration universe parameters are numbered in declaration order. The
+exported parameter context is a JSON array of unique, nonempty, valid-UTF-8
+names (at most 256); strings, null, booleans, duplicate names, and other
+non-array or non-text contexts fail as `registry.normalization_failure`.
 
 Binder information is encoded as `0` (explicit), `1` (implicit), `2` (strict
 implicit), or `3` (instance implicit).
@@ -60,6 +63,7 @@ proposition-digest, environment-digest)`.
 - level depth: 64 constructor edges from a root at depth zero;
 - total expression and level nodes: 65,536;
 - universe arguments: 256 per constant;
+- declaration universe parameters: 256 unique valid-UTF-8 names;
 - name segments: 64;
 - name/string segment: 256 UTF-8 bytes;
 - fully qualified name: 1,024 UTF-8 bytes;

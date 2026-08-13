@@ -96,10 +96,66 @@ class RegistryError(Exception):
             raise ValueError(f"unknown stable error: {self.code}")
 
 
+def _validate_json_shape(value: Any, *, allow_oversized_integers: bool = False) -> None:
+    stack = [(value, 0)]
+    nodes = 0
+    string_bytes = 0
+    seen_containers: set[int] = set()
+    while stack:
+        current, depth = stack.pop()
+        nodes += 1
+        if nodes > LIMITS["canonical_nodes"]:
+            raise RegistryError("registry.resource_limit")
+        if depth > LIMITS["canonical_depth"]:
+            raise RegistryError("registry.resource_limit")
+        if current is None or type(current) is bool:
+            continue
+        if type(current) is int:
+            if not allow_oversized_integers and current.bit_length() > 64:
+                raise RegistryError("registry.resource_limit")
+            continue
+        if isinstance(current, str):
+            try:
+                string_bytes += len(current.encode("utf-8", "strict"))
+            except UnicodeEncodeError as exc:
+                raise RegistryError("registry.normalization_failure") from exc
+            if string_bytes > LIMITS["canonical_string_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            continue
+        if isinstance(current, list):
+            if id(current) in seen_containers:
+                raise RegistryError("registry.normalization_failure")
+            seen_containers.add(id(current))
+            stack.extend((item, depth + 1) for item in reversed(current))
+            continue
+        if isinstance(current, dict):
+            if id(current) in seen_containers:
+                raise RegistryError("registry.normalization_failure")
+            seen_containers.add(id(current))
+            for key, item in reversed(list(current.items())):
+                if not isinstance(key, str):
+                    raise RegistryError("registry.normalization_failure")
+                stack.append((item, depth + 1))
+                stack.append((key, depth + 1))
+            continue
+        raise RegistryError("registry.normalization_failure")
+
+
 def canonical_json(value: Any) -> bytes:
+    _validate_json_shape(value)
+    return _encode_json(value)
+
+
+def retained_evidence_json(value: Any) -> bytes:
+    """Encode bounded retained evidence, including deliberately invalid integers."""
+    _validate_json_shape(value, allow_oversized_integers=True)
+    return _encode_json(value)
+
+
+def _encode_json(value: Any) -> bytes:
     try:
         return (json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8", "strict")
-    except (UnicodeEncodeError, UnicodeDecodeError) as exc:
+    except (RecursionError, UnicodeEncodeError, UnicodeDecodeError) as exc:
         raise RegistryError("registry.normalization_failure") from exc
 
 
@@ -138,7 +194,10 @@ def canonical_cbor(value: Any, *, _depth: int = 0, _state: list[int] | None = No
     elif isinstance(value, bytes):
         out = _head(2, len(value)) + value
     elif isinstance(value, str):
-        raw = value.encode("utf-8", "strict")
+        try:
+            raw = value.encode("utf-8", "strict")
+        except UnicodeEncodeError as exc:
+            raise RegistryError("registry.normalization_failure") from exc
         if len(raw) > LIMITS["string_bytes"]:
             raise RegistryError("registry.resource_limit")
         _state[1] += len(raw)
@@ -189,10 +248,31 @@ def digest_frame(kind: str, payload: bytes) -> tuple[bytes, str]:
     return frame, hashlib.sha256(frame).hexdigest()
 
 
+def validate_level_parameters(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        raise RegistryError("registry.normalization_failure")
+    if len(value) > LIMITS["universe_arguments"]:
+        raise RegistryError("registry.resource_limit")
+    result = []
+    for item in value:
+        if not isinstance(item, str) or not item:
+            raise RegistryError("registry.normalization_failure")
+        try:
+            raw = item.encode("utf-8", "strict")
+        except UnicodeEncodeError as exc:
+            raise RegistryError("registry.normalization_failure") from exc
+        if len(raw) > LIMITS["name_segment_bytes"]:
+            raise RegistryError("registry.resource_limit")
+        result.append(item)
+    if len(result) != len(set(result)):
+        raise RegistryError("registry.normalization_failure")
+    return result
+
+
 def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
     """Validate the language-neutral structural expression grammar."""
 
-    params = level_params or []
+    params = validate_level_parameters([] if level_params is None else level_params)
     nodes = 0
     string_bytes = 0
 
@@ -288,6 +368,8 @@ def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
 def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     """Compute the bounded deterministic fixture closure."""
 
+    if not isinstance(root_names, list) or not isinstance(declarations, dict):
+        raise RegistryError("registry.normalization_failure")
     if len(root_names) > LIMITS["closure_width"]:
         raise RegistryError("registry.closure_width_limit")
     gray: set[str] = set()
@@ -297,7 +379,21 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
     def name_key(name: str) -> bytes:
         if not isinstance(name, str) or not name or any(not part for part in name.split(".")):
             raise RegistryError("registry.normalization_failure")
-        return canonical_cbor([[0, part] for part in name.split(".")])
+        parts = name.split(".")
+        if len(parts) > LIMITS["name_segments"]:
+            raise RegistryError("registry.resource_limit")
+        total = 0
+        for part in parts:
+            try:
+                raw = part.encode("utf-8", "strict")
+            except UnicodeEncodeError as exc:
+                raise RegistryError("registry.normalization_failure") from exc
+            if len(raw) > LIMITS["name_segment_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            total += len(raw)
+        if total > LIMITS["qualified_name_bytes"]:
+            raise RegistryError("registry.resource_limit")
+        return canonical_cbor([[0, part] for part in parts])
 
     def visit(name: str, depth: int) -> None:
         nonlocal work
@@ -315,8 +411,12 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
         declaration = declarations.get(name)
         if declaration is None:
             raise RegistryError("registry.missing_dependency")
+        if not isinstance(declaration, dict):
+            raise RegistryError("registry.normalization_failure")
         refs = declaration.get("references")
-        if not isinstance(refs, list) or len(refs) > LIMITS["closure_width"]:
+        if not isinstance(refs, list):
+            raise RegistryError("registry.normalization_failure")
+        if len(refs) > LIMITS["closure_width"]:
             raise RegistryError("registry.closure_width_limit")
         gray.add(name)
         for reference in sorted(refs, key=name_key):
@@ -340,6 +440,17 @@ def validate_identifier(value: Any) -> str:
 def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, str]:
     """Resolve one test-only record under independently supplied local policy."""
 
+    if not isinstance(bundle, dict):
+        raise RegistryError("registry.malformed_record")
+    if not isinstance(policy, dict):
+        raise RegistryError("registry.authorization_policy_unsupported")
+    expected_bundle_fields = {
+        "record", "record_digest", "snapshot", "requested_root",
+        "proposition_digest", "environment_digest", "proof_build_digest",
+        "axioms", "compatibility", "compatibility_digest",
+    }
+    if set(bundle) - (expected_bundle_fields | {"candidate_policy"}) or not expected_bundle_fields.issubset(bundle):
+        raise RegistryError("registry.malformed_record")
     if len(canonical_json(bundle)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
     if len(canonical_json(policy)) > LIMITS["input_bytes"]:
@@ -374,7 +485,7 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
             raise RegistryError("registry.authorization_policy_unsupported")
         root_classes.append(set(values))
     if sum(len(values) for values in root_classes) > LIMITS["registry_entries"]:
-        raise RegistryError("registry.authorization_policy_unsupported")
+        raise RegistryError("registry.resource_limit")
     for digest_field in ("record_digest", "compatibility_digest"):
         if re.fullmatch(r"[0-9a-f]{64}", str(policy.get(digest_field))) is None:
             raise RegistryError("registry.authorization_policy_unsupported")

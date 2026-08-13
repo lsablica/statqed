@@ -64,6 +64,10 @@ def expanded(value: Any) -> Any:
         return [1, level]
     if value == "@over-name-segments@":
         return [2, [[0, "x"]] * 65, []]
+    if value == "@max-level-params@":
+        return [f"u{index}" for index in range(LIMITS["universe_arguments"])]
+    if value == "@over-level-params@":
+        return [f"u{index}" for index in range(LIMITS["universe_arguments"] + 1)]
     if value == "@max-expression-nodes@":
         leaves: list[Any] = [[0, 0] for _ in range(32_767)]
         while len(leaves) > 1:
@@ -74,7 +78,8 @@ def expanded(value: Any) -> Any:
         return [4, 0, [1, [0]], leaves[0]]
     if value == "@over-expression-nodes@":
         expression = expanded("@max-expression-nodes@")
-        return [3, [2, [[0, "f"]], []], expression]
+        expression[2] = [1, [1, [0]]]
+        return expression
     if value == "@combined-depth-max@":
         level = [0]
         for _ in range(LIMITS["level_depth"]):
@@ -90,6 +95,14 @@ def expanded(value: Any) -> Any:
         return [3, expanded("@aggregate-string-max@"), [8, "x"]]
     if value == "@over-width@":
         return [f"r{i:03d}" for i in range(LIMITS["closure_width"] + 1)]
+    if isinstance(value, str) and value in {"@max-closure-name-roots@", "@over-closure-name-roots@"}:
+        base = ".".join(["x" * LIMITS["name_segment_bytes"]] * 4)
+        name = base if value.startswith("@max") else base + ".x"
+        return [name]
+    if isinstance(value, str) and value in {"@max-closure-name-declarations@", "@over-closure-name-declarations@"}:
+        root_token = value.replace("declarations", "roots")
+        name = expanded(root_token)[0]
+        return {name: {"kind": "definition", "references": []}}
     if value == "@over-closure-depth@":
         result = {}
         for i in range(LIMITS["closure_depth"] + 2):
@@ -122,6 +135,13 @@ def rebuild_bundle_record(bundle: dict[str, Any]) -> None:
     }
     _, root = digest_frame("snapshot", canonical_cbor(bundle["snapshot"]))
     bundle["requested_root"] = root
+
+
+def nested_lists(depth: int) -> Any:
+    value: Any = None
+    for _ in range(depth):
+        value = [value]
+    return value
 
 
 def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: str) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -160,7 +180,7 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
     elif mutation == "policy_root_over":
         policy["current_permitted_roots"] = [root] + [f"{index + 4:064x}" for index in range(13)]
     elif mutation == "bundle_surrogate":
-        bundle["unexpected"] = "\ud800"
+        bundle["candidate_policy"] = "\ud800"
     elif mutation == "forged_id":
         bundle["record"]["id"] = "statqed.test-only.forged.v0"
         rebuild_bundle_record(bundle)
@@ -199,6 +219,16 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["current_permitted_roots"] = [new_root]
     elif mutation == "artifact_policy":
         bundle["candidate_policy"] = {"current_permitted_roots": ["11" * 32]}
+    elif mutation == "artifact_policy_nested_max":
+        bundle["candidate_policy"] = nested_lists(LIMITS["canonical_depth"] - 1)
+    elif mutation == "artifact_policy_nested_over":
+        bundle["candidate_policy"] = nested_lists(LIMITS["canonical_depth"])
+    elif mutation == "bundle_null":
+        return None, policy
+    elif mutation == "bundle_list":
+        return [], policy
+    elif mutation == "policy_null":
+        return bundle, None
     elif mutation == "proposition":
         bundle["proposition_digest"] = "11" * 32
     elif mutation == "environment":
@@ -259,8 +289,9 @@ def evaluate(
             value = expanded(case["input"])
             if isinstance(value, list) and len(value) == 2 and value[0] == 8:
                 value = [8, expanded(value[1])]
+            level_parameters = expanded(case["level_params"]) if "level_params" in case else []
             try:
-                normalized = normalize_expr(value, level_params=case.get("level_params"))
+                normalized = normalize_expr(value, level_params=level_parameters)
                 payload = canonical_cbor(["statqed.lean-expr.v0", normalized])
                 digest_frame("proposition", payload)
                 primary_classification, primary_code = "accepted", "accepted"
@@ -268,8 +299,9 @@ def evaluate(
                 payload = None
                 primary_classification, primary_code = "rejected", error.code
             try:
+                oracle_parameters = independent_oracle.validate_level_parameters(level_parameters)
                 oracle_payload = independent_oracle.semantic_expression_payload(
-                    value, level_parameter_count=len(case.get("level_params", []))
+                    value, level_parameter_count=len(oracle_parameters)
                 )
                 oracle_classification, oracle_code = "accepted", "accepted"
             except independent_oracle.OracleError as error:
@@ -302,14 +334,18 @@ def evaluate(
                 primary_classification, primary_code = "rejected", error.code
             try:
                 oracle = independent_oracle.environment_closure(roots, declarations)
+                oracle_payload = independent_oracle.canonical_cbor(
+                    ["statqed.lean-environment-closure.v0", oracle]
+                )
                 oracle_classification, oracle_code = "accepted", "accepted"
             except independent_oracle.OracleError as error:
                 oracle = None
+                oracle_payload = None
                 oracle_classification, oracle_code = "rejected", error.code
             if (
                 primary_classification == "accepted"
                 and oracle_classification == "accepted"
-                and primary != oracle
+                and (primary != oracle or payload != oracle_payload)
             ):
                 oracle_code = "registry.environment_mismatch"
             return (

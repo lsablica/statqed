@@ -214,11 +214,15 @@ def _level(
 def normalize_expression(
     expression: Any,
     *,
-    level_parameters: Sequence[Any] = (),
+    level_parameters: Sequence[Any] | None = None,
 ) -> list[Any]:
     """Normalize one closed typed constructor tree to ``statqed.lean-expr.v0``."""
 
     budget = _Budget()
+    if level_parameters is None:
+        level_parameters = []
+    if not isinstance(level_parameters, list):
+        raise OracleError("registry.normalization_failure")
     if len(level_parameters) > LIMITS["universe_arguments"]:
         raise OracleError("registry.resource_limit")
     parameters = [_name(name, budget) for name in level_parameters]
@@ -399,6 +403,12 @@ def normalize_semantic_expression(
 ) -> list[Any]:
     """Validate the language-neutral array grammar without using the primary model."""
 
+    if (
+        type(level_parameter_count) is not int
+        or not 0 <= level_parameter_count <= LIMITS["universe_arguments"]
+    ):
+        raise OracleError("registry.normalization_failure")
+
     budget = _Budget()
 
     def semantic_name(value: Any) -> list[list[Any]]:
@@ -514,11 +524,30 @@ def semantic_expression_payload(
     return canonical_cbor([GRAMMAR_ID, normalized])
 
 
+def validate_level_parameters(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        raise OracleError("registry.normalization_failure")
+    if len(value) > LIMITS["universe_arguments"]:
+        raise OracleError("registry.resource_limit")
+    result = []
+    budget = _Budget()
+    for item in value:
+        if not isinstance(item, str) or not item:
+            raise OracleError("registry.normalization_failure")
+        budget.string(item, individual_limit=LIMITS["name_segment_bytes"])
+        result.append(item)
+    if len(result) != len(set(result)):
+        raise OracleError("registry.normalization_failure")
+    return result
+
+
 def environment_closure(
     roots: Sequence[str], declarations: Mapping[str, Mapping[str, Any]]
 ) -> list[dict[str, Any]]:
     """Independently compute the bounded fixture closure from typed declarations."""
 
+    if not isinstance(roots, list) or not isinstance(declarations, Mapping):
+        raise OracleError("registry.normalization_failure")
     if len(roots) > LIMITS["closure_width"]:
         raise OracleError("registry.closure_width_limit")
     active: set[str] = set()
@@ -528,7 +557,15 @@ def environment_closure(
     def name_key(name: str) -> bytes:
         if not isinstance(name, str) or not name or any(not part for part in name.split(".")):
             raise OracleError("registry.normalization_failure")
-        return canonical_cbor([[0, part] for part in name.split(".")])
+        parts = name.split(".")
+        if len(parts) > LIMITS["name_segments"]:
+            raise OracleError("registry.resource_limit")
+        budget = _Budget()
+        for part in parts:
+            budget.string(part, individual_limit=LIMITS["name_segment_bytes"])
+        if budget.string_bytes > LIMITS["qualified_name_bytes"]:
+            raise OracleError("registry.resource_limit")
+        return canonical_cbor([[0, part] for part in parts])
 
     def visit(name: str, depth: int) -> None:
         nonlocal work
@@ -544,10 +581,14 @@ def environment_closure(
         if len(emitted) + len(active) >= LIMITS["closure_units"]:
             raise OracleError("registry.closure_work_budget_limit")
         declaration = declarations.get(name)
-        if not isinstance(declaration, Mapping):
+        if declaration is None:
             raise OracleError("registry.missing_dependency")
+        if not isinstance(declaration, Mapping):
+            raise OracleError("registry.normalization_failure")
         references = declaration.get("references")
-        if not isinstance(references, list) or len(references) > LIMITS["closure_width"]:
+        if not isinstance(references, list):
+            raise OracleError("registry.normalization_failure")
+        if len(references) > LIMITS["closure_width"]:
             raise OracleError("registry.closure_width_limit")
         if any(not isinstance(reference, str) for reference in references):
             raise OracleError("registry.normalization_failure")
@@ -603,7 +644,7 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
     ])
 
 
-def proposition_payload(expression: Any, *, level_parameters: Sequence[Any] = ()) -> bytes:
+def proposition_payload(expression: Any, *, level_parameters: Sequence[Any] | None = None) -> bytes:
     normalized = normalize_expression(expression, level_parameters=level_parameters)
     payload = canonical_cbor([GRAMMAR_ID, normalized])
     if len(payload) > LIMITS["payload_bytes"]:
@@ -645,7 +686,7 @@ def six_digest_frames(payload: bytes) -> dict[str, dict[str, str]]:
     return result
 
 
-def observe(expression: Any, *, level_parameters: Sequence[Any] = ()) -> dict[str, Any]:
+def observe(expression: Any, *, level_parameters: Sequence[Any] | None = None) -> dict[str, Any]:
     normalized = normalize_expression(expression, level_parameters=level_parameters)
     payload = canonical_cbor([GRAMMAR_ID, normalized])
     if len(payload) > LIMITS["payload_bytes"]:
@@ -663,7 +704,7 @@ def require_candidate_bytes(
     expression: Any,
     candidate: bytes,
     *,
-    level_parameters: Sequence[Any] = (),
+    level_parameters: Sequence[Any] | None = None,
 ) -> None:
     """Reject a candidate encoder whose bytes differ from this oracle."""
 
@@ -677,21 +718,49 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
 
 
+def _validate_json_input(value: Any) -> None:
+    stack = [(value, 0)]
+    nodes = 0
+    while stack:
+        current, depth = stack.pop()
+        nodes += 1
+        if nodes > LIMITS["canonical_nodes"] or depth > LIMITS["canonical_depth"]:
+            raise OracleError("registry.resource_limit")
+        if current is None or type(current) in (bool, int) or isinstance(current, str):
+            continue
+        if isinstance(current, list):
+            stack.extend((item, depth + 1) for item in reversed(current))
+            continue
+        if isinstance(current, Mapping):
+            for key, item in reversed(list(current.items())):
+                if not isinstance(key, str):
+                    raise OracleError("registry.normalization_failure")
+                stack.append((item, depth + 1))
+            continue
+        raise OracleError("registry.normalization_failure")
+
+
 def main() -> int:
     try:
         raw_input = sys.stdin.buffer.read(LIMITS["input_bytes"] + 1)
         if len(raw_input) > LIMITS["input_bytes"]:
             raise OracleError("registry.resource_limit")
         document = json.loads(raw_input)
+        _validate_json_input(document)
         if not isinstance(document, Mapping) or set(document) - {"expression", "level_parameters"}:
             raise OracleError("registry.normalization_failure")
         if "expression" not in document:
+            raise OracleError("registry.normalization_failure")
+        if "level_parameters" in document and not isinstance(document["level_parameters"], list):
             raise OracleError("registry.normalization_failure")
         result = observe(
             document["expression"],
             level_parameters=document.get("level_parameters", []),
         )
-    except (json.JSONDecodeError, UnicodeError):
+    except RecursionError:
+        print(_canonical_json({"classification": "rejected", "code": "registry.resource_limit"}))
+        return 2
+    except (json.JSONDecodeError, UnicodeError, ValueError):
         print(_canonical_json({"classification": "rejected", "code": "registry.normalization_failure"}))
         return 2
     except OracleError as exc:

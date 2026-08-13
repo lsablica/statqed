@@ -38,6 +38,12 @@ CBOR name bytes before encoding. This ordering is deliberately not Lean's
 constructor, and recursor of a mutual inductive family is emitted in one atomic
 unit.
 
+Roots must be an array of valid names, declarations a map, each selected
+declaration a map, and `references` an array of valid names. Non-array roots,
+non-map declaration tables or records, and non-array references fail as
+`registry.normalization_failure`; no host-language iteration or attribute
+error is observable.
+
 The closure payload is canonical CBOR of:
 
 ```text
