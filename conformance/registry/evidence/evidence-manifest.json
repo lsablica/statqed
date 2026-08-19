@@ -13,7 +13,7 @@
   },
   "review_projection": {
     "path": "work/reviews/SQ-0007.md",
-    "projection_sha256": "346e645bff9e6b91325e011c2640e41c4a3ac45baa20c712b727dc0ae8f99d5a"
+    "projection_sha256": "164aa6c2de9a7446996cd05d8200d9801cdb9d2b63dc1501d8c1f1c152bc885d"
   },
   "schema": "statqed.sq0007-evidence.v2",
   "scientific_subject_count": 81,
@@ -426,7 +426,7 @@
     }
   ],
   "subject_count": 105,
-  "subject_digest": "e0b55f3310550c9667dab9496686b4af07682d2f4d7801b627a68010880e1c22",
+  "subject_digest": "a64d586fbedd9790dc56fd7562fa3080f7c2a13386cb15a8152bb62a007fa529",
   "subjects": [
     {
       "bytes": 7079,
@@ -764,9 +764,9 @@
       "sha256": "870d2c9758f3ea12143690aae9095423c0db839bc5cd5360262a5a1dd8a503a9"
     },
     {
-      "bytes": 59587,
+      "bytes": 60927,
       "path": "scripts/registry/independent_oracle.py",
-      "sha256": "4b81c686235d19ff0a934f4a9e6837774c57441eae85fe584a8eb264e77197dd"
+      "sha256": "ac59f74ae22638b9b5b80d45bf1772eec4594745f61f15ce0fa7bb861ec87964"
     },
     {
       "bytes": 52323,
@@ -789,9 +789,9 @@
       "sha256": "c579ec492875ab2ad8a885a70ef9cacbaa2e228e65ea9da9462428c3795dee34"
     },
     {
-      "bytes": 31709,
+      "bytes": 36610,
       "path": "scripts/registry/tests/test_independent_oracle.py",
-      "sha256": "12c74ca9d15874de58af7b347eebe8fa576a942a87ab613e38affe776c1f0559"
+      "sha256": "c0f90c398438f01aa39e112daac35fdf9bcbab8be2b159b30e6b4005aacb029a"
     },
     {
       "bytes": 43882,
