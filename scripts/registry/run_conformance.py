@@ -45,6 +45,27 @@ def read_json(path: Path) -> Any:
 
 
 def expanded(value: Any) -> Any:
+    if isinstance(value, str) and value in {
+        "@canonical-payload-max@", "@canonical-payload-over@",
+        "@canonical-payload-mixed-left@", "@canonical-payload-mixed-right@",
+    }:
+        leaf_count = 1_474 if value == "@canonical-payload-max@" else 1_475
+        leaf = [2, [[1, (1 << 64) - 1]] * LIMITS["name_segments"], []]
+        leaves = [copy.deepcopy(leaf) for _ in range(leaf_count)]
+        while len(leaves) > 1:
+            paired = [
+                [3, leaves[index], leaves[index + 1]]
+                for index in range(0, len(leaves) - 1, 2)
+            ]
+            if len(leaves) % 2:
+                paired.append(leaves[-1])
+            leaves = paired
+        expression = leaves[0]
+        if value == "@canonical-payload-mixed-left@":
+            return [3, expression, [99]]
+        if value == "@canonical-payload-mixed-right@":
+            return [3, [99], expression]
+        return expression
     if value == "@max-depth@":
         expr: Any = [2, [[0, "x"]], []]
         for _ in range(LIMITS["expression_depth"]):
@@ -71,6 +92,8 @@ def expanded(value: Any) -> Any:
         return [f"u{index}" for index in range(LIMITS["universe_arguments"])]
     if value == "@over-level-params@":
         return [f"u{index}" for index in range(LIMITS["universe_arguments"] + 1)]
+    if value == "@over-level-param-string@":
+        return ["x" * (LIMITS["name_segment_bytes"] + 1)]
     if value == "@max-expression-nodes@":
         leaves: list[Any] = [[0, 0] for _ in range(32_767)]
         while len(leaves) > 1:
@@ -134,6 +157,30 @@ def expanded(value: Any) -> Any:
                 "value": "x" * (LIMITS["string_bytes"] + 1),
             },
         }
+    if isinstance(value, str) and value in {
+        "@closure-payload-max-roots@", "@closure-payload-over-roots@",
+        "@closure-payload-mixed-roots@",
+    }:
+        count = 15 if value == "@closure-payload-max-roots@" else 16
+        roots = [f"r{index:02d}" for index in range(count)]
+        return (["a", *roots] if value == "@closure-payload-mixed-roots@" else roots)
+    if isinstance(value, str) and value in {
+        "@closure-payload-max-declarations@", "@closure-payload-over-declarations@",
+        "@closure-payload-mixed-declarations@",
+    }:
+        count = 15 if value == "@closure-payload-max-declarations@" else 16
+        declarations = {
+            f"r{index:02d}": {
+                "kind": "definition", "references": [],
+                "value": "x" * (LIMITS["string_bytes"] - 1),
+            }
+            for index in range(count)
+        }
+        if value == "@closure-payload-mixed-declarations@":
+            declarations = {
+                "a": {"kind": "unknown", "references": []}, **declarations
+            }
+        return declarations
     if isinstance(value, str) and value in {"@max-closure-name-roots@", "@over-closure-name-roots@"}:
         base = ".".join(["x" * LIMITS["name_segment_bytes"]] * 4)
         name = base if value.startswith("@max") else base + ".x"
@@ -252,6 +299,11 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         )
         for key, value in additions:
             bundle[key] = value
+    elif mutation == "resource_escaped_aggregate_surrogate":
+        bundle["candidate_policy"] = [
+            ('"' * (LIMITS["string_bytes"] - 1)) + "\ud800"
+            for _ in range(8)
+        ]
     elif mutation in {
         "resource_positive_integer_bundle_surrogate",
         "resource_negative_integer_bundle_surrogate",
@@ -532,9 +584,8 @@ def evaluate(
                 payload = None
                 primary_classification, primary_code = "rejected", error.code
             try:
-                oracle_parameters = independent_oracle.validate_level_parameters(level_parameters)
-                oracle_payload = independent_oracle.semantic_expression_payload(
-                    value, level_parameter_count=len(oracle_parameters)
+                oracle_payload = independent_oracle.semantic_expression_payload_with_parameters(
+                    value, level_parameters
                 )
                 oracle_classification, oracle_code = "accepted", "accepted"
             except independent_oracle.OracleError as error:

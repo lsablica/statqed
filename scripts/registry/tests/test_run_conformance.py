@@ -80,9 +80,11 @@ class DifferentialConformanceTests(unittest.TestCase):
         )
 
     def test_rejected_oracle_disagreement_marks_generated_corpus_failed(self):
-        original = run_conformance.independent_oracle.semantic_expression_payload
+        original = (
+            run_conformance.independent_oracle.semantic_expression_payload_with_parameters
+        )
 
-        def disagree(expression, **kwargs):
+        def disagree(expression, level_parameters):
             if (
                 isinstance(expression, list)
                 and len(expression) == 3
@@ -93,13 +95,17 @@ class DifferentialConformanceTests(unittest.TestCase):
                 raise run_conformance.independent_oracle.OracleError(
                     "registry.normalization_failure"
                 )
-            return original(expression, **kwargs)
+            return original(expression, level_parameters)
 
         try:
-            run_conformance.independent_oracle.semantic_expression_payload = disagree
+            run_conformance.independent_oracle.semantic_expression_payload_with_parameters = (
+                disagree
+            )
             result_bytes, _, _ = run_conformance.generated()
         finally:
-            run_conformance.independent_oracle.semantic_expression_payload = original
+            run_conformance.independent_oracle.semantic_expression_payload_with_parameters = (
+                original
+            )
         result = json.loads(result_bytes)
         self.assertGreater(result["failed"], 0)
 

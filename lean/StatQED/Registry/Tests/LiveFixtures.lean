@@ -67,11 +67,100 @@ private def normalizationFixtureFromTyped
       ("typed_expression", typed)]
   | _, _ => .error s!"registry.fixture.unexpected_result:{fixtureId}"
 
+private def normalizationFixtureFromTypedWithParameters
+    (fixtureId expected : String) (parameters : List Name)
+    (expression : Expr) (typed : Json) : Except String Json := do
+  let result := propositionJson parameters expression
+  let encodedParameters := .arr <| parameters.toArray.map nameJson
+  match expected, result with
+  | "accepted", .ok normalized => pure <| Json.mkObj [
+      ("expected", .str expected), ("fixture_id", .str fixtureId),
+      ("level_parameters", encodedParameters), ("normalized", normalized),
+      ("typed_expression", typed)]
+  | "rejected", .error code => pure <| Json.mkObj [
+      ("code", .str code), ("expected", .str expected),
+      ("fixture_id", .str fixtureId), ("level_parameters", encodedParameters),
+      ("typed_expression", typed)]
+  | _, _ => .error s!"registry.fixture.unexpected_result:{fixtureId}"
+
 private def typedNatural (value : Nat) : Json := Json.mkObj [
   ("kind", .str "natural"), ("tag", .str "literal"), ("value", .str value.repr)]
 
 private def typedConstant (name : Name) : Json := Json.mkObj [
   ("name", nameJson name), ("tag", .str "constant"), ("universes", .arr #[])]
+
+private def typedString (value : String) : Json := Json.mkObj [
+  ("kind", .str "string"), ("tag", .str "literal"), ("value", .str value)]
+
+private def typedApplication (function argument : Json) : Json := Json.mkObj [
+  ("argument", argument), ("function", function), ("tag", .str "application")]
+
+private def typedFreeVariable : Json := Json.mkObj [("tag", .str "free_variable")]
+
+private def typedMetadata (count : Nat) (inner : Json) : Json :=
+  List.range count |>.foldl (fun expression _ => Json.mkObj [
+    ("expression", expression), ("metadata", .str "present"),
+    ("tag", .str "metadata")]) inner
+
+private def repeatedMetadata (count : Nat) (inner : Expr) : Expr :=
+  List.range count |>.foldl (fun expression _ => .mdata MData.empty expression) inner
+
+private def repeatedStringName (count bytes : Nat) : Name :=
+  List.range count |>.foldl (fun parent _ => .str parent (String.replicate bytes 'x')) .anonymous
+
+private def typedLevelSucc (count : Nat) (inner : Json) : Json :=
+  List.range count |>.foldl (fun level _ => Json.mkObj [
+    ("level", level), ("tag", .str "succ")]) inner
+
+private def typedLevelMetavariable : Json := Json.mkObj [("tag", .str "metavariable")]
+
+private def typedSort (level : Json) : Json := Json.mkObj [
+  ("level", level), ("tag", .str "sort")]
+
+private def compositionalResourceFixtures : Except String (Array Json) := do
+  let overString := String.replicate (maxStringLiteralBytes + 1) 'x'
+  let overStringExpr := .lit (.strVal overString)
+  let freeExpr := .fvar ⟨`registryFixtureFreeVariable⟩
+  let typedOverString := typedString overString
+  let mixedRight ← normalizationFixtureFromTyped "LIVE-RESOURCE-MIXED-STRING-RIGHT"
+    "rejected" (.app freeExpr overStringExpr)
+    (typedApplication typedFreeVariable typedOverString)
+  let mixedLeft ← normalizationFixtureFromTyped "LIVE-RESOURCE-MIXED-STRING-LEFT"
+    "rejected" (.app overStringExpr freeExpr)
+    (typedApplication typedOverString typedFreeVariable)
+  let malformedParameters ← normalizationFixtureFromTypedWithParameters
+    "LIVE-RESOURCE-STRING-OVER-DUPLICATE-PARAMETERS" "rejected" [`u, `u]
+    overStringExpr typedOverString
+
+  let levelOver := successorLevel (maxLevelDepth + 1)
+  let levelMvar := .mvar ⟨`registryFixtureLevelMetavariable⟩
+  let typedOverLevel := typedLevelSucc (maxLevelDepth + 1) (Json.mkObj [("tag", .str "zero")])
+  let levelMixedRight ← normalizationFixtureFromTyped "LIVE-RESOURCE-MIXED-LEVEL-RIGHT"
+    "rejected" (.sort (.max levelMvar levelOver))
+    (typedSort <| Json.mkObj [
+      ("left", typedLevelMetavariable), ("right", typedOverLevel),
+      ("tag", .str "max")])
+  let levelMixedLeft ← normalizationFixtureFromTyped "LIVE-RESOURCE-MIXED-LEVEL-LEFT"
+    "rejected" (.sort (.max levelOver levelMvar))
+    (typedSort <| Json.mkObj [
+      ("left", typedOverLevel), ("right", typedLevelMetavariable),
+      ("tag", .str "max")])
+
+  let metadataMaxExpr := repeatedMetadata maxExpressionDepth (.const ``True [])
+  let metadataMax ← normalizationFixtureFromTyped "LIVE-METADATA-DEPTH-MAX" "accepted"
+    metadataMaxExpr (typedMetadata maxExpressionDepth (typedConstant ``True))
+  let metadataOverExpr := repeatedMetadata (maxExpressionDepth + 1) (.const ``True [])
+  let metadataOver ← normalizationFixtureFromTyped "LIVE-METADATA-DEPTH-OVER" "rejected"
+    metadataOverExpr (typedMetadata (maxExpressionDepth + 1) (typedConstant ``True))
+
+  let nameMax := repeatedStringName 4 maxNameSegmentBytes
+  let nameMaxFixture ← normalizationFixture "LIVE-QUALIFIED-NAME-BYTES-MAX" "accepted"
+    (.const nameMax []) 1
+  let nameOver := .str nameMax "x"
+  let nameOverFixture ← normalizationFixtureFromTyped "LIVE-QUALIFIED-NAME-BYTES-OVER"
+    "rejected" (.const nameOver []) (typedConstant nameOver)
+  pure #[mixedRight, mixedLeft, malformedParameters, levelMixedRight, levelMixedLeft,
+    metadataMax, metadataOver, nameMaxFixture, nameOverFixture]
 
 private def typedProjection (index : Nat) : Json := Json.mkObj [
   ("index", toJson index),
@@ -194,6 +283,7 @@ def report (environment : Environment) : Except String Json := do
   let levelMax ← levelBoundaryFixture "LIVE-LEVEL-DEPTH-MAX" "accepted" maxLevelDepth
   let levelOver ← levelBoundaryFixture "LIVE-LEVEL-DEPTH-OVER" "rejected" (maxLevelDepth + 1)
   let integerBoundaries ← integerBoundaryFixtures
+  let compositionalResources ← compositionalResourceFixtures
   let closureFixtures ← #[
     ("LIVE-CLOSURE-TRUE-FAMILY", #[``True], #[]),
     ("LIVE-CLOSURE-DEFINITION", #[`StatQED.Registry.Tests.liveDefinitionReferenceFixture], #[]),
@@ -219,7 +309,7 @@ def report (environment : Environment) : Except String Json := do
     ("depth_boundary", depthBoundary),
     ("expression_fixtures", .arr <| expressionFixtures ++ #[metadataBase, metadata,
       lambdaConstructor, letConstructor, projectionConstructor, depthMax, depthOver, levelMax, levelOver]
-      ++ integerBoundaries),
+      ++ integerBoundaries ++ compositionalResources),
     ("fixed_work_boundary", fixedWorkBoundary),
     ("schema", .str "statqed.registry-live-fixtures.v0"),
     ("unit_boundary", unitBoundary),

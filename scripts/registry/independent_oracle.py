@@ -81,6 +81,8 @@ _BINDER_INFO: Final = {
     "instance_implicit": 3,
 }
 _UINT64_MAX: Final = (1 << 64) - 1
+LEAN_COMMIT: Final = "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
+CLOSURE_ID: Final = "statqed.lean-environment-closure.v0"
 
 
 @dataclass
@@ -122,8 +124,65 @@ def _utf8_length_lower_bound(value: Any) -> int | None:
     return len(value.encode("utf-8", "ignore"))
 
 
+def _cbor_size_lower_bound(value: Any, *, limit: int) -> int:
+    """Independently count CBOR bytes forced by a possibly malformed value."""
+
+    nodes = 0
+
+    def head_size(length: int) -> int:
+        if length < 24:
+            return 1
+        if length <= 0xFF:
+            return 2
+        if length <= 0xFFFF:
+            return 3
+        if length <= 0xFFFF_FFFF:
+            return 5
+        return 9
+
+    def visit(current: Any, depth: int, active: set[int]) -> int:
+        nonlocal nodes
+        nodes += 1
+        if nodes > LIMITS["canonical_nodes"] or depth > LIMITS["canonical_depth"]:
+            raise OracleError("registry.resource_limit")
+        if current is None or type(current) is bool:
+            return 1
+        if type(current) is int:
+            magnitude = current if current >= 0 else -1 - current
+            if magnitude > _UINT64_MAX:
+                return 1
+            return head_size(magnitude)
+        if isinstance(current, bytes):
+            return head_size(len(current)) + len(current)
+        if isinstance(current, str):
+            length = _utf8_length_lower_bound(current) or 0
+            if length > LIMITS["string_literal_bytes"]:
+                raise OracleError("registry.resource_limit")
+            return head_size(length) + length
+        if isinstance(current, (list, Mapping)):
+            marker = id(current)
+            if marker in active:
+                return 1
+            active.add(marker)
+            items = current if isinstance(current, list) else tuple(
+                part for pair in current.items() for part in pair
+            )
+            total = head_size(len(current))
+            for item in items:
+                total += visit(item, depth + 1, active)
+                if total > limit:
+                    raise OracleError("registry.resource_limit")
+            active.remove(marker)
+            return total
+        return 1
+
+    return visit(value, 0, set())
+
+
 def _semantic_expression_resource_preflight(expression: Any) -> None:
     """Inspect all selected array-grammar branches before syntax ownership."""
+
+    _cbor_size_lower_bound([GRAMMAR_ID, expression], limit=LIMITS["payload_bytes"])
 
     nodes = 0
     string_bytes = 0
@@ -221,10 +280,40 @@ def _exported_expression_resource_preflight(
     nodes = 0
     string_bytes = 0
     stack: list[tuple[Any, str, int, bool]] = [(expression, "expr", 0, False)]
+
+    def name_resource(value: Any) -> None:
+        segments = 0
+        qualified = 0
+        current = value
+        active_names: set[int] = set()
+        while isinstance(current, Mapping):
+            marker = id(current)
+            if marker in active_names:
+                return
+            active_names.add(marker)
+            tag = current.get("tag")
+            if tag in {"string", "numeric"}:
+                segments += 1
+                if segments > LIMITS["name_segments"]:
+                    raise OracleError("registry.resource_limit")
+            if tag == "string":
+                length = _utf8_length_lower_bound(current.get("segment"))
+                if length is not None:
+                    if length > LIMITS["name_segment_bytes"]:
+                        raise OracleError("registry.resource_limit")
+                    qualified += length
+                    if qualified > LIMITS["qualified_name_bytes"]:
+                        raise OracleError("registry.resource_limit")
+            parent = current.get("parent")
+            if parent is None:
+                return
+            current = parent
+
     if isinstance(level_parameters, list):
         if len(level_parameters) > LIMITS["universe_arguments"]:
             raise OracleError("registry.resource_limit")
-        stack.extend((name, "name", 0, False) for name in level_parameters)
+        for name in level_parameters:
+            name_resource(name)
     active: set[int] = set()
     while stack:
         value, context, depth, exiting = stack.pop()
@@ -236,14 +325,24 @@ def _exported_expression_resource_preflight(
                 continue
             active.add(id(value))
             stack.append((value, context, depth, True))
-        if context in {"expr", "level"}:
+        metadata = (
+            context == "expr"
+            and isinstance(value, Mapping)
+            and value.get("tag") == "metadata"
+        )
+        if context == "expr" and depth > LIMITS["expression_depth"]:
+            raise OracleError("registry.resource_limit")
+        if context == "level" and depth > LIMITS["level_depth"]:
+            raise OracleError("registry.resource_limit")
+        if context in {"expr", "level"} and not metadata:
             nodes += 1
-            limit = LIMITS["expression_depth"] if context == "expr" else LIMITS["level_depth"]
-            if nodes > LIMITS["nodes"] or depth > limit:
+            if nodes > LIMITS["nodes"]:
                 raise OracleError("registry.resource_limit")
         if context == "name":
             if not isinstance(value, Mapping):
                 continue
+            if depth == 0:
+                name_resource(value)
             if depth > LIMITS["name_segments"]:
                 raise OracleError("registry.resource_limit")
             if value.get("tag") == "string":
@@ -272,7 +371,7 @@ def _exported_expression_resource_preflight(
                 stack.append((value["name"], "name", 0, False))
             continue
         if tag == "metadata" and "expression" in value:
-            stack.append((value["expression"], "expr", depth, False))
+            stack.append((value["expression"], "expr", depth + 1, False))
         elif tag == "sort" and "level" in value:
             stack.append((value["level"], "level", 0, False))
         elif tag == "constant":
@@ -415,17 +514,17 @@ def normalize_expression(
     if level_parameters is None:
         level_parameters = []
     _exported_expression_resource_preflight(expression, level_parameters)
-    budget = _Budget()
     if not isinstance(level_parameters, list):
         raise OracleError("registry.normalization_failure")
     if len(level_parameters) > LIMITS["universe_arguments"]:
         raise OracleError("registry.resource_limit")
-    parameters = [_name(name, budget) for name in level_parameters]
+    parameter_budget = _Budget()
+    parameters = [_name(name, parameter_budget) for name in level_parameters]
     if len({json.dumps(name, separators=(",", ":")) for name in parameters}) != len(parameters):
         raise OracleError("registry.normalization_failure")
+    budget = _Budget()
 
     def walk(value: Any, *, depth: int, bound: int) -> list[Any]:
-        budget.node()
         if depth > LIMITS["expression_depth"]:
             raise OracleError("registry.resource_limit")
         node = _object(
@@ -441,7 +540,8 @@ def normalize_expression(
         if tag == "metadata":
             if set(node) - {"tag", "expression", "metadata"} or "expression" not in node:
                 raise OracleError("registry.normalization_failure")
-            return walk(node["expression"], depth=depth, bound=bound)
+            return walk(node["expression"], depth=depth + 1, bound=bound)
+        budget.node()
         if tag in {"free_variable", "metavariable"}:
             raise OracleError("registry.expression_unsupported")
         if tag == "bound_variable" and set(node) == {"tag", "index"}:
@@ -720,6 +820,25 @@ def semantic_expression_payload(
     return canonical_cbor([GRAMMAR_ID, normalized])
 
 
+def semantic_expression_payload_with_parameters(
+    expression: Any, level_parameters: Any
+) -> bytes:
+    """Apply resource preflights to both semantic inputs before syntax checks."""
+
+    _semantic_expression_resource_preflight(expression)
+    if isinstance(level_parameters, list):
+        if len(level_parameters) > LIMITS["universe_arguments"]:
+            raise OracleError("registry.resource_limit")
+        for item in level_parameters:
+            length = _utf8_length_lower_bound(item)
+            if length is not None and length > LIMITS["name_segment_bytes"]:
+                raise OracleError("registry.resource_limit")
+    parameters = validate_level_parameters(level_parameters)
+    return semantic_expression_payload(
+        expression, level_parameter_count=len(parameters)
+    )
+
+
 def validate_level_parameters(value: Any) -> list[str]:
     if isinstance(value, list):
         if len(value) > LIMITS["universe_arguments"]:
@@ -753,6 +872,10 @@ def environment_closure(
         raise OracleError("registry.normalization_failure")
     if len(roots) > LIMITS["closure_width"]:
         raise OracleError("registry.closure_width_limit")
+    _cbor_size_lower_bound(
+        [CLOSURE_ID, LEAN_COMMIT, GRAMMAR_ID, roots, declarations],
+        limit=LIMITS["payload_bytes"],
+    )
     pending = list(roots)
     inspected: set[str] = set()
     while pending:
@@ -861,44 +984,259 @@ def environment_closure(
 
 
 def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_commit: str) -> bytes:
-    """Canonicalize and validate independently exported live closure records."""
+    """Canonicalize a closed, bounded live Lean declaration-record sequence."""
 
-    if not isinstance(records, Sequence) or len(records) > LIMITS["closure_units"]:
+    if not isinstance(records, list):
+        raise OracleError("registry.normalization_failure")
+    if len(records) > LIMITS["closure_units"]:
         raise OracleError("registry.resource_limit")
-    encoded = [dict(record) for record in records]
+    if lean_commit != LEAN_COMMIT:
+        raise OracleError("registry.normalization_failure")
 
     def observed_name_key(value: Any) -> bytes:
-        segments: list[list[Any]] = []
-
-        def visit(current: Any) -> None:
-            node = _object(current, fields={"tag"}, optional={"parent", "segment"})
-            if node["tag"] == "anonymous" and set(node) == {"tag"}:
-                return
-            if node["tag"] not in {"string", "numeric"} or set(node) != {"tag", "parent", "segment"}:
+        reversed_segments: list[list[Any]] = []
+        current = value
+        active: set[int] = set()
+        string_bytes = 0
+        while True:
+            if not isinstance(current, Mapping):
                 raise OracleError("registry.normalization_failure")
-            visit(node["parent"])
-            if node["tag"] == "string" and isinstance(node["segment"], str):
-                raw = node["segment"].encode("utf-8", "strict")
-                segments.append([0, node["segment"]])
-            elif node["tag"] == "numeric":
-                segments.append([1, _uint(node["segment"])])
+            marker = id(current)
+            if marker in active:
+                raise OracleError("registry.resource_limit")
+            active.add(marker)
+            tag = current.get("tag")
+            if tag == "anonymous" and set(current) == {"tag"}:
+                break
+            if tag not in {"string", "numeric"} or set(current) != {
+                "tag", "parent", "segment"
+            }:
+                raise OracleError("registry.normalization_failure")
+            if tag == "string":
+                segment = current["segment"]
+                if not isinstance(segment, str):
+                    raise OracleError("registry.normalization_failure")
+                length = _utf8_length_lower_bound(segment)
+                if length is not None and length > LIMITS["name_segment_bytes"]:
+                    raise OracleError("registry.resource_limit")
+                try:
+                    raw = segment.encode("utf-8", "strict")
+                except UnicodeEncodeError as exc:
+                    raise OracleError("registry.normalization_failure") from exc
+                string_bytes += len(raw)
+                if string_bytes > LIMITS["qualified_name_bytes"]:
+                    raise OracleError("registry.resource_limit")
+                reversed_segments.append([0, segment])
+            else:
+                reversed_segments.append([1, _uint(current["segment"])])
+            if len(reversed_segments) > LIMITS["name_segments"]:
+                raise OracleError("registry.resource_limit")
+            current = current["parent"]
+        if not reversed_segments:
+            raise OracleError("registry.normalization_failure")
+        return canonical_cbor(list(reversed(reversed_segments)))
+
+    def name_list(value: Any, *, limit: int) -> list[bytes]:
+        if not isinstance(value, list):
+            raise OracleError("registry.normalization_failure")
+        if len(value) > limit:
+            raise OracleError("registry.resource_limit")
+        keys = [observed_name_key(item) for item in value]
+        if keys != sorted(keys) or len(set(keys)) != len(keys):
+            raise OracleError("registry.normalization_failure")
+        return keys
+
+    def parameter_list(value: Any) -> list[bytes]:
+        if not isinstance(value, list):
+            raise OracleError("registry.normalization_failure")
+        if len(value) > LIMITS["universe_arguments"]:
+            raise OracleError("registry.resource_limit")
+        keys = [observed_name_key(item) for item in value]
+        if len(set(keys)) != len(keys):
+            raise OracleError("registry.normalization_failure")
+        return keys
+
+    def natural(value: Any) -> None:
+        _uint(value)
+
+    def boolean(value: Any) -> None:
+        if type(value) is not bool:
+            raise OracleError("registry.normalization_failure")
+
+    def inferred_expression_parameters(value: Any) -> list[Any]:
+        found: dict[bytes, Any] = {}
+        stack = [value]
+        while stack:
+            current = stack.pop()
+            if isinstance(current, Mapping):
+                if current.get("tag") == "parameter" and "name" in current:
+                    found[observed_name_key(current["name"])] = current["name"]
+                stack.extend(current.values())
+            elif isinstance(current, list):
+                stack.extend(current)
+        return [found[key] for key in sorted(found)]
+
+    def expression(value: Any, parameters: list[Any] | None) -> None:
+        # The live closure bytes contain the already normalized typed grammar;
+        # erased metadata/binder display fields are therefore not permitted.
+        stack = [value]
+        while stack:
+            node = stack.pop()
+            if not isinstance(node, Mapping):
+                raise OracleError("registry.normalization_failure")
+            tag = node.get("tag")
+            fields = set(node)
+            if tag == "bound_variable" and fields == {"tag", "index"}:
+                natural(node["index"])
+            elif tag == "sort" and fields == {"tag", "level"}:
+                pass
+            elif tag == "constant" and fields == {"tag", "name", "universes"}:
+                observed_name_key(node["name"])
+            elif tag == "application" and fields == {"tag", "function", "argument"}:
+                stack.extend((node["function"], node["argument"]))
+            elif tag in {"lambda", "forall"} and fields == {
+                "tag", "binder_info", "type", "body"
+            }:
+                if node["binder_info"] not in _BINDER_INFO:
+                    raise OracleError("registry.normalization_failure")
+                stack.extend((node["type"], node["body"]))
+            elif tag == "let" and fields == {"tag", "type", "value", "body"}:
+                stack.extend((node["type"], node["value"], node["body"]))
+            elif tag == "literal" and fields == {"tag", "kind", "value"}:
+                if node["kind"] not in {"natural", "string"}:
+                    raise OracleError("registry.normalization_failure")
+            elif tag == "projection" and fields == {
+                "tag", "type_name", "index", "structure"
+            }:
+                observed_name_key(node["type_name"])
+                natural(node["index"])
+                stack.append(node["structure"])
             else:
                 raise OracleError("registry.normalization_failure")
+        normalize_expression(
+            value,
+            level_parameters=(
+                inferred_expression_parameters(value)
+                if parameters is None
+                else parameters
+            ),
+        )
 
-        visit(value)
-        if not segments:
+    def uint_fields(value: Mapping[str, Any], fields: set[str]) -> None:
+        for field in fields:
+            natural(value[field])
+
+    def constructor(value: Any, parameters: list[Any]) -> bytes:
+        node = _object(value, fields={
+            "constructor_index", "name", "num_fields", "num_parameters",
+            "type", "unsafe",
+        })
+        key = observed_name_key(node["name"])
+        uint_fields(node, {"constructor_index", "num_fields", "num_parameters"})
+        boolean(node["unsafe"])
+        expression(node["type"], None)
+        return key
+
+    def member(value: Any) -> bytes:
+        node = _object(value, fields={
+            "constructors", "is_recursive", "is_reflexive", "level_parameters",
+            "name", "num_indices", "num_nested", "num_parameters", "type", "unsafe",
+        })
+        key = observed_name_key(node["name"])
+        parameters = node["level_parameters"]
+        parameter_list(parameters)
+        uint_fields(node, {"num_indices", "num_nested", "num_parameters"})
+        boolean(node["is_recursive"])
+        boolean(node["is_reflexive"])
+        boolean(node["unsafe"])
+        expression(node["type"], None)
+        constructors = node["constructors"]
+        if not isinstance(constructors, list):
             raise OracleError("registry.normalization_failure")
-        return canonical_cbor(segments)
+        if len(constructors) > LIMITS["closure_width"]:
+            raise OracleError("registry.resource_limit")
+        constructor_keys = [constructor(item, parameters) for item in constructors]
+        if len(set(constructor_keys)) != len(constructor_keys):
+            raise OracleError("registry.normalization_failure")
+        if [item["constructor_index"] for item in constructors] != list(
+            range(len(constructors))
+        ):
+            raise OracleError("registry.normalization_failure")
+        return key
 
-    names = [observed_name_key(record.get("name")) for record in encoded]
+    def recursor(value: Any, parameters: list[Any]) -> bytes:
+        node = _object(value, fields={
+            "family", "k_reduction", "name", "num_indices", "num_minors",
+            "num_motives", "num_parameters", "rules", "type", "unsafe",
+        })
+        key = observed_name_key(node["name"])
+        name_list(node["family"], limit=LIMITS["closure_width"])
+        uint_fields(node, {"num_indices", "num_minors", "num_motives", "num_parameters"})
+        boolean(node["k_reduction"])
+        boolean(node["unsafe"])
+        expression(node["type"], None)
+        rules = node["rules"]
+        if not isinstance(rules, list):
+            raise OracleError("registry.normalization_failure")
+        if len(rules) > LIMITS["closure_width"]:
+            raise OracleError("registry.resource_limit")
+        for item in rules:
+            rule = _object(item, fields={"constructor", "field_count", "rhs"})
+            observed_name_key(rule["constructor"])
+            natural(rule["field_count"])
+            expression(rule["rhs"], None)
+        return key
+
+    base_fields = {
+        "body", "kind", "level_parameters", "name", "origin", "reducibility",
+        "references", "type", "unsafe",
+    }
+    encoded: list[dict[str, Any]] = []
+    names: list[bytes] = []
+    for value in records:
+        if not isinstance(value, Mapping):
+            raise OracleError("registry.normalization_failure")
+        kind = value.get("kind")
+        fields = base_fields | ({"family", "members", "recursors"} if kind == "inductive_family" else set())
+        record = _object(value, fields=fields)
+        if kind not in {"definition", "theorem", "opaque", "axiom", "quotient", "inductive_family"}:
+            raise OracleError("registry.normalization_failure")
+        names.append(observed_name_key(record["name"]))
+        parameters = record["level_parameters"]
+        parameter_list(parameters)
+        name_list(record["references"], limit=LIMITS["closure_width"])
+        if record["origin"] not in {"project", "imported"}:
+            raise OracleError("registry.normalization_failure")
+        expected_reducibility = {"abbreviation", "opaque", "regular"} if kind == "definition" else {"not_applicable"}
+        if record["reducibility"] not in expected_reducibility:
+            raise OracleError("registry.normalization_failure")
+        boolean(record["unsafe"])
+        expression(record["type"], parameters)
+        if kind == "definition":
+            if not isinstance(record["body"], Mapping):
+                raise OracleError("registry.normalization_failure")
+            expression(record["body"], parameters)
+        elif record["body"] is not None:
+            raise OracleError("registry.normalization_failure")
+        if kind == "inductive_family":
+            name_list(record["family"], limit=LIMITS["closure_width"])
+            members = record["members"]
+            recursors = record["recursors"]
+            if not isinstance(members, list) or not isinstance(recursors, list):
+                raise OracleError("registry.normalization_failure")
+            if len(members) > LIMITS["closure_width"] or len(recursors) > LIMITS["closure_width"]:
+                raise OracleError("registry.resource_limit")
+            member_keys = [member(item) for item in members]
+            recursor_keys = [recursor(item, parameters) for item in recursors]
+            if member_keys != sorted(member_keys) or len(set(member_keys)) != len(member_keys):
+                raise OracleError("registry.normalization_failure")
+            if recursor_keys != sorted(recursor_keys) or len(set(recursor_keys)) != len(recursor_keys):
+                raise OracleError("registry.normalization_failure")
+        encoded.append(dict(record))
+
     if names != sorted(names) or len(set(names)) != len(names):
         raise OracleError("registry.normalization_failure")
-    return canonical_cbor([
-        "statqed.lean-environment-closure.v0",
-        lean_commit,
-        GRAMMAR_ID,
-        encoded,
-    ])
+    return canonical_cbor([CLOSURE_ID, lean_commit, GRAMMAR_ID, encoded])
 
 
 def proposition_payload(expression: Any, *, level_parameters: Sequence[Any] | None = None) -> bytes:

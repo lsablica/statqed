@@ -182,6 +182,93 @@ private def levelsJson (parameters : List Name) (levels : List Level) : Except S
 private def combineStats (left right : Nat × Nat) : Nat × Nat :=
   (left.1 + right.1, left.2 + right.2)
 
+private def checkNameResources (name : Name) : Except String Nat := do
+  let (segments, bytes) := nameStats name
+  if segments > maxNameSegments || bytes > maxQualifiedNameBytes then
+    .error "registry.normalization.name_limit"
+  let rec checkSegments : Name → Except String Unit
+    | .anonymous => .ok ()
+    | .str parent segment => do
+        if segment.toUTF8.size > maxNameSegmentBytes then
+          .error "registry.normalization.name_segment_byte_limit"
+        checkSegments parent
+    | .num parent _ => checkSegments parent
+  checkSegments name
+  pure bytes
+
+private def levelResourceStats (fuel : Nat) : Level → Except String (Nat × Nat)
+  | level => match fuel with
+    | 0 => .error "registry.normalization.level_depth_limit"
+    | fuel + 1 => match level with
+      | .zero | .mvar _ => .ok (1, 0)
+      | .succ inner => do
+          let stats ← levelResourceStats fuel inner
+          pure (stats.1 + 1, stats.2)
+      | .max left right | .imax left right => do
+          let leftStats ← levelResourceStats fuel left
+          let rightStats ← levelResourceStats fuel right
+          let combined := combineStats leftStats rightStats
+          pure (combined.1 + 1, combined.2)
+      | .param name => do
+          let nameBytes ← checkNameResources name
+          pure (1, nameBytes)
+termination_by fuel
+
+private def exprResourceStats (fuel : Nat) : Expr → Except String (Nat × Nat)
+  | expression => match fuel with
+    | 0 => .error "registry.normalization.expression_depth_limit"
+    | fuel + 1 => match expression with
+      | .bvar _ | .fvar _ | .mvar _ => .ok (1, 0)
+      | .sort level => do
+          let stats ← levelResourceStats (maxLevelDepth + 1) level
+          pure (stats.1 + 1, stats.2)
+      | .const name levels => do
+          if levels.length > maxUniverseArguments then
+            .error "registry.normalization.universe_argument_limit"
+          let nameBytes ← checkNameResources name
+          let mut stats := (1, nameBytes)
+          for level in levels do
+            stats := combineStats stats (← levelResourceStats (maxLevelDepth + 1) level)
+          pure stats
+      | .app function argument => do
+          let functionStats ← exprResourceStats fuel function
+          let argumentStats ← exprResourceStats fuel argument
+          let combined := combineStats functionStats argumentStats
+          pure (combined.1 + 1, combined.2)
+      | .lam _ type body _ | .forallE _ type body _ => do
+          let typeStats ← exprResourceStats fuel type
+          let bodyStats ← exprResourceStats fuel body
+          let combined := combineStats typeStats bodyStats
+          pure (combined.1 + 1, combined.2)
+      | .letE _ type value body _ => do
+          let typeStats ← exprResourceStats fuel type
+          let valueStats ← exprResourceStats fuel value
+          let bodyStats ← exprResourceStats fuel body
+          let combined := combineStats (combineStats typeStats valueStats) bodyStats
+          pure (combined.1 + 1, combined.2)
+      | .lit (.natVal _) => .ok (1, 0)
+      | .lit (.strVal value) =>
+          if value.toUTF8.size > maxStringLiteralBytes then
+            .error "registry.normalization.string_literal_limit"
+          else .ok (1, value.toUTF8.size)
+      | .mdata _ inner => exprResourceStats fuel inner
+      | .proj typeName _ subject => do
+          let nameBytes ← checkNameResources typeName
+          let subjectStats ← exprResourceStats fuel subject
+          pure (subjectStats.1 + 1, subjectStats.2 + nameBytes)
+termination_by fuel
+
+private def resourcePreflight
+    (levelParameters : List Name) (fuel : Nat) (expression : Expr) : Except String Unit := do
+  if levelParameters.length > maxUniverseArguments then
+    .error "registry.normalization.universe_argument_limit"
+  for parameter in levelParameters do
+    let _ ← checkNameResources parameter
+  let (nodes, stringBytes) ← exprResourceStats fuel expression
+  if nodes > maxExpressionNodes || stringBytes > maxAggregateStringBytes then
+    .error "registry.normalization.resource_limit"
+  pure ()
+
 private def levelStats (parameters : List Name) (fuel : Nat) : Level → Except String (Nat × Nat)
   | level => match fuel with
     | 0 => .error "registry.normalization.level_depth_limit"
@@ -368,6 +455,7 @@ termination_by fuel
 /-- Encode a closed expression under an explicit declaration-universe context. -/
 def declarationExprJson
     (levelParameters : List Name) (fuel : Nat) (expression : Expr) : Except String Json := do
+  resourcePreflight levelParameters (fuel + 1) expression
   if levelParameters.length > maxUniverseArguments then
     .error "registry.normalization.universe_argument_limit"
   let encodedParameters ← levelParameters.mapM checkedNameJson
@@ -471,6 +559,7 @@ termination_by fuel
 /-- Bounded typed observation for one closed declaration expression. -/
 def typedDeclarationExprJson
     (levelParameters : List Name) (expression : Expr) : Except String Json := do
+  resourcePreflight levelParameters (maxExpressionDepth + 1) expression
   let (nodes, stringBytes) ← exprStats levelParameters 0 (maxExpressionDepth + 1) expression
   if nodes > maxExpressionNodes || stringBytes > maxAggregateStringBytes then
     .error "registry.normalization.resource_limit"
@@ -478,6 +567,7 @@ def typedDeclarationExprJson
 
 /-- Encode a closed proposition type using the versioned structural grammar. -/
 def propositionJson (levelParameters : List Name) (type : Expr) : Except String Json := do
+  resourcePreflight levelParameters (maxExpressionDepth + 1) type
   if levelParameters.length > maxUniverseArguments then
     .error "registry.normalization.universe_argument_limit"
   let encodedParameters ← levelParameters.mapM checkedNameJson

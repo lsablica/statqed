@@ -85,6 +85,9 @@ LIMITS: Final = {
 }
 
 _IDENTIFIER = re.compile(r"^[a-z0-9][a-z0-9._:-]{0,127}$")
+NORMALIZER_ID: Final = "statqed.lean-expr.v0"
+CLOSURE_ID: Final = "statqed.lean-environment-closure.v0"
+LEAN_COMMIT: Final = "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
 
 
 @dataclass
@@ -278,6 +281,8 @@ def validate_level_parameters(value: Any) -> list[str]:
 
 def _semantic_expression_resource_preflight(expr: Any) -> None:
     """Inspect every grammar-selected branch before reporting syntax errors."""
+
+    _cbor_size_lower_bound([NORMALIZER_ID, expr], limit=LIMITS["object_bytes"])
 
     nodes = 0
     string_bytes = 0
@@ -473,6 +478,10 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
         raise RegistryError("registry.normalization_failure")
     if len(root_names) > LIMITS["closure_width"]:
         raise RegistryError("registry.closure_width_limit")
+    _cbor_size_lower_bound(
+        [CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, root_names, declarations],
+        limit=LIMITS["object_bytes"],
+    )
 
     # Inspect every potentially selected declaration before semantic traversal
     # so sorted root/reference order cannot mask a definite resource failure.
@@ -628,6 +637,81 @@ def _utf8_length_lower_bound(value: Any) -> int | None:
     return len(value.encode("utf-8", "ignore"))
 
 
+def _json_string_size_lower_bound(value: str) -> int:
+    """Count JSON bytes forced by valid scalars surrounding any surrogates."""
+
+    total = 2
+    short_escapes = {8, 9, 10, 12, 13}
+    for character in value:
+        codepoint = ord(character)
+        if 0xD800 <= codepoint <= 0xDFFF:
+            continue
+        if character in {'"', "\\"} or codepoint in short_escapes:
+            total += 2
+        elif codepoint < 0x20:
+            total += 6
+        else:
+            total += len(character.encode("utf-8", "strict"))
+        if total > LIMITS["input_bytes"]:
+            raise RegistryError("registry.resource_limit")
+    return total
+
+
+def _cbor_size_lower_bound(value: Any, *, limit: int) -> int:
+    """Count CBOR bytes forced by a possibly malformed object, without encoding."""
+
+    nodes = 0
+
+    def head_size(length: int) -> int:
+        if length < 24:
+            return 1
+        if length <= 0xFF:
+            return 2
+        if length <= 0xFFFF:
+            return 3
+        if length <= 0xFFFF_FFFF:
+            return 5
+        return 9
+
+    def visit(current: Any, depth: int, active: set[int]) -> int:
+        nonlocal nodes
+        nodes += 1
+        if nodes > LIMITS["canonical_nodes"] or depth > LIMITS["canonical_depth"]:
+            raise RegistryError("registry.resource_limit")
+        if current is None or type(current) is bool:
+            return 1
+        if type(current) is int:
+            magnitude = current if current >= 0 else -1 - current
+            if magnitude > 0xFFFF_FFFF_FFFF_FFFF:
+                return 1
+            return head_size(magnitude)
+        if isinstance(current, bytes):
+            return head_size(len(current)) + len(current)
+        if isinstance(current, str):
+            length = _utf8_length_lower_bound(current) or 0
+            if length > LIMITS["string_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            return head_size(length) + length
+        if isinstance(current, (list, dict)):
+            marker = id(current)
+            if marker in active:
+                return 1
+            active.add(marker)
+            items = current if isinstance(current, list) else tuple(
+                part for pair in current.items() for part in pair
+            )
+            total = head_size(len(current))
+            for item in items:
+                total += visit(item, depth + 1, active)
+                if total > limit:
+                    raise RegistryError("registry.resource_limit")
+            active.remove(marker)
+            return total
+        return 1
+
+    return visit(value, 0, set())
+
+
 def _canonical_json_size_lower_bound(value: Any) -> int:
     """Return a map-order-independent lower bound for canonical JSON bytes.
 
@@ -655,7 +739,7 @@ def _canonical_json_size_lower_bound(value: Any) -> int:
         if isinstance(current, str):
             length = _utf8_length(current)
             if length is None:
-                return 2
+                return _json_string_size_lower_bound(current)
             if length > LIMITS["string_bytes"]:
                 raise RegistryError("registry.resource_limit")
             return len(

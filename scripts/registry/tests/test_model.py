@@ -16,6 +16,24 @@ import run_conformance
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def canonical_payload_expression(leaf_count: int):
+    leaf = [
+        2,
+        [[1, (1 << 64) - 1]] * model.LIMITS["name_segments"],
+        [],
+    ]
+    leaves = [copy.deepcopy(leaf) for _ in range(leaf_count)]
+    while len(leaves) > 1:
+        paired = [
+            [3, leaves[index], leaves[index + 1]]
+            for index in range(0, len(leaves) - 1, 2)
+        ]
+        if len(leaves) % 2:
+            paired.append(leaves[-1])
+        leaves = paired
+    return leaves[0]
+
+
 class ModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -162,6 +180,47 @@ class ModelTests(unittest.TestCase):
         model.canonical_cbor(["statqed.lean-expr.v0", model.normalize_expr(aggregate)])
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.normalize_expr([3, aggregate, [8, "x"]])
+
+    def test_canonical_payload_limit_precedes_sibling_and_root_syntax(self):
+        maximum = canonical_payload_expression(1_474)
+        model.normalize_expr(maximum)
+        one_over = canonical_payload_expression(1_475)
+        for expression in (one_over, [3, [99], one_over], [3, one_over, [99]]):
+            with self.subTest(kind="expression"), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.normalize_expr(expression)
+
+        maximum_declarations = {
+            f"r{index:02d}": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (model.LIMITS["string_bytes"] - 1),
+            }
+            for index in range(15)
+        }
+        self.assertEqual(
+            len(model.closure(sorted(maximum_declarations), maximum_declarations)), 15
+        )
+        over_declarations = {
+            **maximum_declarations,
+            "r15": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (model.LIMITS["string_bytes"] - 1),
+            },
+        }
+        for roots, declarations in (
+            (sorted(over_declarations), over_declarations),
+            (["a", *sorted(over_declarations)], {
+                "a": {"kind": "unknown", "references": []},
+                **over_declarations,
+            }),
+        ):
+            with self.subTest(kind="closure"), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.closure(roots, declarations)
 
     def test_loose_variable_rejected(self):
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
@@ -478,6 +537,12 @@ class ModelTests(unittest.TestCase):
                 model.RegistryError, "registry.resource_limit"
             ):
                 model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+        escaped = [("\"" * (model.LIMITS["string_bytes"] - 1)) + "\ud800"] * 8
+        bundle = copy.deepcopy(self.bundle)
+        bundle["candidate_policy"] = escaped
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
         for value in (
             ["x" * (model.LIMITS["string_bytes"] - 1) for _ in range(16)],

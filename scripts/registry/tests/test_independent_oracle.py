@@ -41,6 +41,46 @@ def sort(level=None):
     return {"tag": "sort", "level": level or {"tag": "zero"}}
 
 
+def canonical_payload_expression(leaf_count):
+    leaf = [
+        2,
+        [[1, (1 << 64) - 1]] * oracle.LIMITS["name_segments"],
+        [],
+    ]
+    leaves = [copy.deepcopy(leaf) for _ in range(leaf_count)]
+    while len(leaves) > 1:
+        paired = [
+            [3, leaves[index], leaves[index + 1]]
+            for index in range(0, len(leaves) - 1, 2)
+        ]
+        if len(leaves) % 2:
+            paired.append(leaves[-1])
+        leaves = paired
+    return leaves[0]
+
+
+def exact_node_expression():
+    leaves = [constant("True") for _ in range(32_767)]
+    while len(leaves) > 1:
+        paired = [
+            {
+                "tag": "application",
+                "function": leaves[index],
+                "argument": leaves[index + 1],
+            }
+            for index in range(0, len(leaves) - 1, 2)
+        ]
+        if len(leaves) % 2:
+            paired.append(leaves[-1])
+        leaves = paired
+    return {
+        "tag": "lambda",
+        "binder_info": "explicit",
+        "type": sort(),
+        "body": leaves[0],
+    }
+
+
 class IndependentOracleTests(unittest.TestCase):
     def test_true_false_are_distinct_stable_vectors(self):
         true_observation = oracle.observe(constant("True"))
@@ -197,6 +237,150 @@ class IndependentOracleTests(unittest.TestCase):
                 oracle.OracleError, "registry.resource_limit"
             ):
                 oracle.normalize_expression(expression)
+
+    def test_exported_names_metadata_and_parameter_budgets_match_live_limits(self):
+        maximum_name = name(*(["x" * oracle.LIMITS["name_segment_bytes"]] * 4))
+        over_name = name(
+            *(["x" * oracle.LIMITS["name_segment_bytes"]] * 4), "x"
+        )
+        oracle.normalize_expression({
+            "tag": "constant", "name": maximum_name, "universes": []
+        })
+        malformed = {"tag": "unknown"}
+        for long_node in (
+            {"tag": "constant", "name": over_name, "universes": []},
+            {
+                "tag": "projection", "type_name": over_name, "index": 0,
+                "structure": constant("True"),
+            },
+            {
+                "tag": "sort",
+                "level": {"tag": "parameter", "name": over_name},
+            },
+        ):
+            for function, argument in ((malformed, long_node), (long_node, malformed)):
+                with self.subTest(tag=long_node["tag"]), self.assertRaisesRegex(
+                    oracle.OracleError, "registry.resource_limit"
+                ):
+                    oracle.normalize_expression({
+                        "tag": "application", "function": function, "argument": argument
+                    })
+        with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
+            oracle.normalize_expression(constant("True"), level_parameters=[over_name])
+
+        expression = constant("True")
+        for _ in range(oracle.LIMITS["expression_depth"]):
+            expression = {"tag": "metadata", "expression": expression}
+        oracle.normalize_expression(expression)
+        with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
+            oracle.normalize_expression({"tag": "metadata", "expression": expression})
+
+        maximum_nodes = exact_node_expression()
+        oracle.normalize_expression(maximum_nodes)
+        oracle.normalize_expression({"tag": "metadata", "expression": maximum_nodes})
+
+        parameters = []
+        for index in range(oracle.LIMITS["universe_arguments"]):
+            suffix = f"{index:03d}"
+            parameters.append(name(
+                "x" * 256, "x" * 256, "x" * 256, "x" * (256 - len(suffix)) + suffix
+            ))
+        oracle.normalize_expression(constant("True"), level_parameters=parameters)
+
+    def test_joint_semantic_resource_preflight_precedes_cross_input_syntax(self):
+        over_string = [8, "x" * (oracle.LIMITS["string_literal_bytes"] + 1)]
+        over_nodes = run_conformance.expanded("@over-expression-nodes@")
+        over_depth = run_conformance.expanded("@over-depth@")
+        for expression in (over_string, over_nodes, over_depth):
+            with self.subTest(resource="expression"), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.semantic_expression_payload_with_parameters(expression, [True])
+        for parameters in (
+            ["u"] * (oracle.LIMITS["universe_arguments"] + 1),
+            ["x" * (oracle.LIMITS["name_segment_bytes"] + 1)],
+        ):
+            with self.subTest(resource="parameters"), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.semantic_expression_payload_with_parameters([99], parameters)
+
+    def test_canonical_payload_limit_precedes_sibling_and_root_syntax(self):
+        maximum = canonical_payload_expression(1_474)
+        oracle.semantic_expression_payload(maximum)
+        one_over = canonical_payload_expression(1_475)
+        for expression in (one_over, [3, [99], one_over], [3, one_over, [99]]):
+            with self.subTest(kind="expression"), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.semantic_expression_payload(expression)
+
+        maximum_declarations = {
+            f"r{index:02d}": {
+                "kind": "definition", "references": [],
+                "value": "x" * (oracle.LIMITS["string_literal_bytes"] - 1),
+            }
+            for index in range(15)
+        }
+        oracle.environment_closure(sorted(maximum_declarations), maximum_declarations)
+        over_declarations = {
+            **maximum_declarations,
+            "r15": {
+                "kind": "definition", "references": [],
+                "value": "x" * (oracle.LIMITS["string_literal_bytes"] - 1),
+            },
+        }
+        for roots, declarations in (
+            (sorted(over_declarations), over_declarations),
+            (["a", *sorted(over_declarations)], {
+                "a": {"kind": "unknown", "references": []}, **over_declarations,
+            }),
+        ):
+            with self.subTest(kind="closure"), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.environment_closure(roots, declarations)
+
+    def test_exported_environment_records_are_closed_total_and_bounded(self):
+        valid = {
+            "body": constant("True"),
+            "kind": "definition",
+            "level_parameters": [],
+            "name": name("StatQED", "Registry", "fixture"),
+            "origin": "project",
+            "reducibility": "regular",
+            "references": [],
+            "type": sort(),
+            "unsafe": False,
+        }
+        oracle.environment_payload_from_records([valid], oracle.LEAN_COMMIT)
+        malformed = (
+            "not-an-array",
+            [None],
+            [{key: value for key, value in valid.items() if key != "kind"}],
+            [{**valid, "unknown": True}],
+            [{**valid, "name": name(*(["x"] * 65))}],
+            [{**valid, "name": name("x" * 257)}],
+            [{**valid, "name": name(*(["x" * 256] * 5))}],
+        )
+        for records in malformed:
+            code = (
+                "registry.resource_limit"
+                if isinstance(records, list) and records and isinstance(records[0], dict)
+                and records[0].get("name") != valid["name"]
+                else "registry.normalization_failure"
+            )
+            with self.subTest(records=type(records).__name__), self.assertRaisesRegex(
+                oracle.OracleError, code
+            ):
+                oracle.environment_payload_from_records(records, oracle.LEAN_COMMIT)
+        deep = anonymous()
+        for _ in range(2_000):
+            deep = {"tag": "string", "parent": deep, "segment": "x"}
+        with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
+            oracle.environment_payload_from_records(
+                [{**valid, "name": deep}], oracle.LEAN_COMMIT
+            )
 
     def test_deliberately_wrong_encoder_is_detected(self):
         expression = constant("True")
