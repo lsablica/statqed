@@ -13,11 +13,11 @@
   },
   "review_projection": {
     "path": "work/reviews/SQ-0007.md",
-    "projection_sha256": "80ec2f920c6484f6d26ec60e2c21b3dd1e46c59a657596671fc5ae22bde596e6"
+    "projection_sha256": "346e645bff9e6b91325e011c2640e41c4a3ac45baa20c712b727dc0ae8f99d5a"
   },
   "schema": "statqed.sq0007-evidence.v2",
   "scientific_subject_count": 81,
-  "scientific_subject_digest": "8acb1f5af415af573357b956ebb494fd7eac87b4fd2f39b729ce8ccb8ae23404",
+  "scientific_subject_digest": "e3bcbf915b819cc893998530012ce52e3b1bfabaad19657134c6f8d1814362a4",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -70,9 +70,9 @@
       "sha256": "47fa8b9c3f0f1565d4cf74b0995b20450b4d484bee4797f8ae5c0478cf402312"
     },
     {
-      "bytes": 983652,
+      "bytes": 1048576,
       "path": "conformance/registry/golden/CLOSURE-CANONICAL-PAYLOAD-MAX.cbor",
-      "sha256": "9c7491ebad6a0698ef67a20c928c7c41b476ee7c457c928e04de9620394b0197"
+      "sha256": "585682dd18a87a7c73274af95bc1cb65d487fe2f9a1ace5186ce8ab6a924e813"
     },
     {
       "bytes": 176,
@@ -195,9 +195,9 @@
       "sha256": "529f7701f15e93cda71404441ad2d125b65938d4be25c954d5c7771742817770"
     },
     {
-      "bytes": 1048034,
+      "bytes": 1048576,
       "path": "conformance/registry/golden/RESOURCE-CANONICAL-PAYLOAD-MAX.cbor",
-      "sha256": "282b83605432ab33ea952c1d3cf3c9321e3266e5bc00e6d093763fbb8f729a65"
+      "sha256": "929a4b796a77bb7aa5af9cfe5781310c3a8a55781a3f22743bf056108dbff9fd"
     },
     {
       "bytes": 2714,
@@ -240,9 +240,9 @@
       "sha256": "b1660dc03b382685bec08fc56bd6e34c2bf860af31247e1ba43c5314f3af36ab"
     },
     {
-      "bytes": 21217,
+      "bytes": 21365,
       "path": "lean/StatQED/Registry/Closure.lean",
-      "sha256": "2806003777dc4dd98b6d51f9ab00f40285e8cfedcea34f97a794d18e6a1754b3"
+      "sha256": "403127dccd5b32a71d9b12642e9efb2ffb4a6a4f6db42d5e6e343dd714bb7612"
     },
     {
       "bytes": 27165,
@@ -307,42 +307,42 @@
     {
       "bytes": 1650,
       "path": "theorem-registry/evidence/bundle.json",
-      "sha256": "65921473f1bbf590647c23e2be337269e2facc50a4db8ade2e4749513e1461a7"
+      "sha256": "01153ba565ded53487bd839345118b965ad4fa94568f5f2d252d45431ebda025"
     },
     {
       "bytes": 2053,
       "path": "theorem-registry/evidence/compatibility-proof-build.frame",
-      "sha256": "8d15b111e3ab7d0c519e83efcb09cd817fc3d3c41388a4598c114419d16d0111"
+      "sha256": "4f5fd3858804013054628c93e07fba3ac8a1d05447e12a790526dfc199f475df"
     },
     {
       "bytes": 899,
       "path": "theorem-registry/evidence/compatibility.frame",
-      "sha256": "64ae71ddcff83f6fd7dffc6e49ba62e2b50657995ceaafbf0f770e159da1c56b"
+      "sha256": "f4d175a9da2c3bc421bb77377c1ca27bf23c988bd79c9f36ea1b3cf376f12723"
     },
     {
-      "bytes": 2480,
+      "bytes": 2560,
       "path": "theorem-registry/evidence/environment.cbor",
-      "sha256": "2502c43638dc7534427743858d111128c7ccdba1f82ca378e1262688849d8b04"
+      "sha256": "99fc963d50b67bdbb7bd6cb9e3647adf720327dc84e9d1d3c51f11cdb350d476"
     },
     {
-      "bytes": 2631,
+      "bytes": 2711,
       "path": "theorem-registry/evidence/environment.frame",
-      "sha256": "c3df13c2b89df48b2a864126a08f65429cca9536839d578c31d9ba30571e7c5e"
+      "sha256": "4eebfb49103218355598f34c52d3db54c22eaf800684d14d2a2a26076e71dccf"
     },
     {
       "bytes": 779,
       "path": "theorem-registry/evidence/identity-summary.json",
-      "sha256": "2fe03540d7a89e121b4c5d085ee174b375228e4e4a2fd5946106d8499165531d"
+      "sha256": "603364dcf2046f0a48c766145806134a8db5baaec34724a3b633d590de10de44"
     },
     {
-      "bytes": 18822,
+      "bytes": 19142,
       "path": "theorem-registry/evidence/independent-observation.json",
-      "sha256": "26ed625736e317331c27e639426c5e4ac4c0de248a59e57eef17bf6f07a10149"
+      "sha256": "6b056b3c8ba39feaf0b46d95b38ce085cb5e9c692fe86d63484978095d3739b9"
     },
     {
-      "bytes": 795253,
+      "bytes": 797104,
       "path": "theorem-registry/evidence/lean-observation.json",
-      "sha256": "64d7cd67f641f6b3720270f3f6b9f8f54ab9222bc7d3b3e8c10ee8febd44e5fd"
+      "sha256": "2fbe3d5cc484d6263b9c110f546772added397de7cdaae7b788ae6cd9426d3d0"
     },
     {
       "bytes": 4950450,
@@ -352,7 +352,7 @@
     {
       "bytes": 2014,
       "path": "theorem-registry/evidence/proof-build.frame",
-      "sha256": "a036c2e9021ef6c0ad072067adc5bff3a7161c38a6bda832d71eb96ff416476e"
+      "sha256": "bd8d179b95f41a6003a26ce9bca8164e6430fcb325b025b7296a95963a9e11a6"
     },
     {
       "bytes": 33,
@@ -367,52 +367,52 @@
     {
       "bytes": 989,
       "path": "theorem-registry/evidence/record.frame",
-      "sha256": "7c7cbdcfa3158ddb9ad25766669c23609ee55cf50a76424cac8f065df4ab156e"
+      "sha256": "fd0210b3fd58dfe77cdadca0d693a038025c1e343fe7d50c085ad2c436a72e8a"
     },
     {
       "bytes": 300,
       "path": "theorem-registry/evidence/snapshot.frame",
-      "sha256": "68394e825912b198b938b5d0126dd22ecee87101abfd4222d92e67e31173b274"
+      "sha256": "f48fb7b285bbc09ea12638afeed697101030fe2b0989f40de5163021c8c739c3"
     },
     {
       "bytes": 2062,
       "path": "theorem-registry/locks/compatibility-proof-build-v0.json",
-      "sha256": "07d903aa1a6fbbe2a6d4bc718979e7951dc2d2393d9dd7deeef57985e792dc1d"
+      "sha256": "d7dfa622d6b550c8fbfb5247368d4e22d8e842bd6d190827abee40430e948717"
     },
     {
       "bytes": 861,
       "path": "theorem-registry/locks/compatibility-v0.json",
-      "sha256": "6a6e0f8f019ba6f7aa0600d1d20c88f908c2caaf79d5c035e9cf2e4e6d81690a"
+      "sha256": "e041fff8392b1495a84a3f053a5054ca546cb2d7a2a5c98a4d434238f3d176ea"
     },
     {
       "bytes": 2063,
       "path": "theorem-registry/locks/proof-build-refactor-v0.json",
-      "sha256": "a433804b2c75caa57709db897207495afaebb077d87d194fe215ebf78784ffc4"
+      "sha256": "6952cdc56e431034373b00a168b5fbc6f24a15c2e9dd4a7c3302cef6be96735d"
     },
     {
       "bytes": 1994,
       "path": "theorem-registry/locks/proof-build-v0.json",
-      "sha256": "2cfd6a6ab8200034098ba22808e795e6959514f0950f7116dec93e841f75b3e6"
+      "sha256": "a1f2925a81540c3739eeef4173b750a76d20e36844ed4bf534c07f976f7d7824"
     },
     {
       "bytes": 2496,
       "path": "theorem-registry/policy/authorization-v0.json",
-      "sha256": "642c0cab93a041b79db1c05f1504310ec4fcdb244d1fafbea3d38003cc53f723"
+      "sha256": "36168f3f2d19134cac27dd18bbea60cb1c33850630fd7f3d684304b5c637cd2a"
     },
     {
       "bytes": 170,
       "path": "theorem-registry/records/snapshot-v0.json",
-      "sha256": "7fb416df478c7fda5e2ede7b6551d9ba79b0396744412a5063c32ce092c09910"
+      "sha256": "dbe76f407a1d45370a18a48914f0d680a153ffda398001ac7b589b0f1f6c1611"
     },
     {
       "bytes": 904,
       "path": "theorem-registry/records/test-only-true.v0.json",
-      "sha256": "7b4abc782ae43a1db25e73f4808c415682aba961e08cd191d50ed03858e64888"
+      "sha256": "d7096702f14f7f5712def080e7db77d18eaafbf6671414b9a532e1ab49541547"
     },
     {
-      "bytes": 5217,
+      "bytes": 5397,
       "path": "theorem-registry/spec/closure-v0.md",
-      "sha256": "ec1796ca3ebd289b7079c664eb64170aca26a1b609cb1df645d7931ef96e41c9"
+      "sha256": "f76705c4cc2fac9cdf2748b38a8f20dda088cd3f18e698a81a1a323437a27645"
     },
     {
       "bytes": 4626,
@@ -426,7 +426,7 @@
     }
   ],
   "subject_count": 105,
-  "subject_digest": "4eed64ad7bfbbada2f80edbd95846857deec34886ff0b0c62daeeb0aa70ccf35",
+  "subject_digest": "e0b55f3310550c9667dab9496686b4af07682d2f4d7801b627a68010880e1c22",
   "subjects": [
     {
       "bytes": 7079,
@@ -494,9 +494,9 @@
       "sha256": "47fa8b9c3f0f1565d4cf74b0995b20450b4d484bee4797f8ae5c0478cf402312"
     },
     {
-      "bytes": 983652,
+      "bytes": 1048576,
       "path": "conformance/registry/golden/CLOSURE-CANONICAL-PAYLOAD-MAX.cbor",
-      "sha256": "9c7491ebad6a0698ef67a20c928c7c41b476ee7c457c928e04de9620394b0197"
+      "sha256": "585682dd18a87a7c73274af95bc1cb65d487fe2f9a1ace5186ce8ab6a924e813"
     },
     {
       "bytes": 176,
@@ -619,9 +619,9 @@
       "sha256": "529f7701f15e93cda71404441ad2d125b65938d4be25c954d5c7771742817770"
     },
     {
-      "bytes": 1048034,
+      "bytes": 1048576,
       "path": "conformance/registry/golden/RESOURCE-CANONICAL-PAYLOAD-MAX.cbor",
-      "sha256": "282b83605432ab33ea952c1d3cf3c9321e3266e5bc00e6d093763fbb8f729a65"
+      "sha256": "929a4b796a77bb7aa5af9cfe5781310c3a8a55781a3f22743bf056108dbff9fd"
     },
     {
       "bytes": 2714,
@@ -679,9 +679,9 @@
       "sha256": "4ace431dd998edfd70b3145f3bae68cdf7450ce7c5e4c42c124a14498754193c"
     },
     {
-      "bytes": 21217,
+      "bytes": 21365,
       "path": "lean/StatQED/Registry/Closure.lean",
-      "sha256": "2806003777dc4dd98b6d51f9ab00f40285e8cfedcea34f97a794d18e6a1754b3"
+      "sha256": "403127dccd5b32a71d9b12642e9efb2ffb4a6a4f6db42d5e6e343dd714bb7612"
     },
     {
       "bytes": 27165,
@@ -734,9 +734,9 @@
       "sha256": "a99ab3901c15723f1aa74a63766703443b29adc7b0269ae91689d4de2e08e5c2"
     },
     {
-      "bytes": 40426,
+      "bytes": 40380,
       "path": "scripts/registry/build_registry.py",
-      "sha256": "1e04f8b0db727d8a7ac76257a44370ee17e32bca2616d0d17be217ee840f1c03"
+      "sha256": "38e53b391532386bc1d7b8b58fc3b06644d158b380e09f6999916bd1785b56f7"
     },
     {
       "bytes": 1080,
@@ -764,19 +764,19 @@
       "sha256": "870d2c9758f3ea12143690aae9095423c0db839bc5cd5360262a5a1dd8a503a9"
     },
     {
-      "bytes": 57675,
+      "bytes": 59587,
       "path": "scripts/registry/independent_oracle.py",
-      "sha256": "6bd2a1676ed8fd360ceadbb36d5a562aaf24f7f7fb2245d8b23a01b3022ec7e5"
+      "sha256": "4b81c686235d19ff0a934f4a9e6837774c57441eae85fe584a8eb264e77197dd"
     },
     {
-      "bytes": 50840,
+      "bytes": 52323,
       "path": "scripts/registry/model.py",
-      "sha256": "75f3d85fb01da4e8e99f45b726914b1e31e43aa80b0286d4557d03e25cc7f012"
+      "sha256": "2b6c963d5490992d29fdaef521a4a6fd768e145f7c5ad9cf84c1aa42224992ef"
     },
     {
-      "bytes": 39544,
+      "bytes": 39995,
       "path": "scripts/registry/run_conformance.py",
-      "sha256": "dbfc55c0f8548788fe0535b8dcfb39e2789a688afc63a15535525f86e968542a"
+      "sha256": "90982e6613bc18be8c91374dc7a7a6fcbc456e4f3db14d8de3874193fbfd07e3"
     },
     {
       "bytes": 1046,
@@ -789,14 +789,14 @@
       "sha256": "c579ec492875ab2ad8a885a70ef9cacbaa2e228e65ea9da9462428c3795dee34"
     },
     {
-      "bytes": 24699,
+      "bytes": 31709,
       "path": "scripts/registry/tests/test_independent_oracle.py",
-      "sha256": "9a8aa132698853209fa644201bf3ab7381205b7b025eaa176ba7d61411018f61"
+      "sha256": "12c74ca9d15874de58af7b347eebe8fa576a942a87ab613e38affe776c1f0559"
     },
     {
-      "bytes": 42953,
+      "bytes": 43882,
       "path": "scripts/registry/tests/test_model.py",
-      "sha256": "165de9c32bc33a73202358e1d3e6136ea9f9015f8989a19217d97de460a999bf"
+      "sha256": "442363eea4604cf520e9ad9a2f24d75a4f1518e81a211fd95fa5c1f55f24d35a"
     },
     {
       "bytes": 5926,
@@ -831,42 +831,42 @@
     {
       "bytes": 1650,
       "path": "theorem-registry/evidence/bundle.json",
-      "sha256": "65921473f1bbf590647c23e2be337269e2facc50a4db8ade2e4749513e1461a7"
+      "sha256": "01153ba565ded53487bd839345118b965ad4fa94568f5f2d252d45431ebda025"
     },
     {
       "bytes": 2053,
       "path": "theorem-registry/evidence/compatibility-proof-build.frame",
-      "sha256": "8d15b111e3ab7d0c519e83efcb09cd817fc3d3c41388a4598c114419d16d0111"
+      "sha256": "4f5fd3858804013054628c93e07fba3ac8a1d05447e12a790526dfc199f475df"
     },
     {
       "bytes": 899,
       "path": "theorem-registry/evidence/compatibility.frame",
-      "sha256": "64ae71ddcff83f6fd7dffc6e49ba62e2b50657995ceaafbf0f770e159da1c56b"
+      "sha256": "f4d175a9da2c3bc421bb77377c1ca27bf23c988bd79c9f36ea1b3cf376f12723"
     },
     {
-      "bytes": 2480,
+      "bytes": 2560,
       "path": "theorem-registry/evidence/environment.cbor",
-      "sha256": "2502c43638dc7534427743858d111128c7ccdba1f82ca378e1262688849d8b04"
+      "sha256": "99fc963d50b67bdbb7bd6cb9e3647adf720327dc84e9d1d3c51f11cdb350d476"
     },
     {
-      "bytes": 2631,
+      "bytes": 2711,
       "path": "theorem-registry/evidence/environment.frame",
-      "sha256": "c3df13c2b89df48b2a864126a08f65429cca9536839d578c31d9ba30571e7c5e"
+      "sha256": "4eebfb49103218355598f34c52d3db54c22eaf800684d14d2a2a26076e71dccf"
     },
     {
       "bytes": 779,
       "path": "theorem-registry/evidence/identity-summary.json",
-      "sha256": "2fe03540d7a89e121b4c5d085ee174b375228e4e4a2fd5946106d8499165531d"
+      "sha256": "603364dcf2046f0a48c766145806134a8db5baaec34724a3b633d590de10de44"
     },
     {
-      "bytes": 18822,
+      "bytes": 19142,
       "path": "theorem-registry/evidence/independent-observation.json",
-      "sha256": "26ed625736e317331c27e639426c5e4ac4c0de248a59e57eef17bf6f07a10149"
+      "sha256": "6b056b3c8ba39feaf0b46d95b38ce085cb5e9c692fe86d63484978095d3739b9"
     },
     {
-      "bytes": 795253,
+      "bytes": 797104,
       "path": "theorem-registry/evidence/lean-observation.json",
-      "sha256": "64d7cd67f641f6b3720270f3f6b9f8f54ab9222bc7d3b3e8c10ee8febd44e5fd"
+      "sha256": "2fbe3d5cc484d6263b9c110f546772added397de7cdaae7b788ae6cd9426d3d0"
     },
     {
       "bytes": 4950450,
@@ -876,7 +876,7 @@
     {
       "bytes": 2014,
       "path": "theorem-registry/evidence/proof-build.frame",
-      "sha256": "a036c2e9021ef6c0ad072067adc5bff3a7161c38a6bda832d71eb96ff416476e"
+      "sha256": "bd8d179b95f41a6003a26ce9bca8164e6430fcb325b025b7296a95963a9e11a6"
     },
     {
       "bytes": 33,
@@ -891,57 +891,57 @@
     {
       "bytes": 989,
       "path": "theorem-registry/evidence/record.frame",
-      "sha256": "7c7cbdcfa3158ddb9ad25766669c23609ee55cf50a76424cac8f065df4ab156e"
+      "sha256": "fd0210b3fd58dfe77cdadca0d693a038025c1e343fe7d50c085ad2c436a72e8a"
     },
     {
       "bytes": 300,
       "path": "theorem-registry/evidence/snapshot.frame",
-      "sha256": "68394e825912b198b938b5d0126dd22ecee87101abfd4222d92e67e31173b274"
+      "sha256": "f48fb7b285bbc09ea12638afeed697101030fe2b0989f40de5163021c8c739c3"
     },
     {
       "bytes": 2062,
       "path": "theorem-registry/locks/compatibility-proof-build-v0.json",
-      "sha256": "07d903aa1a6fbbe2a6d4bc718979e7951dc2d2393d9dd7deeef57985e792dc1d"
+      "sha256": "d7dfa622d6b550c8fbfb5247368d4e22d8e842bd6d190827abee40430e948717"
     },
     {
       "bytes": 861,
       "path": "theorem-registry/locks/compatibility-v0.json",
-      "sha256": "6a6e0f8f019ba6f7aa0600d1d20c88f908c2caaf79d5c035e9cf2e4e6d81690a"
+      "sha256": "e041fff8392b1495a84a3f053a5054ca546cb2d7a2a5c98a4d434238f3d176ea"
     },
     {
       "bytes": 2063,
       "path": "theorem-registry/locks/proof-build-refactor-v0.json",
-      "sha256": "a433804b2c75caa57709db897207495afaebb077d87d194fe215ebf78784ffc4"
+      "sha256": "6952cdc56e431034373b00a168b5fbc6f24a15c2e9dd4a7c3302cef6be96735d"
     },
     {
       "bytes": 1994,
       "path": "theorem-registry/locks/proof-build-v0.json",
-      "sha256": "2cfd6a6ab8200034098ba22808e795e6959514f0950f7116dec93e841f75b3e6"
+      "sha256": "a1f2925a81540c3739eeef4173b750a76d20e36844ed4bf534c07f976f7d7824"
     },
     {
       "bytes": 2496,
       "path": "theorem-registry/policy/authorization-v0.json",
-      "sha256": "642c0cab93a041b79db1c05f1504310ec4fcdb244d1fafbea3d38003cc53f723"
+      "sha256": "36168f3f2d19134cac27dd18bbea60cb1c33850630fd7f3d684304b5c637cd2a"
     },
     {
       "bytes": 170,
       "path": "theorem-registry/records/snapshot-v0.json",
-      "sha256": "7fb416df478c7fda5e2ede7b6551d9ba79b0396744412a5063c32ce092c09910"
+      "sha256": "dbe76f407a1d45370a18a48914f0d680a153ffda398001ac7b589b0f1f6c1611"
     },
     {
       "bytes": 904,
       "path": "theorem-registry/records/test-only-true.v0.json",
-      "sha256": "7b4abc782ae43a1db25e73f4808c415682aba961e08cd191d50ed03858e64888"
+      "sha256": "d7096702f14f7f5712def080e7db77d18eaafbf6671414b9a532e1ab49541547"
     },
     {
       "bytes": 420,
       "path": "theorem-registry/registry.json",
-      "sha256": "c0c7992edacc2ecbb6efb6bbea9e8a8ae8d824bf33e5d29c3a470ceec41826f1"
+      "sha256": "bb78120d1d8c3ecfb465432b2d8ee1147f91ada14e54c0b2f49299661b64bfae"
     },
     {
-      "bytes": 5217,
+      "bytes": 5397,
       "path": "theorem-registry/spec/closure-v0.md",
-      "sha256": "ec1796ca3ebd289b7079c664eb64170aca26a1b609cb1df645d7931ef96e41c9"
+      "sha256": "f76705c4cc2fac9cdf2748b38a8f20dda088cd3f18e698a81a1a323437a27645"
     },
     {
       "bytes": 4626,
