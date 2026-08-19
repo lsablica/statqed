@@ -284,7 +284,7 @@ git diff --check
 - [x] Compositional predecessor-evidence maintenance — the merged v3 live policies retain SQ-0003/SQ-0005/SQ-0006 historical evidence, add deterministic all-module axiom and fresh-kernel coverage, and make lifecycle fixtures explicit without claiming a successor on the maintenance branches.
 - [x] SQ-0007 predecessor repair integrated — exact independently approved maintenance head `51d45e83a05dfc951052f68d6bf7dcefc28d3ec6` merged normally as `e6e6fcf5a4dc58037be506b67eb25deee9298979`; later fixture-neutrality main `950ebf5f591f7d58d089d215c9c76863bc50f7f6` and branch-relative trust main `a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f` were integrated by normal ancestry-preserving merges before final review.
 - [x] SQ-0007 exact local evidence — 105 bound subjects; 214 conformance cases with zero failures; 32 goldens; 11/11 detected divergences; 130 Registry tests; 20 Rust tests under both toolchains; 9-module/509-declaration live trust coverage; 36/36 trust mutations; and 24 byte-identical regenerated subjects. Hosted PR checks remain the final unmerged integration gate.
-- [ ] SQ-0007 and SQ-0009 through SQ-0020.
+- [ ] SQ-0009 through SQ-0020.
 
 ## Surprises & Discoveries
 
