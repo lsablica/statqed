@@ -214,6 +214,34 @@ class IndependentOracleTests(unittest.TestCase):
             oracle.normalize_expression({"tag": "literal", "kind": "string", "value": "e\u0301"}),
             [8, "e\u0301"],
         )
+        self.assertEqual(
+            oracle.normalize_expression(
+                {"tag": "literal", "kind": "natural", "value": "0" * 4_301}
+            ),
+            [7, 0],
+        )
+        self.assertEqual(
+            oracle.normalize_expression({
+                "tag": "literal",
+                "kind": "natural",
+                "value": str((1 << 64) - 1),
+            }),
+            [7, (1 << 64) - 1],
+        )
+        with self.assertRaisesRegex(
+            oracle.OracleError, "registry.normalization_failure"
+        ):
+            oracle.normalize_expression({
+                "tag": "literal",
+                "kind": "natural",
+                "value": str(1 << 64),
+            })
+        with self.assertRaisesRegex(
+            oracle.OracleError, "registry.normalization_failure"
+        ):
+            oracle.normalize_expression(
+                {"tag": "literal", "kind": "natural", "value": "9" * 4_301}
+            )
 
     def test_all_six_digest_frames_are_domain_separated(self):
         payload = oracle.proposition_payload(constant("True"))
@@ -480,6 +508,57 @@ class IndependentOracleTests(unittest.TestCase):
                         [candidate], oracle.LEAN_COMMIT
                     )
 
+    def test_nested_typed_enums_fail_stably(self):
+        valid = {
+            "body": constant("True"),
+            "kind": "definition",
+            "level_parameters": [],
+            "name": name("StatQED", "Registry", "fixture"),
+            "origin": "project",
+            "reducibility": "regular",
+            "references": [],
+            "type": sort(),
+            "unsafe": False,
+        }
+        malformed_values = ([], {})
+        for malformed in malformed_values:
+            expressions = (
+                {"tag": malformed},
+                {"tag": "sort", "level": {"tag": malformed}},
+                {
+                    "tag": "constant",
+                    "name": {"tag": malformed},
+                    "universes": [],
+                },
+                {
+                    "tag": "constant",
+                    "name": name("True"),
+                    "universes": [{"tag": malformed}],
+                },
+                {
+                    "tag": "lambda",
+                    "binder_info": malformed,
+                    "type": sort(),
+                    "body": {"tag": "bound_variable", "index": 0},
+                },
+                {"tag": "literal", "kind": malformed, "value": "x"},
+            )
+            for index, expression in enumerate(expressions):
+                with self.subTest(
+                    entrypoint="direct", value=type(malformed).__name__, index=index
+                ), self.assertRaisesRegex(
+                    oracle.OracleError, "registry.normalization_failure"
+                ):
+                    oracle.normalize_expression(expression)
+                with self.subTest(
+                    entrypoint="environment", value=type(malformed).__name__, index=index
+                ), self.assertRaisesRegex(
+                    oracle.OracleError, "registry.normalization_failure"
+                ):
+                    oracle.environment_payload_from_records(
+                        [{**valid, "type": expression}], oracle.LEAN_COMMIT
+                    )
+
     def test_exported_nested_declarations_use_their_own_universe_contexts(self):
         observation = json.loads(
             (SCRIPT_DIR.parents[1] / "theorem-registry/evidence/lean-observation.json")
@@ -733,6 +812,65 @@ class IndependentOracleTests(unittest.TestCase):
             deeply_nested.stdout,
             b'{"classification":"rejected","code":"registry.resource_limit"}\n',
         )
+        wrong_enum_documents = (
+            {"expression": {"tag": []}},
+            {
+                "expression": {
+                    "tag": "sort",
+                    "level": {"tag": []},
+                }
+            },
+            {
+                "expression": {
+                    "tag": "lambda",
+                    "binder_info": [],
+                    "type": sort(),
+                    "body": {"tag": "bound_variable", "index": 0},
+                }
+            },
+            {
+                "expression": {
+                    "tag": "constant",
+                    "name": {"tag": []},
+                    "universes": [],
+                }
+            },
+            {
+                "expression": {
+                    "tag": "constant",
+                    "name": name("True"),
+                    "universes": [{"tag": []}],
+                }
+            },
+            {
+                "expression": {
+                    "tag": "literal",
+                    "kind": [],
+                    "value": "x",
+                }
+            },
+            {
+                "expression": {
+                    "tag": "literal",
+                    "kind": "natural",
+                    "value": "9" * 4_301,
+                }
+            },
+        )
+        for document in wrong_enum_documents:
+            wrong_enum = subprocess.run(
+                command,
+                input=json.dumps(document, separators=(",", ":")).encode(),
+                capture_output=True,
+                check=False,
+            )
+            with self.subTest(document=document):
+                self.assertEqual(wrong_enum.returncode, 2)
+                self.assertEqual(
+                    wrong_enum.stdout,
+                    b'{"classification":"rejected","code":"registry.normalization_failure"}\n',
+                )
+                self.assertEqual(wrong_enum.stderr, b"")
 
     def test_output_does_not_depend_on_input_identity(self):
         expression = constant("True")

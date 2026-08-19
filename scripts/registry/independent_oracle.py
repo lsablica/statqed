@@ -292,7 +292,7 @@ def _exported_expression_resource_preflight(
                 return
             active_names.add(marker)
             tag = current.get("tag")
-            if tag in {"string", "numeric"}:
+            if isinstance(tag, str) and tag in {"string", "numeric"}:
                 segments += 1
                 if segments > LIMITS["name_segments"]:
                     raise OracleError("registry.resource_limit")
@@ -362,7 +362,7 @@ def _exported_expression_resource_preflight(
         if context == "level":
             if tag == "succ" and "level" in value:
                 stack.append((value["level"], "level", depth + 1, False))
-            elif tag in {"max", "imax"}:
+            elif isinstance(tag, str) and tag in {"max", "imax"}:
                 if "left" in value:
                     stack.append((value["left"], "level", depth + 1, False))
                 if "right" in value:
@@ -386,7 +386,7 @@ def _exported_expression_resource_preflight(
             for field in ("function", "argument"):
                 if field in value:
                     stack.append((value[field], "expr", depth + 1, False))
-        elif tag in {"lambda", "forall"}:
+        elif isinstance(tag, str) and tag in {"lambda", "forall"}:
             for field in ("type", "body"):
                 if field in value:
                     stack.append((value[field], "expr", depth + 1, False))
@@ -424,6 +424,30 @@ def _uint(value: Any) -> int:
     return value
 
 
+def _natural_literal_uint(value: Any) -> int:
+    """Parse the exported decimal spelling without host integer-parser limits."""
+
+    if type(value) is int:
+        return _uint(value)
+    if not isinstance(value, str) or not value or not value.isascii() or not value.isdigit():
+        raise OracleError("registry.normalization_failure")
+    first_significant = 0
+    while first_significant < len(value) and value[first_significant] == "0":
+        first_significant += 1
+    significant = value[first_significant:]
+    if not significant:
+        return 0
+    maximum = str(_UINT64_MAX)
+    if len(significant) > len(maximum) or (
+        len(significant) == len(maximum) and significant > maximum
+    ):
+        raise OracleError("registry.normalization_failure")
+    result = 0
+    for digit in significant:
+        result = result * 10 + (ord(digit) - ord("0"))
+    return result
+
+
 def _text(value: Any, budget: _Budget, *, limit: int) -> str:
     if not isinstance(value, str):
         raise OracleError("registry.normalization_failure")
@@ -441,6 +465,8 @@ def _name(value: Any, budget: _Budget, *, allow_anonymous: bool = False) -> list
             raise OracleError("registry.resource_limit")
         node = _object(current, fields={"tag"}, optional={"parent", "segment"})
         tag = node["tag"]
+        if not isinstance(tag, str):
+            raise OracleError("registry.normalization_failure")
         if tag == "anonymous":
             if set(node) != {"tag"}:
                 raise OracleError("registry.normalization_failure")
@@ -482,6 +508,8 @@ def _level(
         raise OracleError("registry.resource_limit")
     node = _object(value, fields={"tag"}, optional={"level", "left", "right", "name"})
     tag = node["tag"]
+    if not isinstance(tag, str):
+        raise OracleError("registry.normalization_failure")
     if tag == "zero" and set(node) == {"tag"}:
         return [0]
     if tag == "succ" and set(node) == {"tag", "level"}:
@@ -537,6 +565,8 @@ def normalize_expression(
             },
         )
         tag = node["tag"]
+        if not isinstance(tag, str):
+            raise OracleError("registry.normalization_failure")
         if tag == "metadata":
             if set(node) - {"tag", "expression", "metadata"} or "expression" not in node:
                 raise OracleError("registry.normalization_failure")
@@ -572,7 +602,10 @@ def normalize_expression(
             allowed = {"tag", "binder_info", "type", "body", "binder_name"}
             if set(node) - allowed or not {"tag", "binder_info", "type", "body"}.issubset(node):
                 raise OracleError("registry.normalization_failure")
-            binder_info = _BINDER_INFO.get(node["binder_info"])
+            raw_binder_info = node["binder_info"]
+            if not isinstance(raw_binder_info, str):
+                raise OracleError("registry.normalization_failure")
+            binder_info = _BINDER_INFO.get(raw_binder_info)
             if binder_info is None:
                 raise OracleError("registry.normalization_failure")
             return [
@@ -592,14 +625,12 @@ def normalize_expression(
                 walk(node["body"], depth=depth + 1, bound=bound + 1),
             ]
         if tag == "literal" and set(node) == {"tag", "kind", "value"}:
-            if node["kind"] == "natural":
-                raw_value = node["value"]
-                if isinstance(raw_value, str) and raw_value.isascii() and raw_value.isdigit():
-                    natural = int(raw_value, 10)
-                else:
-                    natural = raw_value
-                return [7, _uint(natural)]
-            if node["kind"] == "string":
+            raw_kind = node["kind"]
+            if not isinstance(raw_kind, str):
+                raise OracleError("registry.normalization_failure")
+            if raw_kind == "natural":
+                return [7, _natural_literal_uint(node["value"])]
+            if raw_kind == "string":
                 return [
                     8,
                     _text(
