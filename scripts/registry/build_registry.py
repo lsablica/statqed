@@ -266,7 +266,7 @@ def independently_normalized_closure_unit(raw: dict[str, Any]) -> dict[str, Any]
                 constructor_params = constructor["level_parameters"]
                 converted_constructor = {
                     key: value for key, value in constructor.items()
-                    if key not in {"type", "level_parameters"}
+                    if key != "type"
                 }
                 converted_constructor["type"] = independently_normalized_expr(
                     constructor["type"], constructor_params
@@ -282,7 +282,7 @@ def independently_normalized_closure_unit(raw: dict[str, Any]) -> dict[str, Any]
             recursor_params = recursor["level_parameters"]
             converted_recursor = {
                 key: value for key, value in recursor.items()
-                if key not in {"type", "rules", "level_parameters"}
+                if key not in {"type", "rules"}
             }
             converted_recursor["type"] = independently_normalized_expr(
                 recursor["type"], recursor_params

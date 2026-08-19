@@ -49,7 +49,7 @@ def expanded(value: Any) -> Any:
         "@canonical-payload-max@", "@canonical-payload-over@",
         "@canonical-payload-mixed-left@", "@canonical-payload-mixed-right@",
     }:
-        leaf_count = 1_474 if value == "@canonical-payload-max@" else 1_475
+        leaf_count = 1_474
         leaf = [2, [[1, (1 << 64) - 1]] * LIMITS["name_segments"], []]
         leaves = [copy.deepcopy(leaf) for _ in range(leaf_count)]
         while len(leaves) > 1:
@@ -61,6 +61,13 @@ def expanded(value: Any) -> Any:
                 paired.append(leaves[-1])
             leaves = paired
         expression = leaves[0]
+        first_leaf = expression
+        while first_leaf[0] == 3:
+            first_leaf = first_leaf[1]
+        first_leaf[1][0] = [0, "x" * LIMITS["name_segment_bytes"]]
+        first_leaf[1][1] = [0, "x" * LIMITS["name_segment_bytes"]]
+        tail = 49 if value == "@canonical-payload-max@" else 50
+        first_leaf[1][2] = [0, "x" * tail]
         if value == "@canonical-payload-mixed-left@":
             return [3, expression, [99]]
         if value == "@canonical-payload-mixed-right@":
@@ -161,18 +168,25 @@ def expanded(value: Any) -> Any:
         "@closure-payload-max-roots@", "@closure-payload-over-roots@",
         "@closure-payload-mixed-roots@",
     }:
-        count = 15 if value == "@closure-payload-max-roots@" else 16
+        count = 16
         roots = [f"r{index:02d}" for index in range(count)]
         return (["a", *roots] if value == "@closure-payload-mixed-roots@" else roots)
     if isinstance(value, str) and value in {
         "@closure-payload-max-declarations@", "@closure-payload-over-declarations@",
         "@closure-payload-mixed-declarations@",
     }:
-        count = 15 if value == "@closure-payload-max-declarations@" else 16
+        count = 16
+        last_adjustment = (
+            646 if value == "@closure-payload-max-declarations@" else 645
+        )
         declarations = {
             f"r{index:02d}": {
                 "kind": "definition", "references": [],
-                "value": "x" * (LIMITS["string_bytes"] - 1),
+                "value": "x" * (
+                    LIMITS["string_bytes"] - 1
+                    if index < count - 1
+                    else LIMITS["string_bytes"] - 1 - last_adjustment
+                ),
             }
             for index in range(count)
         }

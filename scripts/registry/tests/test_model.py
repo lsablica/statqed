@@ -34,6 +34,33 @@ def canonical_payload_expression(leaf_count: int):
     return leaves[0]
 
 
+def exact_canonical_payload_expression(*, one_over: bool = False):
+    expression = canonical_payload_expression(1_474)
+    first_leaf = expression
+    while first_leaf[0] == 3:
+        first_leaf = first_leaf[1]
+    first_leaf[1][0] = [0, "x" * model.LIMITS["name_segment_bytes"]]
+    first_leaf[1][1] = [0, "x" * model.LIMITS["name_segment_bytes"]]
+    first_leaf[1][2] = [0, "x" * (50 if one_over else 49)]
+    return expression
+
+
+def exact_canonical_payload_declarations(*, one_over: bool = False):
+    adjustment = 645 if one_over else 646
+    return {
+        f"r{index:02d}": {
+            "kind": "definition",
+            "references": [],
+            "value": "x" * (
+                model.LIMITS["string_bytes"] - 1
+                if index < 15
+                else model.LIMITS["string_bytes"] - 1 - adjustment
+            ),
+        }
+        for index in range(16)
+    }
+
+
 class ModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -182,34 +209,28 @@ class ModelTests(unittest.TestCase):
             model.normalize_expr([3, aggregate, [8, "x"]])
 
     def test_canonical_payload_limit_precedes_sibling_and_root_syntax(self):
-        maximum = canonical_payload_expression(1_474)
-        model.normalize_expr(maximum)
-        one_over = canonical_payload_expression(1_475)
+        maximum = exact_canonical_payload_expression()
+        maximum_payload = model.canonical_cbor(
+            [model.NORMALIZER_ID, model.normalize_expr(maximum)]
+        )
+        self.assertEqual(len(maximum_payload), model.LIMITS["object_bytes"])
+        one_over = exact_canonical_payload_expression(one_over=True)
         for expression in (one_over, [3, [99], one_over], [3, one_over, [99]]):
             with self.subTest(kind="expression"), self.assertRaisesRegex(
                 model.RegistryError, "registry.resource_limit"
             ):
                 model.normalize_expr(expression)
 
-        maximum_declarations = {
-            f"r{index:02d}": {
-                "kind": "definition",
-                "references": [],
-                "value": "x" * (model.LIMITS["string_bytes"] - 1),
-            }
-            for index in range(15)
-        }
-        self.assertEqual(
-            len(model.closure(sorted(maximum_declarations), maximum_declarations)), 15
+        maximum_declarations = exact_canonical_payload_declarations()
+        maximum_records = model.closure(
+            sorted(maximum_declarations), maximum_declarations
         )
-        over_declarations = {
-            **maximum_declarations,
-            "r15": {
-                "kind": "definition",
-                "references": [],
-                "value": "x" * (model.LIMITS["string_bytes"] - 1),
-            },
-        }
+        maximum_closure = model.canonical_cbor([
+            model.CLOSURE_ID, model.LEAN_COMMIT, model.NORMALIZER_ID,
+            maximum_records,
+        ])
+        self.assertEqual(len(maximum_closure), model.LIMITS["object_bytes"])
+        over_declarations = exact_canonical_payload_declarations(one_over=True)
         for roots, declarations in (
             (sorted(over_declarations), over_declarations),
             (["a", *sorted(over_declarations)], {

@@ -478,8 +478,41 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
         raise RegistryError("registry.normalization_failure")
     if len(root_names) > LIMITS["closure_width"]:
         raise RegistryError("registry.closure_width_limit")
+
+    # Count only bytes that a reachable canonical declaration record would
+    # necessarily contribute.  Raw roots, reference edges, and declaration
+    # table keys are traversal input, not part of the specified payload.
+    pending_payload = list(root_names)
+    inspected_payload: set[str] = set()
+    provisional: dict[str, dict[str, Any]] = {}
+    while pending_payload:
+        candidate = pending_payload.pop()
+        if not isinstance(candidate, str) or candidate in inspected_payload:
+            continue
+        inspected_payload.add(candidate)
+        declaration = declarations.get(candidate)
+        if not isinstance(declaration, dict):
+            continue
+        references = declaration.get("references")
+        if isinstance(references, list):
+            pending_payload.extend(
+                reference for reference in references if isinstance(reference, str)
+            )
+        kind = declaration.get("kind")
+        if kind == "definition":
+            unit: dict[str, Any] = {"kind": kind, "name": candidate}
+            if isinstance(declaration.get("value"), str):
+                unit["value"] = declaration["value"]
+            provisional[candidate] = unit
+        elif kind == "inductive_family":
+            provisional[candidate] = {"kind": kind, "name": candidate}
     _cbor_size_lower_bound(
-        [CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, root_names, declarations],
+        [
+            CLOSURE_ID,
+            LEAN_COMMIT,
+            NORMALIZER_ID,
+            [provisional[name] for name in sorted(provisional)],
+        ],
         limit=LIMITS["object_bytes"],
     )
 
@@ -599,7 +632,9 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
 
     for root in sorted(root_names, key=name_key):
         visit(root, 0)
-    return [dict(name=name, **done[name]) for name in sorted(done, key=name_key)]
+    result = [dict(name=name, **done[name]) for name in sorted(done, key=name_key)]
+    canonical_cbor([CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, result])
+    return result
 
 
 def validate_identifier(value: Any) -> str:

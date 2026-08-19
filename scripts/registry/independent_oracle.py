@@ -872,8 +872,37 @@ def environment_closure(
         raise OracleError("registry.normalization_failure")
     if len(roots) > LIMITS["closure_width"]:
         raise OracleError("registry.closure_width_limit")
+    pending_payload = list(roots)
+    inspected_payload: set[str] = set()
+    provisional: dict[str, dict[str, Any]] = {}
+    while pending_payload:
+        candidate = pending_payload.pop()
+        if not isinstance(candidate, str) or candidate in inspected_payload:
+            continue
+        inspected_payload.add(candidate)
+        declaration = declarations.get(candidate)
+        if not isinstance(declaration, Mapping):
+            continue
+        references = declaration.get("references")
+        if isinstance(references, list):
+            pending_payload.extend(
+                reference for reference in references if isinstance(reference, str)
+            )
+        kind = declaration.get("kind")
+        if kind == "definition":
+            unit: dict[str, Any] = {"kind": kind, "name": candidate}
+            if isinstance(declaration.get("value"), str):
+                unit["value"] = declaration["value"]
+            provisional[candidate] = unit
+        elif kind == "inductive_family":
+            provisional[candidate] = {"kind": kind, "name": candidate}
     _cbor_size_lower_bound(
-        [CLOSURE_ID, LEAN_COMMIT, GRAMMAR_ID, roots, declarations],
+        [
+            CLOSURE_ID,
+            LEAN_COMMIT,
+            GRAMMAR_ID,
+            [provisional[name] for name in sorted(provisional)],
+        ],
         limit=LIMITS["payload_bytes"],
     )
     pending = list(roots)
@@ -980,7 +1009,9 @@ def environment_closure(
 
     for root in sorted(roots, key=name_key):
         visit(root, 0)
-    return [dict(name=name, **emitted[name]) for name in sorted(emitted, key=name_key)]
+    result = [dict(name=name, **emitted[name]) for name in sorted(emitted, key=name_key)]
+    canonical_cbor([CLOSURE_ID, LEAN_COMMIT, GRAMMAR_ID, result])
+    return result
 
 
 def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_commit: str) -> bytes:
@@ -990,6 +1021,10 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
         raise OracleError("registry.normalization_failure")
     if len(records) > LIMITS["closure_units"]:
         raise OracleError("registry.resource_limit")
+    _cbor_size_lower_bound(
+        [CLOSURE_ID, lean_commit, GRAMMAR_ID, records],
+        limit=LIMITS["payload_bytes"],
+    )
     if lean_commit != LEAN_COMMIT:
         raise OracleError("registry.normalization_failure")
 
@@ -1008,7 +1043,7 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
             tag = current.get("tag")
             if tag == "anonymous" and set(current) == {"tag"}:
                 break
-            if tag not in {"string", "numeric"} or set(current) != {
+            if not isinstance(tag, str) or tag not in {"string", "numeric"} or set(current) != {
                 "tag", "parent", "segment"
             }:
                 raise OracleError("registry.normalization_failure")
@@ -1094,16 +1129,16 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
                 observed_name_key(node["name"])
             elif tag == "application" and fields == {"tag", "function", "argument"}:
                 stack.extend((node["function"], node["argument"]))
-            elif tag in {"lambda", "forall"} and fields == {
+            elif isinstance(tag, str) and tag in {"lambda", "forall"} and fields == {
                 "tag", "binder_info", "type", "body"
             }:
-                if node["binder_info"] not in _BINDER_INFO:
+                if not isinstance(node["binder_info"], str) or node["binder_info"] not in _BINDER_INFO:
                     raise OracleError("registry.normalization_failure")
                 stack.extend((node["type"], node["body"]))
             elif tag == "let" and fields == {"tag", "type", "value", "body"}:
                 stack.extend((node["type"], node["value"], node["body"]))
             elif tag == "literal" and fields == {"tag", "kind", "value"}:
-                if node["kind"] not in {"natural", "string"}:
+                if not isinstance(node["kind"], str) or node["kind"] not in {"natural", "string"}:
                     raise OracleError("registry.normalization_failure")
             elif tag == "projection" and fields == {
                 "tag", "type_name", "index", "structure"
@@ -1128,13 +1163,15 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
 
     def constructor(value: Any, parameters: list[Any]) -> bytes:
         node = _object(value, fields={
-            "constructor_index", "name", "num_fields", "num_parameters",
-            "type", "unsafe",
+            "constructor_index", "level_parameters", "name", "num_fields",
+            "num_parameters", "type", "unsafe",
         })
         key = observed_name_key(node["name"])
+        parameters = node["level_parameters"]
+        parameter_list(parameters)
         uint_fields(node, {"constructor_index", "num_fields", "num_parameters"})
         boolean(node["unsafe"])
-        expression(node["type"], None)
+        expression(node["type"], parameters)
         return key
 
     def member(value: Any) -> bytes:
@@ -1149,7 +1186,7 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
         boolean(node["is_recursive"])
         boolean(node["is_reflexive"])
         boolean(node["unsafe"])
-        expression(node["type"], None)
+        expression(node["type"], parameters)
         constructors = node["constructors"]
         if not isinstance(constructors, list):
             raise OracleError("registry.normalization_failure")
@@ -1166,15 +1203,18 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
 
     def recursor(value: Any, parameters: list[Any]) -> bytes:
         node = _object(value, fields={
-            "family", "k_reduction", "name", "num_indices", "num_minors",
-            "num_motives", "num_parameters", "rules", "type", "unsafe",
+            "family", "k_reduction", "level_parameters", "name", "num_indices",
+            "num_minors", "num_motives", "num_parameters", "rules", "type",
+            "unsafe",
         })
         key = observed_name_key(node["name"])
+        parameters = node["level_parameters"]
+        parameter_list(parameters)
         name_list(node["family"], limit=LIMITS["closure_width"])
         uint_fields(node, {"num_indices", "num_minors", "num_motives", "num_parameters"})
         boolean(node["k_reduction"])
         boolean(node["unsafe"])
-        expression(node["type"], None)
+        expression(node["type"], parameters)
         rules = node["rules"]
         if not isinstance(rules, list):
             raise OracleError("registry.normalization_failure")
@@ -1184,7 +1224,7 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
             rule = _object(item, fields={"constructor", "field_count", "rhs"})
             observed_name_key(rule["constructor"])
             natural(rule["field_count"])
-            expression(rule["rhs"], None)
+            expression(rule["rhs"], parameters)
         return key
 
     base_fields = {
@@ -1199,16 +1239,19 @@ def environment_payload_from_records(records: Sequence[Mapping[str, Any]], lean_
         kind = value.get("kind")
         fields = base_fields | ({"family", "members", "recursors"} if kind == "inductive_family" else set())
         record = _object(value, fields=fields)
-        if kind not in {"definition", "theorem", "opaque", "axiom", "quotient", "inductive_family"}:
+        if not isinstance(kind, str) or kind not in {
+            "definition", "theorem", "opaque", "axiom", "quotient",
+            "inductive_family",
+        }:
             raise OracleError("registry.normalization_failure")
         names.append(observed_name_key(record["name"]))
         parameters = record["level_parameters"]
         parameter_list(parameters)
         name_list(record["references"], limit=LIMITS["closure_width"])
-        if record["origin"] not in {"project", "imported"}:
+        if not isinstance(record["origin"], str) or record["origin"] not in {"project", "imported"}:
             raise OracleError("registry.normalization_failure")
         expected_reducibility = {"abbreviation", "opaque", "regular"} if kind == "definition" else {"not_applicable"}
-        if record["reducibility"] not in expected_reducibility:
+        if not isinstance(record["reducibility"], str) or record["reducibility"] not in expected_reducibility:
             raise OracleError("registry.normalization_failure")
         boolean(record["unsafe"])
         expression(record["type"], parameters)

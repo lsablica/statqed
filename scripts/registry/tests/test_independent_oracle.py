@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -57,6 +58,33 @@ def canonical_payload_expression(leaf_count):
             paired.append(leaves[-1])
         leaves = paired
     return leaves[0]
+
+
+def exact_canonical_payload_expression(*, one_over=False):
+    expression = canonical_payload_expression(1_474)
+    first_leaf = expression
+    while first_leaf[0] == 3:
+        first_leaf = first_leaf[1]
+    first_leaf[1][0] = [0, "x" * oracle.LIMITS["name_segment_bytes"]]
+    first_leaf[1][1] = [0, "x" * oracle.LIMITS["name_segment_bytes"]]
+    first_leaf[1][2] = [0, "x" * (50 if one_over else 49)]
+    return expression
+
+
+def exact_canonical_payload_declarations(*, one_over=False):
+    adjustment = 645 if one_over else 646
+    return {
+        f"r{index:02d}": {
+            "kind": "definition",
+            "references": [],
+            "value": "x" * (
+                oracle.LIMITS["string_literal_bytes"] - 1
+                if index < 15
+                else oracle.LIMITS["string_literal_bytes"] - 1 - adjustment
+            ),
+        }
+        for index in range(16)
+    }
 
 
 def exact_node_expression():
@@ -306,30 +334,30 @@ class IndependentOracleTests(unittest.TestCase):
                 oracle.semantic_expression_payload_with_parameters([99], parameters)
 
     def test_canonical_payload_limit_precedes_sibling_and_root_syntax(self):
-        maximum = canonical_payload_expression(1_474)
-        oracle.semantic_expression_payload(maximum)
-        one_over = canonical_payload_expression(1_475)
+        maximum = exact_canonical_payload_expression()
+        self.assertEqual(
+            len(oracle.semantic_expression_payload(maximum)),
+            oracle.LIMITS["payload_bytes"],
+        )
+        one_over = exact_canonical_payload_expression(one_over=True)
         for expression in (one_over, [3, [99], one_over], [3, one_over, [99]]):
             with self.subTest(kind="expression"), self.assertRaisesRegex(
                 oracle.OracleError, "registry.resource_limit"
             ):
                 oracle.semantic_expression_payload(expression)
 
-        maximum_declarations = {
-            f"r{index:02d}": {
-                "kind": "definition", "references": [],
-                "value": "x" * (oracle.LIMITS["string_literal_bytes"] - 1),
-            }
-            for index in range(15)
-        }
-        oracle.environment_closure(sorted(maximum_declarations), maximum_declarations)
-        over_declarations = {
-            **maximum_declarations,
-            "r15": {
-                "kind": "definition", "references": [],
-                "value": "x" * (oracle.LIMITS["string_literal_bytes"] - 1),
-            },
-        }
+        maximum_declarations = exact_canonical_payload_declarations()
+        maximum_records = oracle.environment_closure(
+            sorted(maximum_declarations), maximum_declarations
+        )
+        self.assertEqual(
+            len(oracle.canonical_cbor([
+                oracle.CLOSURE_ID, oracle.LEAN_COMMIT, oracle.GRAMMAR_ID,
+                maximum_records,
+            ])),
+            oracle.LIMITS["payload_bytes"],
+        )
+        over_declarations = exact_canonical_payload_declarations(one_over=True)
         for roots, declarations in (
             (sorted(over_declarations), over_declarations),
             (["a", *sorted(over_declarations)], {
@@ -381,6 +409,147 @@ class IndependentOracleTests(unittest.TestCase):
             oracle.environment_payload_from_records(
                 [{**valid, "name": deep}], oracle.LEAN_COMMIT
             )
+
+    def test_exported_environment_payload_preflight_precedes_record_syntax(self):
+        def definition(index):
+            return {
+                "body": {
+                    "tag": "literal",
+                    "kind": "string",
+                    "value": "x" * (oracle.LIMITS["string_literal_bytes"] - 1),
+                },
+                "kind": "definition",
+                "level_parameters": [],
+                "name": name("StatQED", "Registry", f"large{index:02d}"),
+                "origin": "project",
+                "reducibility": "regular",
+                "references": [],
+                "type": sort(),
+                "unsafe": False,
+            }
+
+        maximum = [definition(index) for index in range(15)]
+        oracle.environment_payload_from_records(maximum, oracle.LEAN_COMMIT)
+        one_over = [*maximum, definition(15)]
+        malformed = {**definition(16), "unknown": True}
+        for records in (one_over, [malformed, *one_over], [*one_over, malformed]):
+            with self.subTest(first=records[0]["name"]), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.environment_payload_from_records(records, oracle.LEAN_COMMIT)
+
+    def test_exported_environment_enum_shapes_fail_stably(self):
+        valid = {
+            "body": constant("True"),
+            "kind": "definition",
+            "level_parameters": [],
+            "name": name("StatQED", "Registry", "fixture"),
+            "origin": "project",
+            "reducibility": "regular",
+            "references": [],
+            "type": sort(),
+            "unsafe": False,
+        }
+        malformed_values = ([], {})
+        for malformed in malformed_values:
+            cases = (
+                {**valid, "kind": malformed},
+                {**valid, "origin": malformed},
+                {**valid, "reducibility": malformed},
+                {**valid, "name": {"tag": malformed}},
+                {**valid, "body": {"tag": malformed}},
+                {
+                    **valid,
+                    "body": {"tag": "literal", "kind": malformed, "value": "x"},
+                },
+                {
+                    **valid,
+                    "body": {
+                        "tag": "lambda",
+                        "binder_info": malformed,
+                        "type": sort(),
+                        "body": {"tag": "bound_variable", "index": 0},
+                    },
+                },
+            )
+            for index, candidate in enumerate(cases):
+                with self.subTest(value=type(malformed).__name__, index=index), self.assertRaisesRegex(
+                    oracle.OracleError, "registry.normalization_failure"
+                ):
+                    oracle.environment_payload_from_records(
+                        [candidate], oracle.LEAN_COMMIT
+                    )
+
+    def test_exported_nested_declarations_use_their_own_universe_contexts(self):
+        observation = json.loads(
+            (SCRIPT_DIR.parents[1] / "theorem-registry/evidence/lean-observation.json")
+            .read_text(encoding="utf-8")
+        )
+        closure = copy.deepcopy(observation["declarations"][0]["closure"])
+        family = next(record for record in closure if record["kind"] == "inductive_family")
+        declared = name("u")
+        second = name("v")
+        undeclared_sort = {
+            "tag": "sort",
+            "level": {"tag": "parameter", "name": name("rogue")},
+        }
+
+        self.assertIn("level_parameters", family["members"][0]["constructors"][0])
+        self.assertIn("level_parameters", family["recursors"][0])
+        oracle.environment_payload_from_records(closure, oracle.LEAN_COMMIT)
+
+        valid_contexts = copy.deepcopy(closure)
+        valid_family = next(
+            record for record in valid_contexts if record["kind"] == "inductive_family"
+        )
+        valid_member = valid_family["members"][0]
+        valid_member["level_parameters"] = [declared, second]
+        valid_member["type"] = {
+            "tag": "sort",
+            "level": {
+                "tag": "max",
+                "left": {"tag": "parameter", "name": declared},
+                "right": {"tag": "parameter", "name": second},
+            },
+        }
+        valid_constructor = valid_member["constructors"][0]
+        valid_constructor["level_parameters"] = [second, declared]
+        valid_constructor["type"] = {
+            "tag": "sort",
+            "level": {"tag": "parameter", "name": second},
+        }
+        oracle.environment_payload_from_records(valid_contexts, oracle.LEAN_COMMIT)
+
+        mutations = []
+        member = family["members"][0]
+        mutations.append((member, "type", undeclared_sort))
+        constructor = member["constructors"][0]
+        mutations.append((constructor, "type", undeclared_sort))
+        recursor = family["recursors"][0]
+        mutations.append((recursor, "type", undeclared_sort))
+        mutations.append((recursor["rules"][0], "rhs", undeclared_sort))
+
+        for index, (_target, field, value) in enumerate(mutations):
+            candidate = copy.deepcopy(closure)
+            candidate_family = next(
+                record for record in candidate if record["kind"] == "inductive_family"
+            )
+            candidate_member = candidate_family["members"][0]
+            candidate_constructor = candidate_member["constructors"][0]
+            candidate_recursor = candidate_family["recursors"][0]
+            targets = (
+                candidate_member,
+                candidate_constructor,
+                candidate_recursor,
+                candidate_recursor["rules"][0],
+            )
+            if index == 0:
+                targets[index]["level_parameters"] = [declared]
+            targets[index][field] = value
+            with self.subTest(index=index), self.assertRaisesRegex(
+                oracle.OracleError, "registry.normalization_failure"
+            ):
+                oracle.environment_payload_from_records(candidate, oracle.LEAN_COMMIT)
 
     def test_deliberately_wrong_encoder_is_detected(self):
         expression = constant("True")

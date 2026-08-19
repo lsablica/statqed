@@ -160,6 +160,7 @@ private def constructorJson (environment : Environment) (name : Name) : Except S
   let typeJson ← declarationExprJson value.levelParams maxExpressionDepth value.type
   pure <| Json.mkObj [
     ("constructor_index", toJson value.cidx),
+    ("level_parameters", .arr <| value.levelParams.toArray.map nameJson),
     ("name", nameJson value.name),
     ("num_fields", toJson value.numFields),
     ("num_parameters", toJson value.numParams),
@@ -182,6 +183,7 @@ private def recursorJson (environment : Environment) (name : Name) : Except Stri
   pure <| Json.mkObj [
     ("family", nameArrayJson value.all),
     ("k_reduction", .bool value.k),
+    ("level_parameters", .arr <| value.levelParams.toArray.map nameJson),
     ("name", nameJson value.name),
     ("num_indices", toJson value.numIndices),
     ("num_minors", toJson value.numMinors),

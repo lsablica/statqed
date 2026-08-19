@@ -17,7 +17,10 @@ unit is emitted once, but every attempted edge consumes work.
 - an opaque declaration or axiom contributes kind, name, universe arity,
   normalized type, unsafe status, and origin classification, but no body;
 - an inductive family is one atomic unit containing the ordered mutual family,
-  parameter/index counts, constructors and structural fields;
+  parameter/index counts, constructors and structural fields; every member,
+  constructor, and recursor retains its own declared universe-parameter
+  context, and each normalized type or recursor rule is checked against that
+  exact context;
 - a constructor resolves to its family unit;
 - a recursor contributes its type, structural counts, safety, ordered rules
   and parent family;
