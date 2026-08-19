@@ -66,6 +66,18 @@ class DifferentialConformanceTests(unittest.TestCase):
         self.assertEqual((oracle_classification, oracle_code), ("accepted", "accepted"))
         self.assertEqual(payload, expected)
         self.assertEqual(payload[:1], b"\x84")
+        self.assertNotEqual(
+            payload,
+            run_conformance.canonical_cbor(
+                [run_conformance.CLOSURE_ID, "0" * 40, run_conformance.NORMALIZER_ID, records]
+            ),
+        )
+        self.assertNotEqual(
+            payload,
+            run_conformance.canonical_cbor(
+                [run_conformance.CLOSURE_ID, run_conformance.LEAN_COMMIT, "statqed.lean-expr.v999", records]
+            ),
+        )
 
     def test_rejected_oracle_disagreement_marks_generated_corpus_failed(self):
         original = run_conformance.independent_oracle.semantic_expression_payload
