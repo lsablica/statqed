@@ -1,109 +1,267 @@
 # RFC-0005: Theorem Identity, Proof Trust, and Compatibility
 
-- Status: Draft
-- Author: SQ-0001 manager
-- Reviewers: formal-methods reviewer, statistical architect, interoperability reviewer, security reviewer, counterexample reviewer
+- Status: Accepted
+- Author: SQ-0001 manager; completed by SQ-0007
+- Reviewers: source, theorem-semantics, formal, conformance, cryptographic, authorization/security, compatibility, CI, integration
 - Created: 2026-08-03
+- Completed candidate: 2026-08-11
 - Task: SQ-0003 and SQ-0007
 - Supersedes: none
 
 ## Decision boundary
 
-Define theorem semantic identity, statement normalization, environment/dependency locks, registry-record binding, proof/build locks, transitive axiom reports, and directional compatibility. Decide what may remain stable across proof refactors and what an artifact must pin.
+This RFC defines the v0 identity and trust layers needed for one deliberately
+vacuous test-only registry record.  It does not define a public statistical
+theorem, artifact verification, logical-data identity, or source fidelity.
 
-## Motivation
+<!-- SQ-0007-NORMATIVE-SCOPE-BEGIN -->
+The v0 theorem-registry decision keeps eleven layers distinct: governed ID and
+semantic version; canonical elaborated proposition bytes; a meaning-bearing
+environment closure; proposition digest; canonical registry record and digest;
+verifier-selected authorization root/policy; proof/build lock; live transitive
+axiom observation; directional compatibility-proof lock; and reviewed
+annotations. The versioned `statqed.lean-expr.v0` grammar preserves structural
+Lean expression and universe constructors, de Bruijn indices, binder
+information, names, literals, projections, and argument order; erases metadata,
+binder display names, and `letE.nondep`; performs no reduction or unfolding;
+and fails closed on unsupported or unscoped terms and finite resource limits.
+The versioned environment closure starts from proposition constants and
+projection type names, includes declaration-kind-specific meaning-bearing
+types and definition/recursor bodies, groups inductive families atomically,
+sorts and deduplicates deterministically, and fails closed on missing names,
+unexpected cycles, width, depth, and work limits. Proposition and environment
+digests remain separate; full semantic identity is the tuple of governed ID,
+version, normalizer, proposition digest, and environment digest. Canonical
+record, proof/build, authorization snapshot, and compatibility locks use
+separate SHA-256 domains through `statqed.digest-lp.v1`. Authorization policy
+and permitted/current/historical/forbidden/revoked roots are selected locally
+by the verifier; candidate or artifact bytes cannot grant authority. The
+proof/build lock separately binds exact Lean/Lake/Mathlib/project material,
+the proof subject, same-kernel checks, live axiom observation, and the empty v0
+allowed-axiom policy. Compatibility is directional and requires a locked,
+kernel-checked `T_new -> T_old`; metadata alone never authorizes substitution.
+The only v0 entry is `statqed.test-only.foundation.true.v0` for
+`StatQED.Registry.Tests.testOnlyTrue : True`, maturity Experimental and exposure
+test-only. It is not a public/statistical theorem, source-fidelity result,
+non-vacuity witness, artifact-byte binding, logical-data identity, certificate,
+checker-soundness proof, provenance truth, or interpretation approval. Digest
+matches are conditional integrity evidence, not mathematical equality,
+authorization, truth, provenance, collision-freedom, or statistical validity.
+<!-- SQ-0007-NORMATIVE-SCOPE-END -->
 
-A digest of surface theorem text is not exact formal meaning. Referenced definitions, elaboration, imports, axioms, or normalization rules can change while printed text remains the same. A proof-body refactor can preserve the proposition while introducing an unacceptable axiom. Registry metadata can also drift from the formal declaration.
+## Source-grounded identity relation
 
-## Terminology and source background
+Pinned Lean provides several materially different relations: raw structural
+`Expr.equal`, alpha-oriented `Expr.eqv`, and kernel definitional equality.
+`Level.isEquiv` documents an incomplete normalization-based universe test.  No
+one of these is a stable cross-language serialization.
 
-- **Semantic theorem identity:** governed theorem ID plus version, canonical elaborated proposition bytes, normalization-algorithm version, and locked meaning-bearing environment.
-- **Statement digest:** a collision-resistant lookup/integrity value computed over those canonical bytes and context; not proof of equality by itself.
-- **Proof/build lock:** proof source or artifact, toolchain/environment, and actual transitive axiom report used for one checked build.
-- **Registry record:** the canonical meaning-bearing theorem metadata plus reviewed annotations, itself content-bound.
-- **Registry authorization root:** an independently selected verifier-policy input naming an accepted registry snapshot/root, policy version, and historical/revocation rules. Record integrity does not confer governed ID, review, maturity, or compatibility authority.
-- **Compatibility theorem:** a kernel-checked proposition relating complete old and new propositions in an explicitly useful direction.
+V0 therefore chooses a conservative, project-versioned interface identity. It
+may distinguish terms the kernel considers definitionally equal.  That is a
+documented compatibility cost, not a claim that raw syntax is complete
+mathematical meaning.  Later profiles require a new normalizer identifier and
+checked compatibility, never a silent reinterpretation.
 
-Exact Lean normalization and environment-lock mechanics require the pinned toolchain and prototypes in SQ-0003/SQ-0007.
+The exact semantic grammar and limits are in
+`theorem-registry/spec/normalizer-v0.md`.  All accepted `Expr` and `Level`
+constructors have a fixed semantic-array form under Accepted
+`statqed.cbor-core.v1`.  Free variables, metavariables, loose bound variables,
+undeclared universe parameters, unsupported constructors, invalid UTF-8, and
+limit violations fail closed.
 
-## Examples and nonexamples
+Binder information is retained as a deliberate interface strengthening even
+though the kernel ignores it in definitional equality.  Binder display names,
+metadata, and `letE.nondep` are erased.  Literal and projection constructors are
+retained.  No beta, delta, iota, zeta, eta, universe algebra, unfolding, or
+Unicode normalization occurs.
 
-Examples:
+## Meaning-bearing closure
 
-- A proof refactor under the same canonical proposition/environment preserves the semantic theorem version but creates a new proof/build lock and axiom report.
-- Replacing a locked old theorem `T_old` with `T_new` for verification of the old claim requires a checked implication `T_new → T_old`, including all assumptions and instantiation mappings.
-- Claim class and source-fidelity annotations may be reviewed metadata even when they cannot be mechanically extracted; their changes expire those reviews.
+The closure algorithm is specified in
+`theorem-registry/spec/closure-v0.md`.  Proposition constants and projection
+type names form the roots.  Definition types and values are meaning-bearing;
+theorem, opaque, and axiom types are meaning-bearing while their proof/opaque
+bodies are not.  Inductive families, constructors, recursors, projections, and
+quotient primitives have explicit kind-specific payloads.
 
-Nonexamples:
+The algorithm does not include unrelated imports, global instance tables,
+attributes, source positions, module names, pretty-printer state, theorem
+bodies, or opaque bodies.  Selected instances occur as explicit constants
+after elaboration.  Inductive families are atomic so ordinary constructor
+backedges do not create false cycle failures.  Any remaining active-path cycle,
+missing declaration, unsafe declaration, or budget failure is rejected.
 
-- Equal theorem names or equal pretty-printed text imply equal meaning.
-- Equal fixed-width digests prove theorem equality or collision-freedom.
-- A registry row saying `implies` authorizes substitution without a locked proof.
-- An artifact-supplied, internally consistent replacement registry inherits a governed theorem ID or review status without resolving against the verifier-selected authorization root.
-- An unchanged statement digest permits a proof body containing `sorryAx`, `admit`, a project-defined axiom, or an unreviewed native/unsafe shortcut.
-- A statement hash validates source fidelity, claim classification, or the truth of external premises.
+The language-neutral fixture closure accepts only closed, versioned
+declaration units: a `definition` has `kind`, `references`, and at most one
+bounded UTF-8 string `value`; an `inductive_family` has only `kind` and
+`references`. Missing kinds, unknown kinds or fields, and wrong field types
+fail as normalization errors. This fixture grammar is not an extension
+mechanism and is distinct from the richer typed live Lean export.
 
-## Alternatives
+This is the smallest closure supported by the retained referenced-definition,
+import, instance, missing-dependency, cycle, width, depth, and work mutations.
+Complete Mathlib/Lake/project material remains in the proof/build lock.
 
-### Name and semantic-version range only
+Exact live fixtures cover every accepted expression constructor, declared
+universe and binder classes, metadata erasure, a selected project-local
+instance, full mutual-family material, canonical-CBOR name ordering, depth
+64/65, and exact work accounting. The independent Python lineage derives
+normalization, references, reachability, records, work, and result classes from
+typed Lean exports rather than accepting primary output as its oracle.
 
-Rejected. Names and semver do not bind formal meaning.
+## Digest domains
 
-### Hash pretty-printed source text only
+All domains use SHA-256 with the Accepted `statqed.digest-lp.v1` frame and
+explicit algorithm, profile, object, framing, length, and payload components:
 
-Rejected. Formatting/elaboration instability and dependency drift make it insufficient.
+| Layer | Purpose | Object class |
+|---|---|---|
+| proposition | `statqed.theorem.proposition.v0` | `statqed.lean-proposition.v0` |
+| environment | `statqed.theorem.environment.v0` | `statqed.lean-environment-closure.v0` |
+| record | `statqed.registry.record.v0` | `statqed.registry-record.v0` |
+| proof/build | `statqed.theorem.proof-build.v0` | `statqed.proof-build-lock.v0` |
+| authorization snapshot | `statqed.registry.snapshot.v0` | `statqed.registry-snapshot.v0` |
+| compatibility | `statqed.theorem.compatibility.v0` | `statqed.compatibility-proof-lock.v0` |
 
-### Hash the complete repository or proof body as theorem identity
+The proposition digest hashes proposition bytes only.  The environment digest
+is a separate identity component.  Record and lock dependencies form an acyclic
+ordering; no object hashes an ancestor that already contains its digest.
 
-Rejected as semantic identity because harmless proof refactors would create new theorem meanings. A separate proof/build lock is still required.
+## Registry record and authorization
 
-### Defer the exact normalizer and lock closure
+The closed record distinguishes mechanically extracted fields, governed
+metadata, reviewed annotations, authorization state, and proof/build evidence.
+The only ID is visibly test-only.  Its source anchor is ADR-0011 and its
+original mathematical attribution is `not_applicable` because `True` is
+definitionally trivial.
 
-Accepted for SQ-0001. Their selection requires pinned Lean/Mathlib prototypes and independent vectors; SQ-0007 cannot freeze a registry format before resolving them.
+Trusted local policy supplies pairwise-disjoint current-permitted,
+historical-permitted, historical-forbidden, and revoked root sets. Revocation
+dominates. Resolution recomputes the snapshot root, applies the selected local
+policy, locates exactly one ID/version, compares every closed record field and
+its digest against verifier-selected bindings, then checks proposition,
+closure, proof lock, axiom report, and any
+compatibility lock.  Candidate-provided policy is ignored.  An internally
+consistent whole-registry replacement remains unknown or forbidden.
 
-## Proposed semantics
+The composed Python resolver performs those canonical-byte and framing
+recomputations over the retained record, snapshot, lock, and policy subjects.
+The standalone Rust component consumes a deliberately non-normative bounded
+transport and compares its separated digest fields with independently supplied
+trusted bindings. It does not parse Lean expressions, canonical CBOR, or lock
+payloads and is not independent evidence that those bytes were recomputed.
 
-1. A public theorem has a governed stable ID and explicit semantic version.
-2. Identity binds canonical elaborated proposition bytes, normalizer version, and the meaning-bearing dependency environment. The statement digest is a lookup/integrity key over that material, subject to named cryptographic assumptions.
-3. Proof bodies are not part of semantic proposition identity, but every accepted build has a separate proof/build lock and actual transitive axiom report.
-4. The trusted-path policy rejects `sorryAx`, `admit`, project-defined axioms, and unreviewed unsafe/native trust shortcuts. The exact allowed kernel/Mathlib axiom baseline is versioned after SQ-0003 reports it; it is never a license to add project axioms.
-5. Kernel acceptance is reported as derivability of the exact proposition relative to the named environment and axiom set, not unconditional truth or source fidelity.
-6. The canonical registry record is content-bound. Mechanically extracted fields and reviewed annotations are distinguished.
-7. Verification policy independently selects an accepted registry snapshot/root and policy version. Artifact-supplied records remain untrusted unless they resolve against that root. The result records the root/policy, resolution, historical/revocation status, and nonclaims.
-8. Any change to meaning-bearing annotations, assumptions, randomness/quantifier profiles, or source mappings expires the relevant semantic/source review even when formal proposition bytes are unchanged.
-9. Compatibility or replacement requires identical canonical proposition bytes in the same locked environment or a kernel-checked compatibility theorem over complete propositions in the required direction. Metadata alone is insufficient.
+## Proof/build and axiom policy
 
-## Formal and implementation consequences
+The proof/build lock binds the exact Lean release/source, Lake, Mathlib commit,
+manifest digest, project-source manifest, declaration, canonical proof subject,
+semantic identity, live `Lean.collectAxioms` observation, `--trust=0` result,
+same-kernel fresh replay, and trust policy.
 
-- SQ-0003 must produce an actual axiom report and propose the versioned baseline before any trusted-path claim.
-- SQ-0007 must specify canonical elaboration/normalization, bounded dependency closure, registry-record canonical bytes, verifier-selected registry authorization root/policy, statement digest, proof/build lock, revocation/historical behavior, and compatibility-proof lock.
-- Artifacts pin the exact registry record and proof/environment material required by their verification mode.
-- The theorem resolver never performs natural-language, name-only, semver-only, or metadata-only substitution.
+`collectAxioms` uses imported extension data and silently contributes nothing
+for an unknown declaration.  V0 first requires declaration presence and
+cross-checks the explicit environment closure.  Fresh `leanchecker` replay is
+same-kernel corruption evidence, not an external verifier, and its unsafe/
+partial exclusions are separately rejected.
 
-## Trust, security, privacy, and accessibility
+The v0 allowed imported-axiom set is empty. `sorry`, `admit`, `sorryAx`, project
+axioms, bodyless assumptions, unsafe/partial declarations, and native/compiler
+trust shortcuts are prohibited.  A proof refactor can preserve proposition and
+environment identity but changes the proof/build lock when proof material
+changes.
 
-Threats include whole-registry replacement, forged ID/review/maturity metadata, root mismatch, revoked/historical roots, digest collision/substitution, environment drift, forged compatibility metadata, hidden axioms, source-review drift, closure cycles, and denial of service from unbounded width/depth. Locks and registry resolution must be deterministic, bounded, offline-resolvable, and rendered with human-readable theorem IDs, root/policy/status, assumptions, axiom status, and nonclaims.
+## Directional compatibility
+
+Direct substitution requires identical canonical proposition bytes and
+environment digest. Otherwise the verifier requires a locally authorized lock
+for a kernel-checked implication in the useful direction `T_new -> T_old`,
+including complete propositions and explicit universe instantiations. V0 does
+not infer term mappings, peel premises, chain edges, or accept equivalence/
+implication metadata. Compatibility permits disclosed substitution only; it
+does not merge identities or transfer semantic, source, maturity, or
+interpretation review.
+
+The only v0 compatibility fixture is the vacuous test-only implication
+`False -> True`. It demonstrates lock construction, direction checking, axiom
+observation, and substitution-rejection plumbing; it is not evidence of a
+nontrivial theorem migration or a public compatibility relation.
+
+## Stable failures and resources
+
+V0 publishes deterministic `registry.*` classes for malformed/version,
+normalization/unsupported expression, cycle/width/depth/work/missing closure,
+proposition/environment/digest/record/root/policy/proof mismatches, unknown/
+revoked/forbidden roots, forbidden axioms, compatibility missing/direction,
+resource, and operational failures.  Diagnostic text is bounded and contains
+no host paths, locale text, timestamps, random identifiers, or dependency debug
+strings.
+
+The exact limits are recorded in the registry specification and tested at the
+maximum and one over it: 1 MiB input/object, 2 MiB output, 16 parser fixture
+entries (one published), expression depth 256/nodes 65,536, level depth 64,
+closure width 256/units 1,024/depth 64/work 1,000,000, 128-byte identifiers,
+256 axioms, 32 compatibility edges/path length one, and 4 KiB diagnostics.
+Generic JSON ingress is bounded to 336 container edges, and verifier-selected
+authorization policy contains at most 16 total roots across its disjoint root
+classes.
+Depth counts dependency or constructor edges from a root at depth zero.
+The fixed closure-work cap is an outer safety limit: the other v0 limits imply
+a reachable traversal maximum of 525,312, so the exact 1,000,000/1,000,001
+predicate is tested separately while real traversal accounting is checked at
+a reachable required-work/one-under boundary. No v0 fixture claims to reach
+the dominated outer work cap.
+
+## Evidence and implementation independence
+
+The primary extractor reads the live pinned Lean environment and emits typed
+expressions, kind-specific closure, proof subjects, and axiom observations.  A
+separate standard-library Python oracle independently implements the expression
+grammar, environment-closure walk/canonicalization, CBOR encoder, and six digest
+frames without importing the primary
+normalizer, Rust resolver, or SQ-0005 oracle.  A standalone std-only Rust
+workspace performs bounded offline binding resolution under verifier-selected
+policy; it is not a second canonical-byte parser.
+
+Agreement is evidence, not authority.  Deliberately wrong encoders, closure
+walks, record/root selection, proof/axiom checks, and compatibility direction
+are detected.  Permanent content-addressed evidence binds sources, specs,
+implementations, locks, fixtures, retained failures, supply-chain observations,
+reviews, and decision status.
+
+## Alternatives rejected
+
+- theorem name or semantic-version range only;
+- pretty-printed text, Lean `repr`, cached hashes, or `.olean` bytes;
+- full repository/import hash as semantic identity;
+- proof-body hash as semantic identity;
+- imported `collectAxioms` data or fresh replay as independent verification;
+- artifact-supplied roots or internally consistent replacement registries;
+- metadata-only compatibility;
+- one digest reused across logical domains;
+- silent expansion to public statistical theorems.
 
 ## Compatibility and migration
 
-Proof refactors can preserve semantic versions only when proposition/environment identity is preserved, but they create new proof/build locks. Meaning changes create new theorem versions. A directional implication can support a disclosed migration but does not make old and new theorem identities equal.
+Any grammar, closure, record, authorization, lock, axiom-policy, resource, or
+error-semantic change requires a new version.  Proof refactors may preserve
+semantic identity but create new proof/build locks.  Meaning changes create new
+theorem versions.  A checked implication supports disclosed migration without
+making identities equal.  RFC-0007 retains ownership of broader migration
+policy.
 
-## Validation plan
+## Validation disposition
 
-- two independent normalization/hash implementations or a documented independent oracle;
-- fixtures changing a referenced definition, import environment, implicit argument, universe parameter, and typeclass instance;
-- proof-body mutation introducing a forbidden axiom without changing the proposition;
-- forged and wrong-direction compatibility records;
-- whole-registry replacement, forged governance metadata, root mismatch, revoked/historical roots, closure cycles, and deterministic width/depth/work-budget failures;
-- collision-assumption and canonical-byte reporting;
-- source, statistical, formal, interoperability, security, adversarial, and integration review.
-
-## Objections and resolution
-
-- **Objection:** Full dependency locking is expensive. **Resolution:** SQ-0007 must prototype the smallest closure that preserves meaning; cost cannot justify name/hash-only substitution.
-- **Objection:** A trusted registry administrator can mark compatibility. **Resolution:** governance approval may publish metadata, but deductive substitution still requires checked evidence.
-- **Objection:** Proof bodies should be irrelevant. **Resolution:** they are irrelevant to proposition identity but material to the axiom/trust report for a checked build.
+Every original validation item has a retained positive, negative, mutation, or
+explicitly scoped exclusion.  The `True` entry is intentionally vacuous and
+cannot validate statistical theorem content.  Acceptance remains contingent on
+the exact-subject source, semantic, formal, conformance, cryptographic,
+authorization/security, compatibility, CI, and integration dispositions in the
+SQ-0007 review record.
 
 ## Decision
 
-Draft. The constitutional separations and prohibitions above are proposed; the exact normalizer, bounded dependency/environment closure, registry canonical record, verifier-selected authorization root/policy, historical/revocation rules, digest profile, and axiom baseline remain blocking deliverables for SQ-0003/SQ-0007. ADR-0007 must remain Proposed until this RFC is Accepted.
+Accepted after distinct formal/trust, adversarial/counterexample, and
+integration reviewers approved the identical content-addressed scientific
+subject. The marked normative scope is byte-identical to the reviewed Draft
+candidate. Hosted pull-request checks remain an integration gate for the
+unmerged implementation branch, not a condition that changes this decision.

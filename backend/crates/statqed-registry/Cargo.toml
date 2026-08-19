@@ -1,0 +1,25 @@
+[workspace]
+members = ["."]
+resolver = "3"
+
+[package]
+name = "statqed-registry"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85.1"
+license = "MIT"
+publish = false
+description = "Experimental bounded offline resolver for the StatQED test-only registry v0"
+
+[lints.rust]
+missing_docs = "warn"
+unreachable_pub = "warn"
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+expect_used = "deny"
+indexing_slicing = "deny"
+panic = "deny"
+unreachable = "deny"
+unwrap_used = "deny"

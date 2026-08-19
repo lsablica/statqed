@@ -1,0 +1,41 @@
+{
+  "schema": "statqed.registry-rust-build-evidence.v0",
+  "observed_at": "2026-08-19",
+  "platform": {
+    "os": "Ubuntu 24.04.4 LTS",
+    "architecture": "x86_64",
+    "host_triple": "x86_64-unknown-linux-gnu"
+  },
+  "development": {
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "rustc_commit": "8bab26f4f68e0e26f0bb7960be334d5b520ea452",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "commands": [
+      "cargo +1.97.1 fmt --check",
+      "cargo +1.97.1 clippy --all-targets --all-features --locked -- -D warnings",
+      "cargo +1.97.1 test --all-features --locked"
+    ],
+    "result": "pass: 20 integration tests and doc tests"
+  },
+  "offline_floor": {
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "rustc_commit": "4eb161250e340c8f48f66e2b929ef4a5bed7c181",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "command": "cargo +1.85.1 test --all-features --locked --offline",
+    "result": "pass: 20 integration tests and doc tests"
+  },
+  "subjects": {
+    "Cargo.toml": "7e8fc49726a3c84c41ef2d58d6ae7263e6c7f5edb61287244d3af94d2cb3a647",
+    "Cargo.lock": "c7b87301f5b05be4424cb5cdea7ad87913e4a61af7be4b177dd539f4d7d0e11c",
+    "rust-toolchain.toml": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc",
+    "src/lib.rs": "c5eb95c92b92d60bf5e22934a99693505285c7bfaf37e92f107444688ab18020",
+    "tests/resolver.rs": "5dc19664ef6e3048dff7f14cb847f97bf3270e926d8e89df2aeac9d5340ff229"
+  },
+  "network": "No network is used by either test command; the exact graph has no third-party crates.",
+  "credentials": "The observed commands used a fresh isolated Cargo home containing no credentials or alternate registry configuration; the exact graph requires none.",
+  "limitations": [
+    "The operational key=value transport is not the normative registry encoding.",
+    "The resolver compares exact digest bindings selected by trusted local policy; independent generators establish canonical bytes and digest correctness.",
+    "Only Linux x86_64 was directly exercised."
+  ]
+}

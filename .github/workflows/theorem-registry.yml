@@ -1,0 +1,172 @@
+name: Theorem registry
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: theorem-registry-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
+env:
+  EXPECTED_ELAN_SHA256: df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+  EXPECTED_LEAN_TOOLCHAIN: leanprover/lean4:v4.32.2
+  EXPECTED_LEAN_COMMIT: f3b06c705e6c85f5314019d5d3baab0fec5b580c
+  EXPECTED_MATHLIB_REVISION: 905b95818eb32af7874a58b427f50c1711a5e96c
+  EXPECTED_RUSTC_DEV_COMMIT: 8bab26f4f68e0e26f0bb7960be334d5b520ea452
+  EXPECTED_RUSTC_FLOOR_COMMIT: 4eb161250e340c8f48f66e2b929ef4a5bed7c181
+
+jobs:
+  registry:
+    name: Theorem registry evidence and conformance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      ELAN_HOME: ${{ github.workspace }}/../statqed-registry-tools/elan
+      CARGO_HOME: ${{ runner.temp }}/statqed-registry-tools/cargo
+      RUSTUP_HOME: ${{ runner.temp }}/statqed-registry-tools/rustup
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Check out full reviewed history without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+
+      - name: Record observed runner metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner.os=$RUNNER_OS"
+          echo "runner.arch=$RUNNER_ARCH"
+          echo "runner.name=$RUNNER_NAME"
+          echo "image.os=${ImageOS:-unreported}"
+          echo "image.version=${ImageVersion:-unreported}"
+          cat /etc/os-release
+          uname -a
+          python3 -VV
+          git rev-parse HEAD
+          # Direct evidence is limited to this observed mutable hosted runner.
+
+      - name: Install exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_root="$RUNNER_TEMP/statqed-registry-lean"
+          mkdir -p "$tool_root"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --output "$tool_root/elan.tar.gz" \
+            https://github.com/leanprover/elan/releases/download/v4.2.3/elan-x86_64-unknown-linux-gnu.tar.gz
+          echo "$EXPECTED_ELAN_SHA256  $tool_root/elan.tar.gz" | sha256sum --check --strict
+          tar -xzf "$tool_root/elan.tar.gz" -C "$tool_root"
+          "$tool_root/elan-init" -y --no-modify-path --default-toolchain none
+          echo "$ELAN_HOME/bin" >> "$GITHUB_PATH"
+          "$ELAN_HOME/bin/elan" toolchain install "$EXPECTED_LEAN_TOOLCHAIN"
+          lean_version="$("$ELAN_HOME/bin/elan" run "$EXPECTED_LEAN_TOOLCHAIN" lean --version)"
+          echo "$lean_version"
+          [[ "$lean_version" == *"commit $EXPECTED_LEAN_COMMIT"* ]]
+
+      - name: Install exact Rust development and offline-floor toolchains
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$CARGO_HOME" "$RUSTUP_HOME"
+          test ! -e "$CARGO_HOME/credentials"
+          test ! -e "$CARGO_HOME/credentials.toml"
+          test ! -e "$CARGO_HOME/config"
+          test ! -e "$CARGO_HOME/config.toml"
+          rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
+          rustup toolchain install 1.85.1 --profile minimal
+          rustc_dev="$(rustc +1.97.1 -Vv)"
+          rustc_floor="$(rustc +1.85.1 -Vv)"
+          printf '%s\n%s\n' "$rustc_dev" "$rustc_floor"
+          [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
+          [[ "$rustc_floor" == *"commit-hash: $EXPECTED_RUSTC_FLOOR_COMMIT"* ]]
+          test ! -e "$CARGO_HOME/credentials"
+          test ! -e "$CARGO_HOME/credentials.toml"
+          test ! -e "$CARGO_HOME/config"
+          test ! -e "$CARGO_HOME/config.toml"
+
+      - name: Run repository and predecessor gates before dependency material exists
+        run: |
+          make check
+          make list-work
+          git diff --check
+          python3 scripts/serialization/run_conformance.py --verify
+          python3 scripts/schema/check_schema_v0.py
+
+      - name: Resolve exact Mathlib lock and use reviewed binary cache
+        shell: bash
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          cp lake-manifest.json "$RUNNER_TEMP/lake-manifest.committed.json"
+          lake update --keep-toolchain
+          cmp lake-manifest.json "$RUNNER_TEMP/lake-manifest.committed.json"
+          lake exe cache get
+
+      - name: Run permanent registry evidence gates
+        run: |
+          python3 scripts/registry/check_evidence.py
+          python3 scripts/registry/run_conformance.py --verify
+
+      - name: Build, extract, observe axioms, and run same-kernel replay
+        shell: bash
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          lake build
+          lake env lean --trust=0 StatQED/Registry/Tests/Smoke.lean
+          lake env lean --trust=0 StatQED/Registry/Tools/AxiomReport.lean
+          lake env lean --trust=0 StatQED/Registry/Tools/Extract.lean
+          lake env leanchecker --fresh StatQED.Registry.Tests.Smoke
+          cd ..
+          python3 scripts/check_lean_trust.py
+          python3 scripts/check_lean_trust.py --run-mutations
+          python3 scripts/registry/check_axiom_report.py --check theorem-registry/evidence/axioms.json
+
+      - name: Run independent oracle, corruption, authorization, compatibility, and resource tests
+        run: python3 -m unittest discover -s scripts/registry/tests -p 'test_*.py' -v
+
+      - name: Run standalone Rust development resolver
+        working-directory: backend/crates/statqed-registry
+        env:
+          CARGO_NET_OFFLINE: "true"
+        run: |
+          cargo +1.97.1 fmt --check
+          cargo +1.97.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          cargo +1.97.1 test --all-features --locked --offline
+
+      - name: Run exact-lock Rust floor without network acquisition
+        working-directory: backend/crates/statqed-registry
+        env:
+          CARGO_NET_OFFLINE: "true"
+        run: cargo +1.85.1 test --all-features --locked --offline
+
+      - name: Verify dependency, license, advisory, and yanked observations
+        run: |
+          python3 scripts/registry/dependency_inventory.py --check
+          python3 scripts/registry/check_advisories.py --check
+          python3 scripts/registry/check_yanked.py --check
+
+      - name: Confirm byte-identical regeneration and clean tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/registry/build_registry.py
+          python3 scripts/registry/run_conformance.py
+          python3 scripts/registry/build_evidence_manifest.py
+          git diff --exit-code
+          git diff --check
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"

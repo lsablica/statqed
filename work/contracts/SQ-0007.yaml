@@ -1,7 +1,7 @@
 {
   "id": "SQ-0007",
   "title": "Create theorem registry and lock v0",
-  "status": "READY",
+  "status": "DONE",
   "plan": "docs/exec-plans/active/0001-foundation-bootstrap.md",
   "milestone": "Plan 0001 / Milestone C",
   "objective": "After RFC-0005 acceptance, the ADR-0011 test-only `True` conformance record has separately versioned semantic-proposition, meaning-bearing-environment, canonical-registry-record, verifier-selected-authorization, proof/build, axiom-report, and directional-compatibility evidence, with a deterministic bounded offline resolver and without any public-theorem, source-fidelity, artifact-verification, or non-vacuity claim.",
@@ -13,13 +13,13 @@
     "SQ-0003 is DONE and pins Lean `leanprover/lean4:v4.32.2`, Lean source `f3b06c705e6c85f5314019d5d3baab0fec5b580c`, Lake `5.0.0-src+f3b06c7`, and Mathlib `905b95818eb32af7874a58b427f50c1711a5e96c` with an actual environment-derived axiom-report path.",
     "SQ-0006 is DONE and supplies only the closed data-free ADR-0011 `foundation_structural` fixture; its schema evidence does not define theorem identity or authorization.",
     "ADR-0011 is Accepted and permits only a visibly test-only proposition `True` for the first registry path.",
-    "RFC-0005 remains Draft and is owned by SQ-0007; its acceptance is a completion gate, not a readiness prerequisite for its owner task."
+    "RFC-0005 is Accepted from the exact independently reviewed SQ-0007 subject; its acceptance was a completion gate, not a readiness prerequisite for its owner task."
   ],
   "decision_ownership": {
     "owned": [
       "RFC-0005 — theorem identity, proof trust, registry authorization, and directional compatibility"
     ],
-    "conditional_adr": "ADR-0007 may become Accepted only after RFC-0005 is Accepted and the ADR's marked decision scope exactly matches the accepted RFC consequence.",
+    "conditional_adr": "ADR-0007 is Accepted after RFC-0005 acceptance and its marked decision scope is byte-identical to the accepted RFC consequence.",
     "read_only": [
       "RFC-0001 and ADR-0004 accepted deterministic-encoding scope",
       "ADR-0011 data-free foundation slice",
@@ -106,7 +106,7 @@
   ],
   "sources": [
     "rfcs/0005-theorem-identity-and-compatibility.md — owned Draft decision input",
-    "docs/adr/0007-versioned-theorem-registry.md — Proposed consequence of RFC-0005",
+    "docs/adr/0007-versioned-theorem-registry.md — Accepted consequence of RFC-0005",
     "docs/adr/0011-foundation-toy-slice.md — Accepted source and nonclaim boundary for the test-only `True` record",
     "rfcs/0006-canonical-logical-data-digest.md — read-only Draft boundary owned by SQ-0027",
     "work/handoffs/SQ-0003.md and work/reviews/SQ-0003.md — exact proof-environment, axiom-report, trust-mutation, and limitation evidence",

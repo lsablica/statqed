@@ -1,5 +1,20 @@
 # StatQED Theorem Registry
 
-The registry will map stable theorem IDs to Lean declarations, statement hashes, assumptions, randomness/quantifier profiles, source audits, proof status, examples, ablations, compatibility, and citations.
+Status: Experimental test-only v0.
 
-SQ-0007 creates a toy registry/lock. Statistical entries begin with the randomization method pack.
+The registry contains exactly one definitionally trivial `True` record used to
+exercise identity, environment closure, proof/build, axiom observation,
+authorization, and directional-compatibility plumbing.  It is not a public or
+statistical theorem and is not a non-vacuity witness.
+
+`registry.json` is a generated index.  The canonical record, independently
+selected authorization policy, lock layers, and retained evidence are in the
+adjacent directories.  Regenerate them with:
+
+```bash
+python3 scripts/registry/build_registry.py
+```
+
+Verification is bounded, deterministic, and offline after toolchain setup.
+Internal hash consistency never gives a candidate registry governance
+authority; the verifier selects the permitted root policy separately.

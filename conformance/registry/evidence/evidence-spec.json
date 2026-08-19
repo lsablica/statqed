@@ -1,0 +1,93 @@
+{
+  "schema": "statqed.sq0007-evidence-spec.v2",
+  "historical_launch_base": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
+  "historical_task_commits": {
+    "prototype": "2296f3f441c5601eb92de84fc61c8c2823ab4524",
+    "blocked_head": "8d327ec7d7d533d9485194c373bb44c7ea27d795"
+  },
+  "verified_predecessor_chain": [
+    {
+      "phase": "phase_m_compositional_evidence",
+      "predecessor_tip": "e6e6fcf5a4dc58037be506b67eb25deee9298979",
+      "task_integration_merge": "524eb11036f53babb2cb92d3e60973f6ee44e81a",
+      "first_parent": "8d327ec7d7d533d9485194c373bb44c7ea27d795",
+      "second_parent": "e6e6fcf5a4dc58037be506b67eb25deee9298979"
+    },
+    {
+      "phase": "phase_f_fixture_neutrality",
+      "predecessor_tip": "950ebf5f591f7d58d089d215c9c76863bc50f7f6",
+      "task_integration_merge": "4b99eabf02c333790bc7cd438625c9f2328fb101",
+      "first_parent": "524eb11036f53babb2cb92d3e60973f6ee44e81a",
+      "second_parent": "950ebf5f591f7d58d089d215c9c76863bc50f7f6"
+    },
+    {
+      "phase": "phase_t_branch_relative_live_report_fixtures",
+      "predecessor_tip": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f",
+      "task_integration_merge": "1b9ce9555cb524c7b727a67c275ba68ef7b93798",
+      "first_parent": "4b99eabf02c333790bc7cd438625c9f2328fb101",
+      "second_parent": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f"
+    }
+  ],
+  "verified_predecessor_tip": "a2d16e416abe2e5aa0b406f8b57d7bbe85cecd9f",
+  "predecessor_bindings": {
+    "sq0005_manifest_sha256": "22b771b5aa71a72fe3979e9dd29ff8a5ae0b8e082bd0b971036baa0d554a4a7a",
+    "sq0006_manifest_sha256": "3a5c97ab4aea0f8c3eb8c0f5ac9f3d30d7f04f22898b7ecefd8e64321f103a40",
+    "sq0006_scientific_digest": "4bfd5fad7f9884d592d5c8c320dbd4efd735c990f3b23d6b3cb5d8e9854df5f0",
+    "rfc0006_sha256": "e834f805cc38fca2185433c72df4ac7db856c0ae20037fedcb57329a740b3429"
+  },
+  "live_invariants": {
+    "task": "SQ-0007",
+    "allowed_statuses": ["IN_PROGRESS", "IN_REVIEW", "BLOCKED", "DONE"],
+    "rfc": "RFC-0005",
+    "adr": "ADR-0007",
+    "rfc0006_owner": "SQ-0027"
+  },
+  "historical_completion_state": {
+    "meaning": "Populated by the final DONE transition; it is historical evidence, not a permanent global-ledger equality requirement.",
+    "done_contains": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005", "SQ-0006", "SQ-0007"],
+    "active": [],
+    "ready": ["SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
+    "blocked_count": 48
+  },
+  "subject_patterns": [
+    "rfcs/0005-theorem-identity-and-compatibility.md",
+    "docs/adr/0007-versioned-theorem-registry.md",
+    "theorem-registry/**",
+    "schemas/registry/**",
+    "lean/StatQED/Registry/**",
+    "backend/crates/statqed-registry/**",
+    "scripts/registry/**",
+    "conformance/registry/fixtures/**",
+    "conformance/registry/golden/**",
+    "conformance/registry/results/**",
+    "source-audits/registry/**",
+    "docs/design/theorem-registry.md",
+    "docs/spec/theorem-lock.md",
+    "docs/implementation/theorem-registry.md",
+    ".github/workflows/theorem-registry.yml",
+    "Makefile"
+  ],
+  "scientific_subject_patterns": [
+    "rfcs/0005-theorem-identity-and-compatibility.md",
+    "docs/adr/0007-versioned-theorem-registry.md",
+    "theorem-registry/spec/**",
+    "theorem-registry/records/**",
+    "theorem-registry/policy/**",
+    "theorem-registry/locks/**",
+    "theorem-registry/evidence/**",
+    "schemas/registry/**",
+    "lean/StatQED/Registry/**",
+    "backend/crates/statqed-registry/Cargo.toml",
+    "backend/crates/statqed-registry/Cargo.lock",
+    "backend/crates/statqed-registry/rust-toolchain.toml",
+    "backend/crates/statqed-registry/src/**",
+    "backend/crates/statqed-registry/tests/**",
+    "backend/crates/statqed-registry/evidence/**",
+    "conformance/registry/fixtures/**",
+    "conformance/registry/golden/**",
+    "conformance/registry/results/**",
+    "source-audits/registry/**"
+  ],
+  "ignored_components": ["__pycache__", "target", ".lake", ".pytest_cache"],
+  "review_path": "work/reviews/SQ-0007.md"
+}
