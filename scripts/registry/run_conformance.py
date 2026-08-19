@@ -222,6 +222,24 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         bundle["candidate_policy"] = "\ud800"
     elif mutation == "bundle_unknown_string_over":
         bundle["unknown"] = "x" * (LIMITS["string_bytes"] + 1)
+    elif mutation in {
+        "resource_id_over_policy_surrogate",
+        "resource_axioms_over_policy_surrogate",
+        "resource_unknown_string_over_policy_surrogate",
+        "resource_id_over_bundle_surrogate",
+    }:
+        if mutation in {
+            "resource_id_over_policy_surrogate", "resource_id_over_bundle_surrogate"
+        }:
+            bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
+        elif mutation == "resource_axioms_over_policy_surrogate":
+            bundle["axioms"] = [None] * (LIMITS["axioms"] + 1)
+        else:
+            bundle["unknown"] = "x" * (LIMITS["string_bytes"] + 1)
+        if mutation == "resource_id_over_bundle_surrogate":
+            bundle["candidate_policy"] = "\ud800"
+        else:
+            policy["schema"] = "\ud800"
     elif mutation == "forged_id":
         bundle["record"]["id"] = "statqed.test-only.forged.v0"
         rebuild_bundle_record(bundle)
@@ -330,6 +348,8 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         "compatibility_policy_proof_subject_null",
         "compatibility_policy_universes_null",
         "compatibility_policy_new_proposition_null",
+        "compatibility_policy_normalized_type_bool",
+        "compatibility_policy_wrong_valid_proof_subject",
     }:
         field, value = {
             "compatibility_policy_path_boolean": ("path_length", True),
@@ -337,6 +357,12 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
             "compatibility_policy_proof_subject_null": ("proof_subject", None),
             "compatibility_policy_universes_null": ("universe_instantiations", None),
             "compatibility_policy_new_proposition_null": ("new_proposition", None),
+            "compatibility_policy_normalized_type_bool": (
+                "normalized_type", [5, False, [2, [[0, "False"]], []], [2, [[0, "True"]], []]]
+            ),
+            "compatibility_policy_wrong_valid_proof_subject": (
+                "proof_subject", [2, [[0, "True"]], []]
+            ),
         }[mutation]
         policy["compatibility_binding"][field] = value
         _, digest = digest_frame(

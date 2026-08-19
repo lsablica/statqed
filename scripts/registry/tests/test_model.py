@@ -528,6 +528,37 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
+    def test_resource_preflight_precedes_unrelated_unicode_failure(self):
+        scenarios = []
+        bundle = copy.deepcopy(self.bundle)
+        policy = copy.deepcopy(self.policy)
+        bundle["record"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
+        policy["schema"] = "\ud800"
+        scenarios.append((bundle, policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        policy = copy.deepcopy(self.policy)
+        bundle["axioms"] = [None] * (model.LIMITS["axioms"] + 1)
+        policy["schema"] = "\ud800"
+        scenarios.append((bundle, policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        policy = copy.deepcopy(self.policy)
+        bundle["unknown"] = "x" * (model.LIMITS["string_bytes"] + 1)
+        policy["schema"] = "\ud800"
+        scenarios.append((bundle, policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        bundle["record"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
+        bundle["candidate_policy"] = "\ud800"
+        scenarios.append((bundle, copy.deepcopy(self.policy)))
+
+        for bundle, policy in scenarios:
+            with self.subTest(bundle_keys=sorted(bundle)), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.verify_bundle(bundle, policy)
+
     def test_wrong_compatibility_direction_rejected(self):
         bundle = copy.deepcopy(self.bundle)
         bundle["compatibility"] = copy.deepcopy(self.policy["compatibility_binding"])
@@ -584,6 +615,11 @@ class ModelTests(unittest.TestCase):
             ("proof_subject", None),
             ("universe_instantiations", None),
             ("new_proposition", None),
+            (
+                "normalized_type",
+                [5, False, [2, [[0, "False"]], []], [2, [[0, "True"]], []]],
+            ),
+            ("proof_subject", [2, [[0, "True"]], []]),
         ):
             bundle = copy.deepcopy(self.bundle)
             policy = copy.deepcopy(self.policy)

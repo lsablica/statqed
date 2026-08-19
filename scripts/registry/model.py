@@ -493,18 +493,29 @@ def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, 
     """
 
     for root in (bundle, policy):
-        stack: list[Any] = [root]
+        stack: list[tuple[Any, int]] = [(root, 0)]
+        seen_containers: set[int] = set()
+        nodes = 0
         while stack:
-            value = stack.pop()
+            value, depth = stack.pop()
+            nodes += 1
+            if nodes > LIMITS["canonical_nodes"] or depth > LIMITS["canonical_depth"]:
+                raise RegistryError("registry.resource_limit")
             if isinstance(value, str):
                 length = _utf8_length(value)
                 if length is not None and length > LIMITS["string_bytes"]:
                     raise RegistryError("registry.resource_limit")
             elif isinstance(value, list):
-                stack.extend(value)
+                if id(value) in seen_containers:
+                    continue
+                seen_containers.add(id(value))
+                stack.extend((item, depth + 1) for item in value)
             elif isinstance(value, dict):
-                stack.extend(value.keys())
-                stack.extend(value.values())
+                if id(value) in seen_containers:
+                    continue
+                seen_containers.add(id(value))
+                stack.extend((item, depth + 1) for item in value.keys())
+                stack.extend((item, depth + 1) for item in value.values())
 
     root_fields = (
         "current_permitted_roots",
@@ -573,12 +584,32 @@ def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
         [2, [[0, "False"]], []],
         [2, [[0, "True"]], []],
     ]
-    if value.get("normalized_type") != expected_type:
-        raise RegistryError("registry.compatibility_missing")
+    expected_proof_subject = [
+        4,
+        0,
+        [2, [[0, "False"]], []],
+        [
+            3,
+            [
+                3,
+                [2, [[0, "False"], [0, "elim"]], [[0]]],
+                [2, [[0, "True"]], []],
+            ],
+            [0, 0],
+        ],
+    ]
     try:
-        normalize_expr(value.get("proof_subject"))
+        normalized_type = normalize_expr(value.get("normalized_type"))
+        normalized_proof = normalize_expr(value.get("proof_subject"))
     except RegistryError as error:
         raise RegistryError("registry.compatibility_missing") from error
+    # Python's bool is an int subclass, so compare canonical typed bytes rather
+    # than native lists. The v0 lock is deliberately limited to the one live,
+    # kernel-checked False -> True fixture and its reviewed proof subject.
+    if canonical_cbor(normalized_type) != canonical_cbor(expected_type):
+        raise RegistryError("registry.compatibility_missing")
+    if canonical_cbor(normalized_proof) != canonical_cbor(expected_proof_subject):
+        raise RegistryError("registry.compatibility_missing")
     for field in (
         "new_proposition_digest", "old_proposition_digest", "environment_digest",
         "proof_build_digest", "axiom_report_digest",
@@ -601,11 +632,11 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         "proposition_digest", "environment_digest", "proof_build_digest",
         "axioms", "compatibility", "compatibility_digest",
     }
+    _verify_bundle_resource_preflight(bundle, policy)
     if len(canonical_json(bundle)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
     if len(canonical_json(policy)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
-    _verify_bundle_resource_preflight(bundle, policy)
     if set(bundle) - (expected_bundle_fields | {"candidate_policy"}) or not expected_bundle_fields.issubset(bundle):
         raise RegistryError("registry.malformed_record")
     candidate_digest_fields = (
