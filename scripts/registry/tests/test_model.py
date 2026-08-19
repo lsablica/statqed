@@ -123,19 +123,18 @@ class ModelTests(unittest.TestCase):
 
     def test_closure_unicode_failures_are_stable(self):
         cases = (
-            (["\ud800"], {"\ud800": {"references": []}}),
-            (["root"], {"root": {"references": ["\ud800"]}, "\ud800": {"references": []}}),
+            (["\ud800"], {"\ud800": {"kind": "definition", "references": []}}),
+            (["root"], {"root": {"kind": "definition", "references": ["\ud800"]}, "\ud800": {"kind": "definition", "references": []}}),
         )
         for roots, declarations in cases:
             with self.subTest(roots=repr(roots)), self.assertRaisesRegex(
                 model.RegistryError, "registry.normalization_failure"
             ):
                 model.closure(roots, declarations)
-        retained = model.closure(
-            ["root"], {"root": {"references": [], "value": "\ud800"}}
-        )
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
-            model.canonical_cbor(["statqed.lean-environment-closure.v0", retained])
+            model.closure(
+                ["root"], {"root": {"kind": "definition", "references": [], "value": "\ud800"}}
+            )
 
     def test_semantic_limits_survive_canonical_framing(self):
         leaves = [[0, 0] for _ in range(32_767)]
@@ -235,27 +234,28 @@ class ModelTests(unittest.TestCase):
             model.closure(["x"], {})
 
     def test_closure_cycle_rejected(self):
-        declarations = {"a": {"references": ["b"]}, "b": {"references": ["a"]}}
+        declarations = {"a": {"kind": "definition", "references": ["b"]}, "b": {"kind": "definition", "references": ["a"]}}
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_cycle"):
             model.closure(["a"], declarations)
 
     def test_closure_width_boundary(self):
         roots = [f"x{i}" for i in range(model.LIMITS["closure_width"])]
-        declarations = {name: {"references": []} for name in roots}
+        declarations = {name: {"kind": "definition", "references": []} for name in roots}
         self.assertEqual(len(model.closure(roots, declarations)), len(roots))
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
             model.closure(roots + ["over"], declarations)
         outgoing = [f"d{i}" for i in range(model.LIMITS["closure_width"])]
-        graph = {"root": {"references": outgoing}, **{name: {"references": []} for name in outgoing}}
+        graph = {"root": {"kind": "definition", "references": outgoing}, **{name: {"kind": "definition", "references": []} for name in outgoing}}
         self.assertEqual(len(model.closure(["root"], graph)), len(outgoing) + 1)
         graph["root"]["references"].append("over")
-        graph["over"] = {"references": []}
+        graph["over"] = {"kind": "definition", "references": []}
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
             model.closure(["root"], graph)
 
     def test_closure_depth_boundary(self):
         accepted = {
             f"n{index}": {
+                "kind": "definition",
                 "references": [] if index == model.LIMITS["closure_depth"] else [f"n{index + 1}"]
             }
             for index in range(model.LIMITS["closure_depth"] + 1)
@@ -263,28 +263,43 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(len(model.closure(["n0"], accepted)), len(accepted))
         rejected = copy.deepcopy(accepted)
         rejected[f"n{model.LIMITS['closure_depth']}"]["references"] = ["over"]
-        rejected["over"] = {"references": []}
+        rejected["over"] = {"kind": "definition", "references": []}
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_depth_limit"):
             model.closure(["n0"], rejected)
 
     def test_closure_unit_boundary_has_no_off_by_one_escape(self):
         maximum = model.LIMITS["closure_units"]
         branches = [f"b{i}" for i in range(model.LIMITS["closure_width"])]
-        accepted = {"root": {"references": branches}}
+        accepted = {"root": {"kind": "definition", "references": branches}}
         remaining = maximum - 1 - len(branches)
         for index, branch in enumerate(branches):
             leaf_count = min(3, remaining)
             leaves = [f"{branch}.l{leaf}" for leaf in range(leaf_count)]
-            accepted[branch] = {"references": leaves}
-            accepted.update({leaf: {"references": []} for leaf in leaves})
+            accepted[branch] = {"kind": "definition", "references": leaves}
+            accepted.update({leaf: {"kind": "definition", "references": []} for leaf in leaves})
             remaining -= leaf_count
         self.assertEqual(remaining, 0)
         self.assertEqual(len(model.closure(["root"], accepted)), maximum)
         rejected = copy.deepcopy(accepted)
         rejected[branches[-1]]["references"].append("one.over")
-        rejected["one.over"] = {"references": []}
+        rejected["one.over"] = {"kind": "definition", "references": []}
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_work_budget_limit"):
             model.closure(["root"], rejected)
+
+    def test_closure_declaration_units_are_closed_and_versioned(self):
+        accepted = {"a": {"kind": "definition", "references": [], "value": "body"}}
+        self.assertEqual(model.closure(["a"], accepted), [{"name": "a", "kind": "definition", "value": "body"}])
+        rejected = (
+            {"a": {"references": []}},
+            {"a": {"kind": "unknown", "references": []}},
+            {"a": {"kind": "definition", "references": [], "unknown": -1}},
+            {"a": {"kind": "definition", "references": [], "value": -1}},
+        )
+        for declarations in rejected:
+            with self.subTest(declarations=declarations), self.assertRaisesRegex(
+                model.RegistryError, "registry.normalization_failure"
+            ):
+                model.closure(["a"], declarations)
 
     def test_fixed_work_cap_is_explicitly_dominated_by_other_v0_limits(self):
         dominance_upper_bound = (

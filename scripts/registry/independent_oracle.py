@@ -567,6 +567,26 @@ def environment_closure(
             raise OracleError("registry.resource_limit")
         return canonical_cbor([[0, part] for part in parts])
 
+    def declaration_payload(declaration: Mapping[str, Any]) -> dict[str, Any]:
+        kind = declaration.get("kind")
+        fields = set(declaration)
+        if kind == "definition" and fields in (
+            {"kind", "references"},
+            {"kind", "references", "value"},
+        ):
+            payload = {"kind": kind}
+            if "value" in declaration:
+                if not isinstance(declaration["value"], str):
+                    raise OracleError("registry.normalization_failure")
+                _Budget().string(
+                    declaration["value"], individual_limit=LIMITS["string_literal_bytes"]
+                )
+                payload["value"] = declaration["value"]
+            return payload
+        if kind == "inductive_family" and fields == {"kind", "references"}:
+            return {"kind": kind}
+        raise OracleError("registry.normalization_failure")
+
     def visit(name: str, depth: int) -> None:
         nonlocal work
         work += 1
@@ -585,6 +605,7 @@ def environment_closure(
             raise OracleError("registry.missing_dependency")
         if not isinstance(declaration, Mapping):
             raise OracleError("registry.normalization_failure")
+        payload = declaration_payload(declaration)
         references = declaration.get("references")
         if not isinstance(references, list):
             raise OracleError("registry.normalization_failure")
@@ -596,7 +617,7 @@ def environment_closure(
         for reference in sorted(references, key=name_key):
             visit(reference, depth + 1)
         active.remove(name)
-        emitted[name] = {key: value for key, value in declaration.items() if key != "references"}
+        emitted[name] = payload
 
     for root in sorted(roots, key=name_key):
         visit(root, 0)

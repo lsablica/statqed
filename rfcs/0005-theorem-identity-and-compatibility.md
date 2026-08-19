@@ -91,6 +91,13 @@ after elaboration.  Inductive families are atomic so ordinary constructor
 backedges do not create false cycle failures.  Any remaining active-path cycle,
 missing declaration, unsafe declaration, or budget failure is rejected.
 
+The language-neutral fixture closure accepts only closed, versioned
+declaration units: a `definition` has `kind`, `references`, and at most one
+bounded UTF-8 string `value`; an `inductive_family` has only `kind` and
+`references`. Missing kinds, unknown kinds or fields, and wrong field types
+fail as normalization errors. This fixture grammar is not an extension
+mechanism and is distinct from the richer typed live Lean export.
+
 This is the smallest closure supported by the retained referenced-definition,
 import, instance, missing-dependency, cycle, width, depth, and work mutations.
 Complete Mathlib/Lake/project material remains in the proof/build lock.

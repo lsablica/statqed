@@ -395,6 +395,28 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
             raise RegistryError("registry.resource_limit")
         return canonical_cbor([[0, part] for part in parts])
 
+    def declaration_payload(declaration: dict[str, Any]) -> dict[str, Any]:
+        kind = declaration.get("kind")
+        if kind == "definition" and set(declaration) in (
+            {"kind", "references"},
+            {"kind", "references", "value"},
+        ):
+            payload = {"kind": kind}
+            if "value" in declaration:
+                if not isinstance(declaration["value"], str):
+                    raise RegistryError("registry.normalization_failure")
+                try:
+                    raw = declaration["value"].encode("utf-8", "strict")
+                except UnicodeEncodeError as exc:
+                    raise RegistryError("registry.normalization_failure") from exc
+                if len(raw) > LIMITS["string_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+                payload["value"] = declaration["value"]
+            return payload
+        if kind == "inductive_family" and set(declaration) == {"kind", "references"}:
+            return {"kind": kind}
+        raise RegistryError("registry.normalization_failure")
+
     def visit(name: str, depth: int) -> None:
         nonlocal work
         work += 1
@@ -413,6 +435,7 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
             raise RegistryError("registry.missing_dependency")
         if not isinstance(declaration, dict):
             raise RegistryError("registry.normalization_failure")
+        payload = declaration_payload(declaration)
         refs = declaration.get("references")
         if not isinstance(refs, list):
             raise RegistryError("registry.normalization_failure")
@@ -424,7 +447,7 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
                 raise RegistryError("registry.normalization_failure")
             visit(reference, depth + 1)
         gray.remove(name)
-        done[name] = {key: value for key, value in declaration.items() if key != "references"}
+        done[name] = payload
 
     for root in sorted(root_names, key=name_key):
         visit(root, 0)

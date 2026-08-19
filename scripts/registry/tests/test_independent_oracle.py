@@ -207,24 +207,23 @@ class IndependentOracleTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(oracle.OracleError, "registry.closure_cycle"):
             oracle.environment_closure(
-                ["a"], {"a": {"references": ["b"]}, "b": {"references": ["a"]}}
+                ["a"], {"a": {"kind": "definition", "references": ["b"]}, "b": {"kind": "definition", "references": ["a"]}}
             )
 
     def test_closure_unicode_failures_are_stable(self):
         cases = (
-            (["\ud800"], {"\ud800": {"references": []}}),
-            (["root"], {"root": {"references": ["\ud800"]}, "\ud800": {"references": []}}),
+            (["\ud800"], {"\ud800": {"kind": "definition", "references": []}}),
+            (["root"], {"root": {"kind": "definition", "references": ["\ud800"]}, "\ud800": {"kind": "definition", "references": []}}),
         )
         for roots, declarations in cases:
             with self.subTest(roots=repr(roots)), self.assertRaisesRegex(
                 oracle.OracleError, "registry.normalization_failure"
             ):
                 oracle.environment_closure(roots, declarations)
-        retained = oracle.environment_closure(
-            ["root"], {"root": {"references": [], "value": "\ud800"}}
-        )
         with self.assertRaisesRegex(oracle.OracleError, "registry.normalization_failure"):
-            oracle.canonical_cbor(["statqed.lean-environment-closure.v0", retained])
+            oracle.environment_closure(
+                ["root"], {"root": {"kind": "definition", "references": [], "value": "\ud800"}}
+            )
 
     def test_level_parameter_context_is_closed_and_utf8(self):
         for parameters in (None, "u", 1, [None], [True], ["\ud800"], ["u", "u"]):
@@ -242,16 +241,34 @@ class IndependentOracleTests(unittest.TestCase):
 
     def test_malformed_closure_shapes_fail_stably(self):
         cases = (
-            (None, {}), ("root", {"root": {"references": []}}),
+            (None, {}), ("root", {"root": {"kind": "definition", "references": []}}),
             ([], None), ([], []), (["root"], {"root": []}),
-            (["root"], {"root": {"references": None}}),
-            (["root"], {"root": {"references": "dep"}}),
+            (["root"], {"root": {"kind": "definition", "references": None}}),
+            (["root"], {"root": {"kind": "definition", "references": "dep"}}),
         )
         for roots, declarations in cases:
             with self.subTest(roots=repr(roots), declarations=repr(declarations)), self.assertRaisesRegex(
                 oracle.OracleError, "registry.normalization_failure"
             ):
                 oracle.environment_closure(roots, declarations)
+
+    def test_closure_declaration_units_are_closed_and_versioned(self):
+        accepted = {"a": {"kind": "definition", "references": [], "value": "body"}}
+        self.assertEqual(
+            oracle.environment_closure(["a"], accepted),
+            [{"name": "a", "kind": "definition", "value": "body"}],
+        )
+        rejected = (
+            {"a": {"references": []}},
+            {"a": {"kind": "unknown", "references": []}},
+            {"a": {"kind": "definition", "references": [], "unknown": -1}},
+            {"a": {"kind": "definition", "references": [], "value": -1}},
+        )
+        for declarations in rejected:
+            with self.subTest(declarations=declarations), self.assertRaisesRegex(
+                oracle.OracleError, "registry.normalization_failure"
+            ):
+                oracle.environment_closure(["a"], declarations)
 
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]

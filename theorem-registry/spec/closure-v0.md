@@ -44,6 +44,15 @@ non-map declaration tables or records, and non-array references fail as
 `registry.normalization_failure`; no host-language iteration or attribute
 error is observable.
 
+The language-neutral fixture closure uses a closed declaration-unit grammar:
+`definition` contains exactly `kind`, `references`, and optionally a bounded
+UTF-8 string `value`; `inductive_family` contains exactly `kind` and
+`references`. The kind is required. Unknown kinds, missing required fields,
+unknown fields, and non-string definition values are
+`registry.normalization_failure`. These fixture records are deliberately
+narrower than the independently exported live Lean declaration-unit grammar;
+they do not introduce generic extension atoms.
+
 The closure payload is canonical CBOR of:
 
 ```text
