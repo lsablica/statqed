@@ -13,11 +13,11 @@
   },
   "review_projection": {
     "path": "work/reviews/SQ-0007.md",
-    "projection_sha256": "8507ba886cdbd444d2fa45d33551ea70e3dfa838d7751f8bad9813d57ebe6f04"
+    "projection_sha256": "01145acfee74e92ccffcdbabe2952f21dabebfd9bbd11a4028c786ed5b1f2095"
   },
   "schema": "statqed.sq0007-evidence.v2",
   "scientific_subject_count": 79,
-  "scientific_subject_digest": "846b422f07a1cd16fff1933d2c79083843ad4306106237b113b3acd22a370b6b",
+  "scientific_subject_digest": "56b385ed749f9441182c8af283d51ffb76ccf3290ff8d585b86b6680c9fedd0a",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -60,9 +60,9 @@
       "sha256": "5dc19664ef6e3048dff7f14cb847f97bf3270e926d8e89df2aeac9d5340ff229"
     },
     {
-      "bytes": 27181,
+      "bytes": 31210,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "5a99b3c1f44f0ebfe3f4c9161a47bc7326296bf986a88ce78fee7ca90f32f003"
+      "sha256": "eb0d5e41bdc9e0973634335a1314faa7f39347c4b79e44593ae99f623f425e6e"
     },
     {
       "bytes": 151,
@@ -220,9 +220,9 @@
       "sha256": "6bd45ce02078c54bf4e54a55cec7b04ca80784f0dc5861ff31b3af5053cb37df"
     },
     {
-      "bytes": 32115,
+      "bytes": 36107,
       "path": "conformance/registry/results/results.json",
-      "sha256": "273079a68c21caf302b0b5028fddad3feb13bf0b05cfce0362c57eee6b6e9185"
+      "sha256": "3a0d73d9a1a22c98e3e158b537c77f7e179d52a6af2667092d71b6fdf96bea6d"
     },
     {
       "bytes": 4026,
@@ -416,7 +416,7 @@
     }
   ],
   "subject_count": 103,
-  "subject_digest": "977a01753aed14032a7904e7a123cb69d76f3c2153bf2f0f669235dd6bb61f73",
+  "subject_digest": "42ac386360c972b496c40498710454b76778ed5668c7021fb3cce8998559b3b5",
   "subjects": [
     {
       "bytes": 7079,
@@ -474,9 +474,9 @@
       "sha256": "5dc19664ef6e3048dff7f14cb847f97bf3270e926d8e89df2aeac9d5340ff229"
     },
     {
-      "bytes": 27181,
+      "bytes": 31210,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "5a99b3c1f44f0ebfe3f4c9161a47bc7326296bf986a88ce78fee7ca90f32f003"
+      "sha256": "eb0d5e41bdc9e0973634335a1314faa7f39347c4b79e44593ae99f623f425e6e"
     },
     {
       "bytes": 151,
@@ -634,9 +634,9 @@
       "sha256": "6bd45ce02078c54bf4e54a55cec7b04ca80784f0dc5861ff31b3af5053cb37df"
     },
     {
-      "bytes": 32115,
+      "bytes": 36107,
       "path": "conformance/registry/results/results.json",
-      "sha256": "273079a68c21caf302b0b5028fddad3feb13bf0b05cfce0362c57eee6b6e9185"
+      "sha256": "3a0d73d9a1a22c98e3e158b537c77f7e179d52a6af2667092d71b6fdf96bea6d"
     },
     {
       "bytes": 4026,
@@ -744,19 +744,19 @@
       "sha256": "870d2c9758f3ea12143690aae9095423c0db839bc5cd5360262a5a1dd8a503a9"
     },
     {
-      "bytes": 31704,
+      "bytes": 42541,
       "path": "scripts/registry/independent_oracle.py",
-      "sha256": "5dcaeea19564edc2e0996a819eb05698ab7131ccb12acc25c5932ea0eea92a1b"
+      "sha256": "2d84c04977472e0c028495a6fb901550909cf57732488270f4c0bdb129150af2"
     },
     {
-      "bytes": 35686,
+      "bytes": 47785,
       "path": "scripts/registry/model.py",
-      "sha256": "b08487bb8b0db6afbfae35316eeb298f23b5d6ca9f1cdb3c53e44b8ffd8fd7e8"
+      "sha256": "869fcdb744227cbf1c41ce374e232e36c718ffa8f2480fce84a123432062b1e3"
     },
     {
-      "bytes": 32762,
+      "bytes": 37336,
       "path": "scripts/registry/run_conformance.py",
-      "sha256": "81655308d7eef157b71f67f00e5a38d19893a93afd9fb0f375e10b86478ec1f1"
+      "sha256": "9dc649c59b062e7d859daff930132fffb1d9312b7c18c53a87d6d9b34bc6da56"
     },
     {
       "bytes": 1046,
@@ -769,14 +769,14 @@
       "sha256": "c579ec492875ab2ad8a885a70ef9cacbaa2e228e65ea9da9462428c3795dee34"
     },
     {
-      "bytes": 15059,
+      "bytes": 16977,
       "path": "scripts/registry/tests/test_independent_oracle.py",
-      "sha256": "d5d8d2f18b6798e5c017cbfa81236116bcb634dd253b6b733a78378cdf98c6fc"
+      "sha256": "b24edba498c4d2dccfa4550a68004dd7aa74a42aff35961b419a6d6995914971"
     },
     {
-      "bytes": 34108,
+      "bytes": 40527,
       "path": "scripts/registry/tests/test_model.py",
-      "sha256": "26041f1e3a6e0b5d1a3862f4e1317472e11215ae0fd54bc953bd1e009bdf3a97"
+      "sha256": "badba6d587fbde6b6981768b0bab184386d6f31fa0c4481ad5271929fe432127"
     },
     {
       "bytes": 5774,
