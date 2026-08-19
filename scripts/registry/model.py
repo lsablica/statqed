@@ -249,6 +249,13 @@ def digest_frame(kind: str, payload: bytes) -> tuple[bytes, str]:
 
 
 def validate_level_parameters(value: Any) -> list[str]:
+    if isinstance(value, list):
+        if len(value) > LIMITS["universe_arguments"]:
+            raise RegistryError("registry.resource_limit")
+        for item in value:
+            length = _utf8_length_lower_bound(item)
+            if length is not None and length > LIMITS["name_segment_bytes"]:
+                raise RegistryError("registry.resource_limit")
     if not isinstance(value, list):
         raise RegistryError("registry.normalization_failure")
     if len(value) > LIMITS["universe_arguments"]:
@@ -269,9 +276,103 @@ def validate_level_parameters(value: Any) -> list[str]:
     return result
 
 
+def _semantic_expression_resource_preflight(expr: Any) -> None:
+    """Inspect every grammar-selected branch before reporting syntax errors."""
+
+    nodes = 0
+    string_bytes = 0
+    stack: list[tuple[Any, str, int, bool]] = [(expr, "expr", 0, False)]
+    active: set[int] = set()
+    while stack:
+        value, context, depth, exiting = stack.pop()
+        if exiting:
+            active.discard(id(value))
+            continue
+        if isinstance(value, list):
+            if id(value) in active:
+                continue
+            active.add(id(value))
+            stack.append((value, context, depth, True))
+        if context in {"expr", "level"}:
+            nodes += 1
+            depth_limit = (
+                LIMITS["expression_depth"] if context == "expr" else LIMITS["level_depth"]
+            )
+            if nodes > LIMITS["expression_nodes"] or depth > depth_limit:
+                raise RegistryError("registry.resource_limit")
+        if context == "name":
+            if not isinstance(value, list):
+                continue
+            if len(value) > LIMITS["name_segments"]:
+                raise RegistryError("registry.resource_limit")
+            qualified = 0
+            for segment in value:
+                if (
+                    isinstance(segment, list)
+                    and len(segment) >= 2
+                    and segment[0] == 0
+                    and type(segment[0]) is int
+                ):
+                    length = _utf8_length_lower_bound(segment[1])
+                    if length is not None:
+                        if length > LIMITS["name_segment_bytes"]:
+                            raise RegistryError("registry.resource_limit")
+                        qualified += length
+                        string_bytes += length
+            if qualified > LIMITS["qualified_name_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            if string_bytes > LIMITS["aggregate_string_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            continue
+        if not isinstance(value, list) or not value or type(value[0]) is not int:
+            continue
+        tag = value[0]
+        if context == "level":
+            if tag == 1 and len(value) > 1:
+                stack.append((value[1], "level", depth + 1, False))
+            elif tag in (2, 3):
+                if len(value) > 1:
+                    stack.append((value[1], "level", depth + 1, False))
+                if len(value) > 2:
+                    stack.append((value[2], "level", depth + 1, False))
+            continue
+        if tag == 1 and len(value) > 1:
+            stack.append((value[1], "level", 0, False))
+        elif tag == 2:
+            if len(value) > 1:
+                stack.append((value[1], "name", 0, False))
+            if len(value) > 2 and isinstance(value[2], list):
+                if len(value[2]) > LIMITS["universe_arguments"]:
+                    raise RegistryError("registry.resource_limit")
+                stack.extend((level, "level", 0, False) for level in value[2])
+        elif tag == 3:
+            if len(value) > 1:
+                stack.append((value[1], "expr", depth + 1, False))
+            if len(value) > 2:
+                stack.append((value[2], "expr", depth + 1, False))
+        elif tag in (4, 5, 6):
+            first = 2 if tag in (4, 5) else 1
+            for child in value[first:4]:
+                stack.append((child, "expr", depth + 1, False))
+        elif tag == 8 and len(value) > 1:
+            length = _utf8_length_lower_bound(value[1])
+            if length is not None:
+                if length > LIMITS["string_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+                string_bytes += length
+                if string_bytes > LIMITS["aggregate_string_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+        elif tag == 9:
+            if len(value) > 1:
+                stack.append((value[1], "name", 0, False))
+            if len(value) > 3:
+                stack.append((value[3], "expr", depth + 1, False))
+
+
 def normalize_expr(expr: Any, *, level_params: list[str] | None = None) -> Any:
     """Validate the language-neutral structural expression grammar."""
 
+    _semantic_expression_resource_preflight(expr)
     params = validate_level_parameters([] if level_params is None else level_params)
     nodes = 0
     string_bytes = 0
@@ -372,6 +473,41 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
         raise RegistryError("registry.normalization_failure")
     if len(root_names) > LIMITS["closure_width"]:
         raise RegistryError("registry.closure_width_limit")
+
+    # Inspect every potentially selected declaration before semantic traversal
+    # so sorted root/reference order cannot mask a definite resource failure.
+    pending = list(root_names)
+    inspected: set[str] = set()
+    while pending:
+        candidate = pending.pop()
+        if not isinstance(candidate, str):
+            continue
+        parts = candidate.split(".")
+        if len(parts) > LIMITS["name_segments"]:
+            raise RegistryError("registry.resource_limit")
+        lengths = [_utf8_length_lower_bound(part) for part in parts]
+        if any(
+            length is not None and length > LIMITS["name_segment_bytes"]
+            for length in lengths
+        ) or sum(length or 0 for length in lengths) > LIMITS["qualified_name_bytes"]:
+            raise RegistryError("registry.resource_limit")
+        if candidate in inspected:
+            continue
+        inspected.add(candidate)
+        declaration = declarations.get(candidate)
+        if not isinstance(declaration, dict):
+            continue
+        references = declaration.get("references")
+        if isinstance(references, list):
+            if len(references) > LIMITS["closure_width"]:
+                raise RegistryError("registry.closure_width_limit")
+            pending.extend(reference for reference in references if isinstance(reference, str))
+        if declaration.get("kind") == "definition" and isinstance(
+            declaration.get("value"), str
+        ):
+            length = _utf8_length_lower_bound(declaration["value"])
+            if length is not None and length > LIMITS["string_bytes"]:
+                raise RegistryError("registry.resource_limit")
     gray: set[str] = set()
     done: dict[str, dict[str, Any]] = {}
     work = 0
@@ -484,7 +620,79 @@ def _utf8_length(value: Any) -> int | None:
         return None
 
 
-def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, Any]) -> None:
+def _utf8_length_lower_bound(value: Any) -> int | None:
+    """Count all independently encodable UTF-8 bytes, ignoring surrogates."""
+
+    if not isinstance(value, str):
+        return None
+    return len(value.encode("utf-8", "ignore"))
+
+
+def _canonical_json_size_lower_bound(value: Any) -> int:
+    """Return a map-order-independent lower bound for canonical JSON bytes.
+
+    Malformed values contribute only their smallest possible token size so an
+    unrelated syntax error cannot hide a resource violation already forced by
+    the valid portion of the same object.  Containers are cycle-safe and the
+    published node/depth/integer limits remain resource-owned.
+    """
+
+    nodes = 0
+
+    def visit(current: Any, depth: int, active: set[int]) -> int:
+        nonlocal nodes
+        nodes += 1
+        if nodes > LIMITS["canonical_nodes"] or depth > LIMITS["canonical_depth"]:
+            raise RegistryError("registry.resource_limit")
+        if current is None:
+            return 4
+        if type(current) is bool:
+            return 4 if current else 5
+        if type(current) is int:
+            if current.bit_length() > 64:
+                raise RegistryError("registry.resource_limit")
+            return len(str(current).encode("ascii"))
+        if isinstance(current, str):
+            length = _utf8_length(current)
+            if length is None:
+                return 2
+            if length > LIMITS["string_bytes"]:
+                raise RegistryError("registry.resource_limit")
+            return len(
+                json.dumps(current, ensure_ascii=False, separators=(",", ":"))
+                .encode("utf-8", "strict")
+            )
+        if isinstance(current, list):
+            marker = id(current)
+            if marker in active:
+                return 1
+            active.add(marker)
+            total = 2 + max(0, len(current) - 1)
+            for item in current:
+                total += visit(item, depth + 1, active)
+                if total > LIMITS["input_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+            active.remove(marker)
+            return total
+        if isinstance(current, dict):
+            marker = id(current)
+            if marker in active:
+                return 1
+            active.add(marker)
+            total = 2 + max(0, len(current) - 1) + len(current)
+            for key, item in current.items():
+                total += visit(key, depth + 1, active)
+                total += visit(item, depth + 1, active)
+                if total > LIMITS["input_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+            active.remove(marker)
+            return total
+        return 1
+
+    return visit(value, 0, set()) + 1  # canonical_json appends one newline
+
+
+def _verify_bundle_resource_preflight(bundle: Any, policy: Any) -> None:
     """Enforce observable v0 resource caps before lower-precedence errors.
 
     This pass deliberately inspects only fields whose container types make the
@@ -496,6 +704,7 @@ def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, 
         stack: list[tuple[Any, int]] = [(root, 0)]
         seen_containers: set[int] = set()
         nodes = 0
+        string_bytes = 0
         while stack:
             value, depth = stack.pop()
             nodes += 1
@@ -503,8 +712,11 @@ def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, 
                 raise RegistryError("registry.resource_limit")
             if isinstance(value, str):
                 length = _utf8_length(value)
-                if length is not None and length > LIMITS["string_bytes"]:
+                lower_bound = _utf8_length_lower_bound(value)
+                if lower_bound is not None and lower_bound > LIMITS["string_bytes"]:
                     raise RegistryError("registry.resource_limit")
+                if lower_bound is not None:
+                    string_bytes += lower_bound
             elif isinstance(value, list):
                 if id(value) in seen_containers:
                     continue
@@ -516,6 +728,13 @@ def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, 
                 seen_containers.add(id(value))
                 stack.extend((item, depth + 1) for item in value.keys())
                 stack.extend((item, depth + 1) for item in value.values())
+        # Finish the full traversal before classifying malformed Unicode.  A
+        # definite aggregate resource violation must not depend on map
+        # insertion order or be masked by an unrelated lone surrogate.
+        if string_bytes > LIMITS["canonical_string_bytes"]:
+            raise RegistryError("registry.resource_limit")
+        if _canonical_json_size_lower_bound(root) > LIMITS["input_bytes"]:
+            raise RegistryError("registry.resource_limit")
 
     root_fields = (
         "current_permitted_roots",
@@ -523,28 +742,66 @@ def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, 
         "historical_forbidden_roots",
         "revoked_roots",
     )
-    root_lists = [policy.get(field) for field in root_fields]
+    root_lists = [policy.get(field) for field in root_fields] if isinstance(policy, dict) else []
     if (
         sum(len(values) for values in root_lists if isinstance(values, list))
         > LIMITS["registry_entries"]
     ):
         raise RegistryError("registry.resource_limit")
 
-    record = bundle.get("record")
+    record = bundle.get("record") if isinstance(bundle, dict) else None
     if isinstance(record, dict):
-        identifier_length = _utf8_length(record.get("id"))
+        identifier_length = _utf8_length_lower_bound(record.get("id"))
         if identifier_length is not None and identifier_length > LIMITS["identifier_bytes"]:
             raise RegistryError("registry.resource_limit")
 
-    snapshot = bundle.get("snapshot")
+    record_binding = policy.get("record_binding") if isinstance(policy, dict) else None
+    if isinstance(record_binding, dict):
+        identifier_length = _utf8_length_lower_bound(record_binding.get("id"))
+        if identifier_length is not None and identifier_length > LIMITS["identifier_bytes"]:
+            raise RegistryError("registry.resource_limit")
+
+    snapshot = bundle.get("snapshot") if isinstance(bundle, dict) else None
     if isinstance(snapshot, dict):
         records = snapshot.get("records")
         if isinstance(records, list) and len(records) > LIMITS["registry_entries"]:
             raise RegistryError("registry.resource_limit")
+        if isinstance(records, list):
+            for entry in records:
+                if isinstance(entry, list) and entry:
+                    identifier_length = _utf8_length_lower_bound(entry[0])
+                    if (
+                        identifier_length is not None
+                        and identifier_length > LIMITS["identifier_bytes"]
+                    ):
+                        raise RegistryError("registry.resource_limit")
 
-    axioms = bundle.get("axioms")
+    axioms = bundle.get("axioms") if isinstance(bundle, dict) else None
     if isinstance(axioms, list) and len(axioms) > LIMITS["axioms"]:
         raise RegistryError("registry.resource_limit")
+
+    compatibility_values = []
+    if isinstance(bundle, dict):
+        compatibility_values.append(bundle.get("compatibility"))
+    if isinstance(policy, dict):
+        compatibility_values.append(policy.get("compatibility_binding"))
+    for compatibility in compatibility_values:
+        if not isinstance(compatibility, dict):
+            continue
+        compatibility_axioms = compatibility.get("axioms")
+        if (
+            isinstance(compatibility_axioms, list)
+            and len(compatibility_axioms) > LIMITS["axioms"]
+        ):
+            raise RegistryError("registry.resource_limit")
+        for field in ("normalized_type", "proof_subject"):
+            if field not in compatibility:
+                continue
+            try:
+                normalize_expr(compatibility[field])
+            except RegistryError as error:
+                if error.code == "registry.resource_limit":
+                    raise
 
 
 def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
@@ -620,9 +877,43 @@ def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
     return digest
 
 
+def _validate_record_shape(value: Any, *, error_code: str) -> dict[str, Any]:
+    """Validate the closed v0 record shape under the caller's error owner."""
+
+    expected_fields = {
+        "schema", "id", "version", "declaration", "normalizer", "closure",
+        "proposition_digest", "environment_digest", "proof_build_digest",
+        "axiom_report_digest", "maturity", "exposure", "source_anchor",
+        "attribution", "nonclaims",
+    }
+    if not isinstance(value, dict) or set(value) != expected_fields:
+        raise RegistryError(error_code)
+    text_fields = expected_fields - {"nonclaims"}
+    if any(not isinstance(value.get(field), str) for field in text_fields):
+        raise RegistryError(error_code)
+    if not isinstance(value.get("nonclaims"), list) or any(
+        not isinstance(item, str) for item in value["nonclaims"]
+    ):
+        raise RegistryError(error_code)
+    for digest_field in (
+        "proposition_digest", "environment_digest", "proof_build_digest",
+        "axiom_report_digest",
+    ):
+        if re.fullmatch(r"[0-9a-f]{64}", value[digest_field]) is None:
+            raise RegistryError(error_code)
+    try:
+        validate_identifier(value["id"])
+    except RegistryError as error:
+        if error.code == "registry.resource_limit":
+            raise
+        raise RegistryError(error_code) from error
+    return value
+
+
 def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, str]:
     """Resolve one test-only record under independently supplied local policy."""
 
+    _verify_bundle_resource_preflight(bundle, policy)
     if not isinstance(bundle, dict):
         raise RegistryError("registry.malformed_record")
     if not isinstance(policy, dict):
@@ -632,7 +923,6 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         "proposition_digest", "environment_digest", "proof_build_digest",
         "axioms", "compatibility", "compatibility_digest",
     }
-    _verify_bundle_resource_preflight(bundle, policy)
     if len(canonical_json(bundle)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
     if len(canonical_json(policy)) > LIMITS["input_bytes"]:
@@ -653,27 +943,7 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
     snapshot = bundle.get("snapshot")
     if not isinstance(record, dict) or not isinstance(snapshot, dict):
         raise RegistryError("registry.malformed_record")
-    expected_record_fields = {
-        "schema", "id", "version", "declaration", "normalizer", "closure",
-        "proposition_digest", "environment_digest", "proof_build_digest",
-        "axiom_report_digest", "maturity", "exposure", "source_anchor",
-        "attribution", "nonclaims",
-    }
-    if set(record) != expected_record_fields:
-        raise RegistryError("registry.malformed_record")
-    record_text_fields = expected_record_fields - {"nonclaims"}
-    if any(not isinstance(record.get(field), str) for field in record_text_fields):
-        raise RegistryError("registry.malformed_record")
-    if not isinstance(record.get("nonclaims"), list) or any(
-        not isinstance(item, str) for item in record["nonclaims"]
-    ):
-        raise RegistryError("registry.malformed_record")
-    for digest_field in (
-        "proposition_digest", "environment_digest", "proof_build_digest",
-        "axiom_report_digest",
-    ):
-        if re.fullmatch(r"[0-9a-f]{64}", record[digest_field]) is None:
-            raise RegistryError("registry.malformed_record")
+    _validate_record_shape(record, error_code="registry.malformed_record")
     if set(snapshot) != {"schema", "records"} or not isinstance(snapshot.get("records"), list):
         raise RegistryError("registry.malformed_record")
     if len(snapshot["records"]) > LIMITS["registry_entries"]:
@@ -689,6 +959,7 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         or re.fullmatch(r"[0-9a-f]{64}", entry[2]) is None
     ):
         raise RegistryError("registry.malformed_record")
+    validate_identifier(entry[0])
     if record["schema"] != "statqed.registry-record.v0":
         raise RegistryError("registry.version_unsupported")
     if snapshot["schema"] != "statqed.registry-snapshot.v0":
@@ -742,6 +1013,10 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
             or re.fullmatch(r"[0-9a-f]{64}", policy[digest_field]) is None
         ):
             raise RegistryError("registry.authorization_policy_unsupported")
+    _validate_record_shape(
+        policy.get("record_binding"),
+        error_code="registry.authorization_policy_unsupported",
+    )
     for index, left in enumerate(root_classes):
         if any(left & right for right in root_classes[index + 1 :]):
             raise RegistryError("registry.authorization_policy_unsupported")
@@ -753,7 +1028,7 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
     # mechanically extracted or governed fields.
     if (
         policy.get("record_digest") != actual_record_digest
-        or policy.get("record_binding") != record
+        or canonical_cbor(policy["record_binding"]) != canonical_cbor(record)
     ):
         raise RegistryError("registry.record_digest_mismatch")
     current, historical, forbidden, revoked = root_classes

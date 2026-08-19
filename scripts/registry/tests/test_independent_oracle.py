@@ -12,6 +12,7 @@ SCRIPT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_DIR))
 
 import independent_oracle as oracle
+import run_conformance
 
 
 def anonymous():
@@ -179,6 +180,24 @@ class IndependentOracleTests(unittest.TestCase):
         with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
             oracle.normalize_expression(expression)
 
+    def test_exported_resource_preflight_is_sibling_order_independent(self):
+        malformed = {"tag": "unknown"}
+        oversized = {
+            "tag": "literal",
+            "kind": "string",
+            "value": "x" * (oracle.LIMITS["string_literal_bytes"] + 1),
+        }
+        for function, argument in ((malformed, oversized), (oversized, malformed)):
+            expression = {
+                "tag": "application",
+                "function": function,
+                "argument": argument,
+            }
+            with self.subTest(function=function["tag"]), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.normalize_expression(expression)
+
     def test_deliberately_wrong_encoder_is_detected(self):
         expression = constant("True")
         correct = oracle.proposition_payload(expression)
@@ -293,6 +312,34 @@ class IndependentOracleTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
             oracle.environment_closure(["root"], declarations)
+
+    def test_resource_preflight_is_independent_of_expression_and_root_order(self):
+        over_nodes = run_conformance.expanded("@over-expression-nodes@")
+        over_string = [8, "x" * (oracle.LIMITS["string_literal_bytes"] + 1)]
+        for expression in (
+            [3, [99], over_nodes],
+            [3, over_nodes, [99]],
+            [3, [99], over_string],
+            [3, over_string, [99]],
+        ):
+            with self.subTest(kind="expression"), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.normalize_semantic_expression(expression)
+
+        declarations = {
+            "a": {"kind": "unknown", "references": []},
+            "z": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (oracle.LIMITS["string_literal_bytes"] + 1),
+            },
+        }
+        for roots in (["a", "z"], ["z", "a"]):
+            with self.subTest(roots=roots), self.assertRaisesRegex(
+                oracle.OracleError, "registry.resource_limit"
+            ):
+                oracle.environment_closure(roots, declarations)
 
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]

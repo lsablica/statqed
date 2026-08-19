@@ -116,6 +116,200 @@ class _Budget:
         return raw
 
 
+def _utf8_length_lower_bound(value: Any) -> int | None:
+    if not isinstance(value, str):
+        return None
+    return len(value.encode("utf-8", "ignore"))
+
+
+def _semantic_expression_resource_preflight(expression: Any) -> None:
+    """Inspect all selected array-grammar branches before syntax ownership."""
+
+    nodes = 0
+    string_bytes = 0
+    stack: list[tuple[Any, str, int, bool]] = [(expression, "expr", 0, False)]
+    active: set[int] = set()
+    while stack:
+        value, context, depth, exiting = stack.pop()
+        if exiting:
+            active.discard(id(value))
+            continue
+        if isinstance(value, list):
+            if id(value) in active:
+                continue
+            active.add(id(value))
+            stack.append((value, context, depth, True))
+        if context in {"expr", "level"}:
+            nodes += 1
+            limit = LIMITS["expression_depth"] if context == "expr" else LIMITS["level_depth"]
+            if nodes > LIMITS["nodes"] or depth > limit:
+                raise OracleError("registry.resource_limit")
+        if context == "name":
+            if not isinstance(value, list):
+                continue
+            if len(value) > LIMITS["name_segments"]:
+                raise OracleError("registry.resource_limit")
+            qualified = 0
+            for segment in value:
+                if (
+                    isinstance(segment, list)
+                    and len(segment) >= 2
+                    and segment[0] == 0
+                    and type(segment[0]) is int
+                ):
+                    length = _utf8_length_lower_bound(segment[1])
+                    if length is not None:
+                        if length > LIMITS["name_segment_bytes"]:
+                            raise OracleError("registry.resource_limit")
+                        qualified += length
+                        string_bytes += length
+            if qualified > LIMITS["qualified_name_bytes"]:
+                raise OracleError("registry.resource_limit")
+            if string_bytes > LIMITS["aggregate_string_bytes"]:
+                raise OracleError("registry.resource_limit")
+            continue
+        if not isinstance(value, list) or not value or type(value[0]) is not int:
+            continue
+        tag = value[0]
+        if context == "level":
+            if tag == 1 and len(value) > 1:
+                stack.append((value[1], "level", depth + 1, False))
+            elif tag in (2, 3):
+                if len(value) > 1:
+                    stack.append((value[1], "level", depth + 1, False))
+                if len(value) > 2:
+                    stack.append((value[2], "level", depth + 1, False))
+            continue
+        if tag == 1 and len(value) > 1:
+            stack.append((value[1], "level", 0, False))
+        elif tag == 2:
+            if len(value) > 1:
+                stack.append((value[1], "name", 0, False))
+            if len(value) > 2 and isinstance(value[2], list):
+                if len(value[2]) > LIMITS["universe_arguments"]:
+                    raise OracleError("registry.resource_limit")
+                stack.extend((level, "level", 0, False) for level in value[2])
+        elif tag == 3:
+            if len(value) > 1:
+                stack.append((value[1], "expr", depth + 1, False))
+            if len(value) > 2:
+                stack.append((value[2], "expr", depth + 1, False))
+        elif tag in (4, 5, 6):
+            first = 2 if tag in (4, 5) else 1
+            for child in value[first:4]:
+                stack.append((child, "expr", depth + 1, False))
+        elif tag == 8 and len(value) > 1:
+            length = _utf8_length_lower_bound(value[1])
+            if length is not None:
+                if length > LIMITS["string_literal_bytes"]:
+                    raise OracleError("registry.resource_limit")
+                string_bytes += length
+                if string_bytes > LIMITS["aggregate_string_bytes"]:
+                    raise OracleError("registry.resource_limit")
+        elif tag == 9:
+            if len(value) > 1:
+                stack.append((value[1], "name", 0, False))
+            if len(value) > 3:
+                stack.append((value[3], "expr", depth + 1, False))
+
+
+def _exported_expression_resource_preflight(
+    expression: Any, level_parameters: Any
+) -> None:
+    """Apply the same resource-first rule to live exported typed records."""
+
+    nodes = 0
+    string_bytes = 0
+    stack: list[tuple[Any, str, int, bool]] = [(expression, "expr", 0, False)]
+    if isinstance(level_parameters, list):
+        if len(level_parameters) > LIMITS["universe_arguments"]:
+            raise OracleError("registry.resource_limit")
+        stack.extend((name, "name", 0, False) for name in level_parameters)
+    active: set[int] = set()
+    while stack:
+        value, context, depth, exiting = stack.pop()
+        if exiting:
+            active.discard(id(value))
+            continue
+        if isinstance(value, (list, Mapping)):
+            if id(value) in active:
+                continue
+            active.add(id(value))
+            stack.append((value, context, depth, True))
+        if context in {"expr", "level"}:
+            nodes += 1
+            limit = LIMITS["expression_depth"] if context == "expr" else LIMITS["level_depth"]
+            if nodes > LIMITS["nodes"] or depth > limit:
+                raise OracleError("registry.resource_limit")
+        if context == "name":
+            if not isinstance(value, Mapping):
+                continue
+            if depth > LIMITS["name_segments"]:
+                raise OracleError("registry.resource_limit")
+            if value.get("tag") == "string":
+                length = _utf8_length_lower_bound(value.get("segment"))
+                if length is not None:
+                    if length > LIMITS["name_segment_bytes"]:
+                        raise OracleError("registry.resource_limit")
+                    string_bytes += length
+                    if string_bytes > LIMITS["aggregate_string_bytes"]:
+                        raise OracleError("registry.resource_limit")
+            if "parent" in value:
+                stack.append((value["parent"], "name", depth + 1, False))
+            continue
+        if not isinstance(value, Mapping):
+            continue
+        tag = value.get("tag")
+        if context == "level":
+            if tag == "succ" and "level" in value:
+                stack.append((value["level"], "level", depth + 1, False))
+            elif tag in {"max", "imax"}:
+                if "left" in value:
+                    stack.append((value["left"], "level", depth + 1, False))
+                if "right" in value:
+                    stack.append((value["right"], "level", depth + 1, False))
+            elif tag == "parameter" and "name" in value:
+                stack.append((value["name"], "name", 0, False))
+            continue
+        if tag == "metadata" and "expression" in value:
+            stack.append((value["expression"], "expr", depth, False))
+        elif tag == "sort" and "level" in value:
+            stack.append((value["level"], "level", 0, False))
+        elif tag == "constant":
+            if "name" in value:
+                stack.append((value["name"], "name", 0, False))
+            universes = value.get("universes")
+            if isinstance(universes, list):
+                if len(universes) > LIMITS["universe_arguments"]:
+                    raise OracleError("registry.resource_limit")
+                stack.extend((level, "level", 0, False) for level in universes)
+        elif tag == "application":
+            for field in ("function", "argument"):
+                if field in value:
+                    stack.append((value[field], "expr", depth + 1, False))
+        elif tag in {"lambda", "forall"}:
+            for field in ("type", "body"):
+                if field in value:
+                    stack.append((value[field], "expr", depth + 1, False))
+        elif tag == "let":
+            for field in ("type", "value", "body"):
+                if field in value:
+                    stack.append((value[field], "expr", depth + 1, False))
+        elif tag == "literal" and value.get("kind") == "string":
+            length = _utf8_length_lower_bound(value.get("value"))
+            if length is not None:
+                if length > LIMITS["string_literal_bytes"]:
+                    raise OracleError("registry.resource_limit")
+                string_bytes += length
+                if string_bytes > LIMITS["aggregate_string_bytes"]:
+                    raise OracleError("registry.resource_limit")
+        elif tag == "projection":
+            if "type_name" in value:
+                stack.append((value["type_name"], "name", 0, False))
+            if "structure" in value:
+                stack.append((value["structure"], "expr", depth + 1, False))
+
+
 def _object(value: Any, *, fields: set[str], optional: set[str] | None = None) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise OracleError("registry.normalization_failure")
@@ -218,9 +412,10 @@ def normalize_expression(
 ) -> list[Any]:
     """Normalize one closed typed constructor tree to ``statqed.lean-expr.v0``."""
 
-    budget = _Budget()
     if level_parameters is None:
         level_parameters = []
+    _exported_expression_resource_preflight(expression, level_parameters)
+    budget = _Budget()
     if not isinstance(level_parameters, list):
         raise OracleError("registry.normalization_failure")
     if len(level_parameters) > LIMITS["universe_arguments"]:
@@ -403,6 +598,7 @@ def normalize_semantic_expression(
 ) -> list[Any]:
     """Validate the language-neutral array grammar without using the primary model."""
 
+    _semantic_expression_resource_preflight(expression)
     if (
         type(level_parameter_count) is not int
         or not 0 <= level_parameter_count <= LIMITS["universe_arguments"]
@@ -525,6 +721,13 @@ def semantic_expression_payload(
 
 
 def validate_level_parameters(value: Any) -> list[str]:
+    if isinstance(value, list):
+        if len(value) > LIMITS["universe_arguments"]:
+            raise OracleError("registry.resource_limit")
+        for item in value:
+            length = _utf8_length_lower_bound(item)
+            if length is not None and length > LIMITS["name_segment_bytes"]:
+                raise OracleError("registry.resource_limit")
     if not isinstance(value, list):
         raise OracleError("registry.normalization_failure")
     if len(value) > LIMITS["universe_arguments"]:
@@ -550,6 +753,38 @@ def environment_closure(
         raise OracleError("registry.normalization_failure")
     if len(roots) > LIMITS["closure_width"]:
         raise OracleError("registry.closure_width_limit")
+    pending = list(roots)
+    inspected: set[str] = set()
+    while pending:
+        candidate = pending.pop()
+        if not isinstance(candidate, str):
+            continue
+        parts = candidate.split(".")
+        if len(parts) > LIMITS["name_segments"]:
+            raise OracleError("registry.resource_limit")
+        lengths = [_utf8_length_lower_bound(part) for part in parts]
+        if any(
+            length is not None and length > LIMITS["name_segment_bytes"]
+            for length in lengths
+        ) or sum(length or 0 for length in lengths) > LIMITS["qualified_name_bytes"]:
+            raise OracleError("registry.resource_limit")
+        if candidate in inspected:
+            continue
+        inspected.add(candidate)
+        declaration = declarations.get(candidate)
+        if not isinstance(declaration, Mapping):
+            continue
+        references = declaration.get("references")
+        if isinstance(references, list):
+            if len(references) > LIMITS["closure_width"]:
+                raise OracleError("registry.closure_width_limit")
+            pending.extend(reference for reference in references if isinstance(reference, str))
+        if declaration.get("kind") == "definition" and isinstance(
+            declaration.get("value"), str
+        ):
+            length = _utf8_length_lower_bound(declaration["value"])
+            if length is not None and length > LIMITS["string_literal_bytes"]:
+                raise OracleError("registry.resource_limit")
     active: set[str] = set()
     emitted: dict[str, dict[str, Any]] = {}
     work = 0

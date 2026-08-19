@@ -10,6 +10,7 @@ SCRIPT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_DIR))
 
 import model
+import run_conformance
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -341,6 +342,34 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.closure(["root"], declarations)
 
+    def test_resource_preflight_is_independent_of_expression_and_root_order(self):
+        over_nodes = run_conformance.expanded("@over-expression-nodes@")
+        over_string = [8, "x" * (model.LIMITS["string_bytes"] + 1)]
+        for expression in (
+            [3, [99], over_nodes],
+            [3, over_nodes, [99]],
+            [3, [99], over_string],
+            [3, over_string, [99]],
+        ):
+            with self.subTest(kind="expression"), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.normalize_expr(expression)
+
+        declarations = {
+            "a": {"kind": "unknown", "references": []},
+            "z": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (model.LIMITS["string_bytes"] + 1),
+            },
+        }
+        for roots in (["a", "z"], ["z", "a"]):
+            with self.subTest(roots=roots), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.closure(roots, declarations)
+
     def test_fixed_work_cap_is_explicitly_dominated_by_other_v0_limits(self):
         dominance_upper_bound = (
             262_144
@@ -434,6 +463,50 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
+    def test_aggregate_resource_preflight_is_map_order_independent(self):
+        large = ["x" * model.LIMITS["string_bytes"] for _ in range(17)]
+        for candidate_first in (True, False):
+            bundle = copy.deepcopy(self.bundle)
+            additions = (
+                (("candidate_policy", "\ud800"), ("unknown_aggregate", large))
+                if candidate_first
+                else (("unknown_aggregate", large), ("candidate_policy", "\ud800"))
+            )
+            for key, value in additions:
+                bundle[key] = value
+            with self.subTest(candidate_first=candidate_first), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+        for value in (
+            ["x" * (model.LIMITS["string_bytes"] - 1) for _ in range(16)],
+            1 << 64,
+            -(1 << 64) - 1,
+        ):
+            bundle = copy.deepcopy(self.bundle)
+            bundle["candidate_policy"] = value
+            bundle["record"]["schema"] = "\ud800"
+            with self.subTest(value_type=type(value).__name__), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+    def test_policy_record_binding_has_closed_policy_owned_shape(self):
+        mutations = (None, True, {}, [], "record", {**self.policy["record_binding"], "nonclaims": [True]})
+        for value in mutations:
+            policy = copy.deepcopy(self.policy)
+            policy["record_binding"] = copy.deepcopy(value)
+            with self.subTest(value=repr(value)), self.assertRaisesRegex(
+                model.RegistryError, "registry.authorization_policy_unsupported"
+            ):
+                model.verify_bundle(copy.deepcopy(self.bundle), policy)
+
+        policy = copy.deepcopy(self.policy)
+        policy["record_binding"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(copy.deepcopy(self.bundle), policy)
+
     def test_forged_metadata_rejected(self):
         bundle = copy.deepcopy(self.bundle)
         bundle["record"]["maturity"] = "Stable"
@@ -506,6 +579,22 @@ class ModelTests(unittest.TestCase):
             with self.subTest(count=count), self.assertRaisesRegex(model.RegistryError, code):
                 model.verify_bundle(bundle, policy)
 
+    def test_snapshot_entry_identifier_is_validated_before_authorization(self):
+        for identifier, code in (
+            ("Upper", "registry.malformed_record"),
+            ("a" * (model.LIMITS["identifier_bytes"] + 1), "registry.resource_limit"),
+        ):
+            bundle = copy.deepcopy(self.bundle)
+            bundle["snapshot"]["records"][0][0] = identifier
+            _, root = model.digest_frame("snapshot", model.canonical_cbor(bundle["snapshot"]))
+            bundle["requested_root"] = root
+            policy = copy.deepcopy(self.policy)
+            policy["current_permitted_roots"] = [root]
+            with self.subTest(identifier=identifier[:16]), self.assertRaisesRegex(
+                model.RegistryError, code
+            ):
+                model.verify_bundle(bundle, policy)
+
     def test_resource_precedence_over_mixed_schema_failures(self):
         bundle = copy.deepcopy(self.bundle)
         bundle["record"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
@@ -555,6 +644,54 @@ class ModelTests(unittest.TestCase):
 
         for bundle, policy in scenarios:
             with self.subTest(bundle_keys=sorted(bundle)), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.verify_bundle(bundle, policy)
+
+    def test_resource_preflight_precedes_other_input_top_level_shape(self):
+        bundle = copy.deepcopy(self.bundle)
+        bundle["record"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(bundle, None)
+
+        policy = copy.deepcopy(self.policy)
+        policy["current_permitted_roots"] += [
+            f"{index + 4:064x}" for index in range(model.LIMITS["registry_entries"])
+        ]
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(None, policy)
+
+    def test_compatibility_nested_resource_limits_precede_lock_shape(self):
+        for location in ("policy", "candidate"):
+            bundle = copy.deepcopy(self.bundle)
+            policy = copy.deepcopy(self.policy)
+            target = (
+                policy["compatibility_binding"]
+                if location == "policy"
+                else copy.deepcopy(policy["compatibility_binding"])
+            )
+            if location == "candidate":
+                bundle["compatibility"] = target
+            expression = [2, [[0, "True"]], []]
+            for _ in range(model.LIMITS["expression_depth"] + 1):
+                expression = [3, [2, [[0, "f"]], []], expression]
+            target["proof_subject"] = expression
+            with self.subTest(location=location, field="proof_subject"), self.assertRaisesRegex(
+                model.RegistryError, "registry.resource_limit"
+            ):
+                model.verify_bundle(bundle, policy)
+
+            bundle = copy.deepcopy(self.bundle)
+            policy = copy.deepcopy(self.policy)
+            target = (
+                policy["compatibility_binding"]
+                if location == "policy"
+                else copy.deepcopy(policy["compatibility_binding"])
+            )
+            if location == "candidate":
+                bundle["compatibility"] = target
+            target["axioms"] = ["Classical.choice"] * (model.LIMITS["axioms"] + 1)
+            with self.subTest(location=location, field="axioms"), self.assertRaisesRegex(
                 model.RegistryError, "registry.resource_limit"
             ):
                 model.verify_bundle(bundle, policy)

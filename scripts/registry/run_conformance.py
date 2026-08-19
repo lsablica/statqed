@@ -83,6 +83,14 @@ def expanded(value: Any) -> Any:
         expression = expanded("@max-expression-nodes@")
         expression[2] = [1, [1, [0]]]
         return expression
+    if value == "@mixed-over-nodes-right@":
+        return [3, [99], expanded("@over-expression-nodes@")]
+    if value == "@mixed-over-nodes-left@":
+        return [3, expanded("@over-expression-nodes@"), [99]]
+    if value == "@mixed-over-string-right@":
+        return [3, [99], [8, "x" * (LIMITS["string_bytes"] + 1)]]
+    if value == "@mixed-over-string-left@":
+        return [3, [8, "x" * (LIMITS["string_bytes"] + 1)], [99]]
     if value == "@combined-depth-max@":
         level = [0]
         for _ in range(LIMITS["level_depth"]):
@@ -114,6 +122,17 @@ def expanded(value: Any) -> Any:
                 "value": "x" * (LIMITS["string_bytes"] + 1),
                 "unknown": "must-not-mask-resource-limit",
             }
+        }
+    if value == "@mixed-root-resource-roots@":
+        return ["a", "z"]
+    if value == "@mixed-root-resource-declarations@":
+        return {
+            "a": {"kind": "unknown", "references": []},
+            "z": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (LIMITS["string_bytes"] + 1),
+            },
         }
     if isinstance(value, str) and value in {"@max-closure-name-roots@", "@over-closure-name-roots@"}:
         base = ".".join(["x" * LIMITS["name_segment_bytes"]] * 4)
@@ -223,6 +242,39 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
     elif mutation == "bundle_unknown_string_over":
         bundle["unknown"] = "x" * (LIMITS["string_bytes"] + 1)
     elif mutation in {
+        "resource_aggregate_surrogate_first",
+        "resource_aggregate_surrogate_last",
+    }:
+        additions = (
+            (("candidate_policy", "\ud800"), ("unknown_aggregate", ["x" * LIMITS["string_bytes"] for _ in range(17)]))
+            if mutation == "resource_aggregate_surrogate_first"
+            else (("unknown_aggregate", ["x" * LIMITS["string_bytes"] for _ in range(17)]), ("candidate_policy", "\ud800"))
+        )
+        for key, value in additions:
+            bundle[key] = value
+    elif mutation in {
+        "resource_positive_integer_bundle_surrogate",
+        "resource_negative_integer_bundle_surrogate",
+        "resource_string_over_surrogate_prefix",
+        "resource_string_over_surrogate_suffix",
+        "resource_id_over_surrogate_prefix",
+        "resource_id_over_surrogate_suffix",
+    }:
+        if mutation == "resource_positive_integer_bundle_surrogate":
+            bundle["candidate_policy"] = 1 << 64
+            bundle["record"]["schema"] = "\ud800"
+        elif mutation == "resource_negative_integer_bundle_surrogate":
+            bundle["candidate_policy"] = -(1 << 64) - 1
+            bundle["record"]["schema"] = "\ud800"
+        elif mutation == "resource_string_over_surrogate_prefix":
+            bundle["candidate_policy"] = "\ud800" + "x" * (LIMITS["string_bytes"] + 1)
+        elif mutation == "resource_string_over_surrogate_suffix":
+            bundle["candidate_policy"] = "x" * (LIMITS["string_bytes"] + 1) + "\ud800"
+        elif mutation == "resource_id_over_surrogate_prefix":
+            bundle["record"]["id"] = "\ud800" + "a" * (LIMITS["identifier_bytes"] + 1)
+        else:
+            bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1) + "\ud800"
+    elif mutation in {
         "resource_id_over_policy_surrogate",
         "resource_axioms_over_policy_surrogate",
         "resource_unknown_string_over_policy_surrogate",
@@ -246,6 +298,12 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["current_permitted_roots"] = [bundle["requested_root"]]
     elif mutation == "record_schema_null":
         bundle["record"]["schema"] = None
+    elif mutation == "policy_record_binding_null":
+        policy["record_binding"] = None
+    elif mutation == "policy_record_binding_nested_invalid":
+        policy["record_binding"]["nonclaims"] = [True]
+    elif mutation == "policy_record_binding_id_over":
+        policy["record_binding"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
     elif mutation == "forged_maturity":
         bundle["record"]["maturity"] = "Stable"
         rebuild_bundle_record(bundle)
@@ -293,6 +351,15 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
             for index in range(LIMITS["registry_entries"] + 1)
         ]
         bundle["snapshot"]["unknown"] = True
+    elif mutation in {"snapshot_identifier_invalid", "snapshot_identifier_over"}:
+        bundle["snapshot"]["records"][0][0] = (
+            "Upper"
+            if mutation == "snapshot_identifier_invalid"
+            else "a" * (LIMITS["identifier_bytes"] + 1)
+        )
+        _, new_root = digest_frame("snapshot", canonical_cbor(bundle["snapshot"]))
+        bundle["requested_root"] = new_root
+        policy["current_permitted_roots"] = [new_root]
     elif mutation == "artifact_policy":
         bundle["candidate_policy"] = {"current_permitted_roots": ["11" * 32]}
     elif mutation == "artifact_policy_nested_max":
@@ -305,6 +372,14 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         return [], policy
     elif mutation == "policy_null":
         return bundle, None
+    elif mutation == "resource_id_over_policy_null":
+        bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
+        return bundle, None
+    elif mutation == "resource_policy_roots_over_bundle_null":
+        policy["current_permitted_roots"] += [
+            f"{index + 4:064x}" for index in range(LIMITS["registry_entries"])
+        ]
+        return None, policy
     elif mutation == "proposition":
         bundle["proposition_digest"] = "11" * 32
     elif mutation == "environment":
@@ -329,6 +404,26 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
     elif mutation == "identifier_over_wrong_schema":
         bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
         bundle["record"]["schema"] = "statqed.registry-record.v999"
+    elif mutation in {
+        "compatibility_policy_proof_depth_over",
+        "compatibility_candidate_proof_depth_over",
+        "compatibility_policy_axioms_over",
+        "compatibility_candidate_axioms_over",
+    }:
+        target = (
+            policy["compatibility_binding"]
+            if "policy" in mutation
+            else copy.deepcopy(policy["compatibility_binding"])
+        )
+        if "candidate" in mutation:
+            bundle["compatibility"] = target
+        if "proof_depth" in mutation:
+            expression: Any = [2, [[0, "True"]], []]
+            for _ in range(LIMITS["expression_depth"] + 1):
+                expression = [3, [2, [[0, "f"]], []], expression]
+            target["proof_subject"] = expression
+        else:
+            target["axioms"] = ["Classical.choice"] * (LIMITS["axioms"] + 1)
     elif mutation == "compatibility_null_digest_malformed":
         bundle["compatibility_digest"] = "not-a-digest"
     elif mutation == "compatibility_null_digest_substitution":
