@@ -46,8 +46,8 @@
     "meaning": "Populated by the final DONE transition; it is historical evidence, not a permanent global-ledger equality requirement.",
     "done_contains": ["SQ-0001", "SQ-0002", "SQ-0003", "SQ-0004", "SQ-0005", "SQ-0006", "SQ-0007"],
     "active": [],
-    "ready": null,
-    "blocked_count": null
+    "ready": ["SQ-0008", "SQ-0011", "SQ-0013", "SQ-0014", "SQ-0015"],
+    "blocked_count": 48
   },
   "subject_patterns": [
     "rfcs/0005-theorem-identity-and-compatibility.md",

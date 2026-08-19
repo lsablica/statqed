@@ -1,6 +1,6 @@
 # RFC-0005: Theorem Identity, Proof Trust, and Compatibility
 
-- Status: Draft
+- Status: Accepted
 - Author: SQ-0001 manager; completed by SQ-0007
 - Reviewers: source, theorem-semantics, formal, conformance, cryptographic, authorization/security, compatibility, CI, integration
 - Created: 2026-08-03
@@ -260,6 +260,8 @@ SQ-0007 review record.
 
 ## Decision
 
-Draft pending those exact-subject independent dispositions and hosted CI.  Once
-they all approve the identical candidate, this line and the header may change
-to Accepted without changing the marked normative scope.
+Accepted after distinct formal/trust, adversarial/counterexample, and
+integration reviewers approved the identical content-addressed scientific
+subject. The marked normative scope is byte-identical to the reviewed Draft
+candidate. Hosted pull-request checks remain an integration gate for the
+unmerged implementation branch, not a condition that changes this decision.

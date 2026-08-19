@@ -1,6 +1,6 @@
 # ADR-0007: Versioned theorem registry and statement locks
 
-- Status: Proposed
+- Status: Accepted
 - Blocking RFC/task: RFC-0005 / SQ-0007
 - Decision owner: SQ-0007
 
@@ -72,6 +72,6 @@ observations, hostile mutations, supply-chain state, and trust nonclaims.
 
 ## Review
 
-This ADR remains Proposed until RFC-0005 receives exact-subject independent
-approval.  If accepted, only the status/disposition prose changes; the marked
-scope must remain byte-identical to the Accepted RFC scope.
+Accepted after RFC-0005 received exact-subject independent approval. Only this
+status/disposition prose changed: the marked scope remains byte-identical to
+the Accepted RFC scope.

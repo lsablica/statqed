@@ -1,5 +1,5 @@
 {
-  "evidence_spec_sha256": "b422a7ac777f8a30a55429db517b643ba6acb77062a34b8ccf22c206c50cdbc0",
+  "evidence_spec_sha256": "d843684a9f1134359160672d53e7ca90d446f9043b8ca186fd358a55c08e8c73",
   "historical_launch_base": "6148589f10ee58a8cba58f959aec25c6f5207e8d",
   "historical_task_commits": {
     "blocked_head": "8d327ec7d7d533d9485194c373bb44c7ea27d795",
@@ -13,11 +13,11 @@
   },
   "review_projection": {
     "path": "work/reviews/SQ-0007.md",
-    "projection_sha256": "164aa6c2de9a7446996cd05d8200d9801cdb9d2b63dc1501d8c1f1c152bc885d"
+    "projection_sha256": "9d4d537deb1979823c5074e51cb8c95621d2e452ab48988ad7b12402587c5f74"
   },
   "schema": "statqed.sq0007-evidence.v2",
   "scientific_subject_count": 81,
-  "scientific_subject_digest": "e3bcbf915b819cc893998530012ce52e3b1bfabaad19657134c6f8d1814362a4",
+  "scientific_subject_digest": "5fca96e66ce68542617dcf942512a6861875fcd5a10c58c981d7e5af28964c97",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -235,9 +235,9 @@
       "sha256": "537f9efee294f716d7a52658601af8371432434cd78cdea0e42e7127220b1ce6"
     },
     {
-      "bytes": 4026,
+      "bytes": 3992,
       "path": "docs/adr/0007-versioned-theorem-registry.md",
-      "sha256": "b1660dc03b382685bec08fc56bd6e34c2bf860af31247e1ba43c5314f3af36ab"
+      "sha256": "15edbf7afb7020530f14c97ddae579db1e9c2f50cf547bf0abf9acbfd306bccb"
     },
     {
       "bytes": 21365,
@@ -275,9 +275,9 @@
       "sha256": "bbd5c7e89e096641e468fd74a4b23f3fe0d8e7d234a244cae5b84a8ebcfd91d9"
     },
     {
-      "bytes": 14719,
+      "bytes": 14876,
       "path": "rfcs/0005-theorem-identity-and-compatibility.md",
-      "sha256": "a61ae72f658b49784322604548324f66c0ad990574bcba56325bcd01f875ed57"
+      "sha256": "7e38cd66182499399ddaaca387def9705d9f14845a8e1487762b77b01557f18c"
     },
     {
       "bytes": 590,
@@ -426,7 +426,7 @@
     }
   ],
   "subject_count": 105,
-  "subject_digest": "a64d586fbedd9790dc56fd7562fa3080f7c2a13386cb15a8152bb62a007fa529",
+  "subject_digest": "c1d0fecd6ad0c01ba80a74a3492b9ba8f9113491473384f879bcad827bbe7d1f",
   "subjects": [
     {
       "bytes": 7079,
@@ -659,9 +659,9 @@
       "sha256": "537f9efee294f716d7a52658601af8371432434cd78cdea0e42e7127220b1ce6"
     },
     {
-      "bytes": 4026,
+      "bytes": 3992,
       "path": "docs/adr/0007-versioned-theorem-registry.md",
-      "sha256": "b1660dc03b382685bec08fc56bd6e34c2bf860af31247e1ba43c5314f3af36ab"
+      "sha256": "15edbf7afb7020530f14c97ddae579db1e9c2f50cf547bf0abf9acbfd306bccb"
     },
     {
       "bytes": 2488,
@@ -714,9 +714,9 @@
       "sha256": "bbd5c7e89e096641e468fd74a4b23f3fe0d8e7d234a244cae5b84a8ebcfd91d9"
     },
     {
-      "bytes": 14719,
+      "bytes": 14876,
       "path": "rfcs/0005-theorem-identity-and-compatibility.md",
-      "sha256": "a61ae72f658b49784322604548324f66c0ad990574bcba56325bcd01f875ed57"
+      "sha256": "7e38cd66182499399ddaaca387def9705d9f14845a8e1487762b77b01557f18c"
     },
     {
       "bytes": 590,
@@ -784,9 +784,9 @@
       "sha256": "fb1c77533ce0e3f04fa9c0fe49b36008f3e442e1a0e09116c8cd096cf11fbf43"
     },
     {
-      "bytes": 19366,
+      "bytes": 19442,
       "path": "scripts/registry/tests/test_check_evidence.py",
-      "sha256": "c579ec492875ab2ad8a885a70ef9cacbaa2e228e65ea9da9462428c3795dee34"
+      "sha256": "75fc7225ae01fd5221f5ad5d52eefc3268294f99d1e00441b1102180633a871f"
     },
     {
       "bytes": 36610,
