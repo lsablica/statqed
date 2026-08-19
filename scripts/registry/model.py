@@ -430,17 +430,19 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
             raise RegistryError("registry.closure_cycle")
         if len(done) + len(gray) >= LIMITS["closure_units"]:
             raise RegistryError("registry.closure_work_budget_limit")
-        declaration = declarations.get(name)
-        if declaration is None:
+        if name not in declarations:
             raise RegistryError("registry.missing_dependency")
+        declaration = declarations[name]
         if not isinstance(declaration, dict):
             raise RegistryError("registry.normalization_failure")
-        payload = declaration_payload(declaration)
         refs = declaration.get("references")
+        # Resource ownership precedes closed-record schema ownership when the
+        # references container is present and already over the published cap.
+        if isinstance(refs, list) and len(refs) > LIMITS["closure_width"]:
+            raise RegistryError("registry.closure_width_limit")
+        payload = declaration_payload(declaration)
         if not isinstance(refs, list):
             raise RegistryError("registry.normalization_failure")
-        if len(refs) > LIMITS["closure_width"]:
-            raise RegistryError("registry.closure_width_limit")
         gray.add(name)
         for reference in sorted(refs, key=name_key):
             if not isinstance(reference, str):
@@ -455,9 +457,50 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
 
 
 def validate_identifier(value: Any) -> str:
-    if not isinstance(value, str) or not _IDENTIFIER.fullmatch(value):
+    if not isinstance(value, str):
+        raise RegistryError("registry.malformed_record")
+    try:
+        encoded = value.encode("ascii", "strict")
+    except UnicodeEncodeError as exc:
+        raise RegistryError("registry.malformed_record") from exc
+    if len(encoded) > LIMITS["identifier_bytes"]:
+        raise RegistryError("registry.resource_limit")
+    if not _IDENTIFIER.fullmatch(value):
         raise RegistryError("registry.malformed_record")
     return value
+
+
+def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
+    """Validate one closed compatibility lock and return its framed digest."""
+
+    if not isinstance(value, dict):
+        raise RegistryError("registry.compatibility_missing")
+    expected_fields = {
+        "schema", "direction", "new_proposition", "new_proposition_digest",
+        "old_proposition_digest", "environment_digest", "declaration",
+        "normalized_type", "proof_subject", "proof_build_digest",
+        "axiom_report_digest", "axioms", "universe_instantiations", "path_length",
+    }
+    if set(value) != expected_fields:
+        raise RegistryError("registry.compatibility_missing")
+    if value.get("direction") != "new_implies_old":
+        raise RegistryError("registry.compatibility_wrong_direction")
+    if value.get("schema") != "statqed.compatibility-proof-lock.v0":
+        raise RegistryError("registry.compatibility_missing")
+    if value.get("old_proposition_digest") != old_proposition_digest:
+        raise RegistryError("registry.compatibility_missing")
+    if value.get("declaration") != "StatQED.Registry.Tests.falseImpliesTrue":
+        raise RegistryError("registry.compatibility_missing")
+    if value.get("axioms") != [] or value.get("path_length") != 1:
+        raise RegistryError("registry.compatibility_missing")
+    for field in (
+        "new_proposition_digest", "old_proposition_digest", "environment_digest",
+        "proof_build_digest", "axiom_report_digest",
+    ):
+        if re.fullmatch(r"[0-9a-f]{64}", str(value.get(field))) is None:
+            raise RegistryError("registry.compatibility_missing")
+    _, digest = digest_frame("compatibility", canonical_cbor(value))
+    return digest
 
 
 def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, str]:
@@ -478,6 +521,8 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         raise RegistryError("registry.resource_limit")
     if len(canonical_json(policy)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
+    if re.fullmatch(r"[0-9a-f]{64}", str(bundle.get("compatibility_digest"))) is None:
+        raise RegistryError("registry.malformed_record")
     expected_policy_fields = {
         "schema", "policy_version", "current_permitted_roots",
         "historical_permitted_roots", "historical_forbidden_roots",
@@ -547,6 +592,21 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         or policy.get("record_binding") != record
     ):
         raise RegistryError("registry.record_digest_mismatch")
+    if set(snapshot) != {"schema", "records"} or not isinstance(snapshot.get("records"), list):
+        raise RegistryError("registry.malformed_record")
+    if len(snapshot["records"]) > LIMITS["registry_entries"]:
+        raise RegistryError("registry.resource_limit")
+    if len(snapshot["records"]) != 1:
+        raise RegistryError("registry.malformed_record")
+    if snapshot.get("schema") != "statqed.registry-snapshot.v0":
+        raise RegistryError("registry.version_unsupported")
+    entry = snapshot["records"][0]
+    if (
+        not isinstance(entry, list)
+        or len(entry) != 3
+        or any(not isinstance(item, str) for item in entry)
+    ):
+        raise RegistryError("registry.malformed_record")
     snapshot_bytes = canonical_cbor(snapshot)
     _, root = digest_frame("snapshot", snapshot_bytes)
     requested = bundle.get("requested_root")
@@ -569,45 +629,36 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         if record[key] != bundle.get(key):
             raise RegistryError(code)
     axioms = bundle.get("axioms")
-    if not isinstance(axioms, list) or len(axioms) > LIMITS["axioms"]:
+    if not isinstance(axioms, list):
         raise RegistryError("registry.proof_build_lock_mismatch")
+    if len(axioms) > LIMITS["axioms"]:
+        raise RegistryError("registry.resource_limit")
     if axioms:
         raise RegistryError("registry.forbidden_axiom")
+    # The verifier-selected compatibility lock is authenticated even when the
+    # candidate does not request a compatibility edge.  Candidate null is the
+    # Python representation of Rust's zero-edge path; it does not make the
+    # required digest or trusted policy binding optional.
+    policy_compatibility = policy.get("compatibility_binding")
+    try:
+        compatibility_digest = _compatibility_lock_digest(
+            policy_compatibility, bundle.get("proposition_digest")
+        )
+    except RegistryError as error:
+        raise RegistryError("registry.authorization_policy_unsupported") from error
+    if compatibility_digest != policy.get("compatibility_digest"):
+        raise RegistryError("registry.authorization_policy_unsupported")
     compatibility = bundle.get("compatibility")
     if compatibility is not None:
-        if not isinstance(compatibility, dict):
-            raise RegistryError("registry.compatibility_missing")
-        expected_compatibility_fields = {
-            "schema", "direction", "new_proposition", "new_proposition_digest",
-            "old_proposition_digest", "environment_digest", "declaration",
-            "normalized_type", "proof_subject", "proof_build_digest",
-            "axiom_report_digest", "axioms", "universe_instantiations", "path_length",
-        }
-        if set(compatibility) != expected_compatibility_fields:
-            raise RegistryError("registry.compatibility_missing")
-        if compatibility.get("direction") != "new_implies_old":
-            raise RegistryError("registry.compatibility_wrong_direction")
-        if compatibility.get("schema") != "statqed.compatibility-proof-lock.v0":
-            raise RegistryError("registry.compatibility_missing")
-        if compatibility.get("old_proposition_digest") != bundle.get("proposition_digest"):
-            raise RegistryError("registry.compatibility_missing")
-        if compatibility.get("declaration") != "StatQED.Registry.Tests.falseImpliesTrue":
-            raise RegistryError("registry.compatibility_missing")
-        if compatibility.get("axioms") != [] or compatibility.get("path_length") != 1:
-            raise RegistryError("registry.compatibility_missing")
-        for field in (
-            "new_proposition_digest", "old_proposition_digest", "environment_digest",
-            "proof_build_digest", "axiom_report_digest",
-        ):
-            if re.fullmatch(r"[0-9a-f]{64}", str(compatibility.get(field))) is None:
-                raise RegistryError("registry.compatibility_missing")
-        _, compatibility_digest = digest_frame(
-            "compatibility", canonical_cbor(compatibility)
+        candidate_digest = _compatibility_lock_digest(
+            compatibility, bundle.get("proposition_digest")
         )
         if (
-            compatibility_digest != bundle.get("compatibility_digest")
-            or compatibility_digest != policy.get("compatibility_digest")
-            or compatibility != policy.get("compatibility_binding")
+            candidate_digest != bundle.get("compatibility_digest")
+            or candidate_digest != compatibility_digest
+            or compatibility != policy_compatibility
         ):
             raise RegistryError("registry.compatibility_missing")
+    elif compatibility_digest != bundle.get("compatibility_digest"):
+        raise RegistryError("registry.compatibility_missing")
     return {"classification": "accepted", "root_status": "current" if root in current else "historical_permitted"}

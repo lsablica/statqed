@@ -15,21 +15,21 @@
       "cargo +1.97.1 clippy --all-targets --all-features --locked -- -D warnings",
       "cargo +1.97.1 test --all-features --locked"
     ],
-    "result": "pass: 16 integration tests and doc tests"
+    "result": "pass: 18 integration tests and doc tests"
   },
   "offline_floor": {
     "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
     "rustc_commit": "4eb161250e340c8f48f66e2b929ef4a5bed7c181",
     "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
     "command": "cargo +1.85.1 test --all-features --locked --offline",
-    "result": "pass: 16 integration tests and doc tests"
+    "result": "pass: 18 integration tests and doc tests"
   },
   "subjects": {
-    "Cargo.toml": "d04046c15a4ba409165cbdf57e00c9eddaf74c270270d5e912eef770c457bc92",
+    "Cargo.toml": "7e8fc49726a3c84c41ef2d58d6ae7263e6c7f5edb61287244d3af94d2cb3a647",
     "Cargo.lock": "c7b87301f5b05be4424cb5cdea7ad87913e4a61af7be4b177dd539f4d7d0e11c",
-    "rust-toolchain.toml": "7c2f0a64d6cb4c7b9fb3dc70adbcdb8727a1396367605a09e29bee276044dc23",
-    "src/lib.rs": "06136f4e78c1332a5eadb30e90233caeda7232c51d255bbc952ab28b5bd49659",
-    "tests/resolver.rs": "ee2ec2913da6544e79299c6e9e58ca661ae2036e283f75c8a95debe1f1b099bb"
+    "rust-toolchain.toml": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc",
+    "src/lib.rs": "6a89d3e8ddd66649cd99e602799a04aff8ea6d6369e6c499cf873b7cf0423776",
+    "tests/resolver.rs": "d37cda41247221d91970bcb7f95db9ab5e813cbd3608bde61fe74a137ee8a300"
   },
   "network": "No network is used by either test command; the exact graph has no third-party crates.",
   "credentials": "No registry credentials or alternate registry configuration are read by the crate or required by the exact graph.",

@@ -360,6 +360,37 @@ fn identifier_boundary_and_one_over_are_bounded() {
     let mut over = at_limit;
     over.id.push('a');
     assert_eq!(resolve(&over, &matching), Err(ErrorCode::ResourceLimit));
+
+    let mut malformed = record();
+    malformed.id = "Upper".to_owned();
+    assert_eq!(
+        resolve(&malformed, &policy()),
+        Err(ErrorCode::MalformedRecord)
+    );
+}
+
+#[test]
+fn malformed_verifier_policy_owns_policy_error_class() {
+    let mut malformed_root = policy();
+    malformed_root.current_permitted_roots = vec!["not-a-digest".to_owned()];
+    assert_eq!(
+        resolve(&record(), &malformed_root),
+        Err(ErrorCode::AuthorizationPolicyUnsupported)
+    );
+
+    let mut malformed_compatibility = policy();
+    malformed_compatibility.compatibility_digest = "not-a-digest".to_owned();
+    assert_eq!(
+        resolve(&record(), &malformed_compatibility),
+        Err(ErrorCode::AuthorizationPolicyUnsupported)
+    );
+
+    let mut candidate = record();
+    candidate.compatibility_digest = "not-a-digest".to_owned();
+    assert_eq!(
+        resolve(&candidate, &policy()),
+        Err(ErrorCode::MalformedRecord)
+    );
 }
 
 #[test]

@@ -454,7 +454,10 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         policy.declaration.as_str(),
         policy.compatibility_target.as_str(),
     ] {
-        validate_text(value)?;
+        validate_text(value).map_err(|error| match error {
+            ErrorCode::ResourceLimit => ErrorCode::ResourceLimit,
+            _ => ErrorCode::AuthorizationPolicyUnsupported,
+        })?;
     }
     for digest in [
         policy.proposition_digest.as_str(),
@@ -464,7 +467,7 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         policy.axiom_report_digest.as_str(),
         policy.compatibility_digest.as_str(),
     ] {
-        validate_digest(digest)?;
+        validate_digest(digest).map_err(|_| ErrorCode::AuthorizationPolicyUnsupported)?;
     }
     let mut classified_roots = BTreeSet::new();
     for root in policy
@@ -474,7 +477,7 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         .chain(&policy.historical_forbidden_roots)
         .chain(&policy.revoked_roots)
     {
-        validate_digest(root)?;
+        validate_digest(root).map_err(|_| ErrorCode::AuthorizationPolicyUnsupported)?;
         if !classified_roots.insert(root) {
             return Err(ErrorCode::AuthorizationPolicyUnsupported);
         }
@@ -483,8 +486,11 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
 }
 
 fn validate_record_shape(record: &RegistryRecord) -> Result<(), ErrorCode> {
-    if record.id.len() > MAX_IDENTIFIER_BYTES || !valid_identifier(&record.id) {
+    if record.id.len() > MAX_IDENTIFIER_BYTES {
         return Err(ErrorCode::ResourceLimit);
+    }
+    if !valid_identifier(&record.id) {
+        return Err(ErrorCode::MalformedRecord);
     }
     for value in [
         record.schema.as_str(),
@@ -578,8 +584,11 @@ fn parse_count(fields: &BTreeMap<&str, &str>, key: &str) -> Result<usize, ErrorC
 }
 
 fn validate_text(value: &str) -> Result<(), ErrorCode> {
-    if value.is_empty() || value.len() > MAX_STRING_BYTES || value.contains(['\n', '\r', '=']) {
+    if value.len() > MAX_STRING_BYTES {
         return Err(ErrorCode::ResourceLimit);
+    }
+    if value.is_empty() || value.contains(['\n', '\r', '=']) {
+        return Err(ErrorCode::MalformedRecord);
     }
     Ok(())
 }

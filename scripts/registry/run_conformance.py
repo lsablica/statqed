@@ -35,6 +35,9 @@ GOLDEN_DIR = ROOT / "conformance/registry/golden"
 BUNDLE_PATH = ROOT / "theorem-registry/evidence/bundle.json"
 POLICY_PATH = ROOT / "theorem-registry/policy/authorization-v0.json"
 COMPATIBILITY_PATH = ROOT / "theorem-registry/locks/compatibility-v0.json"
+LEAN_COMMIT = "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
+NORMALIZER_ID = "statqed.lean-expr.v0"
+CLOSURE_ID = "statqed.lean-environment-closure.v0"
 
 
 def read_json(path: Path) -> Any:
@@ -95,6 +98,14 @@ def expanded(value: Any) -> Any:
         return [3, expanded("@aggregate-string-max@"), [8, "x"]]
     if value == "@over-width@":
         return [f"r{i:03d}" for i in range(LIMITS["closure_width"] + 1)]
+    if value == "@over-reference-width-unknown-field@":
+        return {
+            "root": {
+                "kind": "definition",
+                "references": [f"r{i:03d}" for i in range(LIMITS["closure_width"] + 1)],
+                "unknown": "must-not-mask-resource-limit",
+            }
+        }
     if isinstance(value, str) and value in {"@max-closure-name-roots@", "@over-closure-name-roots@"}:
         base = ".".join(["x" * LIMITS["name_segment_bytes"]] * 4)
         name = base if value.startswith("@max") else base + ".x"
@@ -217,6 +228,15 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         _, new_root = digest_frame("snapshot", canonical_cbor(bundle["snapshot"]))
         bundle["requested_root"] = new_root
         policy["current_permitted_roots"] = [new_root]
+    elif mutation in {"snapshot_entries_max", "snapshot_entries_over"}:
+        count = LIMITS["registry_entries"] + (mutation == "snapshot_entries_over")
+        bundle["snapshot"]["records"] = [
+            [f"statqed.test-only.snapshot-{index:02d}.v0", "0.0.1", bundle["record_digest"]]
+            for index in range(count)
+        ]
+        _, new_root = digest_frame("snapshot", canonical_cbor(bundle["snapshot"]))
+        bundle["requested_root"] = new_root
+        policy["current_permitted_roots"] = [new_root]
     elif mutation == "artifact_policy":
         bundle["candidate_policy"] = {"current_permitted_roots": ["11" * 32]}
     elif mutation == "artifact_policy_nested_max":
@@ -237,6 +257,27 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         bundle["proof_build_digest"] = "33" * 32
     elif mutation == "forbidden_axiom":
         bundle["axioms"] = ["Classical.choice"]
+    elif mutation == "axioms_max":
+        bundle["axioms"] = ["Classical.choice"] * LIMITS["axioms"]
+    elif mutation == "axioms_over":
+        bundle["axioms"] = ["Classical.choice"] * (LIMITS["axioms"] + 1)
+    elif mutation == "identifier_over":
+        bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
+    elif mutation == "compatibility_null_digest_malformed":
+        bundle["compatibility_digest"] = "not-a-digest"
+    elif mutation == "compatibility_null_digest_substitution":
+        bundle["compatibility_digest"] = "00" * 32
+    elif mutation == "compatibility_policy_digest_malformed":
+        policy["compatibility_digest"] = "not-a-digest"
+    elif mutation == "compatibility_policy_digest_substitution":
+        policy["compatibility_digest"] = "00" * 32
+    elif mutation == "compatibility_policy_binding_malformed":
+        policy["compatibility_binding"] = None
+    elif mutation == "compatibility_policy_binding_substitution":
+        policy["compatibility_binding"]["new_proposition_digest"] = "44" * 32
+        _, policy["compatibility_digest"] = digest_frame(
+            "compatibility", canonical_cbor(policy["compatibility_binding"])
+        )
     elif mutation == "compatibility_correct":
         bundle["compatibility"] = read_json(COMPATIBILITY_PATH)
         _, bundle["compatibility_digest"] = digest_frame(
@@ -325,7 +366,9 @@ def evaluate(
             declarations = expanded(case["declarations"])
             try:
                 primary = closure(roots, declarations)
-                payload = canonical_cbor(["statqed.lean-environment-closure.v0", primary])
+                payload = canonical_cbor(
+                    [CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, primary]
+                )
                 digest_frame("environment", payload)
                 primary_classification, primary_code = "accepted", "accepted"
             except RegistryError as error:
@@ -335,7 +378,7 @@ def evaluate(
             try:
                 oracle = independent_oracle.environment_closure(roots, declarations)
                 oracle_payload = independent_oracle.canonical_cbor(
-                    ["statqed.lean-environment-closure.v0", oracle]
+                    [CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, oracle]
                 )
                 oracle_classification, oracle_code = "accepted", "accepted"
             except independent_oracle.OracleError as error:
@@ -407,7 +450,7 @@ def _classification(candidate: dict[str, Any], policy: dict[str, Any]) -> str:
 def deliberate_divergences(
     bundle: dict[str, Any], policy: dict[str, Any]
 ) -> list[dict[str, Any]]:
-    """Execute ten deliberately wrong implementations and detect disagreement."""
+    """Execute deliberately wrong implementations and detect disagreement."""
 
     true_expr = [2, [[0, "True"]], []]
     correct_expr = independent_oracle.semantic_expression_payload(true_expr)
@@ -446,6 +489,12 @@ def deliberate_divergences(
     }
     correct_closure = independent_oracle.environment_closure(["root"], declarations)
     wrong_closure = [{"name": "root", "kind": "definition"}]
+    correct_closure_envelope = independent_oracle.canonical_cbor(
+        [CLOSURE_ID, LEAN_COMMIT, NORMALIZER_ID, correct_closure]
+    )
+    wrong_closure_envelope = independent_oracle.canonical_cbor(
+        [CLOSURE_ID, correct_closure]
+    )
 
     forged, forged_policy = mutate_bundle(bundle, policy, "forged_id")
     selected = copy.deepcopy(bundle)
@@ -466,6 +515,7 @@ def deliberate_divergences(
         ("wrong_universe_param", universe_detected),
         ("metadata_not_erased", erased != retained),
         ("missing_closure_edge", correct_closure != wrong_closure),
+        ("missing_closure_envelope_fields", correct_closure_envelope != wrong_closure_envelope),
         ("record_field_forgery", _classification(forged, forged_policy) == "registry.record_digest_mismatch"),
         ("candidate_selected_root", _classification(selected, selected_policy) == "registry.authorization_root_mismatch"),
         ("proof_lock_substitution", _classification(substituted, policy) == "registry.proof_build_lock_mismatch"),

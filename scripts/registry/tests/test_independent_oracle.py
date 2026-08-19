@@ -242,7 +242,7 @@ class IndependentOracleTests(unittest.TestCase):
     def test_malformed_closure_shapes_fail_stably(self):
         cases = (
             (None, {}), ("root", {"root": {"kind": "definition", "references": []}}),
-            ([], None), ([], []), (["root"], {"root": []}),
+            ([], None), ([], []), (["root"], {"root": None}), (["root"], {"root": []}),
             (["root"], {"root": {"kind": "definition", "references": None}}),
             (["root"], {"root": {"kind": "definition", "references": "dep"}}),
         )
@@ -259,6 +259,7 @@ class IndependentOracleTests(unittest.TestCase):
             [{"name": "a", "kind": "definition", "value": "body"}],
         )
         rejected = (
+            {"a": None},
             {"a": {"references": []}},
             {"a": {"kind": "unknown", "references": []}},
             {"a": {"kind": "definition", "references": [], "unknown": -1}},
@@ -269,6 +270,19 @@ class IndependentOracleTests(unittest.TestCase):
                 oracle.OracleError, "registry.normalization_failure"
             ):
                 oracle.environment_closure(["a"], declarations)
+
+    def test_resource_precedence_for_mixed_invalid_declaration(self):
+        declarations = {
+            "root": {
+                "kind": "definition",
+                "references": [
+                    f"r{index}" for index in range(oracle.LIMITS["closure_width"] + 1)
+                ],
+                "unknown": True,
+            }
+        }
+        with self.assertRaisesRegex(oracle.OracleError, "registry.closure_width_limit"):
+            oracle.environment_closure(["root"], declarations)
 
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]

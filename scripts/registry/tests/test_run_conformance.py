@@ -44,6 +44,29 @@ class DifferentialConformanceTests(unittest.TestCase):
                 self.assertEqual(oracle_classification, classification)
                 self.assertEqual(oracle_code, code)
 
+    def test_closure_goldens_use_the_normative_four_component_envelope(self):
+        case = next(
+            item
+            for item in json.loads(run_conformance.CATALOG.read_text(encoding="utf-8"))["fixtures"]
+            if item["id"] == "CLOSURE-TRUE-FAMILY"
+        )
+        classification, code, payload, oracle_classification, oracle_code = (
+            run_conformance.evaluate(case, self.bundle, self.policy)
+        )
+        records = run_conformance.closure(case["roots"], case["declarations"])
+        expected = run_conformance.canonical_cbor(
+            [
+                run_conformance.CLOSURE_ID,
+                run_conformance.LEAN_COMMIT,
+                run_conformance.NORMALIZER_ID,
+                records,
+            ]
+        )
+        self.assertEqual((classification, code), ("accepted", "accepted"))
+        self.assertEqual((oracle_classification, oracle_code), ("accepted", "accepted"))
+        self.assertEqual(payload, expected)
+        self.assertEqual(payload[:1], b"\x84")
+
     def test_rejected_oracle_disagreement_marks_generated_corpus_failed(self):
         original = run_conformance.independent_oracle.semantic_expression_payload
 

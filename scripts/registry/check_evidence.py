@@ -156,11 +156,68 @@ def active_scope_errors(root: Path, verified_tip: str, launch_base: str, allowed
     return errors
 
 
+def rust_build_evidence_errors(root: Path) -> list[str]:
+    """Check retained Rust claims against the exact bound source and test set."""
+
+    relative = Path("backend/crates/statqed-registry/evidence/build-evidence.json")
+    try:
+        evidence = load_json(root / relative)
+        if evidence.get("schema") != "statqed.registry-rust-build-evidence.v0":
+            return ["evidence.rust_build_schema_unsupported"]
+        subjects = evidence.get("subjects")
+        if not isinstance(subjects, dict):
+            return ["evidence.rust_build_subjects_malformed"]
+        expected_subjects = {
+            "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "src/lib.rs", "tests/resolver.rs"
+        }
+        if set(subjects) != expected_subjects:
+            return ["evidence.rust_build_subjects_malformed"]
+        errors = []
+        crate = relative.parent.parent
+        for path, expected_hash in sorted(subjects.items()):
+            target = root / crate / path
+            if not target.is_file() or not isinstance(expected_hash, str) or sha(target) != expected_hash:
+                errors.append(f"evidence.rust_build_subject_drift:{path}")
+        test_source = (root / crate / "tests/resolver.rs").read_text(encoding="utf-8")
+        test_count = len(re.findall(r"^\s*#\[test\]\s*$", test_source, re.MULTILINE))
+        expected_result = f"pass: {test_count} integration tests and doc tests"
+        development = evidence.get("development", {})
+        expected_development = {
+            "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+            "rustc_commit": "8bab26f4f68e0e26f0bb7960be334d5b520ea452",
+            "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+            "commands": [
+                "cargo +1.97.1 fmt --check",
+                "cargo +1.97.1 clippy --all-targets --all-features --locked -- -D warnings",
+                "cargo +1.97.1 test --all-features --locked",
+            ],
+        }
+        if any(development.get(key) != value for key, value in expected_development.items()):
+            errors.append("evidence.rust_build_development_toolchain_drift")
+        if development.get("result") != expected_result:
+            errors.append("evidence.rust_build_development_result_drift")
+        offline = evidence.get("offline_floor", {})
+        expected_offline = {
+            "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+            "rustc_commit": "4eb161250e340c8f48f66e2b929ef4a5bed7c181",
+            "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+            "command": "cargo +1.85.1 test --all-features --locked --offline",
+        }
+        if any(offline.get(key) != value for key, value in expected_offline.items()):
+            errors.append("evidence.rust_build_offline_toolchain_drift")
+        if offline.get("result") != expected_result:
+            errors.append("evidence.rust_build_offline_result_drift")
+        return errors
+    except (OSError, TypeError, ValueError, json.JSONDecodeError):
+        return ["evidence.rust_build_record_malformed"]
+
+
 def verify(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     try:
         spec = load_json(root / build_evidence_manifest.SPEC_PATH)
         errors.extend(ancestry_errors(root, spec))
+        errors.extend(rust_build_evidence_errors(root))
         expected = build_evidence_manifest.encoded(build_evidence_manifest.build(root))
         manifest_path = root / build_evidence_manifest.MANIFEST_PATH
         if not manifest_path.is_file() or manifest_path.read_bytes() != expected:

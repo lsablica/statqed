@@ -600,17 +600,17 @@ def environment_closure(
             raise OracleError("registry.closure_cycle")
         if len(emitted) + len(active) >= LIMITS["closure_units"]:
             raise OracleError("registry.closure_work_budget_limit")
-        declaration = declarations.get(name)
-        if declaration is None:
+        if name not in declarations:
             raise OracleError("registry.missing_dependency")
+        declaration = declarations[name]
         if not isinstance(declaration, Mapping):
             raise OracleError("registry.normalization_failure")
-        payload = declaration_payload(declaration)
         references = declaration.get("references")
+        if isinstance(references, list) and len(references) > LIMITS["closure_width"]:
+            raise OracleError("registry.closure_width_limit")
+        payload = declaration_payload(declaration)
         if not isinstance(references, list):
             raise OracleError("registry.normalization_failure")
-        if len(references) > LIMITS["closure_width"]:
-            raise OracleError("registry.closure_width_limit")
         if any(not isinstance(reference, str) for reference in references):
             raise OracleError("registry.normalization_failure")
         active.add(name)

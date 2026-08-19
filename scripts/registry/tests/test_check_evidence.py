@@ -49,6 +49,23 @@ class EvidenceCorruptionTests(unittest.TestCase):
     def append(self, relative: str) -> list[str]:
         return self.mutate(relative, lambda path: path.write_bytes(path.read_bytes() + b"\ncorrupt\n"))
 
+    def mutate_and_rebind_manifest(self, relative: str, operation) -> list[str]:
+        target = self.root / relative
+        manifest = self.root / check_evidence.build_evidence_manifest.MANIFEST_PATH
+        original_target = target.read_bytes()
+        original_manifest = manifest.read_bytes()
+        operation(target)
+        manifest.write_bytes(
+            check_evidence.build_evidence_manifest.encoded(
+                check_evidence.build_evidence_manifest.build(self.root)
+            )
+        )
+        try:
+            return check_evidence.verify(self.root)
+        finally:
+            target.write_bytes(original_target)
+            manifest.write_bytes(original_manifest)
+
     def test_baseline_verifies(self):
         self.assertEqual(check_evidence.verify(self.root), [])
 
@@ -135,6 +152,45 @@ class EvidenceCorruptionTests(unittest.TestCase):
             ),
         )
         self.assertIn("evidence.manifest_drift", errors)
+
+    def test_stale_rust_build_subject_binding_is_rejected_directly(self):
+        errors = self.mutate_and_rebind_manifest(
+            "backend/crates/statqed-registry/evidence/build-evidence.json",
+            lambda path: path.write_text(
+                path.read_text().replace(
+                    '"src/lib.rs": "6a89d3e8ddd66649cd99e602799a04aff8ea6d6369e6c499cf873b7cf0423776"',
+                    '"src/lib.rs": "' + "00" * 32 + '"',
+                    1,
+                )
+            ),
+        )
+        self.assertIn("evidence.rust_build_subject_drift:src/lib.rs", errors)
+
+    def test_stale_rust_build_test_count_is_rejected_directly(self):
+        errors = self.mutate_and_rebind_manifest(
+            "backend/crates/statqed-registry/evidence/build-evidence.json",
+            lambda path: path.write_text(
+                path.read_text().replace(
+                    "pass: 18 integration tests and doc tests",
+                    "pass: 17 integration tests and doc tests",
+                    1,
+                )
+            ),
+        )
+        self.assertIn("evidence.rust_build_development_result_drift", errors)
+
+    def test_rust_build_toolchain_claim_is_checked_after_outer_rebinding(self):
+        errors = self.mutate_and_rebind_manifest(
+            "backend/crates/statqed-registry/evidence/build-evidence.json",
+            lambda path: path.write_text(
+                path.read_text().replace(
+                    "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+                    "rustc 9.99.9 (forged)",
+                    1,
+                )
+            ),
+        )
+        self.assertIn("evidence.rust_build_development_toolchain_drift", errors)
 
     def test_rfc0006_mutation(self):
         errors = self.append("rfcs/0006-canonical-logical-data-digest.md")
