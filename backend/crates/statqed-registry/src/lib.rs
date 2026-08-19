@@ -287,8 +287,10 @@ pub fn resolve_bytes(input: &[u8], policy: &TrustedPolicy) -> Result<Resolution,
 /// Returns a stable [`ErrorCode`] when any required identity, trust, resource,
 /// axiom, or compatibility binding fails.
 pub fn resolve(record: &RegistryRecord, policy: &TrustedPolicy) -> Result<Resolution, ErrorCode> {
-    validate_policy(policy)?;
+    validate_policy_resource_limits(policy)?;
+    validate_record_resource_limits(record)?;
     validate_record_shape(record)?;
+    validate_policy(policy)?;
 
     if record.schema != REGISTRY_FORMAT_VERSION {
         return Err(ErrorCode::VersionUnsupported);
@@ -440,14 +442,6 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
     if policy.version != POLICY_VERSION {
         return Err(ErrorCode::AuthorizationPolicyUnsupported);
     }
-    if policy.current_permitted_roots.len()
-        + policy.historical_permitted_roots.len()
-        + policy.historical_forbidden_roots.len()
-        + policy.revoked_roots.len()
-        > MAX_REGISTRY_ENTRIES
-    {
-        return Err(ErrorCode::ResourceLimit);
-    }
     for value in [
         policy.record_id.as_str(),
         policy.semantic_version.as_str(),
@@ -467,7 +461,10 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         policy.axiom_report_digest.as_str(),
         policy.compatibility_digest.as_str(),
     ] {
-        validate_digest(digest).map_err(|_| ErrorCode::AuthorizationPolicyUnsupported)?;
+        validate_digest(digest).map_err(|error| match error {
+            ErrorCode::ResourceLimit => ErrorCode::ResourceLimit,
+            _ => ErrorCode::AuthorizationPolicyUnsupported,
+        })?;
     }
     let mut classified_roots = BTreeSet::new();
     for root in policy
@@ -477,10 +474,95 @@ fn validate_policy(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
         .chain(&policy.historical_forbidden_roots)
         .chain(&policy.revoked_roots)
     {
-        validate_digest(root).map_err(|_| ErrorCode::AuthorizationPolicyUnsupported)?;
+        validate_digest(root).map_err(|error| match error {
+            ErrorCode::ResourceLimit => ErrorCode::ResourceLimit,
+            _ => ErrorCode::AuthorizationPolicyUnsupported,
+        })?;
         if !classified_roots.insert(root) {
             return Err(ErrorCode::AuthorizationPolicyUnsupported);
         }
+    }
+    Ok(())
+}
+
+fn validate_policy_resource_limits(policy: &TrustedPolicy) -> Result<(), ErrorCode> {
+    if policy.current_permitted_roots.len()
+        + policy.historical_permitted_roots.len()
+        + policy.historical_forbidden_roots.len()
+        + policy.revoked_roots.len()
+        > MAX_REGISTRY_ENTRIES
+    {
+        return Err(ErrorCode::ResourceLimit);
+    }
+    for value in [
+        policy.version.as_str(),
+        policy.record_id.as_str(),
+        policy.semantic_version.as_str(),
+        policy.declaration.as_str(),
+        policy.proposition_digest.as_str(),
+        policy.environment_digest.as_str(),
+        policy.record_digest.as_str(),
+        policy.proof_build_digest.as_str(),
+        policy.axiom_report_digest.as_str(),
+        policy.compatibility_target.as_str(),
+        policy.compatibility_digest.as_str(),
+    ]
+    .into_iter()
+    .chain(policy.current_permitted_roots.iter().map(String::as_str))
+    .chain(policy.historical_permitted_roots.iter().map(String::as_str))
+    .chain(policy.historical_forbidden_roots.iter().map(String::as_str))
+    .chain(policy.revoked_roots.iter().map(String::as_str))
+    {
+        if value.len() > MAX_STRING_BYTES {
+            return Err(ErrorCode::ResourceLimit);
+        }
+    }
+    Ok(())
+}
+
+fn validate_record_resource_limits(record: &RegistryRecord) -> Result<(), ErrorCode> {
+    if record.id.len() > MAX_IDENTIFIER_BYTES {
+        return Err(ErrorCode::ResourceLimit);
+    }
+    for value in [
+        record.schema.as_str(),
+        record.id.as_str(),
+        record.version.as_str(),
+        record.declaration.as_str(),
+        record.normalizer.as_str(),
+        record.normalization_status.as_str(),
+        record.closure.as_str(),
+        record.closure_status.as_str(),
+        record.proposition_digest.as_str(),
+        record.environment_digest.as_str(),
+        record.record_digest.as_str(),
+        record.requested_root.as_str(),
+        record.policy_version.as_str(),
+        record.proof_build_digest.as_str(),
+        record.axiom_report_digest.as_str(),
+        record.maturity.as_str(),
+        record.exposure.as_str(),
+        record.source_anchor.as_str(),
+        record.attribution.as_str(),
+        record.nonclaims.as_str(),
+        record.compatibility_target.as_str(),
+        record.compatibility_direction.as_str(),
+        record.compatibility_digest.as_str(),
+    ] {
+        if value.len() > MAX_STRING_BYTES {
+            return Err(ErrorCode::ResourceLimit);
+        }
+    }
+    if record.axiom_count > MAX_AXIOM_ENTRIES
+        || record.registry_entries > MAX_REGISTRY_ENTRIES
+        || record.expression_nodes > MAX_EXPRESSION_NODES
+        || record.expression_depth > MAX_EXPRESSION_DEPTH
+        || record.closure_width > MAX_CLOSURE_WIDTH
+        || record.closure_depth > MAX_CLOSURE_DEPTH
+        || record.work_nodes > MAX_WORK_NODES
+        || record.compatibility_edges > MAX_COMPATIBILITY_EDGES
+    {
+        return Err(ErrorCode::ResourceLimit);
     }
     Ok(())
 }
@@ -594,6 +676,9 @@ fn validate_text(value: &str) -> Result<(), ErrorCode> {
 }
 
 fn validate_digest(value: &str) -> Result<(), ErrorCode> {
+    if value.len() > MAX_STRING_BYTES {
+        return Err(ErrorCode::ResourceLimit);
+    }
     if value.len() != 64
         || !value
             .bytes()

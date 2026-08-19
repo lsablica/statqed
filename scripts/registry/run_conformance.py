@@ -106,6 +106,15 @@ def expanded(value: Any) -> Any:
                 "unknown": "must-not-mask-resource-limit",
             }
         }
+    if value == "@over-definition-value-unknown-field@":
+        return {
+            "root": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (LIMITS["string_bytes"] + 1),
+                "unknown": "must-not-mask-resource-limit",
+            }
+        }
     if isinstance(value, str) and value in {"@max-closure-name-roots@", "@over-closure-name-roots@"}:
         base = ".".join(["x" * LIMITS["name_segment_bytes"]] * 4)
         name = base if value.startswith("@max") else base + ".x"
@@ -166,6 +175,19 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["historical_permitted_roots"] = [root]
     elif mutation == "wrong_root":
         bundle["requested_root"] = "00" * 32
+    elif mutation in {
+        "malformed_requested_root", "malformed_record_digest",
+        "malformed_proposition_digest", "malformed_environment_digest",
+        "malformed_proof_build_digest",
+    }:
+        field = {
+            "malformed_requested_root": "requested_root",
+            "malformed_record_digest": "record_digest",
+            "malformed_proposition_digest": "proposition_digest",
+            "malformed_environment_digest": "environment_digest",
+            "malformed_proof_build_digest": "proof_build_digest",
+        }[mutation]
+        bundle[field] = "not-a-digest"
     elif mutation == "unknown_root":
         policy["current_permitted_roots"] = []
     elif mutation == "revoked_root":
@@ -190,12 +212,22 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         policy["current_permitted_roots"] = [root] + [f"{index + 4:064x}" for index in range(12)]
     elif mutation == "policy_root_over":
         policy["current_permitted_roots"] = [root] + [f"{index + 4:064x}" for index in range(13)]
+    elif mutation == "policy_root_over_malformed":
+        policy["current_permitted_roots"] = ["not-a-digest"] + [
+            f"{index + 4:064x}" for index in range(LIMITS["registry_entries"])
+        ]
+    elif mutation == "policy_compatibility_digest_over":
+        policy["compatibility_digest"] = "x" * (LIMITS["string_bytes"] + 1)
     elif mutation == "bundle_surrogate":
         bundle["candidate_policy"] = "\ud800"
+    elif mutation == "bundle_unknown_string_over":
+        bundle["unknown"] = "x" * (LIMITS["string_bytes"] + 1)
     elif mutation == "forged_id":
         bundle["record"]["id"] = "statqed.test-only.forged.v0"
         rebuild_bundle_record(bundle)
         policy["current_permitted_roots"] = [bundle["requested_root"]]
+    elif mutation == "record_schema_null":
+        bundle["record"]["schema"] = None
     elif mutation == "forged_maturity":
         bundle["record"]["maturity"] = "Stable"
         rebuild_bundle_record(bundle)
@@ -237,6 +269,12 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         _, new_root = digest_frame("snapshot", canonical_cbor(bundle["snapshot"]))
         bundle["requested_root"] = new_root
         policy["current_permitted_roots"] = [new_root]
+    elif mutation == "snapshot_entries_over_unknown_field":
+        bundle["snapshot"]["records"] = [
+            [f"statqed.test-only.snapshot-{index:02d}.v0", "0.0.1", bundle["record_digest"]]
+            for index in range(LIMITS["registry_entries"] + 1)
+        ]
+        bundle["snapshot"]["unknown"] = True
     elif mutation == "artifact_policy":
         bundle["candidate_policy"] = {"current_permitted_roots": ["11" * 32]}
     elif mutation == "artifact_policy_nested_max":
@@ -261,18 +299,51 @@ def mutate_bundle(base: dict[str, Any], base_policy: dict[str, Any], mutation: s
         bundle["axioms"] = ["Classical.choice"] * LIMITS["axioms"]
     elif mutation == "axioms_over":
         bundle["axioms"] = ["Classical.choice"] * (LIMITS["axioms"] + 1)
+    elif mutation == "axioms_over_wrong_schema":
+        bundle["axioms"] = ["Classical.choice"] * (LIMITS["axioms"] + 1)
+        bundle["record"]["schema"] = "statqed.registry-record.v999"
     elif mutation == "identifier_over":
         bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
+    elif mutation == "identifier_utf8_at_limit":
+        bundle["record"]["id"] = "é" * (LIMITS["identifier_bytes"] // 2)
+    elif mutation == "identifier_utf8_over":
+        bundle["record"]["id"] = "é" * (LIMITS["identifier_bytes"] // 2) + "a"
+    elif mutation == "identifier_over_wrong_schema":
+        bundle["record"]["id"] = "a" * (LIMITS["identifier_bytes"] + 1)
+        bundle["record"]["schema"] = "statqed.registry-record.v999"
     elif mutation == "compatibility_null_digest_malformed":
         bundle["compatibility_digest"] = "not-a-digest"
     elif mutation == "compatibility_null_digest_substitution":
         bundle["compatibility_digest"] = "00" * 32
     elif mutation == "compatibility_policy_digest_malformed":
         policy["compatibility_digest"] = "not-a-digest"
+    elif mutation == "compatibility_candidate_and_policy_digest_malformed":
+        bundle["compatibility_digest"] = "not-a-digest"
+        policy["compatibility_digest"] = "not-a-digest"
     elif mutation == "compatibility_policy_digest_substitution":
         policy["compatibility_digest"] = "00" * 32
     elif mutation == "compatibility_policy_binding_malformed":
         policy["compatibility_binding"] = None
+    elif mutation in {
+        "compatibility_policy_path_boolean",
+        "compatibility_policy_normalized_type_null",
+        "compatibility_policy_proof_subject_null",
+        "compatibility_policy_universes_null",
+        "compatibility_policy_new_proposition_null",
+    }:
+        field, value = {
+            "compatibility_policy_path_boolean": ("path_length", True),
+            "compatibility_policy_normalized_type_null": ("normalized_type", None),
+            "compatibility_policy_proof_subject_null": ("proof_subject", None),
+            "compatibility_policy_universes_null": ("universe_instantiations", None),
+            "compatibility_policy_new_proposition_null": ("new_proposition", None),
+        }[mutation]
+        policy["compatibility_binding"][field] = value
+        _, digest = digest_frame(
+            "compatibility", canonical_cbor(policy["compatibility_binding"])
+        )
+        policy["compatibility_digest"] = digest
+        bundle["compatibility_digest"] = digest
     elif mutation == "compatibility_policy_binding_substitution":
         policy["compatibility_binding"]["new_proposition_digest"] = "44" * 32
         _, policy["compatibility_digest"] = digest_frame(

@@ -397,6 +397,13 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
 
     def declaration_payload(declaration: dict[str, Any]) -> dict[str, Any]:
         kind = declaration.get("kind")
+        if kind == "definition" and isinstance(declaration.get("value"), str):
+            try:
+                raw = declaration["value"].encode("utf-8", "strict")
+            except UnicodeEncodeError as exc:
+                raise RegistryError("registry.normalization_failure") from exc
+            if len(raw) > LIMITS["string_bytes"]:
+                raise RegistryError("registry.resource_limit")
         if kind == "definition" and set(declaration) in (
             {"kind", "references"},
             {"kind", "references", "value"},
@@ -405,12 +412,6 @@ def closure(root_names: list[str], declarations: dict[str, dict[str, Any]]) -> l
             if "value" in declaration:
                 if not isinstance(declaration["value"], str):
                     raise RegistryError("registry.normalization_failure")
-                try:
-                    raw = declaration["value"].encode("utf-8", "strict")
-                except UnicodeEncodeError as exc:
-                    raise RegistryError("registry.normalization_failure") from exc
-                if len(raw) > LIMITS["string_bytes"]:
-                    raise RegistryError("registry.resource_limit")
                 payload["value"] = declaration["value"]
             return payload
         if kind == "inductive_family" and set(declaration) == {"kind", "references"}:
@@ -460,14 +461,79 @@ def validate_identifier(value: Any) -> str:
     if not isinstance(value, str):
         raise RegistryError("registry.malformed_record")
     try:
+        utf8 = value.encode("utf-8", "strict")
+    except UnicodeEncodeError as exc:
+        raise RegistryError("registry.malformed_record") from exc
+    if len(utf8) > LIMITS["identifier_bytes"]:
+        raise RegistryError("registry.resource_limit")
+    try:
         encoded = value.encode("ascii", "strict")
     except UnicodeEncodeError as exc:
         raise RegistryError("registry.malformed_record") from exc
-    if len(encoded) > LIMITS["identifier_bytes"]:
-        raise RegistryError("registry.resource_limit")
     if not _IDENTIFIER.fullmatch(value):
         raise RegistryError("registry.malformed_record")
     return value
+
+
+def _utf8_length(value: Any) -> int | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return len(value.encode("utf-8", "strict"))
+    except UnicodeEncodeError:
+        return None
+
+
+def _verify_bundle_resource_preflight(bundle: dict[str, Any], policy: dict[str, Any]) -> None:
+    """Enforce observable v0 resource caps before lower-precedence errors.
+
+    This pass deliberately inspects only fields whose container types make the
+    applicable bound unambiguous. Shape and syntax errors remain owned by the
+    normal validation pass when no resource boundary has already been crossed.
+    """
+
+    for root in (bundle, policy):
+        stack: list[Any] = [root]
+        while stack:
+            value = stack.pop()
+            if isinstance(value, str):
+                length = _utf8_length(value)
+                if length is not None and length > LIMITS["string_bytes"]:
+                    raise RegistryError("registry.resource_limit")
+            elif isinstance(value, list):
+                stack.extend(value)
+            elif isinstance(value, dict):
+                stack.extend(value.keys())
+                stack.extend(value.values())
+
+    root_fields = (
+        "current_permitted_roots",
+        "historical_permitted_roots",
+        "historical_forbidden_roots",
+        "revoked_roots",
+    )
+    root_lists = [policy.get(field) for field in root_fields]
+    if (
+        sum(len(values) for values in root_lists if isinstance(values, list))
+        > LIMITS["registry_entries"]
+    ):
+        raise RegistryError("registry.resource_limit")
+
+    record = bundle.get("record")
+    if isinstance(record, dict):
+        identifier_length = _utf8_length(record.get("id"))
+        if identifier_length is not None and identifier_length > LIMITS["identifier_bytes"]:
+            raise RegistryError("registry.resource_limit")
+
+    snapshot = bundle.get("snapshot")
+    if isinstance(snapshot, dict):
+        records = snapshot.get("records")
+        if isinstance(records, list) and len(records) > LIMITS["registry_entries"]:
+            raise RegistryError("registry.resource_limit")
+
+    axioms = bundle.get("axioms")
+    if isinstance(axioms, list) and len(axioms) > LIMITS["axioms"]:
+        raise RegistryError("registry.resource_limit")
 
 
 def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
@@ -491,8 +557,28 @@ def _compatibility_lock_digest(value: Any, old_proposition_digest: Any) -> str:
         raise RegistryError("registry.compatibility_missing")
     if value.get("declaration") != "StatQED.Registry.Tests.falseImpliesTrue":
         raise RegistryError("registry.compatibility_missing")
-    if value.get("axioms") != [] or value.get("path_length") != 1:
+    if value.get("new_proposition") != "False":
         raise RegistryError("registry.compatibility_missing")
+    if (
+        value.get("axioms") != []
+        or type(value.get("path_length")) is not int
+        or value["path_length"] != 1
+    ):
+        raise RegistryError("registry.compatibility_missing")
+    if value.get("universe_instantiations") != {"new": [], "old": []}:
+        raise RegistryError("registry.compatibility_missing")
+    expected_type = [
+        5,
+        0,
+        [2, [[0, "False"]], []],
+        [2, [[0, "True"]], []],
+    ]
+    if value.get("normalized_type") != expected_type:
+        raise RegistryError("registry.compatibility_missing")
+    try:
+        normalize_expr(value.get("proof_subject"))
+    except RegistryError as error:
+        raise RegistryError("registry.compatibility_missing") from error
     for field in (
         "new_proposition_digest", "old_proposition_digest", "environment_digest",
         "proof_build_digest", "axiom_report_digest",
@@ -515,14 +601,81 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         "proposition_digest", "environment_digest", "proof_build_digest",
         "axioms", "compatibility", "compatibility_digest",
     }
-    if set(bundle) - (expected_bundle_fields | {"candidate_policy"}) or not expected_bundle_fields.issubset(bundle):
-        raise RegistryError("registry.malformed_record")
     if len(canonical_json(bundle)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
     if len(canonical_json(policy)) > LIMITS["input_bytes"]:
         raise RegistryError("registry.resource_limit")
-    if re.fullmatch(r"[0-9a-f]{64}", str(bundle.get("compatibility_digest"))) is None:
+    _verify_bundle_resource_preflight(bundle, policy)
+    if set(bundle) - (expected_bundle_fields | {"candidate_policy"}) or not expected_bundle_fields.issubset(bundle):
         raise RegistryError("registry.malformed_record")
+    candidate_digest_fields = (
+        "record_digest", "requested_root", "proposition_digest",
+        "environment_digest", "proof_build_digest", "compatibility_digest",
+    )
+    if any(
+        not isinstance(bundle.get(field), str)
+        or re.fullmatch(r"[0-9a-f]{64}", bundle[field]) is None
+        for field in candidate_digest_fields
+    ):
+        raise RegistryError("registry.malformed_record")
+    record = bundle.get("record")
+    snapshot = bundle.get("snapshot")
+    if not isinstance(record, dict) or not isinstance(snapshot, dict):
+        raise RegistryError("registry.malformed_record")
+    expected_record_fields = {
+        "schema", "id", "version", "declaration", "normalizer", "closure",
+        "proposition_digest", "environment_digest", "proof_build_digest",
+        "axiom_report_digest", "maturity", "exposure", "source_anchor",
+        "attribution", "nonclaims",
+    }
+    if set(record) != expected_record_fields:
+        raise RegistryError("registry.malformed_record")
+    record_text_fields = expected_record_fields - {"nonclaims"}
+    if any(not isinstance(record.get(field), str) for field in record_text_fields):
+        raise RegistryError("registry.malformed_record")
+    if not isinstance(record.get("nonclaims"), list) or any(
+        not isinstance(item, str) for item in record["nonclaims"]
+    ):
+        raise RegistryError("registry.malformed_record")
+    for digest_field in (
+        "proposition_digest", "environment_digest", "proof_build_digest",
+        "axiom_report_digest",
+    ):
+        if re.fullmatch(r"[0-9a-f]{64}", record[digest_field]) is None:
+            raise RegistryError("registry.malformed_record")
+    if set(snapshot) != {"schema", "records"} or not isinstance(snapshot.get("records"), list):
+        raise RegistryError("registry.malformed_record")
+    if len(snapshot["records"]) > LIMITS["registry_entries"]:
+        raise RegistryError("registry.resource_limit")
+    if len(snapshot["records"]) != 1:
+        raise RegistryError("registry.malformed_record")
+    entry = snapshot["records"][0]
+    if (
+        not isinstance(snapshot.get("schema"), str)
+        or not isinstance(entry, list)
+        or len(entry) != 3
+        or any(not isinstance(item, str) for item in entry)
+        or re.fullmatch(r"[0-9a-f]{64}", entry[2]) is None
+    ):
+        raise RegistryError("registry.malformed_record")
+    if record["schema"] != "statqed.registry-record.v0":
+        raise RegistryError("registry.version_unsupported")
+    if snapshot["schema"] != "statqed.registry-snapshot.v0":
+        raise RegistryError("registry.version_unsupported")
+    if validate_identifier(record["id"]) != "statqed.test-only.foundation.true.v0":
+        raise RegistryError("registry.record_digest_mismatch")
+    if record["maturity"] != "Experimental" or record["exposure"] != "test_only":
+        raise RegistryError("registry.record_digest_mismatch")
+    record_bytes = canonical_cbor(record)
+    _, actual_record_digest = digest_frame("record", record_bytes)
+    if actual_record_digest != bundle.get("record_digest"):
+        raise RegistryError("registry.record_digest_mismatch")
+    snapshot_bytes = canonical_cbor(snapshot)
+    _, root = digest_frame("snapshot", snapshot_bytes)
+    requested = bundle.get("requested_root")
+    if requested != root:
+        raise RegistryError("registry.authorization_root_mismatch")
+
     expected_policy_fields = {
         "schema", "policy_version", "current_permitted_roots",
         "historical_permitted_roots", "historical_forbidden_roots",
@@ -552,36 +705,16 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         if len(values) != len(set(values)):
             raise RegistryError("registry.authorization_policy_unsupported")
         root_classes.append(set(values))
-    if sum(len(values) for values in root_classes) > LIMITS["registry_entries"]:
-        raise RegistryError("registry.resource_limit")
     for digest_field in ("record_digest", "compatibility_digest"):
-        if re.fullmatch(r"[0-9a-f]{64}", str(policy.get(digest_field))) is None:
+        if (
+            not isinstance(policy.get(digest_field), str)
+            or re.fullmatch(r"[0-9a-f]{64}", policy[digest_field]) is None
+        ):
             raise RegistryError("registry.authorization_policy_unsupported")
     for index, left in enumerate(root_classes):
         if any(left & right for right in root_classes[index + 1 :]):
             raise RegistryError("registry.authorization_policy_unsupported")
-    record = bundle.get("record")
-    snapshot = bundle.get("snapshot")
-    if not isinstance(record, dict) or not isinstance(snapshot, dict):
-        raise RegistryError("registry.malformed_record")
-    expected_record_fields = {
-        "schema", "id", "version", "declaration", "normalizer", "closure",
-        "proposition_digest", "environment_digest", "proof_build_digest",
-        "axiom_report_digest", "maturity", "exposure", "source_anchor",
-        "attribution", "nonclaims",
-    }
-    if set(record) != expected_record_fields:
-        raise RegistryError("registry.malformed_record")
-    if record["schema"] != "statqed.registry-record.v0":
-        raise RegistryError("registry.version_unsupported")
-    if validate_identifier(record["id"]) != "statqed.test-only.foundation.true.v0":
-        raise RegistryError("registry.record_digest_mismatch")
-    if record["maturity"] != "Experimental" or record["exposure"] != "test_only":
-        raise RegistryError("registry.record_digest_mismatch")
-    record_bytes = canonical_cbor(record)
-    _, actual_record_digest = digest_frame("record", record_bytes)
-    if actual_record_digest != bundle.get("record_digest"):
-        raise RegistryError("registry.record_digest_mismatch")
+
     # A locally permitted snapshot root is an authorization selector, not a
     # license for a candidate to redefine the reviewed record.  Bind the full
     # closed record and its digest in verifier-selected policy so that
@@ -592,26 +725,6 @@ def verify_bundle(bundle: dict[str, Any], policy: dict[str, Any]) -> dict[str, s
         or policy.get("record_binding") != record
     ):
         raise RegistryError("registry.record_digest_mismatch")
-    if set(snapshot) != {"schema", "records"} or not isinstance(snapshot.get("records"), list):
-        raise RegistryError("registry.malformed_record")
-    if len(snapshot["records"]) > LIMITS["registry_entries"]:
-        raise RegistryError("registry.resource_limit")
-    if len(snapshot["records"]) != 1:
-        raise RegistryError("registry.malformed_record")
-    if snapshot.get("schema") != "statqed.registry-snapshot.v0":
-        raise RegistryError("registry.version_unsupported")
-    entry = snapshot["records"][0]
-    if (
-        not isinstance(entry, list)
-        or len(entry) != 3
-        or any(not isinstance(item, str) for item in entry)
-    ):
-        raise RegistryError("registry.malformed_record")
-    snapshot_bytes = canonical_cbor(snapshot)
-    _, root = digest_frame("snapshot", snapshot_bytes)
-    requested = bundle.get("requested_root")
-    if requested != root:
-        raise RegistryError("registry.authorization_root_mismatch")
     current, historical, forbidden, revoked = root_classes
     if root in revoked:
         raise RegistryError("registry.authorization_root_revoked")

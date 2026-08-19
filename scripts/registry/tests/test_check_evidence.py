@@ -158,7 +158,7 @@ class EvidenceCorruptionTests(unittest.TestCase):
             "backend/crates/statqed-registry/evidence/build-evidence.json",
             lambda path: path.write_text(
                 path.read_text().replace(
-                    '"src/lib.rs": "6a89d3e8ddd66649cd99e602799a04aff8ea6d6369e6c499cf873b7cf0423776"',
+                    '"src/lib.rs": "c5eb95c92b92d60bf5e22934a99693505285c7bfaf37e92f107444688ab18020"',
                     '"src/lib.rs": "' + "00" * 32 + '"',
                     1,
                 )
@@ -171,8 +171,8 @@ class EvidenceCorruptionTests(unittest.TestCase):
             "backend/crates/statqed-registry/evidence/build-evidence.json",
             lambda path: path.write_text(
                 path.read_text().replace(
-                    "pass: 18 integration tests and doc tests",
-                    "pass: 17 integration tests and doc tests",
+                    "pass: 20 integration tests and doc tests",
+                    "pass: 19 integration tests and doc tests",
                     1,
                 )
             ),
@@ -191,6 +191,70 @@ class EvidenceCorruptionTests(unittest.TestCase):
             ),
         )
         self.assertIn("evidence.rust_build_development_toolchain_drift", errors)
+
+    def test_rust_build_claims_are_checked_after_outer_rebinding(self):
+        cases = (
+            ("2026-08-19", "2026-08-18", "evidence.rust_build_observation_drift"),
+            ("Ubuntu 24.04.4 LTS", "forged OS", "evidence.rust_build_platform_drift"),
+            (
+                "No network is used by either test command; the exact graph has no third-party crates.",
+                "network was used",
+                "evidence.rust_build_network_claim_drift",
+            ),
+            (
+                "The observed commands used a fresh isolated Cargo home containing no credentials or alternate registry configuration; the exact graph requires none.",
+                "ambient credentials accepted",
+                "evidence.rust_build_credentials_claim_drift",
+            ),
+            (
+                "Only Linux x86_64 was directly exercised.",
+                "all platforms verified",
+                "evidence.rust_build_limitations_drift",
+            ),
+            (
+                "cargo +1.97.1 fmt --check",
+                "cargo fmt",
+                "evidence.rust_build_development_toolchain_drift",
+            ),
+            (
+                "cargo +1.85.1 test --all-features --locked --offline",
+                "cargo test",
+                "evidence.rust_build_offline_toolchain_drift",
+            ),
+        )
+        for old, new, expected in cases:
+            with self.subTest(old=old):
+                errors = self.mutate_and_rebind_manifest(
+                    "backend/crates/statqed-registry/evidence/build-evidence.json",
+                    lambda path, old=old, new=new: path.write_text(
+                        path.read_text().replace(old, new, 1)
+                    ),
+                )
+                self.assertIn(expected, errors)
+
+    def test_rust_build_floor_result_is_checked_after_outer_rebinding(self):
+        def mutate_floor(path):
+            evidence = json.loads(path.read_text())
+            evidence["offline_floor"]["result"] = "pass: 19 integration tests and doc tests"
+            path.write_text(json.dumps(evidence, sort_keys=True) + "\n")
+
+        errors = self.mutate_and_rebind_manifest(
+            "backend/crates/statqed-registry/evidence/build-evidence.json", mutate_floor
+        )
+        self.assertIn("evidence.rust_build_offline_result_drift", errors)
+
+    def test_registry_workflow_isolated_cargo_home_is_checked_after_outer_rebinding(self):
+        errors = self.mutate_and_rebind_manifest(
+            ".github/workflows/theorem-registry.yml",
+            lambda path: path.write_text(
+                path.read_text().replace(
+                    "CARGO_HOME: ${{ runner.temp }}/statqed-registry-tools/cargo",
+                    "CARGO_HOME: /tmp/ambient-cargo",
+                    1,
+                )
+            ),
+        )
+        self.assertIn("evidence.registry_workflow_isolation_drift", errors)
 
     def test_rfc0006_mutation(self):
         errors = self.append("rfcs/0006-canonical-logical-data-digest.md")

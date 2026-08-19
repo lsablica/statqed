@@ -162,8 +162,38 @@ def rust_build_evidence_errors(root: Path) -> list[str]:
     relative = Path("backend/crates/statqed-registry/evidence/build-evidence.json")
     try:
         evidence = load_json(root / relative)
+        errors = []
+        expected_top_level = {
+            "schema", "observed_at", "platform", "development", "offline_floor",
+            "subjects", "network", "credentials", "limitations",
+        }
+        if set(evidence) != expected_top_level:
+            errors.append("evidence.rust_build_record_malformed")
         if evidence.get("schema") != "statqed.registry-rust-build-evidence.v0":
             return ["evidence.rust_build_schema_unsupported"]
+        if evidence.get("observed_at") != "2026-08-19":
+            errors.append("evidence.rust_build_observation_drift")
+        if evidence.get("platform") != {
+            "os": "Ubuntu 24.04.4 LTS",
+            "architecture": "x86_64",
+            "host_triple": "x86_64-unknown-linux-gnu",
+        }:
+            errors.append("evidence.rust_build_platform_drift")
+        if evidence.get("network") != (
+            "No network is used by either test command; the exact graph has no third-party crates."
+        ):
+            errors.append("evidence.rust_build_network_claim_drift")
+        if evidence.get("credentials") != (
+            "The observed commands used a fresh isolated Cargo home containing no credentials or "
+            "alternate registry configuration; the exact graph requires none."
+        ):
+            errors.append("evidence.rust_build_credentials_claim_drift")
+        if evidence.get("limitations") != [
+            "The operational key=value transport is not the normative registry encoding.",
+            "The resolver compares exact digest bindings selected by trusted local policy; independent generators establish canonical bytes and digest correctness.",
+            "Only Linux x86_64 was directly exercised.",
+        ]:
+            errors.append("evidence.rust_build_limitations_drift")
         subjects = evidence.get("subjects")
         if not isinstance(subjects, dict):
             return ["evidence.rust_build_subjects_malformed"]
@@ -172,7 +202,6 @@ def rust_build_evidence_errors(root: Path) -> list[str]:
         }
         if set(subjects) != expected_subjects:
             return ["evidence.rust_build_subjects_malformed"]
-        errors = []
         crate = relative.parent.parent
         for path, expected_hash in sorted(subjects.items()):
             target = root / crate / path
@@ -192,6 +221,8 @@ def rust_build_evidence_errors(root: Path) -> list[str]:
                 "cargo +1.97.1 test --all-features --locked",
             ],
         }
+        if set(development) != set(expected_development) | {"result"}:
+            errors.append("evidence.rust_build_development_record_malformed")
         if any(development.get(key) != value for key, value in expected_development.items()):
             errors.append("evidence.rust_build_development_toolchain_drift")
         if development.get("result") != expected_result:
@@ -203,6 +234,8 @@ def rust_build_evidence_errors(root: Path) -> list[str]:
             "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
             "command": "cargo +1.85.1 test --all-features --locked --offline",
         }
+        if set(offline) != set(expected_offline) | {"result"}:
+            errors.append("evidence.rust_build_offline_record_malformed")
         if any(offline.get(key) != value for key, value in expected_offline.items()):
             errors.append("evidence.rust_build_offline_toolchain_drift")
         if offline.get("result") != expected_result:
@@ -212,12 +245,35 @@ def rust_build_evidence_errors(root: Path) -> list[str]:
         return ["evidence.rust_build_record_malformed"]
 
 
+def registry_workflow_errors(root: Path) -> list[str]:
+    """Keep the retained Registry workflow's Rust homes isolated and credential-free."""
+
+    try:
+        workflow = (root / ".github/workflows/theorem-registry.yml").read_text(encoding="utf-8")
+    except OSError:
+        return ["evidence.registry_workflow_isolation_drift"]
+    required = (
+        "CARGO_HOME: ${{ runner.temp }}/statqed-registry-tools/cargo",
+        "RUSTUP_HOME: ${{ runner.temp }}/statqed-registry-tools/rustup",
+        'test ! -e "$CARGO_HOME/credentials"',
+        'test ! -e "$CARGO_HOME/credentials.toml"',
+        'test ! -e "$CARGO_HOME/config"',
+        'test ! -e "$CARGO_HOME/config.toml"',
+        'CARGO_NET_OFFLINE: "true"',
+        "cargo +1.85.1 test --all-features --locked --offline",
+    )
+    if any(item not in workflow for item in required):
+        return ["evidence.registry_workflow_isolation_drift"]
+    return []
+
+
 def verify(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     try:
         spec = load_json(root / build_evidence_manifest.SPEC_PATH)
         errors.extend(ancestry_errors(root, spec))
         errors.extend(rust_build_evidence_errors(root))
+        errors.extend(registry_workflow_errors(root))
         expected = build_evidence_manifest.encoded(build_evidence_manifest.build(root))
         manifest_path = root / build_evidence_manifest.MANIFEST_PATH
         if not manifest_path.is_file() or manifest_path.read_bytes() != expected:

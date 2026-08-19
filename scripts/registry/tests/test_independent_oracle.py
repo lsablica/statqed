@@ -283,6 +283,16 @@ class IndependentOracleTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(oracle.OracleError, "registry.closure_width_limit"):
             oracle.environment_closure(["root"], declarations)
+        declarations = {
+            "root": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (oracle.LIMITS["string_literal_bytes"] + 1),
+                "unknown": True,
+            }
+        }
+        with self.assertRaisesRegex(oracle.OracleError, "registry.resource_limit"):
+            oracle.environment_closure(["root"], declarations)
 
     def test_cli_is_deterministic_and_uses_stable_errors(self):
         command = [sys.executable, str(SCRIPT_DIR / "independent_oracle.py")]

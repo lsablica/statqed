@@ -17,7 +17,7 @@
   },
   "schema": "statqed.sq0007-evidence.v2",
   "scientific_subject_count": 79,
-  "scientific_subject_digest": "9073db887d90628fb2da0de73ea79deece5917df670ed6448687b535583e9dee",
+  "scientific_subject_digest": "67e7dbbcafdeafc55cc94cbde4f7e35bf6d64f71c09d4659a05dff88144888a0",
   "scientific_subjects": [
     {
       "bytes": 160,
@@ -30,9 +30,9 @@
       "sha256": "7e8fc49726a3c84c41ef2d58d6ae7263e6c7f5edb61287244d3af94d2cb3a647"
     },
     {
-      "bytes": 1998,
+      "bytes": 2033,
       "path": "backend/crates/statqed-registry/evidence/build-evidence.json",
-      "sha256": "dabffc0863dbfc0bb4b978c277674c321d8338e6d3fde523adf00e580acc6750"
+      "sha256": "f3c583b182dfda9d623dc9874d8c6592e07a41a772ded9b198fcafe54210dca4"
     },
     {
       "bytes": 350,
@@ -50,19 +50,19 @@
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
-      "bytes": 24514,
+      "bytes": 27642,
       "path": "backend/crates/statqed-registry/src/lib.rs",
-      "sha256": "6a89d3e8ddd66649cd99e602799a04aff8ea6d6369e6c499cf873b7cf0423776"
+      "sha256": "c5eb95c92b92d60bf5e22934a99693505285c7bfaf37e92f107444688ab18020"
     },
     {
-      "bytes": 18045,
+      "bytes": 20344,
       "path": "backend/crates/statqed-registry/tests/resolver.rs",
-      "sha256": "d37cda41247221d91970bcb7f95db9ab5e813cbd3608bde61fe74a137ee8a300"
+      "sha256": "5dc19664ef6e3048dff7f14cb847f97bf3270e926d8e89df2aeac9d5340ff229"
     },
     {
-      "bytes": 22550,
+      "bytes": 26089,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "59f8038549247b3542390387d6d852af27f8804a58e5339cf942d615a6c83d6b"
+      "sha256": "d5bbef1c6bfcd86e19d5feee65ec0437a0bf519b8ad54b42311d2c1491006f8e"
     },
     {
       "bytes": 151,
@@ -220,9 +220,9 @@
       "sha256": "6bd45ce02078c54bf4e54a55cec7b04ca80784f0dc5861ff31b3af5053cb37df"
     },
     {
-      "bytes": 27848,
+      "bytes": 31156,
       "path": "conformance/registry/results/results.json",
-      "sha256": "d588bd7b41b8e40de261595d707eb4d06c469d6a17f99c2fde1a864fc1464c43"
+      "sha256": "09170dc63ac672bc263b1536770bdb92bdf57a95c81b3a401ccb4b2582e3e177"
     },
     {
       "bytes": 4026,
@@ -416,12 +416,12 @@
     }
   ],
   "subject_count": 103,
-  "subject_digest": "d4d2955fcad1d82e5eeac4c1014e959c0b989c568075a91c065849a3f7da5be5",
+  "subject_digest": "e1b303b2b282b189652ead0ae7801e48c3253b7f2d105944a65fb5418c5f596d",
   "subjects": [
     {
-      "bytes": 6529,
+      "bytes": 7079,
       "path": ".github/workflows/theorem-registry.yml",
-      "sha256": "d9ab5d9b255bfaff3db760fa821e84e07abd4bb0087a9b238f70717a77319416"
+      "sha256": "445ca60d4c9b4dd449ad25cb09dface7ede8350cd8eba2b4a002f6c052350c79"
     },
     {
       "bytes": 575,
@@ -444,9 +444,9 @@
       "sha256": "72ee04d382607cd31c945ffd45fa6f8adbf507def9ecd0c86162d062ad811d8a"
     },
     {
-      "bytes": 1998,
+      "bytes": 2033,
       "path": "backend/crates/statqed-registry/evidence/build-evidence.json",
-      "sha256": "dabffc0863dbfc0bb4b978c277674c321d8338e6d3fde523adf00e580acc6750"
+      "sha256": "f3c583b182dfda9d623dc9874d8c6592e07a41a772ded9b198fcafe54210dca4"
     },
     {
       "bytes": 350,
@@ -464,19 +464,19 @@
       "sha256": "279d77167cec5426fa80f457cd066dc74a360fbe4e2816f4f3fa01487a918fdc"
     },
     {
-      "bytes": 24514,
+      "bytes": 27642,
       "path": "backend/crates/statqed-registry/src/lib.rs",
-      "sha256": "6a89d3e8ddd66649cd99e602799a04aff8ea6d6369e6c499cf873b7cf0423776"
+      "sha256": "c5eb95c92b92d60bf5e22934a99693505285c7bfaf37e92f107444688ab18020"
     },
     {
-      "bytes": 18045,
+      "bytes": 20344,
       "path": "backend/crates/statqed-registry/tests/resolver.rs",
-      "sha256": "d37cda41247221d91970bcb7f95db9ab5e813cbd3608bde61fe74a137ee8a300"
+      "sha256": "5dc19664ef6e3048dff7f14cb847f97bf3270e926d8e89df2aeac9d5340ff229"
     },
     {
-      "bytes": 22550,
+      "bytes": 26089,
       "path": "conformance/registry/fixtures/catalog.json",
-      "sha256": "59f8038549247b3542390387d6d852af27f8804a58e5339cf942d615a6c83d6b"
+      "sha256": "d5bbef1c6bfcd86e19d5feee65ec0437a0bf519b8ad54b42311d2c1491006f8e"
     },
     {
       "bytes": 151,
@@ -634,9 +634,9 @@
       "sha256": "6bd45ce02078c54bf4e54a55cec7b04ca80784f0dc5861ff31b3af5053cb37df"
     },
     {
-      "bytes": 27848,
+      "bytes": 31156,
       "path": "conformance/registry/results/results.json",
-      "sha256": "d588bd7b41b8e40de261595d707eb4d06c469d6a17f99c2fde1a864fc1464c43"
+      "sha256": "09170dc63ac672bc263b1536770bdb92bdf57a95c81b3a401ccb4b2582e3e177"
     },
     {
       "bytes": 4026,
@@ -729,9 +729,9 @@
       "sha256": "f3feaecdec25a483df8504f9b3498523d7dbfa91d14b8b133fdd04726f7f89e4"
     },
     {
-      "bytes": 14719,
+      "bytes": 17616,
       "path": "scripts/registry/check_evidence.py",
-      "sha256": "405d8e213232e7f2769c5ee2970673647fe41d556e29cc474556189c8aa60818"
+      "sha256": "aab204e8bd97b77ba324bb96d3f962cd5375e90f1028b81baaf0ee0d168f212e"
     },
     {
       "bytes": 820,
@@ -744,19 +744,19 @@
       "sha256": "870d2c9758f3ea12143690aae9095423c0db839bc5cd5360262a5a1dd8a503a9"
     },
     {
-      "bytes": 31637,
+      "bytes": 31704,
       "path": "scripts/registry/independent_oracle.py",
-      "sha256": "d0baa24d92cd10d5e1213fa82351da17e1fd940e4f65e48fbd5ee847903db860"
+      "sha256": "5dcaeea19564edc2e0996a819eb05698ab7131ccb12acc25c5932ea0eea92a1b"
     },
     {
-      "bytes": 30049,
+      "bytes": 35281,
       "path": "scripts/registry/model.py",
-      "sha256": "841b6572d8df18711948a10ff044edd80939028ab9eb80d27fb1604cf25b531b"
+      "sha256": "55e73e8947d0473dfe49039aa025493f7f80f511bdcc8ba1c6c16038208dbc49"
     },
     {
-      "bytes": 27973,
+      "bytes": 31550,
       "path": "scripts/registry/run_conformance.py",
-      "sha256": "ddc6429234708f6c641ceaf584e7fe637520c1ad503f7b460f674e2b2df7937f"
+      "sha256": "1b953ff341856643bf67ad494431da72bf47abb1651fb1aab5fbcf353b892147"
     },
     {
       "bytes": 1046,
@@ -764,19 +764,19 @@
       "sha256": "fb1c77533ce0e3f04fa9c0fe49b36008f3e442e1a0e09116c8cd096cf11fbf43"
     },
     {
-      "bytes": 16452,
+      "bytes": 19366,
       "path": "scripts/registry/tests/test_check_evidence.py",
-      "sha256": "eaf66e584b82f0703d5d6b7cb2541e1e0d507077cedd7ce5f7162151f384026d"
+      "sha256": "c579ec492875ab2ad8a885a70ef9cacbaa2e228e65ea9da9462428c3795dee34"
     },
     {
-      "bytes": 14660,
+      "bytes": 15059,
       "path": "scripts/registry/tests/test_independent_oracle.py",
-      "sha256": "0d43b60fb2dd697be2d1be267e5808e4f0401990a96f18ce9df88c77fc3b393f"
+      "sha256": "d5d8d2f18b6798e5c017cbfa81236116bcb634dd253b6b733a78378cdf98c6fc"
     },
     {
-      "bytes": 27825,
+      "bytes": 32612,
       "path": "scripts/registry/tests/test_model.py",
-      "sha256": "48f62098b2ec0fecc6b5eaa5f07787a2450dd11e9b153e7c5b279c680edc3076"
+      "sha256": "22f32c38dcb2d961ce339c0509687a5678019ab3d7b701f785a82d487754fbd1"
     },
     {
       "bytes": 5774,

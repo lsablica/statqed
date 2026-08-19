@@ -570,6 +570,10 @@ def environment_closure(
     def declaration_payload(declaration: Mapping[str, Any]) -> dict[str, Any]:
         kind = declaration.get("kind")
         fields = set(declaration)
+        if kind == "definition" and isinstance(declaration.get("value"), str):
+            _Budget().string(
+                declaration["value"], individual_limit=LIMITS["string_literal_bytes"]
+            )
         if kind == "definition" and fields in (
             {"kind", "references"},
             {"kind", "references", "value"},
@@ -578,9 +582,6 @@ def environment_closure(
             if "value" in declaration:
                 if not isinstance(declaration["value"], str):
                     raise OracleError("registry.normalization_failure")
-                _Budget().string(
-                    declaration["value"], individual_limit=LIMITS["string_literal_bytes"]
-                )
                 payload["value"] = declaration["value"]
             return payload
         if kind == "inductive_family" and fields == {"kind", "references"}:

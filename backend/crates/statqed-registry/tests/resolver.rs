@@ -391,6 +391,69 @@ fn malformed_verifier_policy_owns_policy_error_class() {
         resolve(&candidate, &policy()),
         Err(ErrorCode::MalformedRecord)
     );
+
+    let mut oversized_policy_digest = policy();
+    oversized_policy_digest.compatibility_digest =
+        "x".repeat(statqed_registry::MAX_STRING_BYTES + 1);
+    assert_eq!(
+        resolve(&record(), &oversized_policy_digest),
+        Err(ErrorCode::ResourceLimit)
+    );
+
+    let mut malformed_both_record = record();
+    malformed_both_record.compatibility_digest = "not-a-digest".to_owned();
+    let mut malformed_both_policy = policy();
+    malformed_both_policy.compatibility_digest = "not-a-digest".to_owned();
+    assert_eq!(
+        resolve(&malformed_both_record, &malformed_both_policy),
+        Err(ErrorCode::MalformedRecord)
+    );
+}
+
+#[test]
+fn malformed_candidate_digests_own_candidate_syntax_class() {
+    let mutations: &[fn(&mut RegistryRecord)] = &[
+        |record| record.requested_root = "not-a-digest".to_owned(),
+        |record| record.record_digest = "not-a-digest".to_owned(),
+        |record| record.proposition_digest = "not-a-digest".to_owned(),
+        |record| record.environment_digest = "not-a-digest".to_owned(),
+        |record| record.proof_build_digest = "not-a-digest".to_owned(),
+        |record| record.compatibility_digest = "not-a-digest".to_owned(),
+    ];
+    for mutate in mutations {
+        let mut candidate = record();
+        mutate(&mut candidate);
+        assert_eq!(
+            resolve(&candidate, &policy()),
+            Err(ErrorCode::MalformedRecord)
+        );
+    }
+}
+
+#[test]
+fn resource_limits_precede_mixed_invalid_shapes() {
+    let mut excessive_policy = policy();
+    excessive_policy.current_permitted_roots =
+        vec!["not-a-digest".to_owned(); statqed_registry::MAX_REGISTRY_ENTRIES + 1];
+    assert_eq!(
+        resolve(&record(), &excessive_policy),
+        Err(ErrorCode::ResourceLimit)
+    );
+
+    let mut over_identifier = record();
+    over_identifier.id = "a".repeat(MAX_IDENTIFIER_BYTES + 1);
+    over_identifier.schema = "statqed.registry-record.v999".to_owned();
+    assert_eq!(
+        resolve(&over_identifier, &policy()),
+        Err(ErrorCode::ResourceLimit)
+    );
+
+    let mut over_utf8_identifier = record();
+    over_utf8_identifier.id = format!("{}a", "é".repeat(MAX_IDENTIFIER_BYTES / 2));
+    assert_eq!(
+        resolve(&over_utf8_identifier, &policy()),
+        Err(ErrorCode::ResourceLimit)
+    );
 }
 
 #[test]

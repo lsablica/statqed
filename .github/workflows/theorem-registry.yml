@@ -29,6 +29,8 @@ jobs:
     timeout-minutes: 90
     env:
       ELAN_HOME: ${{ github.workspace }}/../statqed-registry-tools/elan
+      CARGO_HOME: ${{ runner.temp }}/statqed-registry-tools/cargo
+      RUSTUP_HOME: ${{ runner.temp }}/statqed-registry-tools/rustup
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - name: Check out full reviewed history without credentials
@@ -79,6 +81,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$CARGO_HOME" "$RUSTUP_HOME"
+          test ! -e "$CARGO_HOME/credentials"
+          test ! -e "$CARGO_HOME/credentials.toml"
+          test ! -e "$CARGO_HOME/config"
+          test ! -e "$CARGO_HOME/config.toml"
           rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
           rustup toolchain install 1.85.1 --profile minimal
           rustc_dev="$(rustc +1.97.1 -Vv)"
@@ -86,6 +93,10 @@ jobs:
           printf '%s\n%s\n' "$rustc_dev" "$rustc_floor"
           [[ "$rustc_dev" == *"commit-hash: $EXPECTED_RUSTC_DEV_COMMIT"* ]]
           [[ "$rustc_floor" == *"commit-hash: $EXPECTED_RUSTC_FLOOR_COMMIT"* ]]
+          test ! -e "$CARGO_HOME/credentials"
+          test ! -e "$CARGO_HOME/credentials.toml"
+          test ! -e "$CARGO_HOME/config"
+          test ! -e "$CARGO_HOME/config.toml"
 
       - name: Run repository and predecessor gates before dependency material exists
         run: |

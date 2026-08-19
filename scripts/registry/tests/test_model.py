@@ -195,6 +195,22 @@ class ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(model.RegistryError, "registry.authorization_policy_unsupported"):
             model.verify_bundle(copy.deepcopy(self.bundle), None)
 
+    def test_candidate_digest_and_record_types_fail_as_malformed(self):
+        for field in (
+            "requested_root", "record_digest", "proposition_digest",
+            "environment_digest", "proof_build_digest", "compatibility_digest",
+        ):
+            bundle = copy.deepcopy(self.bundle)
+            bundle[field] = "not-a-digest"
+            with self.subTest(field=field), self.assertRaisesRegex(
+                model.RegistryError, "registry.malformed_record"
+            ):
+                model.verify_bundle(bundle, copy.deepcopy(self.policy))
+        bundle = copy.deepcopy(self.bundle)
+        bundle["record"]["schema"] = None
+        with self.assertRaisesRegex(model.RegistryError, "registry.malformed_record"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
     def test_json_structure_depth_boundary(self):
         value = None
         for _ in range(model.LIMITS["canonical_depth"]):
@@ -314,6 +330,16 @@ class ModelTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(model.RegistryError, "registry.closure_width_limit"):
             model.closure(["root"], declarations)
+        declarations = {
+            "root": {
+                "kind": "definition",
+                "references": [],
+                "value": "x" * (model.LIMITS["string_bytes"] + 1),
+                "unknown": True,
+            }
+        }
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.closure(["root"], declarations)
 
     def test_fixed_work_cap_is_explicitly_dominated_by_other_v0_limits(self):
         dominance_upper_bound = (
@@ -328,6 +354,10 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(model.validate_identifier("a" + "x" * 127), "a" + "x" * 127)
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.validate_identifier("a" + "x" * 128)
+        with self.assertRaisesRegex(model.RegistryError, "registry.malformed_record"):
+            model.validate_identifier("é" * 64)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.validate_identifier("é" * 64 + "a")
         with self.assertRaisesRegex(model.RegistryError, "registry.malformed_record"):
             model.validate_identifier("Upper")
 
@@ -386,8 +416,22 @@ class ModelTests(unittest.TestCase):
         policy["current_permitted_roots"] += [f"{index + 4:064x}" for index in range(13)]
         with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.verify_bundle(copy.deepcopy(self.bundle), policy)
+        policy = copy.deepcopy(self.policy)
+        policy["current_permitted_roots"] = ["not-a-digest"] + [
+            f"{index + 4:064x}" for index in range(model.LIMITS["registry_entries"])
+        ]
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(copy.deepcopy(self.bundle), policy)
+        policy = copy.deepcopy(self.policy)
+        policy["compatibility_digest"] = "x" * (model.LIMITS["string_bytes"] + 1)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(copy.deepcopy(self.bundle), policy)
         bundle = copy.deepcopy(self.bundle); bundle["candidate_policy"] = "\ud800"
         with self.assertRaisesRegex(model.RegistryError, "registry.normalization_failure"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+        bundle = copy.deepcopy(self.bundle)
+        bundle["unknown"] = "x" * (model.LIMITS["string_bytes"] + 1)
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
             model.verify_bundle(bundle, copy.deepcopy(self.policy))
 
     def test_forged_metadata_rejected(self):
@@ -462,6 +506,28 @@ class ModelTests(unittest.TestCase):
             with self.subTest(count=count), self.assertRaisesRegex(model.RegistryError, code):
                 model.verify_bundle(bundle, policy)
 
+    def test_resource_precedence_over_mixed_schema_failures(self):
+        bundle = copy.deepcopy(self.bundle)
+        bundle["record"]["id"] = "a" * (model.LIMITS["identifier_bytes"] + 1)
+        bundle["record"]["schema"] = "statqed.registry-record.v999"
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        bundle["snapshot"]["records"] = [
+            [f"statqed.test-only.snapshot-{index:02d}.v0", "0.0.1", bundle["record_digest"]]
+            for index in range(model.LIMITS["registry_entries"] + 1)
+        ]
+        bundle["snapshot"]["unknown"] = True
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        bundle["axioms"] = ["Classical.choice"] * (model.LIMITS["axioms"] + 1)
+        bundle["record"]["schema"] = "statqed.registry-record.v999"
+        with self.assertRaisesRegex(model.RegistryError, "registry.resource_limit"):
+            model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
     def test_wrong_compatibility_direction_rejected(self):
         bundle = copy.deepcopy(self.bundle)
         bundle["compatibility"] = copy.deepcopy(self.policy["compatibility_binding"])
@@ -512,6 +578,26 @@ class ModelTests(unittest.TestCase):
             ):
                 model.verify_bundle(bundle, policy)
 
+        for field, value in (
+            ("path_length", True),
+            ("normalized_type", None),
+            ("proof_subject", None),
+            ("universe_instantiations", None),
+            ("new_proposition", None),
+        ):
+            bundle = copy.deepcopy(self.bundle)
+            policy = copy.deepcopy(self.policy)
+            policy["compatibility_binding"][field] = value
+            _, digest = model.digest_frame(
+                "compatibility", model.canonical_cbor(policy["compatibility_binding"])
+            )
+            policy["compatibility_digest"] = digest
+            bundle["compatibility_digest"] = digest
+            with self.subTest(policy_binding_field=field), self.assertRaisesRegex(
+                model.RegistryError, "registry.authorization_policy_unsupported"
+            ):
+                model.verify_bundle(bundle, policy)
+
         for value in (True, {}, [], "candidate-selected"):
             bundle = copy.deepcopy(self.bundle)
             bundle["compatibility"] = value
@@ -519,6 +605,13 @@ class ModelTests(unittest.TestCase):
                 model.RegistryError, "registry.compatibility_missing"
             ):
                 model.verify_bundle(bundle, copy.deepcopy(self.policy))
+
+        bundle = copy.deepcopy(self.bundle)
+        policy = copy.deepcopy(self.policy)
+        bundle["compatibility_digest"] = "not-a-digest"
+        policy["compatibility_digest"] = "not-a-digest"
+        with self.assertRaisesRegex(model.RegistryError, "registry.malformed_record"):
+            model.verify_bundle(bundle, policy)
 
     def test_compatibility_lock_binds_environment_axioms_and_proof(self):
         original = copy.deepcopy(self.policy["compatibility_binding"])
