@@ -416,7 +416,7 @@
     }
   ],
   "subject_count": 103,
-  "subject_digest": "e1b303b2b282b189652ead0ae7801e48c3253b7f2d105944a65fb5418c5f596d",
+  "subject_digest": "54234a36730e2ff4a5bfea02c7a70d20edd8403ee63878defb0ea06f6800de81",
   "subjects": [
     {
       "bytes": 7079,
@@ -749,9 +749,9 @@
       "sha256": "5dcaeea19564edc2e0996a819eb05698ab7131ccb12acc25c5932ea0eea92a1b"
     },
     {
-      "bytes": 35281,
+      "bytes": 34309,
       "path": "scripts/registry/model.py",
-      "sha256": "55e73e8947d0473dfe49039aa025493f7f80f511bdcc8ba1c6c16038208dbc49"
+      "sha256": "06568250053f843aeffd9f5de77703cb5f7f67010d38955901a209618ad18931"
     },
     {
       "bytes": 31550,
